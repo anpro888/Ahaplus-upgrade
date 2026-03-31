@@ -1,0 +1,303 @@
+{
+  "_comment": "아하플러스 v2 Design System Rules - auto-generated from codebase analysis",
+  "colors": {
+    "allowed": {
+      "primary": "#6161FF",
+      "primary_hover": "#4F4FE0",
+      "primary_light": "#EEF0FF",
+      "primary_bg": "#F7F7FF",
+      "danger": "#F06060",
+      "danger_dark": "#E24B4A",
+      "success": "#43A047",
+      "purple": "#7F77DD",
+      "blue": "#378ADD",
+      "orange": "#F5A623",
+      "text_primary": "#212121",
+      "text_secondary": "#616161",
+      "text_tertiary": "#757575",
+      "text_disabled": "#9E9E9E",
+      "border": "#E0E0E0",
+      "border_alt": "#BDBDBD",
+      "bg_light": "#F5F5F5",
+      "bg_lighter": "#FAFAFA",
+      "bg_app": "#F5F4F1",
+      "del_bg": "#FFF5F5",
+      "white": "#FFFFFF",
+      "gnb_hover": "#F5F4F1",
+      "gnb_active": "#F0EEE9",
+      "overlay": "rgba(0,0,0,0.45)",
+      "focus_ring": "rgba(97,97,255,0.1)",
+      "badge_refund_bg": "#FFF3E0",
+      "badge_refund_text": "#E65100",
+      "badge_noshow_bg": "#FFF0F0",
+      "blue_mci": "#E8F0FE",
+      "purple_mci": "#F0EAFF",
+      "green_mci": "#E8F5E9",
+      "orange_mci": "#FFF3E0",
+      "teal_mci": "#E0F7FA",
+      "dark_text": "#1a1a1a",
+      "divider": "#424242",
+      "shadow_color": "#D0D0D0"
+    },
+    "status_badges": {
+      "completed_bg": "#43A047",
+      "arrived_bg": "#7F77DD",
+      "checkedout_bg": "#378ADD",
+      "noshow_bg": "#E24B4A",
+      "cancelled_bg": "#F06060"
+    }
+  },
+  "typography": {
+    "font_family": "Pretendard",
+    "font_fallback": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "scales": {
+      "modal_title": {
+        "size": "15px",
+        "weight": "700"
+      },
+      "section_title": {
+        "size": "14px",
+        "weight": "700"
+      },
+      "body": {
+        "size": "13px",
+        "weight_range": [
+          "400",
+          "600"
+        ]
+      },
+      "table_header": {
+        "size": "12px",
+        "weight": "600"
+      },
+      "table_body": {
+        "size": "12px",
+        "weight": "400"
+      },
+      "sub_text": {
+        "size": "11px",
+        "weight_range": [
+          "400",
+          "500"
+        ]
+      },
+      "badge": {
+        "size_range": [
+          "10px",
+          "11px"
+        ],
+        "weight_range": [
+          "500",
+          "700"
+        ]
+      }
+    }
+  },
+  "components": {
+    "button": {
+      "primary": {
+        "background": "#6161FF",
+        "color": "#FFFFFF",
+        "border": "none",
+        "height": "36px",
+        "border_radius": "6px",
+        "font_size": "13px",
+        "font_weight": "600",
+        "hover_bg": "#4F4FE0"
+      },
+      "secondary": {
+        "background": "transparent",
+        "color": "#616161",
+        "border": "1px solid #BDBDBD",
+        "height": "36px",
+        "border_radius": "6px",
+        "font_size": "13px",
+        "font_weight": "600"
+      },
+      "danger": {
+        "background": "#F06060",
+        "color": "#FFFFFF",
+        "border": "none",
+        "height": "36px",
+        "border_radius": "6px",
+        "font_size": "13px",
+        "font_weight": "600",
+        "hover_bg": "#E24B4A"
+      },
+      "small_outline": {
+        "height_range": [
+          "28px",
+          "32px"
+        ],
+        "border_radius": "6px",
+        "font_size": "12px",
+        "color": "#6161FF",
+        "border": "1px solid #E0E0E0",
+        "background": "#FFFFFF"
+      },
+      "modal_footer_order": [
+        "cancel",
+        "delete",
+        "save"
+      ]
+    },
+    "input": {
+      "height": "36px",
+      "border_radius": "6px",
+      "border": "1px solid #E0E0E0",
+      "border_focus": "1px solid #6161FF",
+      "border_error": "1px solid #F06060",
+      "font_size": "13px",
+      "color": "#212121",
+      "placeholder_color": "#9E9E9E",
+      "focus_shadow": "0 0 0 3px rgba(97,97,255,0.1)"
+    },
+    "tab": {
+      "style": "underline",
+      "active_color": "#6161FF",
+      "active_border": "2px solid #6161FF",
+      "inactive_color": "#9E9E9E",
+      "hover_bg": "#EEF0FF",
+      "hover_border_radius": "4px 4px 0 0",
+      "font_size": "13px",
+      "active_weight": "600",
+      "inactive_weight": "500",
+      "padding": "10px 20px"
+    },
+    "modal": {
+      "overlay_bg": "rgba(0,0,0,0.45)",
+      "overlay_blur": "blur(4px)",
+      "border_radius": "16px",
+      "box_shadow": "0 8px 24px rgba(0,0,0,0.15)",
+      "animation": "modalIn 0.2s ease-out",
+      "header_bar_width": "4px",
+      "header_bar_height": "18px",
+      "header_bar_color": "#6161FF",
+      "header_bar_radius": "2px",
+      "title_size": "15px",
+      "title_weight": "700",
+      "close_btn_size": "28px",
+      "close_btn_bg": "#F5F5F5",
+      "close_btn_radius": "50%",
+      "header_border": "1px solid #E0E0E0"
+    },
+    "table": {
+      "thead_bg": "#F7F7FF",
+      "thead_font_size": "12px",
+      "thead_font_weight": "600",
+      "thead_color": "#616161",
+      "tbody_font_size": "12px",
+      "tbody_color": "#212121",
+      "row_border": "1px solid #E0E0E0",
+      "active_row_bg": "#F0F5E8",
+      "deleted_row_bg": "#FFF5F5",
+      "cell_padding": "9px 12px",
+      "border_collapse": "collapse"
+    },
+    "toggle": {
+      "width": "40px",
+      "height": "22px",
+      "thumb_size": "16px",
+      "off_color": "#BDBDBD",
+      "on_color": "#6161FF",
+      "transition": "0.2s"
+    }
+  },
+  "layout": {
+    "topnav_height": "52px",
+    "gnb_height": "36px",
+    "app_bg": "#F5F4F1"
+  },
+  "z_index": {
+    "content": "1-10",
+    "dropdown": "20-50",
+    "gnb_mega": "940",
+    "modal_overlay": "960",
+    "modal_content": "1100",
+    "top_layer": "1300"
+  },
+  "animation": {
+    "default_transition": "0.15s",
+    "dropdown_transition": "0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+    "tooltip_transition": "opacity 0.1s, visibility 0.1s",
+    "toggle_transition": "0.2s",
+    "modal_keyframe": "modalIn: opacity 0→1, scale 0.95→1, translateY -8px→0, 0.2s ease-out"
+  },
+  "css_prefixes": {
+    "sm-": "영업 (Sales Modal)",
+    "sr-": "판매 등록",
+    "rv-": "매출 집계",
+    "sh-": "판매 내역",
+    "shh-": "판매 내역 헤더",
+    "cl-": "고객 목록",
+    "rh-": "예약 내역",
+    "dp-": "예약금",
+    "st-": "예약 설정",
+    "sd-": "판매 상세",
+    "db-": "영업 현황",
+    "pp-": "인쇄",
+    "hm-": "홈",
+    "hol-": "휴일 설정",
+    "hole-": "휴일 편집",
+    "ahai-": "AI 채팅",
+    "sv-": "서비스 설정",
+    "svcm-": "분류 등록 모달",
+    "svsm-": "서비스 등록 모달"
+  },
+  "i18n": {
+    "required_attrs": [
+      "data-i18n",
+      "data-ko",
+      "data-en"
+    ],
+    "namespaces": [
+      "topnav",
+      "gnb",
+      "cal",
+      "rv",
+      "sh",
+      "shh",
+      "cl",
+      "sd",
+      "db",
+      "pp",
+      "dp",
+      "rh",
+      "sv",
+      "common"
+    ],
+    "special_attrs": [
+      "data-i18n-tooltip-ko",
+      "data-i18n-tooltip-en",
+      "data-i18n-title-ko",
+      "data-i18n-title-en",
+      "data-i18n-ph-ko",
+      "data-i18n-ph-en"
+    ],
+    "key_format": "namespace.key",
+    "helpers": [
+      "applyLang()",
+      "tStatus()",
+      "tMenu()"
+    ]
+  },
+  "terminology": {
+    "ko_to_en": {
+      "고객": "Client",
+      "예약": "Booking",
+      "정액권": "Prepaid Card",
+      "티켓": "Prepaid Service",
+      "회원권": "Membership",
+      "미수금": "Outstanding",
+      "담당자": "Staff",
+      "남은 예약": "Upcoming",
+      "재방문": "Revisit",
+      "예약완료": "Completed",
+      "고객입장": "Arrived",
+      "계산완료": "Checked Out",
+      "노쇼": "No-show",
+      "분류": "Category",
+      "영업현황": "Dashboard"
+    }
+  }
+}
