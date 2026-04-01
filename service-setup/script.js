@@ -328,6 +328,10 @@ function showReservationView() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('salesView').classList.remove('show');
   document.getElementById('appBody').style.display = '';
   document.getElementById('homeView').style.display = '';
@@ -383,6 +387,10 @@ function openRevSummary() {
   document.getElementById('salesView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('noticeListView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
@@ -494,6 +502,10 @@ function openSalesHistory() {
   document.getElementById('salesView').classList.remove('show');
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('noticeListView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
@@ -523,6 +535,10 @@ function openCustomerList() {
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('customerListView').classList.add('show');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   // 정렬 초기화
@@ -537,7 +553,616 @@ function openCustomerList() {
 
 function closeCustomerList() {
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   showReservationView();
+}
+
+// ── 중복 고객 관리 페이지 ──
+function openDupClientList() {
+  freezeGnb();
+  document.getElementById('appBody').style.display = 'none';
+  document.getElementById('salesView').classList.remove('show');
+  document.getElementById('revSummaryView').classList.remove('show');
+  document.getElementById('salesHistoryView').classList.remove('show');
+  document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('serviceSetupView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.add('show');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  // 초기화
+  document.getElementById('dcTotalCount').textContent = '0';
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  document.getElementById('dcTbody').innerHTML = '<tr><td colspan="7" style="color:#9E9E9E;padding:20px;text-align:center;">' + (isEn ? 'No data for table' : '내역이 없습니다') + '</td></tr>';
+  document.getElementById('dcPaging').style.display = 'none';
+  if (currentLang === 'en') applyLang();
+}
+
+var _dcAllData = [
+  { date:'2026-03-19', no:45, name:'김하늘', phone:'010-9876-5432', sales:'0', lastVisit:'2026-03-19' },
+  { date:'2025-02-20', no:24, name:'김하늘', phone:'010-8888-7777', sales:'120,000', lastVisit:'2025-02-20' },
+  { date:'2025-12-15', no:43, name:'이수진', phone:'010-3456-7890', sales:'850,000', lastVisit:'2025-12-15' },
+  { date:'2025-01-15', no:23, name:'이수진', phone:'010-3456-7890', sales:'450,000', lastVisit:'2025-01-15' },
+  { date:'2025-11-15', no:40, name:'정민지', phone:'010-1111-9999', sales:'1,200,000', lastVisit:'2025-11-15' },
+  { date:'2024-12-05', no:22, name:'정민지', phone:'010-1111-9999', sales:'300,000', lastVisit:'2024-12-05' },
+  { date:'2025-10-09', no:38, name:'한소희', phone:'010-4444-5555', sales:'320,000', lastVisit:'2025-10-09' },
+  { date:'2024-11-20', no:21, name:'한소희', phone:'010-4444-5555', sales:'560,000', lastVisit:'2024-11-20' },
+  { date:'2025-09-18', no:37, name:'오서준', phone:'010-6666-7777', sales:'980,000', lastVisit:'2025-09-18' },
+  { date:'2024-10-08', no:20, name:'오서준', phone:'010-6666-7777', sales:'0', lastVisit:'' },
+  { date:'2026-02-06', no:44, name:'박서연', phone:'010-5555-1234', sales:'0', lastVisit:'2026-02-06' },
+  { date:'2024-09-12', no:19, name:'박서연', phone:'010-5555-1234', sales:'180,000', lastVisit:'2024-09-12' },
+  { date:'2025-10-22', no:39, name:'김세나', phone:'019-8000-9000', sales:'1,680,000', lastVisit:'2025-10-22' },
+  { date:'2024-08-25', no:18, name:'김세나', phone:'019-8000-9000', sales:'95,000', lastVisit:'2024-08-25' },
+  { date:'2025-11-28', no:41, name:'이지은', phone:'010-8765-4321', sales:'3,850,000', lastVisit:'2025-11-28' },
+  { date:'2024-07-30', no:17, name:'이지은', phone:'010-8765-4321', sales:'720,000', lastVisit:'2024-07-30' },
+  { date:'2025-08-30', no:36, name:'윤채원', phone:'010-2233-4455', sales:'3,950,000', lastVisit:'2025-08-30' },
+  { date:'2024-06-18', no:16, name:'윤채원', phone:'010-2233-4455', sales:'2,100,000', lastVisit:'2024-06-18' },
+  { date:'2025-12-10', no:42, name:'최윤서', phone:'010-2222-3333', sales:'2,450,000', lastVisit:'2025-12-10' },
+  { date:'2024-05-10', no:15, name:'최윤서', phone:'010-2222-3333', sales:'380,000', lastVisit:'2024-05-10' }
+];
+
+var dcPage = 1, dcPerPage = 10, dcTotalPages = 1;
+var _dcFiltered = [];
+
+function dcSearch() {
+  var criteria = document.getElementById('dcCriteria').value;
+  var groups = {};
+  _dcAllData.forEach(function(c) {
+    var key;
+    if (criteria === 'name_phone') key = c.name + '|' + c.phone;
+    else if (criteria === 'name') key = c.name;
+    else key = c.phone;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  });
+  _dcFiltered = [];
+  Object.keys(groups).forEach(function(k) {
+    if (groups[k].length > 1) {
+      groups[k].forEach(function(c) { _dcFiltered.push(c); });
+    }
+  });
+  document.getElementById('dcTotalCount').textContent = _dcFiltered.length;
+  document.getElementById('dcPaging').style.display = _dcFiltered.length > dcPerPage ? 'flex' : 'none';
+  dcGoPage(1);
+}
+
+function dcGoPage(p) {
+  dcTotalPages = Math.max(1, Math.ceil(_dcFiltered.length / dcPerPage));
+  if (p < 1) p = 1;
+  if (p > dcTotalPages) p = dcTotalPages;
+  dcPage = p;
+  var start = (p - 1) * dcPerPage;
+  var end = Math.min(start + dcPerPage, _dcFiltered.length);
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var tbody = document.getElementById('dcTbody');
+
+  if (_dcFiltered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="color:#9E9E9E;padding:20px;text-align:center;">' + (isEn ? 'No data for table' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = start; i < end; i++) {
+    var c = _dcFiltered[i];
+    html += '<tr>' +
+      '<td><label class="dc-chk-label"><input type="checkbox" class="dc-row-check" onchange="dcUpdateBulkBtns()"><span class="dc-checkmark">✓</span></label></td>' +
+      '<td>' + c.date + '</td>' +
+      '<td>' + c.no + '</td>' +
+      '<td>' + c.name + '</td>' +
+      '<td>' + c.phone + '</td>' +
+      '<td class="amount">' + c.sales + '</td>' +
+      '<td>' + (c.lastVisit || '') + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+
+  var info = document.getElementById('dcPageInfo');
+  if (info) {
+    info.innerHTML = '<span>' + (isEn ? 'Page' : '페이지') + '</span> <b>' + p + '</b> <span>' + (isEn ? 'of' : '의') + '</span> <b>' + dcTotalPages + '</b>';
+  }
+  var chkAll = document.getElementById('dcCheckAll');
+  if (chkAll) chkAll.checked = false;
+  dcUpdateBulkBtns();
+}
+
+function dcToggleAll(chk) {
+  document.querySelectorAll('.dc-row-check').forEach(function(c) { c.checked = chk.checked; });
+  dcUpdateBulkBtns();
+}
+
+function dcUpdateBulkBtns() {
+  var hasChecked = document.querySelectorAll('.dc-row-check:checked').length > 0;
+  document.querySelectorAll('#dupClientListView .dc-bulk-btn').forEach(function(btn) {
+    if (hasChecked) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+
+function dcDeleteSelected() {
+  var checked = document.querySelectorAll('.dc-row-check:checked');
+  if (checked.length === 0) {
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    alert(isEn ? 'Please select clients to delete.' : '삭제할 고객을 선택해 주세요.');
+    return;
+  }
+  document.getElementById('dcDeleteModal').style.display = 'flex';
+}
+function closeDcDeleteModal() {
+  document.getElementById('dcDeleteModal').style.display = 'none';
+}
+function confirmDcDelete() {
+  closeDcDeleteModal();
+  dcSearch();
+}
+
+// ── 삭제 고객 관리 페이지 ──
+var _dlcAllData = [
+  { delDate:'2025-12-20', no:8, name:'박준혁', phone:'010-2345-6789', sales:'45,000', lastVisit:'2025-11-10' },
+  { delDate:'2025-11-15', no:12, name:'김영수', phone:'010-3456-1234', sales:'320,000', lastVisit:'2025-10-25' },
+  { delDate:'2025-10-30', no:5, name:'이미영', phone:'010-4567-8901', sales:'0', lastVisit:'2025-08-12' },
+  { delDate:'2025-10-18', no:14, name:'정현우', phone:'010-5678-2345', sales:'180,000', lastVisit:'2025-09-30' },
+  { delDate:'2025-09-25', no:9, name:'최다은', phone:'010-6789-3456', sales:'750,000', lastVisit:'2025-09-01' },
+  { delDate:'2025-09-10', no:3, name:'송희진', phone:'010-6431-9779', sales:'19,000', lastVisit:'2022-07-19' },
+  { delDate:'2025-08-22', no:11, name:'한지훈', phone:'010-7890-4567', sales:'1,200,000', lastVisit:'2025-07-15' },
+  { delDate:'2025-08-05', no:7, name:'오수빈', phone:'010-8901-5678', sales:'95,000', lastVisit:'2025-06-20' },
+  { delDate:'2025-07-12', no:13, name:'윤태영', phone:'010-9012-6789', sales:'2,300,000', lastVisit:'2025-07-01' },
+  { delDate:'2025-06-28', no:6, name:'강서현', phone:'010-1234-7890', sales:'560,000', lastVisit:'2025-05-18' },
+  { delDate:'2025-06-10', no:10, name:'임도윤', phone:'010-2345-8901', sales:'0', lastVisit:'2025-04-22' },
+  { delDate:'2025-05-15', no:4, name:'장민서', phone:'010-3456-9012', sales:'420,000', lastVisit:'2025-03-30' }
+];
+
+var dlcPage = 1, dlcPerPage = 10, dlcTotalPages = 1;
+var _dlcFiltered = [];
+
+function openDeletedClientList() {
+  freezeGnb();
+  document.getElementById('appBody').style.display = 'none';
+  document.getElementById('salesView').classList.remove('show');
+  document.getElementById('revSummaryView').classList.remove('show');
+  document.getElementById('salesHistoryView').classList.remove('show');
+  document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('serviceSetupView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.add('show');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  // 초기화: 전체 표시
+  document.getElementById('dlcSearchInput').value = '';
+  _dlcFiltered = _dlcAllData.slice();
+  document.getElementById('dlcTotalCount').textContent = _dlcFiltered.length;
+  document.getElementById('dlcPaging').style.display = _dlcFiltered.length > dlcPerPage ? 'flex' : 'none';
+  dlcGoPage(1);
+  var body = document.querySelector('#deletedClientView .dlc-body');
+  if (body) body.scrollTop = 0;
+  if (currentLang === 'en') applyLang();
+}
+
+function dlcSearch() {
+  var keyword = document.getElementById('dlcSearchInput').value.trim().toLowerCase();
+  if (!keyword) {
+    _dlcFiltered = _dlcAllData.slice();
+  } else {
+    _dlcFiltered = _dlcAllData.filter(function(c) {
+      return c.name.toLowerCase().indexOf(keyword) >= 0 || c.phone.replace(/-/g,'').indexOf(keyword.replace(/-/g,'')) >= 0;
+    });
+  }
+  document.getElementById('dlcTotalCount').textContent = _dlcFiltered.length;
+  document.getElementById('dlcPaging').style.display = _dlcFiltered.length > dlcPerPage ? 'flex' : 'none';
+  dlcGoPage(1);
+}
+
+function dlcGoPage(p) {
+  dlcTotalPages = Math.max(1, Math.ceil(_dlcFiltered.length / dlcPerPage));
+  if (p < 1) p = 1;
+  if (p > dlcTotalPages) p = dlcTotalPages;
+  dlcPage = p;
+  var start = (p - 1) * dlcPerPage;
+  var end = Math.min(start + dlcPerPage, _dlcFiltered.length);
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var tbody = document.getElementById('dlcTbody');
+
+  if (_dlcFiltered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="color:#9E9E9E;padding:20px;text-align:center;">' + (isEn ? 'No data for table' : '내역이 없습니다') + '</td></tr>';
+    document.getElementById('dlcPageInfo').textContent = '';
+    return;
+  }
+
+  var html = '';
+  for (var i = start; i < end; i++) {
+    var c = _dlcFiltered[i];
+    html += '<tr>';
+    html += '<td><label class="dlc-chk-label"><input type="checkbox" class="dlc-chk" value="' + c.no + '" onchange="dlcUpdateBulkBtns()"><span class="dlc-checkmark">✓</span></label></td>';
+    html += '<td>' + c.delDate + '</td>';
+    html += '<td>' + c.no + '</td>';
+    html += '<td>' + c.name + '</td>';
+    html += '<td>' + c.phone + '</td>';
+    html += '<td class="amount">' + c.sales + '</td>';
+    html += '<td>' + (c.lastVisit || '-') + '</td>';
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+
+  var pageInfo = document.getElementById('dlcPageInfo');
+  if (pageInfo) {
+    pageInfo.innerHTML = '<b>' + dlcPage + '</b> / ' + dlcTotalPages;
+  }
+}
+
+function dlcToggleAll(master) {
+  var cbs = document.querySelectorAll('#dlcTbody .dlc-chk');
+  cbs.forEach(function(cb) { cb.checked = master.checked; });
+  dlcUpdateBulkBtns();
+}
+
+function dlcUpdateBulkBtns() {
+  var hasChecked = document.querySelectorAll('#dlcTbody .dlc-chk:checked').length > 0;
+  document.querySelectorAll('#deletedClientView .dlc-bulk-btn').forEach(function(btn) {
+    if (hasChecked) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+
+function _dlcGetSelectedNos() {
+  var checked = document.querySelectorAll('#dlcTbody .dlc-chk:checked');
+  var nos = [];
+  checked.forEach(function(cb) { nos.push(parseInt(cb.value)); });
+  return nos;
+}
+
+function dlcRestoreSelected() {
+  var nos = _dlcGetSelectedNos();
+  if (nos.length === 0) {
+    document.getElementById('dlcAlertModal').style.display = 'flex';
+    return;
+  }
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  // 삭제 목록에서 제거
+  _dlcAllData = _dlcAllData.filter(function(c) { return nos.indexOf(c.no) < 0; });
+  // 검색 새로고침
+  dlcSearch();
+  // 체크올 해제
+  var chkAll = document.getElementById('dlcCheckAll');
+  if (chkAll) chkAll.checked = false;
+  dlcUpdateBulkBtns();
+}
+
+function dlcPermDeleteSelected() {
+  var nos = _dlcGetSelectedNos();
+  if (nos.length === 0) {
+    document.getElementById('dlcAlertModal').style.display = 'flex';
+    return;
+  }
+  // 확인 모달 열기
+  document.getElementById('dlcDeleteConfirmModal').style.display = 'flex';
+}
+
+function confirmDlcPermDelete() {
+  var nos = _dlcGetSelectedNos();
+  _dlcAllData = _dlcAllData.filter(function(c) { return nos.indexOf(c.no) < 0; });
+  closeDlcDeleteConfirmModal();
+  dlcSearch();
+  var chkAll = document.getElementById('dlcCheckAll');
+  if (chkAll) chkAll.checked = false;
+  dlcUpdateBulkBtns();
+}
+
+function closeDlcAlertModal() {
+  document.getElementById('dlcAlertModal').style.display = 'none';
+}
+
+function closeDlcDeleteConfirmModal() {
+  document.getElementById('dlcDeleteConfirmModal').style.display = 'none';
+}
+
+// ── 가족 목록 페이지 ──
+function openFamilyList() {
+  freezeGnb();
+  document.getElementById('appBody').style.display = 'none';
+  document.getElementById('salesView').classList.remove('show');
+  document.getElementById('revSummaryView').classList.remove('show');
+  document.getElementById('salesHistoryView').classList.remove('show');
+  document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('serviceSetupView').classList.remove('show');
+  document.getElementById('familyListView').classList.add('show');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  flGoPage(1);
+  var body = document.querySelector('#familyListView .fl-body');
+  if (body) body.scrollTop = 0;
+  if (currentLang === 'en') applyLang();
+}
+
+var flPage = 1;
+var flPerPage = 10;
+var flTotalPages = 1;
+
+function flGoPage(p) {
+  var rows = document.querySelectorAll('#flTbody tr');
+  var total = rows.length;
+  flTotalPages = Math.max(1, Math.ceil(total / flPerPage));
+  if (p < 1) p = 1;
+  if (p > flTotalPages) p = flTotalPages;
+  flPage = p;
+  var start = (p - 1) * flPerPage;
+  var end = start + flPerPage;
+  rows.forEach(function(row, i) {
+    row.style.display = (i >= start && i < end) ? '' : 'none';
+  });
+  var info = document.getElementById('flPageInfo');
+  if (info) {
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    info.innerHTML = '<span>' + (isEn ? 'Page' : '페이지') + '</span> <b>' + p + '</b> <span>' + (isEn ? 'of' : '의') + '</span> <b>' + flTotalPages + '</b>';
+  }
+}
+
+function toggleFlPageDd(e) {
+  if (e) e.stopPropagation();
+  var sel = document.getElementById('flGoSelect');
+  sel.style.display = sel.style.display === 'none' ? '' : 'none';
+}
+function hideFlPageDd() {
+  document.getElementById('flGoSelect').style.display = 'none';
+}
+
+function sortFlTable(th, colIdx) {
+  var tbody = document.getElementById('flTbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  var isAsc = th.classList.contains('asc');
+  document.querySelectorAll('#familyListView .fl-sortable').forEach(function(h){ h.classList.remove('asc','desc'); });
+  th.classList.add(isAsc ? 'desc' : 'asc');
+  var dir = isAsc ? -1 : 1;
+  rows.sort(function(a, b) {
+    var aText = a.querySelectorAll('td')[colIdx].textContent.trim().replace(/,/g,'');
+    var bText = b.querySelectorAll('td')[colIdx].textContent.trim().replace(/,/g,'');
+    var aNum = parseFloat(aText);
+    var bNum = parseFloat(bText);
+    if (!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum) * dir;
+    return aText.localeCompare(bText) * dir;
+  });
+  rows.forEach(function(row){ tbody.appendChild(row); });
+  flGoPage(1);
+}
+
+// ── 가족 구성원 상세 모달 ──
+var _flCurrentFamily = null;
+
+// 가족별 샘플 구성원 데이터
+var _flFamilyData = {
+  '김하늘, 박서연': [
+    { no:45, name:'김하늘', mobile:'010-9876-5432', tel:'', relation:'본인' },
+    { no:44, name:'박서연', mobile:'010-5555-1234', tel:'', relation:'sister' }
+  ],
+  '이수진, 최윤서, 이지은': [
+    { no:43, name:'이수진', mobile:'010-3456-7890', tel:'', relation:'본인' },
+    { no:42, name:'최윤서', mobile:'010-2222-3333', tel:'02-555-1234', relation:'mother' },
+    { no:41, name:'이지은', mobile:'010-8765-4321', tel:'', relation:'sister' }
+  ],
+  '정민지, 김세나': [
+    { no:40, name:'정민지', mobile:'010-1111-9999', tel:'', relation:'본인' },
+    { no:39, name:'김세나', mobile:'019-8000-9000', tel:'', relation:'friend' }
+  ],
+  '한소희, 오서준': [
+    { no:38, name:'한소희', mobile:'010-4444-5555', tel:'', relation:'본인' },
+    { no:37, name:'오서준', mobile:'010-6666-7777', tel:'', relation:'spouse' }
+  ],
+  '윤채원, 정민지, 한소희': [
+    { no:36, name:'윤채원', mobile:'010-2233-4455', tel:'', relation:'본인' },
+    { no:40, name:'정민지', mobile:'010-1111-9999', tel:'', relation:'cousin' },
+    { no:38, name:'한소희', mobile:'010-4444-5555', tel:'', relation:'friend' }
+  ],
+  '김하늘, 이지은, 오서준': [
+    { no:45, name:'김하늘', mobile:'010-9876-5432', tel:'', relation:'본인' },
+    { no:41, name:'이지은', mobile:'010-8765-4321', tel:'', relation:'sister' },
+    { no:37, name:'오서준', mobile:'010-6666-7777', tel:'', relation:'brother' }
+  ],
+  '박서연, 최윤서': [
+    { no:44, name:'박서연', mobile:'010-5555-1234', tel:'', relation:'본인' },
+    { no:42, name:'최윤서', mobile:'010-2222-3333', tel:'', relation:'mother' }
+  ],
+  '이수진, 김세나, 윤채원': [
+    { no:43, name:'이수진', mobile:'010-3456-7890', tel:'', relation:'본인' },
+    { no:39, name:'김세나', mobile:'019-8000-9000', tel:'', relation:'friend' },
+    { no:36, name:'윤채원', mobile:'010-2233-4455', tel:'', relation:'cousin' }
+  ],
+  '정민지, 오서준': [
+    { no:40, name:'정민지', mobile:'010-1111-9999', tel:'', relation:'본인' },
+    { no:37, name:'오서준', mobile:'010-6666-7777', tel:'', relation:'friend' }
+  ],
+  '한소희, 김하늘': [
+    { no:38, name:'한소희', mobile:'010-4444-5555', tel:'', relation:'본인' },
+    { no:45, name:'김하늘', mobile:'010-9876-5432', tel:'', relation:'friend' }
+  ],
+  '이지은, 박서연, 최윤서, 김세나': [
+    { no:41, name:'이지은', mobile:'010-8765-4321', tel:'', relation:'본인' },
+    { no:44, name:'박서연', mobile:'010-5555-1234', tel:'', relation:'sister' },
+    { no:42, name:'최윤서', mobile:'010-2222-3333', tel:'', relation:'mother' },
+    { no:39, name:'김세나', mobile:'019-8000-9000', tel:'', relation:'friend' }
+  ],
+  '윤채원, 이수진': [
+    { no:36, name:'윤채원', mobile:'010-2233-4455', tel:'', relation:'본인' },
+    { no:43, name:'이수진', mobile:'010-3456-7890', tel:'', relation:'sister' }
+  ],
+  '김하늘, 최윤서, 정민지': [
+    { no:24, name:'김하늘', mobile:'010-8888-7777', tel:'', relation:'본인' },
+    { no:15, name:'최윤서', mobile:'010-2222-3333', tel:'', relation:'cousin' },
+    { no:22, name:'정민지', mobile:'010-1111-9999', tel:'', relation:'friend' }
+  ],
+  '이수진, 한소희, 오서준': [
+    { no:23, name:'이수진', mobile:'010-3456-7890', tel:'', relation:'본인' },
+    { no:21, name:'한소희', mobile:'010-4444-5555', tel:'', relation:'friend' },
+    { no:20, name:'오서준', mobile:'010-6666-7777', tel:'', relation:'spouse' }
+  ]
+};
+
+function openFamilyDetail(btn) {
+  var tr = btn.closest('tr');
+  var cells = tr.querySelectorAll('td');
+  var regDate = cells[0].textContent.trim();
+  var members = cells[1].textContent.trim();
+  var balance = cells[2].textContent.trim();
+  var point = cells[3].textContent.trim();
+
+  _flCurrentFamily = { regDate:regDate, members:members, balance:balance, point:point };
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  document.getElementById('flDetailSummary').innerHTML =
+    '<span>' + (isEn ? 'Family Balance' : '가족 정액권 잔액') + ': <b>' + balance + '</b></span>' +
+    '<span>' + (isEn ? 'Family Points' : '가족 포인트') + ': <b>' + point + '</b></span>' +
+    '<span>' + (isEn ? 'Registered Date' : '등록일') + ': <b>' + regDate + '</b></span>';
+
+  renderFamilyDetailTable(members);
+  document.getElementById('familyDetailModal').style.display = 'flex';
+}
+
+function renderFamilyDetailTable(members) {
+  var data = _flFamilyData[members] || [];
+  var tbody = document.getElementById('flDetailBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:#9E9E9E;padding:20px;">' + (isEn ? 'No members' : '구성원이 없습니다') + '</td></tr>';
+    return;
+  }
+  var html = '';
+  data.forEach(function(m) {
+    html += '<tr>' +
+      '<td>' + m.no + '</td>' +
+      '<td>' + m.name + '</td>' +
+      '<td>' + m.mobile + '</td>' +
+      '<td>' + (m.tel || '') + '</td>' +
+      '<td>' + m.relation + '</td>' +
+      '<td><div class="fl-manage-btns">' +
+        '<button class="fl-manage-btn fl-edit" onclick="openFamilyEditMember(\'' + m.name + '\',\'' + m.relation + '\')" data-i18n="fl.btn_edit" data-ko="수정" data-en="Edit">' + (isEn ? 'Edit' : '수정') + '</button>' +
+        '<button class="fl-manage-btn fl-del" onclick="openFamilyDeleteMember(\'' + m.name + '\')" data-i18n="common.delete" data-ko="삭제" data-en="Delete">' + (isEn ? 'Delete' : '삭제') + '</button>' +
+      '</div></td></tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+function closeFamilyDetail() {
+  document.getElementById('familyDetailModal').style.display = 'none';
+  _flCurrentFamily = null;
+}
+
+// ── 구성원 수정 ──
+var _flEditTarget = null;
+function openFamilyEditMember(name, relation) {
+  _flEditTarget = name;
+  document.getElementById('flEditName').textContent = name;
+  document.getElementById('flEditRelation').value = relation;
+  document.getElementById('familyEditMemberModal').style.display = 'flex';
+}
+function closeFamilyEditMember() {
+  document.getElementById('familyEditMemberModal').style.display = 'none';
+}
+function saveFamilyEditMember() {
+  closeFamilyEditMember();
+}
+
+// ── 구성원 삭제 ──
+var _flDeleteTarget = null;
+function openFamilyDeleteMember(name) {
+  _flDeleteTarget = name;
+  document.getElementById('flDeleteName').textContent = name;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var point = _flCurrentFamily ? _flCurrentFamily.point : '0';
+  document.getElementById('flDeletePointHeader').innerHTML = (isEn ? 'Take family points' : '가족 포인트 분배') + '<br><span style="font-size:11px;font-weight:400;color:#9E9E9E;">(Max ' + point + ')</span>';
+  document.getElementById('flDeletePoint').value = '';
+  document.getElementById('familyDeleteMemberModal').style.display = 'flex';
+}
+function closeFamilyDeleteMember() {
+  document.getElementById('familyDeleteMemberModal').style.display = 'none';
+}
+function confirmFamilyDeleteMember() {
+  closeFamilyDeleteMember();
+}
+
+// ── 구성원 추가 ──
+var _flAddAllClients = [
+  { name:'김하늘', tel:'', mobile:'010-9876-5432' },
+  { name:'박서연', tel:'', mobile:'010-5555-1234' },
+  { name:'이수진', tel:'02-333-4567', mobile:'010-3456-7890' },
+  { name:'최윤서', tel:'02-555-1234', mobile:'010-2222-3333' },
+  { name:'이지은', tel:'', mobile:'010-8765-4321' },
+  { name:'정민지', tel:'', mobile:'010-1111-9999' },
+  { name:'김세나', tel:'', mobile:'019-8000-9000' },
+  { name:'한소희', tel:'', mobile:'010-4444-5555' },
+  { name:'오서준', tel:'', mobile:'010-6666-7777' },
+  { name:'윤채원', tel:'', mobile:'010-2233-4455' }
+];
+
+function openFamilyAddMember() {
+  document.getElementById('flAddSearchName').value = '';
+  document.getElementById('flAddSearchPhone').value = '';
+  document.getElementById('flAddResultCount').textContent = '0';
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  document.getElementById('flAddResultBody').innerHTML = '<tr><td colspan="4" style="color:#9E9E9E;padding:20px;">' + (isEn ? 'Enter a keyword and search' : '검색어를 입력 후 검색해 주세요') + '</td></tr>';
+  document.getElementById('familyAddMemberModal').style.display = 'flex';
+}
+function closeFamilyAddMember() {
+  document.getElementById('familyAddMemberModal').style.display = 'none';
+}
+
+function searchFamilyAddMember() {
+  var nameQ = document.getElementById('flAddSearchName').value.trim();
+  var phoneQ = document.getElementById('flAddSearchPhone').value.trim();
+  var currentMembers = _flCurrentFamily ? _flCurrentFamily.members.split(', ') : [];
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  var results = _flAddAllClients.filter(function(c) {
+    if (nameQ && c.name.indexOf(nameQ) === -1) return false;
+    if (phoneQ) {
+      var pq = phoneQ.replace(/-/g,'');
+      if (c.mobile.replace(/-/g,'').indexOf(pq) === -1 && c.tel.replace(/-/g,'').indexOf(pq) === -1) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('flAddResultCount').textContent = results.length;
+  var tbody = document.getElementById('flAddResultBody');
+  if (results.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:#9E9E9E;padding:20px;">' + (isEn ? 'No results found' : '검색 결과가 없습니다') + '</td></tr>';
+    return;
+  }
+  var html = '';
+  results.forEach(function(c) {
+    var isMember = currentMembers.indexOf(c.name) !== -1;
+    html += '<tr><td>' + c.name + '</td><td>' + (c.tel || '') + '</td><td>' + c.mobile + '</td>';
+    if (isMember) {
+      html += '<td><span class="fl-already">' + (isEn ? 'My Family' : '가족 구성원') + '</span></td>';
+    } else {
+      html += '<td><button class="fl-add-select-btn" onclick="openFamilyAddRelation(\'' + c.name + '\')" data-i18n="fl.btn_select" data-ko="선택" data-en="Select">' + (isEn ? 'Select' : '선택') + '</button></td>';
+    }
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+// ── 구성원 추가 - 관계 입력 ──
+var _flAddRelTarget = null;
+function openFamilyAddRelation(name) {
+  _flAddRelTarget = name;
+  document.getElementById('flAddRelName').textContent = name;
+  document.getElementById('flAddRelInput').value = '';
+  document.getElementById('familyAddRelationModal').style.display = 'flex';
+}
+function closeFamilyAddRelation() {
+  document.getElementById('familyAddRelationModal').style.display = 'none';
+}
+function saveFamilyAddRelation() {
+  closeFamilyAddRelation();
+  closeFamilyAddMember();
 }
 
 // ── 서비스 설정 페이지 ──
@@ -548,6 +1173,10 @@ function openServiceSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.add('show');
   document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -563,6 +1192,10 @@ function openPrepaidSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.add('show');
@@ -1507,7 +2140,125 @@ function switchItemSubTab(el, idx) {
   if (el) { el.classList.add('active'); el.style.borderBottom='2px solid #6161FF'; el.style.color='#6161FF'; }
 }
 function openCustDetailFromList(id) { console.log('openCustDetailFromList', id); }
-function openCustEditFromList(id) { console.log('openCustEditFromList', id); }
+function openCustEditFromList(btn) {
+  var tr = btn.closest('tr');
+  var cells = tr.querySelectorAll('td');
+  var regDate = cells[0].textContent.trim();
+  var custNum = cells[1].textContent.trim();
+  var custName = cells[2].textContent.trim();
+  var phone = cells[3].textContent.trim();
+  var gradeGroup = cells[4].textContent.trim();
+  var staff = cells[5].textContent.trim();
+  var memo = cells[8] ? cells[8].textContent.trim() : '';
+
+  // 팝업 열기
+  document.getElementById('custRegPopup').style.display = 'flex';
+
+  // 제목 변경
+  var header = document.querySelector('#custRegPopup .svc-popup-header span');
+  if (header) { header.textContent = currentLang === 'en' ? 'Edit Client' : '고객 수정'; header.dataset.ko = '고객 수정'; header.dataset.en = 'Edit Client'; }
+
+  // 저장 버튼 텍스트
+  var saveBtn = document.querySelector('#custRegPopup .svc-popup-footer .btn-primary');
+  if (saveBtn) { saveBtn.textContent = currentLang === 'en' ? 'Save' : '저장'; }
+
+  // 삭제 버튼 표시
+  document.getElementById('cregDeleteBtn').style.display = '';
+
+  // 필드 초기화 후 값 채우기
+  var ids = ['cregName','cregPhone','cregTel','cregMemo','cregAge','cregBirthY','cregBirthM','cregBirthD'];
+  ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  var sels = ['cregGrade','cregGroup','cregStaff','cregVisitPath'];
+  sels.forEach(function(id){ var el=document.getElementById(id); if(el) el.selectedIndex=0; });
+  document.querySelectorAll('#custRegPopup input[type="radio"]').forEach(function(r){ r.checked=false; });
+  var smsEl = document.getElementById('cregSmsBlock'); if(smsEl) smsEl.checked=false;
+  var noNumEl = document.getElementById('cregNoNumber'); if(noNumEl) { noNumEl.checked=false; }
+  var custNumEl = document.getElementById('cregCustNum'); if(custNumEl) { custNumEl.disabled=false; custNumEl.style.background=''; }
+
+  // 데이터 채우기
+  document.getElementById('cregCustNum').value = custNum;
+  document.getElementById('cregName').value = custName;
+  document.getElementById('cregPhone').value = phone.replace(/-/g,'');
+  if (memo) document.getElementById('cregMemo').value = memo;
+
+  // 등록일
+  var regDateInput = document.querySelector('#custRegPopup input[type="date"]');
+  if (regDateInput && regDate) regDateInput.value = regDate;
+
+  // 담당자 매칭
+  if (staff) {
+    var staffSel = document.getElementById('cregStaff');
+    for (var i = 0; i < staffSel.options.length; i++) {
+      if (staffSel.options[i].text === staff) { staffSel.selectedIndex = i; break; }
+    }
+  }
+
+  // 등급/그룹 매칭 (형식: "등급" 또는 "등급 / 그룹")
+  if (gradeGroup) {
+    var parts = gradeGroup.split('/').map(function(s){ return s.trim(); });
+    if (parts[0]) {
+      var gradeSel = document.getElementById('cregGrade');
+      for (var i = 0; i < gradeSel.options.length; i++) {
+        if (gradeSel.options[i].text === parts[0]) { gradeSel.selectedIndex = i; break; }
+      }
+    }
+    if (parts[1]) {
+      var groupSel = document.getElementById('cregGroup');
+      for (var i = 0; i < groupSel.options.length; i++) {
+        if (groupSel.options[i].text === parts[1]) { groupSel.selectedIndex = i; break; }
+      }
+    }
+  }
+
+  if (currentLang === 'en') applyLang();
+}
+
+function deleteCustFromEdit() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (confirm(isEn ? 'Are you sure you want to delete this client?' : '이 고객을 삭제하시겠습니까?')) {
+    // 현재 편집 중인 고객 정보 수집
+    var custNum = document.getElementById('cregCustNum').value;
+    var custName = document.getElementById('cregName').value;
+    var phoneRaw = document.getElementById('cregPhone').value;
+    var phone = phoneRaw.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (phoneRaw.indexOf('-') >= 0) phone = phoneRaw;
+
+    // 고객 목록 테이블에서 해당 행 찾아 데이터 수집 후 삭제
+    var rows = document.querySelectorAll('#clTbody tr');
+    var salesVal = '0';
+    var lastVisitVal = '';
+    for (var i = 0; i < rows.length; i++) {
+      var tds = rows[i].querySelectorAll('td');
+      if (tds.length > 1 && tds[1].textContent.trim() === custNum) {
+        salesVal = tds[7] ? tds[7].textContent.trim() : '0';
+        lastVisitVal = '';
+        rows[i].remove();
+        break;
+      }
+    }
+
+    // 삭제 고객 데이터에 추가
+    var today = new Date();
+    var delDate = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    _dlcAllData.unshift({
+      delDate: delDate,
+      no: parseInt(custNum) || 0,
+      name: custName,
+      phone: phone,
+      sales: salesVal,
+      lastVisit: lastVisitVal || '-'
+    });
+
+    // 고객 수 갱신
+    var countB = document.querySelector('#customerListView .cl-count b');
+    if (countB) {
+      var cnt = parseInt(countB.textContent) || 0;
+      if (cnt > 0) countB.textContent = cnt - 1;
+    }
+
+    closeCustRegPopup();
+  }
+}
 function searchCipCustomer() { console.log('searchCipCustomer'); }
 function selectCipCustomer(el) { console.log('selectCipCustomer', el); }
 function closeDepositModal() {
@@ -1598,6 +2349,10 @@ if (document.readyState !== "loading") { setTimeout(function(){ clGoPage(1); }, 
     sels.forEach(function(id){ var el=document.getElementById(id); if(el) el.selectedIndex=0; });
     document.querySelectorAll('#custRegPopup input[type="radio"]').forEach(function(r){ r.checked=false; });
     var smsEl = document.getElementById('cregSmsBlock'); if(smsEl) smsEl.checked=false;
+    var noNumEl = document.getElementById('cregNoNumber'); if(noNumEl) { noNumEl.checked=false; }
+    var custNumEl = document.getElementById('cregCustNum'); if(custNumEl) { custNumEl.disabled=false; custNumEl.style.background=''; }
+    // 신규 등록 모드: 삭제 버튼 숨김
+    document.getElementById('cregDeleteBtn').style.display = 'none';
     if (currentLang === 'en') applyLang();
   }
   function closeCustRegPopup() {
@@ -1619,6 +2374,32 @@ if (document.readyState !== "loading") { setTimeout(function(){ clGoPage(1); }, 
       });
     });
     closeFieldSettings();
+  }
+
+  // ── 번호 부여 안함 체크 시 고객번호 입력창 비활성화 ──
+  function toggleCustNumField() {
+    var cb = document.getElementById('cregNoNumber');
+    var input = document.getElementById('cregCustNum');
+    if (cb.checked) {
+      input.value = '';
+      input.disabled = true;
+      input.style.background = '#F5F5F5';
+    } else {
+      input.disabled = false;
+      input.style.background = '';
+    }
+  }
+
+  // ── 도로명주소 검색 (juso.go.kr 팝업 API) ──
+  function openJusoSearch() {
+    new daum.Postcode({
+      oncomplete: function(data) {
+        document.getElementById('cregPostcode').value = data.zonecode;
+        document.getElementById('cregAddr1').value = data.roadAddress || data.jibunAddress;
+        document.getElementById('cregAddr2').value = '';
+        document.getElementById('cregAddr2').focus();
+      }
+    }).open();
   }
 
   // ── 고객번호 설정 팝업 ──
@@ -1978,6 +2759,10 @@ function openProductSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -2013,6 +2798,10 @@ function openProductCatSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -2467,6 +3256,10 @@ function openPackageSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -2942,6 +3735,10 @@ function openOtherCodeSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -3163,6 +3960,10 @@ function openPointSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -3336,6 +4137,10 @@ function openConsentSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -3973,6 +4778,10 @@ function openDetailReceiptSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -4085,6 +4894,10 @@ function openEnvSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -4164,6 +4977,10 @@ function openAhaCallSetup() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -4187,6 +5004,10 @@ function openAhaCallHistory() {
   document.getElementById('revSummaryView').classList.remove('show');
   document.getElementById('salesHistoryView').classList.remove('show');
   document.getElementById('customerListView').classList.remove('show');
+  document.getElementById('familyListView').classList.remove('show');
+  document.getElementById('dupClientListView').classList.remove('show');
+  document.getElementById('deletedClientView').classList.remove('show');
+  document.getElementById('clientMgmtView').classList.remove('show');
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('serviceSetupView').classList.remove('show');
   document.getElementById('prepaidSetupView').classList.remove('show');
@@ -4234,15 +5055,16 @@ function achSearch() {
   var phoneFilter = document.getElementById('achPhoneSearch').value.trim();
   var deviceFilter = document.getElementById('achDeviceFilter').value;
 
-  // 날짜 범위 1년 제한 검증
-  if (from && to) {
+  // 날짜 범위 1년 제한 검증 (오늘 기준 1년 이전 날짜 불가)
+  if (from) {
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    var oneYearAgo = new Date(today);
+    oneYearAgo.setFullYear(today.getFullYear() - 1);
     var fromDate = new Date(from);
-    var toDate = new Date(to);
-    var diffMs = toDate - fromDate;
-    var diffDays = diffMs / (1000 * 60 * 60 * 24);
-    if (diffDays > 365) {
+    if (fromDate < oneYearAgo) {
       var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-      achShowAlert(isEn ? '<span style="color:#6161FF">Date</span> range must be within 1 year.' : '<span style="color:#6161FF">날짜</span>는 최근 1년 이내만 가능합니다.');
+      achShowAlert(isEn ? 'Date must be within the last 1 year.' : '날짜는 최근 1년 이내만 가능합니다.');
       return;
     }
   }
@@ -4402,3 +5224,967 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 // ══ [FEAT-AHACALL-HISTORY] END ══
+
+// ══════════════════════════════════════════
+// [VIEW-12] 고객 관리 / 문자 발송 (cm)
+// ══════════════════════════════════════════
+
+var cmCurrentCategory = 'all';
+
+function hideAllViews() {
+  document.getElementById('appBody').style.display = 'none';
+  document.getElementById('homeView').style.display = 'none';
+  var viewIds = [
+    'salesView','revSummaryView','salesHistoryView',
+    'customerListView','familyListView','dupClientListView','deletedClientView',
+    'clientMgmtView','serviceSetupView','prepaidSetupView','packageSetupView',
+    'productSetupView','productCatSetupView','otherCodeSetupView',
+    'pointSetupView','consentSetupView','detailReceiptSetupView',
+    'envSetupView','ahaCallSetupView','ahaCallHistoryView','noticeListView'
+  ];
+  viewIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+}
+
+function openClientMgmt() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('clientMgmtView').classList.add('show');
+  // 메인 카드 그리드로 리셋
+  document.getElementById('cmMain').style.display = '';
+  document.getElementById('cmSearchView').style.display = 'none';
+  document.getElementById('cmResultView').style.display = 'none';
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+// 카테고리별 설정
+var cmCategories = {
+  all:          { ko: '전체 고객',        en: 'All Clients' },
+  dormant:      { ko: '휴면고객',         en: 'Dormant Clients' },
+  byService:    { ko: '판매 서비스별 고객', en: 'Clients by Service' },
+  byProduct:    { ko: '판매 제품별 고객',  en: 'Clients by Product' },
+  byAmount:     { ko: '판매 금액별 고객',  en: 'Clients by Sales Amount' },
+  membership:   { ko: '회원권 보유 고객',  en: 'Membership Holders' },
+  prepaid:      { ko: '정액권별 고객',     en: 'Prepaid Card Clients' },
+  ticket:       { ko: '티켓별 고객',       en: 'Prepaid Service Clients' },
+  noMembership: { ko: '회원권 미보유 고객', en: 'Non-Membership Clients' },
+  birthday:     { ko: '생일 고객',        en: 'Birthday Clients' },
+  referral:     { ko: '소개 고객',        en: 'Referral Clients' }
+};
+
+function cmOpenCategory(cat) {
+  cmCurrentCategory = cat;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var info = cmCategories[cat] || cmCategories.all;
+
+  // 타이틀 설정
+  var titleEl = document.getElementById('cmSearchPanelTitle');
+  titleEl.textContent = isEn ? info.en : info.ko;
+  titleEl.setAttribute('data-ko', info.ko);
+  titleEl.setAttribute('data-en', info.en);
+
+  // 카테고리별 고유 필터 빌드
+  var filterHtml = cmBuildCategoryFilter(cat, isEn);
+  document.getElementById('cmCategoryFilters').innerHTML = filterHtml;
+
+  // 안내 메시지 표시 여부
+  var guideEl = document.getElementById('cmSearchGuide');
+  guideEl.style.display = (cat === 'all') ? '' : 'none';
+
+  // 상세 검색 리셋
+  document.getElementById('cmAdvToggle').checked = false;
+  document.getElementById('cmAdvancedPanel').style.display = 'none';
+  cmResetAdvancedFields();
+
+  // 생일 고객은 상세 검색 자동 체크 + 생일 필드 자동 체크
+  if (cat === 'birthday') {
+    document.getElementById('cmAdvToggle').checked = true;
+    document.getElementById('cmAdvancedPanel').style.display = '';
+    var chk = document.getElementById('cmChkBirthday');
+    chk.checked = true;
+    cmToggleField(chk);
+    var today = new Date();
+    var m = today.getMonth() + 1;
+    var d = today.getDate();
+    document.getElementById('cmBirthM1').value = m;
+    document.getElementById('cmBirthD1').value = d;
+    var lastDay = new Date(today.getFullYear(), m, 0).getDate();
+    document.getElementById('cmBirthM2').value = m;
+    document.getElementById('cmBirthD2').value = lastDay;
+  }
+
+  // 뷰 전환
+  document.getElementById('cmMain').style.display = 'none';
+  document.getElementById('cmSearchView').style.display = '';
+  document.getElementById('cmResultView').style.display = 'none';
+}
+
+function cmBuildCategoryFilter(cat, isEn) {
+  var today = new Date().toISOString().split('T')[0];
+
+  switch(cat) {
+    case 'dormant':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.no_visit" data-ko="미 방문" data-en="No visit">' + (isEn ? 'No visit' : '미 방문') + '</label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmDormantDays">' +
+        '<span data-i18n="cm.days_more" data-ko="일 이상" data-en="days or more">' + (isEn ? 'days or more' : '일 이상') + '</span>' +
+        '</div>';
+
+    case 'byService':
+      var svcCatOpts = '<option data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+      Object.keys(svServiceData).forEach(function(catName) {
+        svcCatOpts += '<option value="' + catName + '">' + catName + '</option>';
+      });
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
+        '<input type="date" class="cm-input-date" id="cmSvcDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmSvcDateTo" value="' + today + '">' +
+        '<label data-ko="서비스" data-en="Service" style="margin-left:16px;">' + (isEn ? 'Service' : '서비스') + '</label>' +
+        '<select id="cmSvcCat" onchange="cmSvcCatChange()">' + svcCatOpts + '</select>' +
+        '<select id="cmSvcItem" disabled><option data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '</div>';
+
+    case 'byProduct':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmProdDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmProdDateTo" value="' + today + '">' +
+        '<label data-i18n="cm.product" data-ko="제품" data-en="Product" style="margin-left:16px;">' + (isEn ? 'Product' : '제품') + '</label>' +
+        '<select class="cm-select" id="cmProdCat"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<select class="cm-select" id="cmProdItem"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '</div>';
+
+    case 'byAmount':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmAmtDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmAmtDateTo" value="' + today + '">' +
+        '<label data-i18n="cm.sales_amount" data-ko="판매액" data-en="Sales Amount" style="margin-left:16px;">' + (isEn ? 'Sales Amount' : '판매액') + '</label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmAmtFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmAmtTo">' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmAmtIncProduct" checked> <span data-i18n="cm.inc_product" data-ko="제품 포함" data-en="Include Products">' + (isEn ? 'Include Products' : '제품 포함') + '</span></label>' +
+        '</div>';
+
+    case 'membership':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.membership_type" data-ko="회원권" data-en="Membership">' + (isEn ? 'Membership' : '회원권') + '</label>' +
+        '<label class="cm-radio"><input type="radio" name="cmMemType" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmMemType" value="prepaid"> <span data-i18n="cm.prepaid_card" data-ko="정액권" data-en="Prepaid">' + (isEn ? 'Prepaid' : '정액권') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmMemType" value="ticket"> <span data-i18n="cm.ticket" data-ko="티켓" data-en="Ticket">' + (isEn ? 'Ticket' : '티켓') + '</span></label>' +
+        '<label style="margin-left:16px;"><input type="checkbox" id="cmMemFamily"> <span data-i18n="cm.inc_family" data-ko="가족 회원권 포함" data-en="Include Family Memberships">' + (isEn ? 'Include Family' : '가족 회원권 포함') + '</span></label>' +
+        '</div>';
+
+    case 'prepaid':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sale Date">' + (isEn ? 'Sale Date' : '판매일') + '</label>' +
+        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="period"> <span data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</span></label>' +
+        '</div>' +
+        '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry">' + (isEn ? 'Expiry' : '만료일') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmPrepaidExpFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmPrepaidExpTo" value="' + today + '">' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmPrepaidNoLimit" checked> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '<label style="margin-left:16px;" data-i18n="cm.prepaid_balance_range" data-ko="정액권별 잔액" data-en="Prepaid Balance">' + (isEn ? 'Prepaid Balance' : '정액권별 잔액') + '</label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmPrepaidBalFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmPrepaidBalTo">' +
+        '</div>' +
+        '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.prepaid_card" data-ko="정액권" data-en="Prepaid Card">' + (isEn ? 'Prepaid Card' : '정액권') + '</label>' +
+        '<select class="cm-select" id="cmPrepaidCard"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmPrepaidShowUnused"> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Unused">' + (isEn ? 'Show Unused' : '미사용 보기') + '</span></label>' +
+        '</div>';
+
+    case 'ticket':
+      return '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sale Date">' + (isEn ? 'Sale Date' : '판매일') + '</label>' +
+        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="period"> <span data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</span></label>' +
+        '</div>' +
+        '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry">' + (isEn ? 'Expiry' : '만료일') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmTicketExpFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmTicketExpTo" value="' + today + '">' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketNoLimit" checked> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '<label style="margin-left:16px;" data-i18n="cm.remaining" data-ko="잔여 횟수" data-en="Remaining">' + (isEn ? 'Remaining' : '잔여 횟수') + '</label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmTicketRemFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmTicketRemTo">' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketRemNoLimit"> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '</div>' +
+        '<div class="cm-cat-filter-row">' +
+        '<label data-i18n="cm.ticket" data-ko="티켓" data-en="Ticket">' + (isEn ? 'Ticket' : '티켓') + '</label>' +
+        '<select class="cm-select" id="cmTicketCat"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<select class="cm-select" id="cmTicketItem"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketShowUnused"> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Unused">' + (isEn ? 'Show Unused' : '미사용 보기') + '</span></label>' +
+        '</div>';
+
+    case 'noMembership':
+      return '<div class="cm-cat-filter-row">' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="hasPurchased"> <span data-i18n="cm.has_purchased" data-ko="회원권 구매 이력 있는 고객" data-en="Has Purchase History">' + (isEn ? 'Has Purchase History' : '회원권 구매 이력 있는 고객') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="noPurchase"> <span data-i18n="cm.no_purchase" data-ko="회원권 구매 이력 없는 고객" data-en="No Purchase History">' + (isEn ? 'No Purchase History' : '회원권 구매 이력 없는 고객') + '</span></label>' +
+        '<label style="margin-left:16px;"><input type="checkbox" id="cmNoMemFamily" checked> <span data-i18n="cm.inc_family_prepaid" data-ko="가족 정액권 포함" data-en="Include Family Prepaid">' + (isEn ? 'Include Family Prepaid' : '가족 정액권 포함') + '</span></label>' +
+        '</div>';
+
+    case 'referral':
+      return '<div class="cm-cat-filter-row">' +
+        '<label class="cm-radio"><input type="radio" name="cmRefType" value="regDate" checked> <span data-i18n="cm.reg_date" data-ko="등록일" data-en="Registration Date">' + (isEn ? 'Registration Date' : '등록일') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmRefType" value="client"> <span data-i18n="cm.client" data-ko="고객" data-en="Client">' + (isEn ? 'Client' : '고객') + '</span></label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmRefDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmRefDateTo" value="' + today + '">' +
+        '</div>';
+
+    default: // all, birthday
+      return '';
+  }
+}
+
+// 서비스 분류 선택 시 상세 서비스 셀렉트 업데이트
+function cmSvcCatChange() {
+  var catSel = document.getElementById('cmSvcCat');
+  var itemSel = document.getElementById('cmSvcItem');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var allText = isEn ? 'All' : '전체';
+  var catName = catSel.value;
+
+  itemSel.innerHTML = '<option>' + allText + '</option>';
+
+  if (catName && svServiceData[catName]) {
+    svServiceData[catName].forEach(function(svc) {
+      itemSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+    });
+    itemSel.disabled = false;
+  } else {
+    itemSel.disabled = true;
+  }
+}
+
+function cmToggleAdvanced() {
+  var panel = document.getElementById('cmAdvancedPanel');
+  panel.style.display = document.getElementById('cmAdvToggle').checked ? '' : 'none';
+}
+
+// 체크박스 클릭 시 같은 행의 input/select 활성/비활성 토글
+function cmToggleField(chk) {
+  var row = chk.closest('.cm-field-row');
+  if (!row) return;
+  var enabled = chk.checked;
+  row.querySelectorAll('select, input[type="text"], input[type="date"], input[type="radio"]').forEach(function(el) {
+    el.disabled = !enabled;
+  });
+}
+
+// 상세 검색 패널 내 모든 필드 초기화 (disabled 상태로)
+function cmResetAdvancedFields() {
+  var panel = document.getElementById('cmAdvancedPanel');
+  if (!panel) return;
+  panel.querySelectorAll('input[type="checkbox"]').forEach(function(chk) { chk.checked = false; });
+  panel.querySelectorAll('input[type="radio"]').forEach(function(r) { r.checked = false; r.disabled = true; });
+  panel.querySelectorAll('select').forEach(function(s) { s.selectedIndex = 0; s.disabled = true; });
+  panel.querySelectorAll('input[type="text"], input[type="date"]').forEach(function(inp) { inp.value = ''; inp.disabled = true; });
+}
+
+function cmGoBack() {
+  if (document.getElementById('cmResultView').style.display !== 'none') {
+    // 결과 → 검색
+    document.getElementById('cmResultView').style.display = 'none';
+    document.getElementById('cmSearchView').style.display = '';
+  } else {
+    // 검색 → 메인
+    document.getElementById('cmSearchView').style.display = 'none';
+    document.getElementById('cmMain').style.display = '';
+  }
+}
+
+function cmDoSearch() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var info = cmCategories[cmCurrentCategory] || cmCategories.all;
+
+  // 검색 조건 요약
+  var summary = '· ' + (isEn ? info.en : info.ko);
+  document.getElementById('cmConditionSummary').textContent = summary;
+
+  // 뷰 전환
+  document.getElementById('cmSearchView').style.display = 'none';
+  document.getElementById('cmResultView').style.display = '';
+}
+
+function cmEditCondition() {
+  document.getElementById('cmResultView').style.display = 'none';
+  document.getElementById('cmSearchView').style.display = '';
+}
+
+// 전체 선택/해제
+function cmToggleAll(el) {
+  var checks = document.querySelectorAll('#cmResultTbody .cm-row-check');
+  checks.forEach(function(c) { c.checked = el.checked; });
+}
+
+// 기타 작업 드롭다운
+function cmToggleOtherMenu() {
+  var menu = document.getElementById('cmOtherMenu');
+  menu.classList.toggle('open');
+}
+
+var cmPendingAction = '';
+
+function cmOtherAction(action) {
+  document.getElementById('cmOtherMenu').classList.remove('open');
+  cmPendingAction = action;
+
+  // 포인트 초기화 / 고객 삭제 → 대표자 본인 인증
+  if (action === 'resetPoints' || action === 'delete') {
+    cmOpenOwnerVerify();
+  } else {
+    // 등급/그룹/담당자/수신거부/다운로드 → 대표자 로그인
+    cmOpenOwnerLogin();
+  }
+}
+
+// 대표자 로그인 모달
+function cmOpenOwnerLogin() {
+  document.getElementById('cmOwnerId').value = '';
+  document.getElementById('cmOwnerPw').value = '';
+  document.getElementById('cmOwnerLoginOverlay').classList.add('show');
+}
+function cmCloseOwnerLogin() {
+  document.getElementById('cmOwnerLoginOverlay').classList.remove('show');
+  cmPendingAction = '';
+}
+function cmOwnerLoginConfirm() {
+  var action = cmPendingAction;
+  document.getElementById('cmOwnerLoginOverlay').classList.remove('show');
+
+  var actionModals = {
+    grade: 'cmGradeOverlay',
+    group: 'cmGroupOverlay',
+    staff: 'cmStaffOverlay',
+    smsOpt: 'cmSmsOptOverlay'
+  };
+
+  if (action === 'download') {
+    cmDownloadExcel();
+    cmPendingAction = '';
+    return;
+  }
+
+  var modalId = actionModals[action];
+  if (modalId) {
+    if (action === 'smsOpt') {
+      var cnt = document.querySelectorAll('#cmResultTbody .cm-row-check:checked').length;
+      document.getElementById('cmSmsOptCount').textContent = cnt;
+    }
+    document.getElementById(modalId).classList.add('show');
+  }
+}
+
+// 액션 모달 닫기
+function cmCloseActionModal(id) {
+  document.getElementById(id).classList.remove('show');
+  cmPendingAction = '';
+}
+
+// 액션 모달 확인
+function cmActionConfirm(id) {
+  document.getElementById(id).classList.remove('show');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  alert(isEn ? 'Changes applied.' : '변경이 적용되었습니다.');
+  cmPendingAction = '';
+}
+
+// 대표자 본인 인증 모달
+function cmOpenOwnerVerify() {
+  document.getElementById('cmOwnerVerifyOverlay').classList.add('show');
+}
+function cmCloseOwnerVerify() {
+  document.getElementById('cmOwnerVerifyOverlay').classList.remove('show');
+  cmPendingAction = '';
+}
+function cmOwnerVerifyConfirm() {
+  var action = cmPendingAction;
+  document.getElementById('cmOwnerVerifyOverlay').classList.remove('show');
+  // PASS 본인인증 팝업 열기
+  document.getElementById('cmPassOverlay').classList.add('show');
+}
+
+// 문자 발송 모달
+// ── 문자 샘플 데이터 ──
+var cmSmsSamples = {
+  sms: [
+    '(광고)000샵\n봄따라혜택이왔나\'봄\'\n10만원이상결제시10%OFF\n무료수신거부\n0808080132',
+    '(광고)000샵\n오늘도세일해\n\'올해첫방문고객\'\n20%할인\n무료수신거부\n0808080132',
+    '(광고)000샵\n\'후기를부탁해\'\n리뷰작성하면\n할인율이2배!!\n무료수신거부\n0808080132',
+    '(광고)000샵\n봄맞이특가!시술예약하세요!\n10만\'시술시5%할인\n무료수신거부\n0808080132',
+    '(광고)000샵\n봄맞이20%할인\n선착순100명\n·5천원할인권·\n추가증정\n무료수신거부\n0808080132',
+    '(광고)000샵\n친추하고\'봄\'\n너랑나랑20만원이상시술시10%\n할인\n무료수신거부\n0808080132',
+    '(광고)000샵\n·속보·4월한달간\n무조건5%할인^^\n예약가능!!\n무료수신거부\n0808080132',
+    '(광고)000샵\n°°설렘쿠폰°°\n10만원\'10%\n20만원\'20%\n무료수신거부\n0808080132'
+  ],
+  lms: [
+    '(광고)000샵\n\n오늘도 세일해\n☆───────\n04.01~04.31\n\n올해 첫 방문고객 30%\n추가인증시 10,000원 추가할인\n☆───────',
+    '(광고)000샵\n\n┃화장한봄날┃//)/ \n┃행복가득~(^^ㆍ)\n★.── ──+☆./\n\n봄따라 혜택이 와나봐\n♡♡♡♡♡♡♡♡♡♡♡♡♡\n할인쿠폰 이벤트 10% OFF',
+    '(광고)000샵\n\n리뷰 작성하면\n할인율이 두배!!\n\n■ ■ ■ ■ 할\n┃┃(0)┃┃ 착\n\n후기를 남겨주세요\n무료수신거부',
+    '(광고)000샵\n\n✿.·˙·.✿.·✿.\n※☆@@@☆※\n✿@☆@☆@@/\n＼☆^^^☆/\n►▶◀◄\n\nSPRING EVENT\n30만원 이상 시술 시 15%',
+    '(광고)000샵\n\n쿠폰(─0─)받아\n──m──m──\n┃봄맞이 20%┃\n\n4월 첫 구매 고객에게\n봄맞이 쿠폰을 씁니다!\n\n선착순 100분께는 5,000원\n할인권을 추가로 증정해요♥',
+    '(광고)000샵\n\n◎ ◎\n/■▼＼\n)) ((\n"친추하고봄"\n\n봄과 함께하는\n친구추천 이벤트\n\n/ 함께 받는 봉선물!\n/ 20만원 이상 시술 시 10%'
+  ],
+  mms: [
+    '(광고)000샵\n\n오늘도 세일해\n☆───────\n04.01~04.31\n\n올해 첫 방문고객 30%\n추가인증시 10,000원 추가할인\n☆───────',
+    '(광고)000샵\n\n┃화장한봄날┃//)/ \n┃행복가득~(^^ㆍ)\n★.── ──+☆./\n\n봄따라 혜택이 와나봐\n♡♡♡♡♡♡♡♡♡♡♡♡♡\n할인쿠폰 이벤트 10% OFF',
+    '(광고)000샵\n\n리뷰 작성하면\n할인율이 두배!!\n\n■ ■ ■ ■ 할\n┃┃(0)┃┃ 착\n\n후기를 남겨주세요\n무료수신거부',
+    '(광고)000샵\n\n✿.·˙·.✿.·✿.\n※☆@@@☆※\n✿@☆@☆@@/\n＼☆^^^☆/\n►▶◀◄\n\nSPRING EVENT\n30만원 이상 시술 시 15%',
+    '(광고)000샵\n\n쿠폰(─0─)받아\n──m──m──\n┃봄맞이 20%┃\n\n4월 첫 구매 고객에게\n봄맞이 쿠폰을 씁니다!',
+    '(광고)000샵\n\n◎ ◎\n/■▼＼\n)) ((\n"친추하고봄"\n\n봄과 함께하는\n친구추천 이벤트'
+  ]
+};
+var cmMmsImages = [
+  'https://placehold.co/300x400/FFE0E0/D32F2F?text=봄맞이+쿠폰+전송%0A10%25+할인',
+  'https://placehold.co/300x400/E8F5E9/388E3C?text=봄+시술+할인%0A10%25+할인',
+  'https://placehold.co/300x400/FFF8E1/F9A825?text=봄날+첫방문고객%0ACOUPON+20%25',
+  'https://placehold.co/300x400/FCE4EC/E91E63?text=봄+따라%0A혜택이+왔나봄%0A10%25',
+  'https://placehold.co/300x400/E3F2FD/1565C0?text=봄맞이+설렘쿠폰%0A20%25+할인+제공',
+  'https://placehold.co/300x400/F3E5F5/7B1FA2?text=4월+맞이+특별+이벤트%0A10%25'
+];
+var cmSmsTypeInfo = {
+  sms: { label:'SMS', cost:22, maxBytes:85, cols:4, perPage:8 },
+  lms: { label:'LMS', cost:49, maxBytes:2000, cols:3, perPage:6 },
+  mms: { label:'MMS', cost:198, maxBytes:2000, cols:3, perPage:6 }
+};
+var cmCurrentType = 'lms';
+var cmCurrentPage = 1;
+var cmMmsViewMode = 'image';
+
+function cmOpenSmsModal() {
+  document.getElementById('cmSmsOverlay').classList.add('show');
+  document.getElementById('cmSmsModal').classList.add('show');
+  cmUpdateSmsBytes();
+  cmSmsTypeChange(document.getElementById('cmSmsType').value);
+}
+
+function cmCloseSmsModal() {
+  document.getElementById('cmSmsOverlay').classList.remove('show');
+  document.getElementById('cmSmsModal').classList.remove('show');
+}
+
+function cmUpdateSmsBytes() {
+  var ta = document.getElementById('cmSmsContent');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) {
+    bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  }
+  var el = document.getElementById('cmSmsBytes');
+  if (el) el.textContent = bytes;
+}
+
+function cmInsertConvert(text) {
+  var ta = document.getElementById('cmSmsContent');
+  if (!ta) return;
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  ta.value = ta.value.substring(0, start) + text + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + text.length;
+  ta.focus();
+  cmUpdateSmsBytes();
+}
+
+function cmSmsTabSwitch(el, mode) {
+  var tabs = el.parentElement.querySelectorAll('.cm-sms-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var row = document.getElementById('cmSmsScheduleRow');
+  if (!row) return;
+  if (mode === 'scheduled') {
+    row.style.display = 'flex';
+    cmInitScheduleDateTime();
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+function cmInitScheduleDateTime() {
+  var now = new Date();
+  var dateInput = document.getElementById('cmSmsScheduleDate');
+  var hourSel = document.getElementById('cmSmsScheduleHour');
+  var minSel = document.getElementById('cmSmsScheduleMin');
+
+  // 날짜 기본값: 오늘, 최소값: 오늘
+  var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  dateInput.value = today;
+  dateInput.min = today;
+
+  // 시간 옵션 생성 (이미 생성되어 있으면 스킵)
+  if (hourSel.options.length === 0) {
+    for (var h = 0; h < 24; h++) {
+      var opt = document.createElement('option');
+      opt.value = h;
+      opt.textContent = String(h).padStart(2, '0');
+      hourSel.appendChild(opt);
+    }
+  }
+  if (minSel.options.length === 0) {
+    for (var m = 0; m < 60; m += 5) {
+      var opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = String(m).padStart(2, '0');
+      minSel.appendChild(opt);
+    }
+  }
+
+  // 현재 시간 기본값
+  hourSel.value = now.getHours();
+  // 가장 가까운 5분 단위로 올림
+  var roundedMin = Math.ceil(now.getMinutes() / 5) * 5;
+  if (roundedMin >= 60) roundedMin = 55;
+  minSel.value = roundedMin;
+
+  // 날짜 변경 시 과거 시간 제한
+  dateInput.onchange = function() { cmValidateScheduleTime(); };
+  hourSel.onchange = function() { cmValidateScheduleTime(); };
+  minSel.onchange = function() { cmValidateScheduleTime(); };
+}
+
+function cmValidateScheduleTime() {
+  var now = new Date();
+  var dateInput = document.getElementById('cmSmsScheduleDate');
+  var hourSel = document.getElementById('cmSmsScheduleHour');
+  var minSel = document.getElementById('cmSmsScheduleMin');
+  var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+
+  if (dateInput.value === today) {
+    // 오늘이면 현재 시간 이전은 선택 불가 → 자동 보정
+    var selH = parseInt(hourSel.value);
+    var selM = parseInt(minSel.value);
+    if (selH < now.getHours() || (selH === now.getHours() && selM <= now.getMinutes())) {
+      hourSel.value = now.getHours();
+      var roundedMin = Math.ceil(now.getMinutes() / 5) * 5;
+      if (roundedMin >= 60) { roundedMin = 0; hourSel.value = Math.min(now.getHours() + 1, 23); }
+      minSel.value = roundedMin;
+    }
+  }
+}
+
+function cmInsertOptout() {
+  var ta = document.getElementById('cmSmsContent');
+  if (!ta) return;
+  var optoutText = '무료수신거부 080-808-0132';
+  // 이미 삽입되어 있으면 중복 삽입하지 않음
+  if (ta.value.indexOf(optoutText) !== -1) return;
+  // 텍스트 끝에 줄바꿈 후 삽입
+  var newLine = ta.value.length > 0 ? '\n' : '';
+  ta.value = ta.value + newLine + optoutText;
+  ta.selectionStart = ta.selectionEnd = ta.value.length;
+  ta.focus();
+  cmUpdateSmsBytes();
+}
+
+// 특수문자 팝업
+var cmSpecialCharsInit = false;
+function cmToggleSpecialChars() {
+  var el = document.getElementById('cmSpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    if (!cmSpecialCharsInit) {
+      cmSpecialCharsInit = true;
+      var chars = '#&*@§※☆★○●◎◇◆◈□■△▲▽▼→←↑↓↔═▷◁▶◀▣▤▥▦▧▨▩㉿㈜♩♪♬™℡℗®ℓ㏂㏘TELa.m.p.m.!\',./:;^_—¨°··…‥//＼∼´∧∨∽˘ˇ¸˛±×÷≠≤≥∞∴♂♀∠⊥⌒∂∇≡≒«»√∝∵∫∪∩'.split('');
+      var grid = document.getElementById('cmSpecialGrid');
+      chars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        btn.textContent = c;
+        btn.onclick = function() { cmInsertConvert(c); };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// 문자저장 모달
+function cmOpenMsgSaveModal() {
+  document.getElementById('cmMsgSaveOverlay').classList.add('show');
+}
+function cmCloseMsgSaveModal() {
+  document.getElementById('cmMsgSaveOverlay').classList.remove('show');
+}
+function cmDoSaveMsg() {
+  var ta = document.getElementById('cmSmsContent');
+  if (!ta || !ta.value.trim()) { cmCloseMsgSaveModal(); return; }
+  cmAddSavedMsg(ta.value.trim());
+  cmCloseMsgSaveModal();
+}
+
+function cmAddSavedMsg(text) {
+  var grid = document.getElementById('cmMymsgGrid');
+  if (!grid) return;
+  var bytes = 0;
+  for (var i = 0; i < text.length; i++) bytes += text.charCodeAt(i) > 127 ? 2 : 1;
+
+  var card = document.createElement('div');
+  card.className = 'cm-mymsg-card';
+  card.setAttribute('data-fulltext', text);
+  card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
+    + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '</div>';
+  card.querySelector('.cm-mymsg-card-body').onclick = function() {
+    var smsTA = document.getElementById('cmSmsContent');
+    if (smsTA) { smsTA.value = text; smsTA.focus(); cmUpdateSmsBytes(); }
+  };
+  grid.appendChild(card);
+}
+
+// 테스트발송 모달
+function cmOpenTestSendModal() {
+  document.getElementById('cmTestSendOverlay').classList.add('show');
+}
+function cmCloseTestSendModal() {
+  document.getElementById('cmTestSendOverlay').classList.remove('show');
+}
+function cmDoTestSend() {
+  cmCloseTestSendModal();
+}
+
+function cmSelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var text = body.innerText || body.textContent;
+  var ta = document.getElementById('cmSmsContent');
+  if (!ta) return;
+  ta.value = text;
+  ta.focus();
+  cmUpdateSmsBytes();
+  var modal = document.querySelector('.cm-sms-modal-scroll');
+  if (modal) modal.scrollTop = 0;
+}
+
+function cmCalcBytes(text) {
+  var b = 0;
+  for (var i = 0; i < text.length; i++) b += text.charCodeAt(i) > 127 ? 2 : 1;
+  return b;
+}
+
+function cmSmsTypeChange(type) {
+  cmCurrentType = type;
+  cmCurrentPage = 1;
+  var info = cmSmsTypeInfo[type];
+  // 비용 업데이트
+  var costLabel = document.querySelector('#cmSmsTargetCount');
+  var targetCount = costLabel ? parseInt(costLabel.textContent) || 3 : 3;
+  var costTd = document.querySelectorAll('.cm-sms-info-table td');
+  if (costTd.length >= 4) {
+    costTd[2].textContent = info.cost + 'p';
+    costTd[4].textContent = (info.cost * targetCount) + 'p';
+  }
+  // 건당비용 라벨
+  var costRow = document.querySelectorAll('.cm-sms-info-table tr');
+  if (costRow.length >= 2) {
+    var labelTd = costRow[1].querySelector('td:first-child');
+    if (labelTd) labelTd.textContent = '건당비용 (' + info.label + ')';
+  }
+  // MMS 이미지영역 / 문자저장 토글
+  var mmsArea = document.getElementById('cmMmsImageArea');
+  var saveMsgBtn = document.querySelector('.cm-sms-btn-row .cm-sms-btn-outline[onclick*="cmOpenMsgSaveModal"]');
+  if (type === 'mms') {
+    mmsArea.style.display = '';
+    if (saveMsgBtn) saveMsgBtn.style.display = 'none';
+  } else {
+    mmsArea.style.display = 'none';
+    if (saveMsgBtn) saveMsgBtn.style.display = '';
+  }
+  // MMS 뷰 토글
+  var toggle = document.getElementById('cmMmsViewToggle');
+  toggle.style.display = type === 'mms' ? 'flex' : 'none';
+  // bytes 최대값
+  var bytesDiv = document.querySelector('.cm-sms-bytes');
+  if (bytesDiv) {
+    var span = bytesDiv.querySelector('span');
+    var cur = span ? span.textContent : '0';
+    bytesDiv.innerHTML = '<span id="cmSmsBytes">' + cur + '</span> / ' + info.maxBytes + ' Bytes';
+  }
+  // 타이틀 업데이트
+  var label = document.getElementById('cmSampleTypeLabel');
+  if (label) label.textContent = info.label;
+  // 그리드 컬럼 업데이트
+  var grid = document.getElementById('cmSmsPreview');
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  // 렌더링
+  cmRenderSamples();
+}
+
+function cmRenderSamples() {
+  var grid = document.getElementById('cmSmsPreview');
+  grid.innerHTML = '';
+  grid.classList.remove('mms-image');
+  var info = cmSmsTypeInfo[cmCurrentType];
+
+  if (cmCurrentType === 'mms' && cmMmsViewMode === 'image') {
+    grid.classList.add('mms-image');
+    var start = (cmCurrentPage - 1) * info.perPage;
+    var items = cmMmsImages.slice(start, start + info.perPage);
+    items.forEach(function(src) {
+      var card = document.createElement('div');
+      card.className = 'cm-mms-image-card';
+      card.innerHTML = '<img src="' + src + '" alt="MMS sample">';
+      grid.appendChild(card);
+    });
+    cmUpdatePaging(cmMmsImages.length, info.perPage);
+  } else {
+    var samples = cmSmsSamples[cmCurrentType] || cmSmsSamples.lms;
+    var start = (cmCurrentPage - 1) * info.perPage;
+    var items = samples.slice(start, start + info.perPage);
+    items.forEach(function(text) {
+      var bytes = cmCalcBytes(text);
+      var card = document.createElement('div');
+      card.className = 'cm-sms-preview-card';
+      card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
+        + '<div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+      grid.appendChild(card);
+    });
+    cmUpdatePaging(samples.length, info.perPage);
+  }
+}
+
+function cmUpdatePaging(total, perPage) {
+  var totalPages = Math.ceil(total / perPage);
+  var cur = document.getElementById('cmSmsPageCur');
+  var tot = document.getElementById('cmSmsPageTotal');
+  if (tot) tot.textContent = totalPages;
+  if (cur) cur.textContent = cmCurrentPage;
+}
+
+function cmSmsPageGo(dir) {
+  var info = cmSmsTypeInfo[cmCurrentType];
+  var samples = (cmCurrentType === 'mms' && cmMmsViewMode === 'image') ? cmMmsImages : (cmSmsSamples[cmCurrentType] || cmSmsSamples.lms);
+  var totalPages = Math.ceil(samples.length / info.perPage);
+  if (dir === 'first') cmCurrentPage = 1;
+  else if (dir === 'prev') cmCurrentPage = Math.max(1, cmCurrentPage - 1);
+  else if (dir === 'next') cmCurrentPage = Math.min(totalPages, cmCurrentPage + 1);
+  else if (dir === 'last') cmCurrentPage = totalPages;
+  cmRenderSamples();
+}
+
+function cmMmsViewSwitch(mode) {
+  cmMmsViewMode = mode;
+  cmCurrentPage = 1;
+  cmRenderSamples();
+}
+
+function cmOpenSpamGuide() {
+  document.getElementById('cmSpamGuideOverlay').classList.add('show');
+}
+function cmCloseSpamGuide() {
+  document.getElementById('cmSpamGuideOverlay').classList.remove('show');
+}
+function cmOpenAdGuide() {
+  document.getElementById('cmAdGuideOverlay').classList.add('show');
+}
+function cmCloseAdGuide() {
+  document.getElementById('cmAdGuideOverlay').classList.remove('show');
+}
+
+function cmGoSenderSetup() {
+  cmCloseSmsModal();
+}
+
+function cmSmsSampleTabSwitch(el, mode) {
+  var tabs = el.parentElement.querySelectorAll('.cm-sms-sample-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var panelSamples = document.getElementById('cmSmsPanelSamples');
+  var panelMymsgs = document.getElementById('cmSmsPanelMymsgs');
+  if (mode === 'samples') {
+    panelSamples.style.display = '';
+    panelMymsgs.style.display = 'none';
+  } else {
+    panelSamples.style.display = 'none';
+    panelMymsgs.style.display = '';
+  }
+}
+
+function cmOpenMymsgCategoryModal() {
+  document.getElementById('cmMymsgCatOverlay').classList.add('show');
+}
+function cmCloseMymsgCategoryModal() {
+  document.getElementById('cmMymsgCatOverlay').classList.remove('show');
+}
+function cmSaveMymsgCategory() {
+  var name = document.getElementById('cmMymsgCatName').value.trim();
+  if (!name) return;
+  var sel = document.getElementById('cmMymsgCategory');
+  var opt = document.createElement('option');
+  opt.textContent = name;
+  sel.appendChild(opt);
+  sel.value = name;
+  document.getElementById('cmMymsgCatName').value = '';
+  cmCloseMymsgCategoryModal();
+}
+function cmToggleMymsgEditor() {
+  // 그리드에 새 편집 카드 추가
+  var grid = document.getElementById('cmMymsgGrid');
+  if (!grid) return;
+  // 이미 편집 중인 카드가 있으면 추가하지 않음
+  if (grid.querySelector('.cm-mymsg-card.editing')) return;
+  var card = document.createElement('div');
+  card.className = 'cm-mymsg-card editing';
+  card.innerHTML = '<textarea placeholder="메세지 내용을 입력하세요" oninput="cmUpdateCardBytes(this)"></textarea>'
+    + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '</div>';
+  grid.appendChild(card);
+  card.querySelector('textarea').focus();
+}
+
+function cmUpdateCardBytes(ta) {
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var bytesEl = ta.closest('.cm-mymsg-card').querySelector('.cm-mymsg-card-bytes');
+  if (bytesEl) bytesEl.textContent = bytes + ' / 2000 Bytes';
+}
+
+function cmSaveCard(btn) {
+  var card = btn.closest('.cm-mymsg-card');
+  var ta = card.querySelector('textarea');
+  if (!ta || !ta.value.trim()) return;
+  var text = ta.value.trim();
+  var bytes = 0;
+  for (var i = 0; i < text.length; i++) bytes += text.charCodeAt(i) > 127 ? 2 : 1;
+
+  // 편집 카드를 저장된 카드로 변환
+  card.classList.remove('editing');
+  card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
+    + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '</div>';
+  card.setAttribute('data-fulltext', text);
+  // 클릭 시 문자 입력창에 삽입
+  card.querySelector('.cm-mymsg-card-body').onclick = function() {
+    var smsTA = document.getElementById('cmSmsContent');
+    if (smsTA) { smsTA.value = text; smsTA.focus(); cmUpdateSmsBytes(); }
+  };
+}
+
+function cmEditCard(btn) {
+  var card = btn.closest('.cm-mymsg-card');
+  var text = card.getAttribute('data-fulltext') || '';
+  var bytes = 0;
+  for (var i = 0; i < text.length; i++) bytes += text.charCodeAt(i) > 127 ? 2 : 1;
+  card.classList.add('editing');
+  card.innerHTML = '<textarea oninput="cmUpdateCardBytes(this)">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea>'
+    + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '</div>';
+  card.querySelector('textarea').focus();
+}
+
+function cmGoAutoSmsSetup() {
+  cmCloseSmsModal();
+}
+
+function cmSendSms() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  alert(isEn ? 'SMS send feature.' : '문자 발송 기능입니다.');
+}
+
+// 드롭다운 외부 클릭 닫기
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('cmOtherMenu');
+  var btn = document.getElementById('cmOtherBtn');
+  if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+// 문자 바이트 카운트 - cmSmsContent & cmMymsgTextarea
+document.addEventListener('DOMContentLoaded', function() {
+  var ta = document.getElementById('cmSmsContent');
+  if (ta) {
+    ta.addEventListener('input', cmUpdateSmsBytes);
+  }
+  var ta2 = document.getElementById('cmMymsgTextarea');
+  if (ta2) {
+    ta2.addEventListener('input', cmUpdateMymsgBytes);
+  }
+});
+// PASS 본인인증
+function cmClosePass() {
+  document.getElementById('cmPassOverlay').classList.remove('show');
+  cmPendingAction = '';
+}
+function cmSelectCarrier(el) {
+  document.querySelectorAll('.cm-pass-carrier').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+}
+function cmPassToggleAll(el) {
+  document.querySelectorAll('.cm-pass-chk').forEach(function(c) { c.checked = el.checked; });
+}
+function cmPassSubmit() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  cmClosePass();
+  alert(isEn ? 'Identity verified. Action completed.' : '본인인증이 완료되었습니다. 처리가 완료되었습니다.');
+  cmPendingAction = '';
+}
+// 고객 자료 엑셀 다운로드
+function cmDownloadExcel() {
+  var catInfo = cmCategories[cmCurrentCategory] || cmCategories.all;
+  var catName = catInfo.ko;
+  var now = new Date();
+  var ts = now.getFullYear().toString() +
+    ('0' + (now.getMonth()+1)).slice(-2) +
+    ('0' + now.getDate()).slice(-2) +
+    ('0' + now.getHours()).slice(-2) + '_' +
+    ('0' + now.getMinutes()).slice(-2);
+  var fileName = '고객 관리_' + catName + '_(' + ts + ').xlsx';
+  var printTime = now.getFullYear() + '-' +
+    ('0' + (now.getMonth()+1)).slice(-2) + '-' +
+    ('0' + now.getDate()).slice(-2) + ' ' +
+    ('0' + now.getHours()).slice(-2) + ':' +
+    ('0' + now.getMinutes()).slice(-2) + ':' +
+    ('0' + now.getSeconds()).slice(-2);
+
+  // 테이블 데이터 수집
+  var rows = document.querySelectorAll('#cmResultTbody tr');
+  var data = [];
+  rows.forEach(function(tr) {
+    var cells = tr.querySelectorAll('td');
+    if (cells.length < 7) return;
+    data.push({
+      name: cells[1].textContent.trim(),
+      phone: cells[2].textContent.trim(),
+      lastVisit: cells[3].textContent.trim(),
+      grade: cells[4].textContent.trim(),
+      staff: cells[5].textContent.trim(),
+      sales: cells[6].textContent.trim()
+    });
+  });
+
+  var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:spreadsheet" xmlns="http://www.w3.org/TR/REC-html40">';
+  html += '<head><meta charset="utf-8"><style>td,th{mso-number-format:"\\@";border:1px solid #000;padding:4px 8px;font-size:12px;font-family:"맑은 고딕";}th{background:#C0C0C0;font-weight:bold;text-align:center;}</style></head><body>';
+  html += '<table>';
+  html += '<tr><td colspan="6" style="font-size:16px;font-weight:bold;border:1px solid #000;">고객 관리</td></tr>';
+  html += '<tr><td colspan="6" style="font-size:14px;font-weight:bold;border:1px solid #000;">' + catName + '</td></tr>';
+  html += '<tr><td colspan="6" style="border:none;"></td></tr>';
+  html += '<tr><td colspan="6" style="font-size:11px;border:none;">출력일시 : ' + printTime + '</td></tr>';
+  html += '<tr><th>고객명</th><th>휴대폰 번호</th><th>최근 방문일</th><th>고객 등급</th><th>담당자</th><th>총 판매액</th></tr>';
+  data.forEach(function(r) {
+    html += '<tr><td style="text-align:center;">' + r.name + '</td><td style="text-align:center;">' + r.phone + '</td><td style="text-align:center;">' + r.lastVisit + '</td><td style="text-align:center;">' + r.grade + '</td><td style="text-align:center;">' + r.staff + '</td><td style="text-align:right;">' + r.sales + '</td></tr>';
+  });
+  html += '</table></body></html>';
+
+  var blob = new Blob(['\ufeff' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+// ══ [VIEW-12] 고객 관리 / 문자 발송 END ══
