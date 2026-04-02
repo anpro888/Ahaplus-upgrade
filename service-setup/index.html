@@ -2045,7 +2045,7 @@
       </table>
     </div>
     <div class="dc-bulk-actions">
-      <button class="dc-bulk-btn" onclick="dcDeleteSelected()" data-i18n="dc.delete_selected" data-ko="선택고객 삭제" data-en="Delete Selected">선택고객 삭제</button>
+      <button class="dc-bulk-btn dc-danger" onclick="dcDeleteSelected()" data-i18n="dc.delete_selected" data-ko="선택고객 삭제" data-en="Delete Client">선택고객 삭제</button>
     </div>
     <div class="dc-paging" id="dcPaging" style="display:none;">
       <span class="dc-paging-info" id="dcPageInfo"></span>
@@ -2067,7 +2067,7 @@
     <div class="dlc-filter-row">
       <div class="dlc-filter-group">
         <label data-i18n="dlc.label_client" data-ko="고객" data-en="Client">고객</label>
-        <input type="text" class="dlc-input" id="dlcSearchInput" data-i18n-ph-ko="고객명 또는 휴대폰번호" data-i18n-ph-en="Name or mobile number" placeholder="고객명 또는 휴대폰번호">
+        <input type="text" class="dlc-input" id="dlcSearchInput" data-i18n-ph-ko="고객명 또는 휴대폰번호" data-i18n-ph-en="Name or Mobile Number" placeholder="고객명 또는 휴대폰번호">
       </div>
       <button class="dlc-search-btn" onclick="dlcSearch()">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
@@ -2096,8 +2096,8 @@
       </table>
     </div>
     <div class="dlc-bulk-actions">
-      <button class="dlc-bulk-btn" onclick="dlcRestoreSelected()" data-i18n="dlc.restore" data-ko="삭제고객 복구" data-en="Restore Client">삭제고객 복구</button>
-      <button class="dlc-bulk-btn" onclick="dlcPermDeleteSelected()" data-i18n="dlc.perm_delete" data-ko="고객 완전 삭제" data-en="Permanently Delete">고객 완전 삭제</button>
+      <button class="dlc-bulk-btn" onclick="dlcRestoreSelected()" data-i18n="dlc.restore" data-ko="삭제고객 복구" data-en="Recover Client">삭제고객 복구</button>
+      <button class="dlc-bulk-btn dlc-danger" onclick="dlcPermDeleteSelected()" data-i18n="dlc.perm_delete" data-ko="고객 완전 삭제" data-en="Delete Completely">고객 완전 삭제</button>
     </div>
     <div class="dlc-paging" id="dlcPaging" style="display:none;">
       <span class="dlc-paging-info" id="dlcPageInfo"></span>
@@ -2141,8 +2141,8 @@
     <div style="padding:0 24px 20px;">
       <div style="border-top:1px solid #E0E0E0;padding-top:16px;">
         <div class="ach-modal-footer-btns">
-          <button class="btn btn-danger" onclick="confirmDlcPermDelete()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
           <button class="btn btn-secondary" onclick="closeDlcDeleteConfirmModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+          <button class="btn btn-danger-outline" onclick="confirmDlcPermDelete()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
         </div>
       </div>
     </div>
@@ -4378,7 +4378,7 @@
           </h3>
         </div>
         <div class="cst-header-right">
-          <button class="cst-back-btn" onclick="cstBackToList()" data-i18n="common.back" data-ko="뒤로가기" data-en="Back">뒤로가기</button>
+          <button class="cst-back-btn" onclick="cstBackToList()" data-i18n="common.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
         </div>
       </div>
     </div>
@@ -4530,7 +4530,7 @@
           </h3>
         </div>
         <div class="cst-header-right">
-          <button class="cst-back-btn" onclick="cstBackToList()" data-i18n="common.back" data-ko="뒤로가기" data-en="Back">뒤로가기</button>
+          <button class="cst-back-btn" onclick="cstBackToList()" data-i18n="common.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
         </div>
       </div>
     </div>
@@ -4562,6 +4562,7 @@
               <button class="cst-reg-action-btn cst-content-add" onclick="cstAddClientQuestion()" data-i18n="sv.consent_add_question" data-ko="고객 질문 추가" data-en="Add Client Questions">고객 질문 추가</button>
               <button class="cst-reg-action-btn cst-content-add" onclick="cstAddContent()" data-i18n="sv.consent_add_content" data-ko="내용 추가" data-en="Add Contents">내용 추가</button>
             </div>
+            <div class="cst-drag-hint" data-i18n="sv.consent_drag_hint" data-ko="* 순서를 변경하려면 항목을 드래그 하세요." data-en="* To change the order, drag and drop the item.">* 순서를 변경하려면 항목을 드래그 하세요.</div>
           </div>
           <!-- 동적 섹션 컨테이너 -->
           <div id="cstSectionsContainer"></div>
@@ -4584,8 +4585,8 @@
         </div>
         <!-- 하단 버튼 -->
         <div class="cst-reg-footer">
-          <button class="cst-save-btn" onclick="cstSaveForm()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
           <button class="cst-back-btn" onclick="cstBackToList()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+          <button class="cst-save-btn" onclick="cstSaveForm()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
         </div>
       </div>
     </div>
@@ -5530,7 +5531,7 @@
   <div class="cm-main" id="cmMain">
     <div class="cm-header-bar">
       <div class="cm-header">
-        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management / SMS">고객 관리 / 문자 발송</h3>
+        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management">고객 관리 / 문자 발송</h3>
       </div>
     </div>
     <div class="cm-card-grid">
@@ -5541,7 +5542,7 @@
         </div>
         <div class="cm-card-text">
           <div class="cm-card-title" data-i18n="cm.cat_all" data-ko="전체 고객" data-en="All Clients">전체 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_all_desc" data-ko="전체 고객을 조회합니다. 상세검색을 이용해 고객을 선별할 수 있습니다." data-en="View all clients. Use advanced search to filter clients.">전체 고객을 조회합니다. 상세검색을 이용해 고객을 선별할 수 있습니다.</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_all_desc" data-ko="전체 고객을 조회합니다. 상세검색을 이용해 고객을 선별할 수 있습니다." data-en="You can see all clients or filter clients with fine filters.">전체 고객을 조회합니다. 상세검색을 이용해 고객을 선별할 수 있습니다.</div>
         </div>
       </div>
       <!-- 휴면고객 -->
@@ -5551,7 +5552,7 @@
         </div>
         <div class="cm-card-text">
           <div class="cm-card-title" data-i18n="cm.cat_dormant" data-ko="휴면고객" data-en="Dormant Clients">휴면고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_dormant_desc" data-ko="일정 기간 방문하지 않은 고객을 조회합니다. 재방문 유도 문자를 보내거나 오래된 고객 정보는 정리해 보세요." data-en="View clients who haven't visited for a certain period.">일정 기간 방문하지 않은 고객을 조회합니다. 재방문 유도 문자를 보내거나 오래된 고객 정보는 정리해 보세요.</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_dormant_desc" data-ko="일정 기간 방문하지 않은 고객을 조회합니다. 재방문 유도 문자를 보내거나 오래된 고객 정보는 정리해 보세요." data-en="Search clients haven't visited for a while and send messages to encourage them to come back.">일정 기간 방문하지 않은 고객을 조회합니다. 재방문 유도 문자를 보내거나 오래된 고객 정보는 정리해 보세요.</div>
         </div>
       </div>
       <!-- 판매 서비스별 고객 -->
@@ -5560,8 +5561,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h5M8 16h6"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_by_service" data-ko="판매 서비스별 고객" data-en="Clients by Service">판매 서비스별 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_by_service_desc" data-ko="특정 서비스를 받은 고객을 조회합니다. 시술 종류별로 고객님께 관리 문자를 보내 보세요." data-en="View clients who received specific services.">특정 서비스를 받은 고객을 조회합니다. 시술 종류별로 고객님께 관리 문자를 보내 보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_by_service" data-ko="판매 서비스별 고객" data-en="Clients by Sales Service">판매 서비스별 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_by_service_desc" data-ko="특정 서비스를 받은 고객을 조회합니다. 시술 종류별로 고객님께 관리 문자를 보내 보세요." data-en="Search clients who have received a specific service. Send care texts to clients by service.">특정 서비스를 받은 고객을 조회합니다. 시술 종류별로 고객님께 관리 문자를 보내 보세요.</div>
         </div>
       </div>
       <!-- 판매 제품별 고객 -->
@@ -5570,8 +5571,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4 8 4 8-4z"/><path d="M4 7v8l8 4 8-4V7"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_by_product" data-ko="판매 제품별 고객" data-en="Clients by Product">판매 제품별 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_by_product_desc" data-ko="특정 제품을 구입한 고객을 조회합니다. 판매 제품별로 고객님께 관리 문자를 보내 보세요." data-en="View clients who purchased specific products.">특정 제품을 구입한 고객을 조회합니다. 판매 제품별로 고객님께 관리 문자를 보내 보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_by_product" data-ko="판매 제품별 고객" data-en="Clients by Sales Product">판매 제품별 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_by_product_desc" data-ko="특정 제품을 구입한 고객을 조회합니다. 판매 제품별로 고객님께 관리 문자를 보내 보세요." data-en="Search clients who have received a specific service. Send care texts to clients by product.">특정 제품을 구입한 고객을 조회합니다. 판매 제품별로 고객님께 관리 문자를 보내 보세요.</div>
         </div>
       </div>
       <!-- 판매 금액별 고객 -->
@@ -5581,7 +5582,7 @@
         </div>
         <div class="cm-card-text">
           <div class="cm-card-title" data-i18n="cm.cat_by_amount" data-ko="판매 금액별 고객" data-en="Clients by Sales Amount">판매 금액별 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_by_amount_desc" data-ko="판매금액으로 고객을 선별합니다. 판매금액에 따라 고객의 등급을 분류해 관리해 보세요." data-en="Filter clients by sales amount.">판매금액으로 고객을 선별합니다. 판매금액에 따라 고객의 등급을 분류해 관리해 보세요.</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_by_amount_desc" data-ko="판매금액으로 고객을 선별합니다. 판매금액에 따라 고객의 등급을 분류해 관리해 보세요." data-en="Search clients by sales amount. Manage your clients by tiering them based on their sales amount.">판매금액으로 고객을 선별합니다. 판매금액에 따라 고객의 등급을 분류해 관리해 보세요.</div>
         </div>
       </div>
       <!-- 회원권 보유 고객 -->
@@ -5590,8 +5591,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#00BCD4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h3M7 14h5"/><circle cx="17" cy="12" r="2"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_membership" data-ko="회원권 보유 고객" data-en="Membership Holders">회원권 보유 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_membership_desc" data-ko="현재 유효한 회원권을 보유한 고객을 조회합니다. 회원권 고객에게 재구매를 유도해 보세요." data-en="View clients with active memberships.">현재 유효한 회원권을 보유한 고객을 조회합니다. 회원권 고객에게 재구매를 유도해 보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_membership" data-ko="회원권 보유 고객" data-en="Clients with Prepaid Goods">회원권 보유 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_membership_desc" data-ko="현재 유효한 회원권을 보유한 고객을 조회합니다. 회원권 고객에게 재구매를 유도해 보세요." data-en="Search clients who have a valid prepaid cards. You can encourage them to re-purchase.">현재 유효한 회원권을 보유한 고객을 조회합니다. 회원권 고객에게 재구매를 유도해 보세요.</div>
         </div>
       </div>
       <!-- 정액권별 고객 -->
@@ -5600,8 +5601,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#3F51B5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h10M7 14h6"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_prepaid" data-ko="정액권별 고객" data-en="Prepaid Card Clients">정액권별 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_prepaid_desc" data-ko="정액권을 구입한 고객을 조회합니다. 잔액 적어 방문하지 않은 고객을 찾아 재방문을 유도해 보세요." data-en="View clients who purchased prepaid cards.">정액권을 구입한 고객을 조회합니다. 잔액 적어 방문하지 않은 고객을 찾아 재방문을 유도해 보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_prepaid" data-ko="정액권별 고객" data-en="Clients by Prepaid Card">정액권별 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_prepaid_desc" data-ko="정액권을 구입한 고객을 조회합니다. 잔액 적어 방문하지 않은 고객을 찾아 재방문을 유도해 보세요." data-en="Search clients who bought prepaid card. Find clients who haven't visited for a while with a low balance and encourage them to come back.">정액권을 구입한 고객을 조회합니다. 잔액 적어 방문하지 않은 고객을 찾아 재방문을 유도해 보세요.</div>
         </div>
       </div>
       <!-- 티켓별 고객 -->
@@ -5610,8 +5611,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 000 4v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 000-4V7z"/><path d="M9 5v14"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_ticket" data-ko="티켓별 고객" data-en="Prepaid Service Clients">티켓별 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_ticket_desc" data-ko="티켓(횟수권)을 구입한 고객을 조회합니다. 잔여횟수가 남았는데 오랫동안 오지 않는 고객을 찾아보세요." data-en="View clients who purchased tickets (service passes).">티켓(횟수권)을 구입한 고객을 조회합니다. 잔여횟수가 남았는데 오랫동안 오지 않는 고객을 찾아보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_ticket" data-ko="티켓별 고객" data-en="Clients by Prepaid Service">티켓별 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_ticket_desc" data-ko="티켓(횟수권)을 구입한 고객을 조회합니다. 잔여횟수가 남았는데 오랫동안 오지 않는 고객을 찾아보세요." data-en="Search clients who bought prepaid service. Find clients who haven't visited for a while with remaining quantity.">티켓(횟수권)을 구입한 고객을 조회합니다. 잔여횟수가 남았는데 오랫동안 오지 않는 고객을 찾아보세요.</div>
         </div>
       </div>
       <!-- 회원권 미보유 고객 -->
@@ -5620,8 +5621,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#795548" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 6l16 12M20 6L4 18"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_no_membership" data-ko="회원권 미보유 고객" data-en="Non-Membership Clients">회원권 미보유 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_no_membership_desc" data-ko="현재 회원권이 없는 고객을 조회합니다. 회원권 이벤트 문자 발송으로 회원권 구매 유도해 보세요." data-en="View clients without memberships.">현재 회원권이 없는 고객을 조회합니다. 회원권 이벤트 문자 발송으로 회원권 구매 유도해 보세요.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_no_membership" data-ko="회원권 미보유 고객" data-en="Clients with no Prepaid Goods">회원권 미보유 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_no_membership_desc" data-ko="현재 회원권이 없는 고객을 조회합니다. 회원권 이벤트 문자 발송으로 회원권 구매 유도해 보세요." data-en="Search clients who have no prepaid goods. You can encourage them to buy prepaid goods.">현재 회원권이 없는 고객을 조회합니다. 회원권 이벤트 문자 발송으로 회원권 구매 유도해 보세요.</div>
         </div>
       </div>
       <!-- 생일 고객 -->
@@ -5631,7 +5632,7 @@
         </div>
         <div class="cm-card-text">
           <div class="cm-card-title" data-i18n="cm.cat_birthday" data-ko="생일 고객" data-en="Birthday Clients">생일 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_birthday_desc" data-ko="생일 고객, 생일인 고객을 조회합니다. 고객님 생일에는 특별한 이벤트로 단골 고객을 만들어 보세요." data-en="View clients with upcoming birthdays.">생일 고객, 생일인 고객을 조회합니다. 고객님 생일에는 특별한 이벤트로 단골 고객을 만들어 보세요.</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_birthday_desc" data-ko="생일 고객, 생일인 고객을 조회합니다. 고객님 생일에는 특별한 이벤트로 단골 고객을 만들어 보세요." data-en="Search birthday clients. On your client's birthday, make them a loyal customer with a special event.">생일 고객, 생일인 고객을 조회합니다. 고객님 생일에는 특별한 이벤트로 단골 고객을 만들어 보세요.</div>
         </div>
       </div>
       <!-- 소개 고객 -->
@@ -5640,8 +5641,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="8" r="2.5"/><path d="M3 19c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M15 13.5c2 0 4 1.5 4 4"/></svg>
         </div>
         <div class="cm-card-text">
-          <div class="cm-card-title" data-i18n="cm.cat_referral" data-ko="소개 고객" data-en="Referral Clients">소개 고객</div>
-          <div class="cm-card-desc" data-i18n="cm.cat_referral_desc" data-ko="우리 매장을 소개한 고객/ 소개받은 고객을 관리합니다." data-en="Manage referred and referring clients.">우리 매장을 소개한 고객/ 소개받은 고객을 관리합니다.</div>
+          <div class="cm-card-title" data-i18n="cm.cat_referral" data-ko="소개 고객" data-en="Recommended Clients">소개 고객</div>
+          <div class="cm-card-desc" data-i18n="cm.cat_referral_desc" data-ko="우리 매장을 소개한 고객/ 소개받은 고객을 관리합니다." data-en="Manage customers who have recommended/been recommended to your shop.">우리 매장을 소개한 고객/ 소개받은 고객을 관리합니다.</div>
         </div>
       </div>
     </div>
@@ -5651,8 +5652,8 @@
   <div class="cm-search-view" id="cmSearchView" style="display:none;">
     <div class="cm-search-header-bar">
       <div class="cm-search-header">
-        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management / SMS">고객 관리 / 문자 발송</h3>
-        <button class="cm-back-btn" onclick="cmGoBack()" data-i18n="common.back" data-ko="뒤로가기" data-en="Back">뒤로가기</button>
+        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management">고객 관리 / 문자 발송</h3>
+        <button class="cm-back-btn" onclick="cmGoBack()" data-i18n="common.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
       </div>
     </div>
     <div class="cm-search-body">
@@ -5663,32 +5664,32 @@
         <div id="cmCategoryFilters"></div>
 
         <!-- 안내 메시지 (전체 고객용) -->
-        <div class="cm-search-guide" id="cmSearchGuide" data-i18n="cm.search_guide" data-ko="검색 버튼을 클릭해 주세요. (특정 조건의 고객만을 조회하시려면 '상세 검색' 체크.)" data-en="Click the Search button. (Check 'Advanced Search' to filter by specific conditions.)">검색 버튼을 클릭해 주세요. (특정 조건의 고객만을 조회하시려면 '상세 검색' 체크.)</div>
+        <div class="cm-search-guide" id="cmSearchGuide" data-i18n="cm.search_guide" data-ko="검색 버튼을 클릭해 주세요. (특정 조건의 고객만을 조회하시려면 '상세 검색' 체크.)" data-en="Please select 'Search' button. (Select 'Filters' to see more search conditions.)">검색 버튼을 클릭해 주세요. (특정 조건의 고객만을 조회하시려면 '상세 검색' 체크.)</div>
 
         <!-- 상세 검색 체크박스 -->
         <div class="cm-adv-toggle">
-          <label class="cm-chk-label"><input type="checkbox" id="cmAdvToggle" onchange="cmToggleAdvanced()"><span class="cm-checkmark">✓</span> <span data-i18n="cm.adv_search" data-ko="상세 검색" data-en="Advanced Search">상세 검색</span></label>
+          <label class="cm-chk-label"><input type="checkbox" id="cmAdvToggle" onchange="cmToggleAdvanced()"><span class="cm-checkmark">✓</span> <span data-i18n="cm.adv_search" data-ko="상세 검색" data-en="Filters">상세 검색</span></label>
         </div>
 
         <!-- 상세 검색 패널 -->
         <div class="cm-advanced-panel" id="cmAdvancedPanel" style="display:none;">
           <!-- 기본 정보 -->
           <fieldset class="cm-fieldset">
-            <legend data-i18n="cm.basic_info" data-ko="기본 정보" data-en="Basic Info">기본 정보</legend>
+            <legend data-i18n="cm.basic_info" data-ko="기본 정보" data-en="Basic Information">기본 정보</legend>
             <div class="cm-field-grid">
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkStaff" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.staff" data-ko="담당자" data-en="Staff">담당자</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkStaff" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.staff" data-ko="담당자" data-en="Preferred Staff">담당자</span></label>
                 <select id="cmStaff" disabled><option data-ko="전체" data-en="All">전체</option><option data-ko="원장님" data-en="Director">원장님</option><option data-ko="매니저" data-en="Manager">매니저</option><option data-ko="담당자 없음" data-en="No Staff">담당자 없음</option></select>
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkVisitRoute" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.visit_route" data-ko="방문 경로" data-en="Visit Route">방문 경로</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkVisitRoute" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.visit_route" data-ko="방문 경로" data-en="Referral Source">방문 경로</span></label>
                 <select id="cmVisitRoute" disabled><option data-ko="전체" data-en="All">전체</option><option>간판</option><option>소개</option><option>판촉물</option><option>인터넷</option><option>지인</option><option>SNS</option><option>기타</option><option data-ko="방문 경로 없음" data-en="None">방문 경로 없음</option></select>
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkNoNumber"><span class="cm-checkmark">✓</span> <span data-i18n="cm.no_number" data-ko="고객번호 없음" data-en="No Client Number">고객번호 없음</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkNoNumber" onchange="cmToggleNoNumber(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.no_number" data-ko="고객번호 없음" data-en="No 'Client Number'">고객번호 없음</span></label>
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkGrade" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.grade" data-ko="고객 등급" data-en="Client Grade">고객 등급</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkGrade" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.grade" data-ko="고객 등급" data-en="Client Rating">고객 등급</span></label>
                 <select id="cmGrade" disabled><option data-ko="전체" data-en="All">전체</option><option>일반</option><option>우대</option><option>VIP</option><option>VVIP</option><option>기타</option><option data-ko="고객 등급 없음" data-en="None">고객 등급 없음</option></select>
               </div>
               <div class="cm-field-row">
@@ -5709,75 +5710,81 @@
               </div>
               <div class="cm-field-row">
                 <label class="cm-chk-label"><input type="checkbox" id="cmChkBirthday" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.birthday" data-ko="생일" data-en="Birthday">생일</span></label>
-                <input type="text" class="cm-input-xs" id="cmBirthM1" disabled> <span data-i18n="cm.month" data-ko="월" data-en="M">월</span>
-                <input type="text" class="cm-input-xs" id="cmBirthD1" disabled> <span data-i18n="cm.day" data-ko="일" data-en="D">일</span>
+                <input type="text" class="cm-input-xs" id="cmBirthM1" disabled> <span data-i18n="cm.month" data-ko="월" data-en="Month">월</span>
+                <input type="text" class="cm-input-xs" id="cmBirthD1" disabled> <span data-i18n="cm.day" data-ko="일" data-en="Day">일</span>
                 <span class="cm-tilde">~</span>
-                <input type="text" class="cm-input-xs" id="cmBirthM2" disabled> <span data-i18n="cm.month" data-ko="월" data-en="M">월</span>
-                <input type="text" class="cm-input-xs" id="cmBirthD2" disabled> <span data-i18n="cm.day" data-ko="일" data-en="D">일</span>
+                <input type="text" class="cm-input-xs" id="cmBirthM2" disabled> <span data-i18n="cm.month" data-ko="월" data-en="Month">월</span>
+                <input type="text" class="cm-input-xs" id="cmBirthD2" disabled> <span data-i18n="cm.day" data-ko="일" data-en="Day">일</span>
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkMemo" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.memo" data-ko="메모" data-en="Memo">메모</span></label>
-                <input type="text" id="cmMemo" disabled placeholder="메모" data-i18n-ph-ko="메모" data-i18n-ph-en="Memo">
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkMemo" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.memo" data-ko="메모" data-en="Notes">메모</span></label>
+                <input type="text" id="cmMemo" disabled placeholder="메모" data-i18n-ph-ko="메모" data-i18n-ph-en="Notes">
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkSmsOpt" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.sms_opt" data-ko="문자 수신거부" data-en="SMS Opt-out">문자 수신거부</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkSmsOpt" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.sms_opt" data-ko="문자 수신거부" data-en="Don't Send Message">문자 수신거부</span></label>
                 <select id="cmSmsOpt" disabled><option data-ko="전체" data-en="All">전체</option><option data-ko="수신 거부" data-en="Opted out">수신 거부</option><option data-ko="수신 거부 안함" data-en="Opted in">수신 거부 안함</option></select>
               </div>
               <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkRegDate" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.reg_date" data-ko="등록일" data-en="Registration Date">등록일</span></label>
+                <label class="cm-chk-label"><input type="checkbox" id="cmChkRegDate" onchange="cmToggleField(this);cmSetDateRangeDefault('cmRegDateFrom','cmRegDateTo',this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.reg_date" data-ko="등록일" data-en="Registered Date">등록일</span></label>
                 <input type="date" class="cm-input-date" id="cmRegDateFrom" disabled> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmRegDateTo" disabled>
               </div>
             </div>
           </fieldset>
           <!-- 방문 정보 -->
           <fieldset class="cm-fieldset">
-            <legend data-i18n="cm.visit_info" data-ko="방문 정보" data-en="Visit Info">방문 정보</legend>
-            <div class="cm-field-grid">
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkFirstVisit" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.first_visit" data-ko="첫 방문일" data-en="First Visit">첫 방문일</span></label>
-                <input type="date" class="cm-input-date" id="cmFirstVisitFrom" disabled> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmFirstVisitTo" disabled>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkPoints" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.points_balance" data-ko="포인트 잔액" data-en="Points Balance">포인트 잔액</span></label>
-                <input type="text" class="cm-input-sm" id="cmPointsFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmPointsTo" disabled>
-              </div>
-              <div class="cm-field-row cm-field-col">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkLastVisit" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.last_visit" data-ko="최근 방문일" data-en="Last Visit">최근 방문일</span></label>
-                <div class="cm-radio-group">
-                  <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="noVisit" disabled> <span data-i18n="cm.no_visit" data-ko="미 방문" data-en="No visit">미 방문</span></label>
-                  <input type="text" class="cm-input-sm" id="cmNoVisitDays" disabled> <span data-i18n="cm.days_more" data-ko="일 이상" data-en="days or more">일 이상</span>
+            <legend data-i18n="cm.visit_info" data-ko="방문 정보" data-en="Visit Information">방문 정보</legend>
+            <div class="cm-visit-grid">
+              <!-- 좌측: 첫 방문일, 최근 방문일 -->
+              <div class="cm-visit-left">
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkFirstVisit" onchange="cmToggleField(this);cmSetDateRangeDefault('cmFirstVisitFrom','cmFirstVisitTo',this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.first_visit" data-ko="첫 방문일" data-en="First Visit Date">첫 방문일</span></label>
+                  <input type="date" class="cm-input-date" id="cmFirstVisitFrom" disabled> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmFirstVisitTo" disabled>
                 </div>
-                <div class="cm-radio-group">
-                  <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="recent" disabled> <span data-i18n="cm.recent" data-ko="최근" data-en="Recent">최근</span></label>
-                  <input type="text" class="cm-input-sm" id="cmRecentDays" disabled> <span data-i18n="cm.days_within" data-ko="일 이내 방문" data-en="days within visit">일 이내 방문</span>
+                <div class="cm-field-row cm-field-col">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkLastVisit" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.last_visit" data-ko="최근 방문일" data-en="Recent Visit Date">최근 방문일</span></label>
+                  <div class="cm-radio-group">
+                    <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="noVisit" disabled> <span data-i18n="cm.no_visit" data-ko="미 방문" data-en="Not visited more than">미 방문</span></label>
+                    <input type="text" class="cm-input-sm" id="cmNoVisitDays" disabled> <span data-i18n="cm.days_more" data-ko="일 이상" data-en="days">일 이상</span>
+                  </div>
+                  <div class="cm-radio-group">
+                    <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="recent" disabled> <span data-i18n="cm.recent" data-ko="최근" data-en="Visited for Last">최근</span></label>
+                    <input type="text" class="cm-input-sm" id="cmRecentDays" disabled> <span data-i18n="cm.days_within" data-ko="일 이내 방문" data-en="days">일 이내 방문</span>
+                  </div>
+                  <div class="cm-radio-group">
+                    <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="period" disabled onchange="cmSetDateRangeDefault('cmLastVisitFrom','cmLastVisitTo',this)"> <span data-i18n="cm.period" data-ko="기간" data-en="Date Range">기간</span></label>
+                    <input type="date" class="cm-input-date" id="cmLastVisitFrom" disabled> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmLastVisitTo" disabled>
+                  </div>
+                  <div class="cm-radio-group">
+                    <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="none" disabled> <span data-i18n="cm.no_visit_info" data-ko="최근 방문일 정보 없는 고객." data-en="Clients with no recent visit day information.">최근 방문일 정보 없는 고객.</span></label>
+                  </div>
                 </div>
-                <div class="cm-radio-group">
-                  <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="period" disabled> <span data-i18n="cm.period" data-ko="기간" data-en="Period">기간</span></label>
-                  <input type="date" class="cm-input-date" id="cmLastVisitFrom" disabled> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmLastVisitTo" disabled>
+              </div>
+              <!-- 우측: 포인트/정액권/객단가/추천/판매액/방문수 -->
+              <div class="cm-visit-right">
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkPoints" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.points_balance" data-ko="포인트 잔액" data-en="Loyalty Points">포인트 잔액</span></label>
+                  <input type="text" class="cm-input-sm" id="cmPointsFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmPointsTo" disabled>
                 </div>
-                <div class="cm-radio-group">
-                  <label class="cm-radio"><input type="radio" name="cmLastVisitType" value="none" disabled> <span data-i18n="cm.no_visit_info" data-ko="최근 방문일 정보 없는 고객." data-en="Clients without last visit info.">최근 방문일 정보 없는 고객.</span></label>
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkPrepaidBalance" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.prepaid_balance" data-ko="정액권 잔액" data-en="Balance">정액권 잔액</span> <span class="cm-tooltip-wrap"><span class="cm-tooltip-icon">?</span><span class="cm-tooltip-text" data-i18n="cm.prepaid_tooltip" data-ko="고객이 보유한 모든 정액권의 잔액 합계" data-en="Total balance of all prepaid cards owned by client">고객이 보유한 모든 정액권의 잔액 합계</span></span></label>
+                  <input type="text" class="cm-input-sm" id="cmPrepaidFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmPrepaidTo" disabled>
                 </div>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkPrepaidBalance" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.prepaid_balance" data-ko="정액권 잔액" data-en="Prepaid Balance">정액권 잔액</span> <span class="cm-tooltip-wrap"><span class="cm-tooltip-icon">?</span><span class="cm-tooltip-text" data-i18n="cm.prepaid_tooltip" data-ko="고객이 보유한 모든 정액권의 잔액 합계" data-en="Total balance of all prepaid cards owned by client">고객이 보유한 모든 정액권의 잔액 합계</span></span></label>
-                <input type="text" class="cm-input-sm" id="cmPrepaidFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmPrepaidTo" disabled>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkAvgSpend" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.avg_spend" data-ko="객단가" data-en="Avg. Spend">객단가</span></label>
-                <input type="text" class="cm-input-sm" id="cmAvgSpendFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmAvgSpendTo" disabled>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkReferralCount" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.referral_count" data-ko="추천 고객 수" data-en="Referral Count">추천 고객 수</span></label>
-                <input type="text" class="cm-input-sm" id="cmReferralCountFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmReferralCountTo" disabled>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkTotalSales" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.total_sales" data-ko="총 판매액" data-en="Total Sales">총 판매액</span></label>
-                <input type="text" class="cm-input-sm" id="cmTotalSalesFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmTotalSalesTo" disabled>
-              </div>
-              <div class="cm-field-row">
-                <label class="cm-chk-label"><input type="checkbox" id="cmChkTotalVisits" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.total_visits" data-ko="총 방문수" data-en="Total Visits">총 방문수</span></label>
-                <input type="text" class="cm-input-sm" id="cmTotalVisitsFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmTotalVisitsTo" disabled>
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkAvgSpend" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.avg_spend" data-ko="객단가" data-en="Average Revenue per Sales">객단가</span></label>
+                  <input type="text" class="cm-input-sm" id="cmAvgSpendFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmAvgSpendTo" disabled>
+                </div>
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkReferralCount" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.referral_count" data-ko="추천 고객 수" data-en="Number of Recommendations">추천 고객 수</span></label>
+                  <input type="text" class="cm-input-sm" id="cmReferralCountFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmReferralCountTo" disabled>
+                </div>
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkTotalSales" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.total_sales" data-ko="총 판매액" data-en="Total Sales">총 판매액</span></label>
+                  <input type="text" class="cm-input-sm" id="cmTotalSalesFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmTotalSalesTo" disabled>
+                </div>
+                <div class="cm-field-row">
+                  <label class="cm-chk-label"><input type="checkbox" id="cmChkTotalVisits" onchange="cmToggleField(this)"><span class="cm-checkmark">✓</span> <span data-i18n="cm.total_visits" data-ko="총 방문수" data-en="Total Number of Visit">총 방문수</span></label>
+                  <input type="text" class="cm-input-sm" id="cmTotalVisitsFrom" disabled> <span class="cm-tilde">~</span> <input type="text" class="cm-input-sm" id="cmTotalVisitsTo" disabled>
+                </div>
               </div>
             </div>
           </fieldset>
@@ -5794,56 +5801,70 @@
   <div class="cm-result-view" id="cmResultView" style="display:none;">
     <div class="cm-search-header-bar">
       <div class="cm-search-header">
-        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management / SMS">고객 관리 / 문자 발송</h3>
+        <h3 data-i18n="cm.title" data-ko="고객 관리 / 문자 발송" data-en="Client Management">고객 관리 / 문자 발송</h3>
+        <button class="cm-back-btn" onclick="cmGoBack()" data-i18n="common.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
       </div>
     </div>
     <div class="cm-result-body">
+      <!-- 검색 조건 요약 -->
+      <div class="cm-condition-area" id="cmConditionArea">
+        <div class="cm-condition-title-row">
+          <span class="cm-condition-cat-title" id="cmConditionCatTitle">전체 고객</span>
+          <button class="cm-btn-edit-condition" onclick="cmEditCondition()" data-i18n="cm.btn_edit_condition" data-ko="검색조건 수정" data-en="Edit Filter">검색조건 수정</button>
+        </div>
+        <div class="cm-condition-chips" id="cmConditionChips"></div>
+      </div>
+
       <!-- 결과 테이블 -->
-      <div class="cm-result-table-wrap">
+      <div class="cm-result-table-wrap" id="cmResultTableWrap">
         <div class="cm-result-top">
           <div class="cm-result-top-left">
-            <span class="cm-result-count" id="cmResultCount"><span data-i18n="cm.count_prefix" data-ko="총" data-en="Total">총</span> <b id="cmResultNum">8</b><span data-i18n="cm.count_suffix" data-ko="명 고객이 검색되었습니다" data-en="client(s) found">명 고객이 검색되었습니다</span></span>
-            <button class="cm-btn-sms" onclick="cmOpenSmsModal()" data-i18n="cm.btn_sms" data-ko="문자 발송" data-en="Send SMS">문자 발송</button>
-            <button class="cm-btn-research" onclick="cmEditCondition()" data-i18n="cm.btn_research" data-ko="다시 검색" data-en="Search Again">다시 검색</button>
+            <span class="cm-result-count" id="cmResultCount"><span data-i18n="cm.count_prefix" data-ko="총" data-en="Total">총</span> <b id="cmResultNum">0</b><span data-i18n="cm.count_suffix" data-ko="명 고객이 검색되었습니다" data-en="client(s) searched">명 고객이 검색되었습니다</span></span>
           </div>
           <div class="cm-result-actions">
+            <button class="cm-btn-sms" id="cmBtnSms" onclick="cmOpenSmsModal()" data-i18n="cm.btn_sms" data-ko="문자 발송" data-en="Send Message">문자 발송</button>
             <div class="cm-dropdown-wrap">
-              <button class="cm-btn-other" onclick="cmToggleOtherMenu()" id="cmOtherBtn" data-i18n="cm.btn_other" data-ko="기타 작업" data-en="Other Actions">기타 작업 <span class="cm-dropdown-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+              <button class="cm-btn-other" id="cmBtnOther" onclick="cmToggleOtherMenu()" data-i18n="cm.btn_other" data-ko="기타 작업" data-en="Other Tasks">기타 작업 <span class="cm-dropdown-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
               <div class="cm-dropdown-menu" id="cmOtherMenu">
-                <div class="cm-dropdown-item" onclick="cmOtherAction('grade')" data-i18n="cm.action_grade" data-ko="고객 등급 변경" data-en="Change Client Grade">고객 등급 변경</div>
-                <div class="cm-dropdown-item" onclick="cmOtherAction('group')" data-i18n="cm.action_group" data-ko="고객 그룹 변경" data-en="Change Client Group">고객 그룹 변경</div>
-                <div class="cm-dropdown-item" onclick="cmOtherAction('staff')" data-i18n="cm.action_staff" data-ko="고객 담당자 변경" data-en="Change Staff">고객 담당자 변경</div>
-                <div class="cm-dropdown-item" onclick="cmOtherAction('smsOpt')" data-i18n="cm.action_sms_opt" data-ko="문자 수신 거부 설정" data-en="SMS Opt-out Settings">문자 수신 거부 설정</div>
-                <div class="cm-dropdown-item" onclick="cmOtherAction('download')" data-i18n="cm.action_download" data-ko="고객 자료 다운로드" data-en="Download Client Data">고객 자료 다운로드</div>
-                <div class="cm-dropdown-item" onclick="cmOtherAction('resetPoints')" data-i18n="cm.action_reset_points" data-ko="포인트 초기화" data-en="Reset Points">포인트 초기화</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('grade')" data-i18n="cm.action_grade" data-ko="고객 등급 변경" data-en="Change Clients Rating">고객 등급 변경</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('group')" data-i18n="cm.action_group" data-ko="고객 그룹 변경" data-en="Change Clients Group">고객 그룹 변경</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('staff')" data-i18n="cm.action_staff" data-ko="고객 담당자 변경" data-en="Change Preferred Staff">고객 담당자 변경</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('smsOpt')" data-i18n="cm.action_sms_opt" data-ko="문자 수신 거부 설정" data-en="Set Don't Send Message">문자 수신 거부 설정</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('download')" data-i18n="cm.action_download" data-ko="고객 자료 다운로드" data-en="Download Data">고객 자료 다운로드</div>
+                <div class="cm-dropdown-item" onclick="cmOtherAction('resetPoints')" data-i18n="cm.action_reset_points" data-ko="포인트 초기화" data-en="Reset Loyalty Points">포인트 초기화</div>
                 <div class="cm-dropdown-item cm-dropdown-danger" onclick="cmOtherAction('delete')" data-i18n="cm.action_delete" data-ko="고객 삭제" data-en="Delete Clients">고객 삭제</div>
               </div>
             </div>
           </div>
         </div>
-        <table class="cm-table">
-          <thead>
+        <table class="cm-table" id="cmResultTable">
+          <thead id="cmResultThead">
             <tr>
               <th class="cm-th-check"><label class="cm-chk-label"><input type="checkbox" id="cmCheckAll" onchange="cmToggleAll(this)"><span class="cm-checkmark">✓</span></label></th>
-              <th data-i18n="cm.th_name" data-ko="고객명" data-en="Client Name">고객명</th>
-              <th data-i18n="cm.th_phone" data-ko="휴대폰 번호" data-en="Mobile">휴대폰 번호</th>
-              <th data-i18n="cm.th_last_visit" data-ko="최근 방문일" data-en="Last Visit">최근 방문일</th>
-              <th data-i18n="cm.th_grade" data-ko="고객 등급" data-en="Grade">고객 등급</th>
-              <th data-i18n="cm.th_staff" data-ko="담당자" data-en="Staff">담당자</th>
-              <th data-i18n="cm.th_total_sales" data-ko="총 판매액" data-en="Total Sales">총 판매액</th>
             </tr>
           </thead>
-          <tbody id="cmResultTbody">
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name1" data-ko="Taylor Swift" data-en="Taylor Swift">Taylor Swift</td><td>010-7442-4566</td><td>2026-03-05</td><td data-i18n="cm.demo_grade1" data-ko="일반" data-en="Normal">일반</td><td data-i18n="cm.demo_staff1" data-ko="원장님" data-en="Director">원장님</td><td class="cm-td-amount">35,341,311</td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td>Aria Maria</td><td></td><td>2024-06-27</td><td></td><td></td><td class="cm-td-amount">536,000</td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name3" data-ko="스바시바" data-en="Sbasiba">스바시바</td><td></td><td>2022-08-10</td><td></td><td></td><td class="cm-td-amount">20,000</td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name4" data-ko="송희진" data-en="Song Heejin">송희진</td><td>010-6431-9779</td><td>2022-07-19</td><td></td><td></td><td class="cm-td-amount">19,000</td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td>Ariana Grande</td><td>010-1234-1234</td><td>2022-05-17</td><td>VIP</td><td></td><td class="cm-td-amount">340,000</td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check"><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name6" data-ko="가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마" data-en="Long Name Test">가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마</td><td></td><td></td><td></td><td></td><td class="cm-td-amount"></td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name7" data-ko="스시스바" data-en="Ssisba">스시스바</td><td></td><td></td><td></td><td></td><td class="cm-td-amount"></td></tr>
-            <tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td><td data-i18n="cm.demo_name8" data-ko="스바시바" data-en="Sbasiba">스바시바</td><td></td><td></td><td></td><td></td><td class="cm-td-amount"></td></tr>
-          </tbody>
+          <tbody id="cmResultTbody"></tbody>
         </table>
+        <div class="cm-result-note" id="cmResultNote" style="display:none;"></div>
+        <div class="cm-paging" id="cmPaging" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 알림 모달 ── -->
+  <div class="svc-popup-overlay" id="cmAlertModal" style="display:none;">
+    <div class="svc-popup" style="width:420px;height:auto;border-radius:16px;">
+      <div class="svc-popup-header" style="border-bottom:none;">
+        <span style="font-size:15px;font-weight:700;color:#212121;" data-i18n="cm.alert_title" data-ko="알림" data-en="Alert">알림</span>
+        <div style="flex:1;"></div>
+        <button class="svc-popup-close" onclick="cmCloseAlert()">✕</button>
+      </div>
+      <div style="padding:8px 24px 20px;">
+        <p id="cmAlertMsg" style="font-size:14px;font-weight:600;color:#212121;margin:0;"></p>
+      </div>
+      <div style="padding:0 24px 20px;text-align:right;">
+        <div style="border-top:1px solid #E0E0E0;padding-top:16px;"></div>
+        <button class="btn" style="height:36px;padding:0 32px;border-radius:6px;font-size:13px;font-weight:600;border:1px solid #E0E0E0;background:#fff;color:#424242;cursor:pointer;" onclick="cmCloseAlert()" data-i18n="cm.btn_alert_close" data-ko="닫기" data-en="Close">닫기</button>
       </div>
     </div>
   </div>
@@ -5857,125 +5878,135 @@
     </div>
     <div class="cm-sms-modal-scroll">
       <div class="cm-sms-modal-body">
-        <!-- 좌: 메시지 편집 -->
+        <!-- 좌: 폰 목업 -->
         <div class="cm-sms-left">
-          <div class="cm-sms-editor">
-            <div class="cm-sms-type-row">
-              <span data-i18n="cm.sms_type" data-ko="문자유형" data-en="Type">문자유형</span>
-              <select id="cmSmsType" onchange="cmSmsTypeChange(this.value)">
-                <option value="sms" data-ko="단문 SMS" data-en="Short SMS">단문 SMS</option>
-                <option value="lms" data-ko="장문 LMS" data-en="Long SMS (LMS)" selected>장문 LMS</option>
-                <option value="mms" data-ko="그림문자 MMS" data-en="MMS with Image">그림문자 MMS</option>
-              </select>
-              <div class="cm-sms-help-wrap">
-                <button class="cm-sms-help-icon">?</button>
-                <div class="cm-sms-help-popup">
-                  <table class="cm-sms-help-popup-table">
-                    <thead><tr>
-                      <th data-ko="구분" data-en="Type">구분</th>
-                      <th data-ko="요금" data-en="Fee">요금</th>
-                      <th data-ko="한글 글자수 (byte)" data-en="Characters (byte)">한글 글자수 (byte)</th>
-                      <th data-ko="이미지 첨부" data-en="Image">이미지 첨부</th>
-                    </tr></thead>
-                    <tbody>
-                      <tr><td data-ko="단문 SMS" data-en="Short SMS">단문 SMS</td><td>22원</td><td>42자 (85byte)</td><td>X</td></tr>
-                      <tr><td data-ko="장문 LMS" data-en="Long LMS">장문 LMS</td><td>49원</td><td>1,000자 (2,000byte)</td><td>X</td></tr>
-                      <tr><td data-ko="그림문자 MMS" data-en="MMS">그림문자 MMS</td><td>198원</td><td>1,000자 (2,000byte)</td><td>O</td></tr>
-                    </tbody>
-                  </table>
-                  <div class="cm-sms-help-popup-notes">
-                    MMS 이미지 첨부 가능 파일형식 : jpg, jpeg, png, bmp, gif<br>
-                    (광고) 표시시 한글 3자(6byte)가 소요됩니다<br>
-                    수신거부 삽입 시 한글 13자(25byte)가 소요됩니다
+          <div class="cm-phone-mock">
+            <div class="cm-phone-screen">
+              <!-- 문자유형 (폰 상단) -->
+              <div class="cm-sms-type-row">
+                <span data-i18n="cm.sms_type" data-ko="문자유형" data-en="Type">문자유형</span>
+                <select id="cmSmsType" onchange="cmSmsTypeChange(this.value)">
+                  <option value="sms" data-ko="단문 SMS" data-en="Short SMS">단문 SMS</option>
+                  <option value="lms" data-ko="장문 LMS" data-en="Long SMS (LMS)" selected>장문 LMS</option>
+                  <option value="mms" data-ko="그림문자 MMS" data-en="MMS with Image">그림문자 MMS</option>
+                </select>
+                <div class="cm-sms-help-wrap">
+                  <button class="cm-sms-help-icon">?</button>
+                  <div class="cm-sms-help-popup">
+                    <table class="cm-sms-help-popup-table">
+                      <thead><tr>
+                        <th data-ko="구분" data-en="Type">구분</th>
+                        <th data-ko="요금" data-en="Fee">요금</th>
+                        <th data-ko="한글 글자수 (byte)" data-en="Characters (byte)">한글 글자수 (byte)</th>
+                        <th data-ko="이미지 첨부" data-en="Image">이미지 첨부</th>
+                      </tr></thead>
+                      <tbody>
+                        <tr><td data-ko="단문 SMS" data-en="Short SMS">단문 SMS</td><td>22원</td><td>42자 (85byte)</td><td>X</td></tr>
+                        <tr><td data-ko="장문 LMS" data-en="Long LMS">장문 LMS</td><td>49원</td><td>1,000자 (2,000byte)</td><td>X</td></tr>
+                        <tr><td data-ko="그림문자 MMS" data-en="MMS">그림문자 MMS</td><td>198원</td><td>1,000자 (2,000byte)</td><td>O</td></tr>
+                      </tbody>
+                    </table>
+                    <div class="cm-sms-help-popup-notes">
+                      MMS 이미지 첨부 가능 파일형식 : jpg, jpeg, png, bmp, gif<br>
+                      (광고) 표시시 한글 3자(6byte)가 소요됩니다<br>
+                      수신거부 삽입 시 한글 13자(25byte)가 소요됩니다
+                    </div>
                   </div>
                 </div>
               </div>
+              <div class="cm-phone-fixed-line" id="cmAdLine">(광고)○○헤어살롱</div>
+              <div class="cm-mms-dropzone cm-hidden" id="cmMmsDropzone" onclick="document.getElementById('cmMmsFileInput').click()">
+                <input type="file" id="cmMmsFileInput" accept="image/*" style="display:none;" onchange="cmHandleMmsFile(this)">
+                <div class="cm-mms-dropzone-empty" id="cmMmsDropzoneEmpty">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#9E9E9E" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="1.5" fill="#9E9E9E"/><path d="M3 16l4.793-4.793a1 1 0 011.414 0L13 15" stroke="#9E9E9E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 13l1.793-1.793a1 1 0 011.414 0L21 16" stroke="#9E9E9E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4M14 10h-4" stroke="#9E9E9E" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <span data-ko="이미지를 드래그하거나 클릭하여 추가해주세요" data-en="Drag or click to add an image">이미지를 드래그하거나 클릭하여 추가해주세요</span>
+                </div>
+                <div class="cm-mms-dropzone-preview" id="cmMmsDropzonePreview" style="display:none;">
+                  <img id="cmMmsPreviewImg" src="" alt="">
+                  <button class="cm-mms-dropzone-remove" onclick="event.stopPropagation();cmRemoveMmsImage()" title="삭제">&times;</button>
+                </div>
+              </div>
+              <textarea id="cmSmsContent" class="cm-phone-bubble" placeholder="메시지를 입력하세요" data-i18n-ph-ko="메시지를 입력하세요" data-i18n-ph-en="Enter message"></textarea>
+              <div class="cm-sms-bytes"><span id="cmSmsBytes">0</span> / 2000 Bytes</div>
+              <div class="cm-phone-fixed-bottom" data-ko="무료수신거부 080-808-0132" data-en="Opt-out 080-808-0132">무료수신거부 080-808-0132</div>
             </div>
-            <div class="cm-mms-image-area" id="cmMmsImageArea" style="display:none;">
-              <div class="cm-mms-image-placeholder" data-ko="이미지 영역" data-en="Image Area">이미지 영역<br><span data-ko="(이미지 등록 버튼을 누르세요)" data-en="(Press image register button)">(이미지 등록 버튼을 누르세요)</span></div>
-              <button class="cm-mms-image-btn" data-ko="이미지 등록" data-en="Register Image">이미지 등록</button>
-            </div>
-            <textarea id="cmSmsContent" class="cm-sms-textarea" placeholder="(광고)&#10;무료수신거부 080-808-0132">(광고)
-무료수신거부 080-808-0132</textarea>
-            <div class="cm-sms-bytes"><span id="cmSmsBytes">33</span> / 2000 Bytes</div>
+            <!-- 특수문자/수신거부/저장 버튼 -->
             <div class="cm-sms-btn-row">
-              <button class="cm-sms-btn-outline" onclick="cmToggleSpecialChars()" data-ko="특수문자" data-en="Special Chars">특수문자</button>
-              <button class="cm-sms-btn-outline" onclick="cmOpenMsgSaveModal()" data-ko="문자저장" data-en="Save Message">문자저장</button>
-            </div>
-            <div class="cm-sms-btn-row">
-              <button class="cm-sms-btn-outline" onclick="cmOpenTestSendModal()" data-ko="테스트발송" data-en="Test Send">테스트발송</button>
-              <button class="cm-sms-btn-primary" onclick="cmSendSms()" data-ko="문자발송" data-en="Send SMS">문자발송</button>
+              <button class="cm-sms-btn-outline" onclick="cmToggleSpecialChars()" data-ko="특수문자" data-en="Special">특수문자</button>
+              <button class="cm-sms-btn-outline" id="cmOptoutToggleBtn" onclick="cmToggleAdOptout()" data-ko="광고/수신거부 삭제" data-en="Remove Ad/Opt-out">광고/수신거부 삭제</button>
+              <span class="cm-sms-btn-icon-wrap"><button class="cm-sms-btn-icon" onclick="cmOpenMsgSaveModal()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><span class="cm-sms-btn-tooltip" data-ko="문자 저장" data-en="Save Message">문자 저장</span></span>
             </div>
             <!-- 특수문자 팝업 -->
-            <div class="cm-special-chars" id="cmSpecialChars" style="display:none;">
-              <button class="cm-special-chars-close" onclick="document.getElementById('cmSpecialChars').style.display='none'">✕</button>
-              <div class="cm-special-chars-grid" id="cmSpecialGrid"></div>
+            <div class="cm-sms-editor" style="border:none;padding:0 14px;position:relative;">
+              <div class="cm-special-chars" id="cmSpecialChars" style="display:none;">
+                <button class="cm-special-chars-close" onclick="document.getElementById('cmSpecialChars').style.display='none'">✕</button>
+                <div class="cm-special-chars-grid" id="cmSpecialGrid"></div>
+              </div>
+            </div>
+            <!-- 테스트발송 / 문자발송 버튼 -->
+            <div class="cm-phone-btn-area">
+              <button class="cm-phone-btn-test" onclick="cmOpenTestSendModal()" data-i18n="cm.sms_test" data-ko="테스트 발송" data-en="Test Send">테스트 발송</button>
+              <button class="cm-phone-btn-send" onclick="cmSendSms()" data-i18n="cm.sms_send" data-ko="문자 발송하기" data-en="Send SMS">문자 발송하기</button>
             </div>
           </div>
         </div>
-        <!-- 우: 수신자 정보/비용 -->
+        <!-- 우: 발송 설정 -->
         <div class="cm-sms-right">
-          <div class="cm-sms-section">
-            <div class="cm-sms-section-title" data-ko="발송대상자 및 비용" data-en="Recipients & Cost">발송대상자 및 비용</div>
-            <table class="cm-sms-info-table">
-              <tr><td data-ko="전송대상고객" data-en="Target Clients">전송대상고객</td><td id="cmSmsTargetCount">3<span data-ko="명" data-en="">명</span></td></tr>
-              <tr><td data-ko="건당비용 (LMS)" data-en="Cost per LMS">건당비용 (LMS)</td><td>49p</td></tr>
-              <tr><td data-ko="총 발생비용" data-en="Total Cost">총 발생비용</td><td id="cmSmsTotalCost">147p</td></tr>
-              <tr><td data-ko="넷머니 잔액" data-en="Net Money Balance">넷머니 잔액</td><td>20,000p</td></tr>
-            </table>
-          </div>
-
-          <div class="cm-sms-row">
-            <span class="cm-sms-label" data-ko="발신번호" data-en="Sender Number">발신번호</span>
-            <select id="cmSmsSender"><option>01091880802</option></select>
-            <button class="cm-sms-tag-btn cm-sms-tag-yellow" onclick="cmGoSenderSetup()" data-ko="설정" data-en="Settings">설정</button>
-            <button class="cm-sms-tag-btn cm-sms-tag-green" onclick="cmInsertOptout()" data-ko="수신거부 삽입" data-en="Insert Opt-out">수신거부 삽입</button>
-            <div class="cm-optout-help-wrap">
-              <button class="cm-sms-help-icon">?</button>
-              <div class="cm-optout-help-popup">
-                <span data-ko="불법 스팸 방지를 위한 정보통신방법 강화에 따라" data-en="In accordance with the strengthened Information and Communications Act to prevent illegal spam,">불법 스팸 방지를 위한 정보통신방법 강화에 따라</span><br>
-                <span data-ko="광고성 문자 발송 시 하단에 '무료수신거부'를 명시해야 합니다." data-en="you must include 'Opt-out' at the bottom of ad messages.">광고성 문자 발송 시 하단에 '무료수신거부'를 명시해야 합니다.</span><br>
-                <span data-ko="문자를 받은 고객이 스팸신고 시 행정처분을 받을 수 있으니" data-en="Customers who report spam may result in administrative penalties,">문자를 받은 고객이 스팸신고 시 행정처분을 받을 수 있으니</span><br>
-                <span data-ko="해당 버튼을 눌러 '무료수신거부'를 삽입하시기 바랍니다." data-en="please press the button to insert 'Opt-out'.">해당 버튼을 눌러 '무료수신거부'를 삽입하시기 바랍니다.</span><br>
-                <span class="cm-optout-help-highlight" data-ko="*본 080 무료수신거부 서비스는 아하소프트에서 무료 지원합니다." data-en="*The 080 opt-out service is provided free by Ahasoft.">*본 080 무료수신거부 서비스는 아하소프트에서 무료 지원합니다.</span>
+          <!-- 2등분: 발송설정(좌) + 비용(우) -->
+          <div class="cm-sms-right-grid">
+            <!-- 좌: 발송 설정 -->
+            <div class="cm-sms-setting-card">
+              <div class="cm-sms-setting-row">
+                <span class="cm-sms-setting-lbl" data-ko="발송번호" data-en="Sender">발송번호</span>
+                <span class="cm-sms-setting-val"><select id="cmSmsSender"><option>010-1234-5678</option></select></span>
+                <button class="cm-sms-setting-btn" onclick="cmGoSenderSetup()" data-ko="설정" data-en="Settings">설정</button>
+              </div>
+              <div class="cm-sms-setting-row">
+                <span class="cm-sms-setting-lbl" data-ko="발송일시" data-en="Send Date">발송일시</span>
+                <div class="cm-sms-schedule-toggle">
+                  <button class="cm-sms-sch-btn active" onclick="cmSmsTabSwitch(this,'now')" data-ko="즉시 발송" data-en="Send Now">즉시 발송</button>
+                  <button class="cm-sms-sch-btn" onclick="cmSmsTabSwitch(this,'scheduled')" data-ko="예약 발송" data-en="Schedule">예약 발송</button>
+                </div>
+              </div>
+              <div class="cm-sms-schedule-row" id="cmSmsScheduleRow" style="display:none;">
+                <input type="date" id="cmSmsScheduleDate" class="cm-sms-schedule-input">
+                <input type="time" id="cmSmsScheduleTime" class="cm-sms-schedule-input" value="09:00">
               </div>
             </div>
-          </div>
-
-          <div class="cm-sms-row">
-            <span class="cm-sms-label" data-ko="전송일" data-en="Send Date">전송일</span>
-            <div class="cm-sms-tab-group">
-              <button class="cm-sms-tab active" onclick="cmSmsTabSwitch(this,'now')" data-ko="즉시발송" data-en="Send Now">즉시발송</button>
-              <button class="cm-sms-tab" onclick="cmSmsTabSwitch(this,'scheduled')" data-ko="예약발송" data-en="Schedule">예약발송</button>
+            <!-- 우: 비용 요약 -->
+            <div class="cm-sms-cost-wrap">
+              <div class="cm-sms-cost-row"><span data-ko="발송 대상" data-en="Target">발송 대상</span><span class="cm-sms-cost-val" id="cmSmsTargetCount">3<span class="cm-sms-cost-unit" data-ko="명" data-en="">명</span></span></div>
+              <div class="cm-sms-cost-row"><span data-ko="건당 비용" data-en="Cost/msg">건당 비용</span><span class="cm-sms-cost-val">49<span class="cm-sms-cost-unit" data-ko="원 (LMS)" data-en="won (LMS)">원 (LMS)</span></span></div>
+              <div class="cm-sms-cost-total-lbl" data-ko="예상 총 비용" data-en="Estimated Total">예상 총 비용</div>
+              <div class="cm-sms-cost-total-num" id="cmSmsTotalCost">147<span data-ko="원" data-en="won">원</span></div>
+              <div class="cm-sms-cost-total-sub" data-ko="VAT 포함 · 발송 실패 시 자동 환불" data-en="VAT included · Auto refund on failure">VAT 포함 · 발송 실패 시 자동 환불</div>
             </div>
           </div>
-          <div class="cm-sms-schedule-row" id="cmSmsScheduleRow" style="display:none;">
-            <input type="date" id="cmSmsScheduleDate" class="cm-sms-schedule-input">
-            <select id="cmSmsScheduleHour" class="cm-sms-schedule-select"></select>
-            <span class="cm-sms-schedule-unit" data-ko="시" data-en="h">시</span>
-            <select id="cmSmsScheduleMin" class="cm-sms-schedule-select"></select>
-            <span class="cm-sms-schedule-unit" data-ko="분" data-en="m">분</span>
-          </div>
 
+          <!-- 전환문자 -->
           <div class="cm-sms-section">
             <div class="cm-sms-section-title" data-ko="전환문자" data-en="Conversion Text">전환문자</div>
-            <p class="cm-sms-section-desc" data-ko="메시지 내용에 아래의 전환문자를 입력(클릭 시 자동입력)하면 고객이 문자를 받을 때 해당 항목의 내용이 자동으로 들어갑니다." data-en="Click conversion text below to auto-insert into message.">메시지 내용에 아래의 전환문자를 입력(클릭 시 자동입력)하면 고객이 문자를 받을 때 해당 항목의 내용이 자동으로 들어갑니다.</p>
+            <p class="cm-sms-section-desc" data-ko="메시지 내용에 아래의 전환문자를 입력(클릭 시 자동입력)하면 고객이 문자를 받을 때 해당 항목의 내용이 자동으로 들어갑니다." data-en="Click to auto-insert into message.">메시지 내용에 아래의 전환문자를 입력(클릭 시 자동입력)하면 고객이 문자를 받을 때 해당 항목의 내용이 자동으로 들어갑니다.</p>
             <table class="cm-sms-convert-table">
-              <thead><tr><th data-ko="항목명" data-en="Item">항목명</th><th data-ko="전환문자" data-en="Conversion Text">전환문자</th></tr></thead>
+              <thead><tr><th data-ko="항목명" data-en="Item">항목명</th><th data-ko="전환문자" data-en="Conversion">전환문자</th></tr></thead>
               <tbody><tr><td data-ko="고객명" data-en="Client Name">고객명</td><td><a class="cm-convert-link" onclick="cmInsertConvert('((성명))')">((성명))</a></td></tr></tbody>
             </table>
           </div>
 
-          <div class="cm-sms-warn-row">
-            <button class="cm-sms-warn-btn" onclick="cmOpenSpamGuide()" data-ko="스팸문자 필터링 안내" data-en="Spam Filter Guide">스팸문자 필터링 안내</button>
-            <button class="cm-sms-warn-btn" onclick="cmOpenAdGuide()" data-ko="광고성 문자 표기방법" data-en="Ad Message Guide">광고성 문자 표기방법</button>
+          <!-- 경고 박스 -->
+          <div class="cm-sms-warning-box">
+            ⚠️ <strong data-ko="주의!" data-en="Caution!">주의!</strong> <span data-ko="스팸 필터링 강화로 문자가 차단될 수 있으니" data-en="Messages may be blocked due to spam filtering.">스팸 필터링 강화로 문자가 차단될 수 있으니</span> <strong style="background:#FDE68A;padding:1px 4px;border-radius:3px;" data-ko="테스트 발송을 먼저" data-en="test send first">테스트 발송을 먼저</strong> <span data-ko="진행하세요." data-en="proceed.">진행하세요.</span>
+            <div style="margin-top:7px;border-top:1px solid #FCD34D;padding-top:7px;display:flex;align-items:center;gap:16px;">
+              <a onclick="cmOpenSpamGuide()" style="cursor:pointer;font-size:12px;color:#D97706;display:flex;align-items:center;gap:5px;font-weight:600;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span data-ko="스팸 필터링 안내 보기" data-en="View spam filtering guide">스팸 필터링 안내 보기</span>
+              </a>
+              <a onclick="cmOpenAdGuide()" style="cursor:pointer;font-size:12px;color:#D97706;display:flex;align-items:center;gap:5px;font-weight:600;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span data-ko="광고문자 표기방법" data-en="Ad text guidelines">광고문자 표기방법</span>
+              </a>
+            </div>
           </div>
-          <div class="cm-sms-caution">
-            <span class="cm-sms-caution-label" data-ko="주의!" data-en="Caution!">주의!</span>
-            <span data-ko="광고성 문자 전송시" data-en="Ad messages must include">광고성 문자 전송시</span> <b>(광고), 매장명, 무료수신거부</b> <span data-ko="번호를 반드시 표시해야 합니다." data-en="number.">번호를 반드시 표시해야 합니다.</span><br>
-            <span data-ko="스팸필터링 강화로 문자가 차단 될 수 있으니" data-en="Messages may be blocked by spam filters, so">스팸필터링 강화로 문자가 차단 될 수 있으니</span> <a class="cm-sms-caution-link" data-ko="테스트발송을 먼저" data-en="test send first">테스트발송을 먼저</a> <span data-ko="진행하세요." data-en="proceed.">진행하세요.</span>
-          </div>
-
         </div>
       </div>
       <div class="cm-sms-sample-tabs">
@@ -6204,7 +6235,7 @@
 <div class="cm-owner-overlay" id="cmGradeOverlay">
   <div class="cm-owner-modal">
     <div class="cm-owner-header">
-      <span data-i18n="cm.grade_change" data-ko="고객 등급 변경" data-en="Change Client Grade">고객 등급 변경</span>
+      <span data-i18n="cm.grade_change" data-ko="고객 등급 변경" data-en="Change Clients Rating">고객 등급 변경</span>
       <button class="cm-owner-close" onclick="cmCloseActionModal('cmGradeOverlay')">✕</button>
     </div>
     <div class="cm-owner-body">
@@ -6216,8 +6247,8 @@
         </select>
       </div>
       <div class="cm-owner-btns">
-        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmGradeOverlay')" data-ko="확인" data-en="Confirm">확인</button>
         <button class="cm-owner-btn cm-owner-btn-cancel" onclick="cmCloseActionModal('cmGradeOverlay')" data-ko="취소" data-en="Cancel">취소</button>
+        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmGradeOverlay')" data-ko="확인" data-en="Confirm">확인</button>
       </div>
     </div>
   </div>
@@ -6227,7 +6258,7 @@
 <div class="cm-owner-overlay" id="cmGroupOverlay">
   <div class="cm-owner-modal">
     <div class="cm-owner-header">
-      <span data-i18n="cm.group_change" data-ko="고객 그룹 변경" data-en="Change Client Group">고객 그룹 변경</span>
+      <span data-i18n="cm.group_change" data-ko="고객 그룹 변경" data-en="Change Clients Group">고객 그룹 변경</span>
       <button class="cm-owner-close" onclick="cmCloseActionModal('cmGroupOverlay')">✕</button>
     </div>
     <div class="cm-owner-body">
@@ -6239,8 +6270,8 @@
         </select>
       </div>
       <div class="cm-owner-btns">
-        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmGroupOverlay')" data-ko="확인" data-en="Confirm">확인</button>
         <button class="cm-owner-btn cm-owner-btn-cancel" onclick="cmCloseActionModal('cmGroupOverlay')" data-ko="취소" data-en="Cancel">취소</button>
+        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmGroupOverlay')" data-ko="확인" data-en="Confirm">확인</button>
       </div>
     </div>
   </div>
@@ -6250,7 +6281,7 @@
 <div class="cm-owner-overlay" id="cmStaffOverlay">
   <div class="cm-owner-modal">
     <div class="cm-owner-header">
-      <span data-i18n="cm.staff_change" data-ko="고객 담당자 변경" data-en="Change Staff">고객 담당자 변경</span>
+      <span data-i18n="cm.staff_change" data-ko="고객 담당자 변경" data-en="Change Preferred Staff">고객 담당자 변경</span>
       <button class="cm-owner-close" onclick="cmCloseActionModal('cmStaffOverlay')">✕</button>
     </div>
     <div class="cm-owner-body">
@@ -6262,8 +6293,8 @@
         </select>
       </div>
       <div class="cm-owner-btns">
-        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmStaffOverlay')" data-ko="확인" data-en="Confirm">확인</button>
         <button class="cm-owner-btn cm-owner-btn-cancel" onclick="cmCloseActionModal('cmStaffOverlay')" data-ko="취소" data-en="Cancel">취소</button>
+        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmStaffOverlay')" data-ko="확인" data-en="Confirm">확인</button>
       </div>
     </div>
   </div>
@@ -6282,8 +6313,8 @@
       </p>
       <p class="cm-action-warn">* <span data-ko="변경 후" data-en="After change,">변경 후</span> <b style="color:#F06060;" data-ko="취소가 불가하니" data-en="cannot be undone,">취소가 불가하니</b> <span data-ko="주의하세요." data-en="please be careful.">주의하세요.</span></p>
       <div class="cm-owner-btns">
-        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmSmsOptOverlay')" data-ko="확인" data-en="Confirm">확인</button>
         <button class="cm-owner-btn cm-owner-btn-cancel" onclick="cmCloseActionModal('cmSmsOptOverlay')" data-ko="취소" data-en="Cancel">취소</button>
+        <button class="cm-owner-btn cm-owner-btn-confirm" onclick="cmActionConfirm('cmSmsOptOverlay')" data-ko="확인" data-en="Confirm">확인</button>
       </div>
     </div>
   </div>

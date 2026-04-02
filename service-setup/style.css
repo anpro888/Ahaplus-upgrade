@@ -1442,11 +1442,13 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   .booking-memo textarea:focus { outline:none; border-color:#6161FF; box-shadow:0 0 0 3px rgba(26,156,140,.12); }
 
   .modal-footer { display:flex; align-items:center; justify-content:flex-end; padding:14px 24px; border-top:1px solid #E0E0E0; gap:10px; background:#FFFFFF; flex-shrink:0; }
-  .btn { height:40px; padding:0 24px; border-radius:6px; font-size:14px; font-weight:500; cursor:pointer; transition:0.2s cubic-bezier(0.4, 0, 0.2, 1); border:none; font-family:inherit; }
+  .btn { height:40px; padding:0 24px; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; transition:0.2s cubic-bezier(0.4, 0, 0.2, 1); border:none; font-family:inherit; }
   .btn-secondary { background:transparent; color:#616161; border:1px solid #BDBDBD; }
-  .btn-secondary:hover { background:#F5F5F5; }
+  .btn-secondary:hover { background:#F5F5F5; border-color:#9E9E9E; }
   .btn-primary { background:#6161FF; color:#FFFFFF; }
   .btn-primary:hover { background:#4F4FE0; }
+  .btn-primary:active { background:#3D3DC0; }
+  .btn-primary:disabled { opacity:0.5; pointer-events:none; }
 
   ::-webkit-scrollbar { width:5px; }
   ::-webkit-scrollbar-track { background:transparent; }
@@ -1460,7 +1462,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   .svc-search-box input { width:100%; height:34px; border:1px solid #E0E0E0; border-radius:6px; padding:0 12px; font-size:13px; font-family:inherit; }
   .svc-search-box input:focus { outline:none; border-color:#6161FF; box-shadow:0 0 0 3px rgba(26,156,140,.12); }
   .svc-popup-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#757575; font-size:14px; transition:0.2s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink:0; }
-  .svc-popup-close:hover { background:#F0EEE9; }
+  .svc-popup-close:hover { background:#EEEEEE; }
   .svc-popup-body { display:flex; flex:1; overflow:hidden; min-height:0; }
   .svc-col { display:flex; flex-direction:column; min-height:0; }
   .svc-col::-webkit-scrollbar { display:none; }
@@ -1525,7 +1527,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   .cns-header h3 { font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:8px; }
   .cns-header h3::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; }
   .cns-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#757575; font-size:14px; }
-  .cns-close:hover { background:#F0EEE9; }
+  .cns-close:hover { background:#EEEEEE; }
   .cns-body { padding:20px 18px; }
   .cns-radios { display:flex; gap:20px; }
   .cns-radios label { display:flex; align-items:center; gap:6px; font-size:14px; color:#212121; cursor:pointer; }
@@ -1545,7 +1547,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   .refs-header h3 { font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:8px; }
   .refs-header h3::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; }
   .refs-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#757575; font-size:14px; }
-  .refs-close:hover { background:#F0EEE9; }
+  .refs-close:hover { background:#EEEEEE; }
   .refs-body { padding:16px 18px; flex:1; overflow-y:auto; min-height:0; }
   .refs-search-row { display:flex; gap:8px; margin-bottom:12px; }
   .refs-search-row input { flex:1; height:36px; border:1px solid #E0E0E0; border-radius:6px; padding:0 12px; font-size:13px; outline:none; font-family:inherit; }
@@ -1565,7 +1567,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   .refs-pager button { width:30px; height:28px; border:1px solid #E0E0E0; border-radius:4px; background:#fff; font-size:11px; cursor:pointer; color:#757575; }
   .refs-pager button:hover { background:#F5F5F5; }
   .refs-footer { display:flex; justify-content:center; padding:12px 18px; border-top:1px solid #E0E0E0; }
-  .refs-footer .btn-cancel { height:36px; padding:0 24px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .refs-footer .btn-cancel { height:36px; padding:0 24px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
   .refs-footer .btn-cancel:hover { background:#F5F5F5; }
 
   /* 중복고객 확인 팝업 */
@@ -1693,10 +1695,11 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #hoursPopup .hp-select:focus, #resPopup .hp-select:focus, #resTimePopup .hp-select:focus, #itemPopup .hp-select:focus { border-color:#6161FF; box-shadow:0 0 0 3px rgba(26,156,140,.12); }
 #hoursPopup .hp-footer, #resPopup .hp-footer, #resTimePopup .hp-footer, #itemPopup .hp-footer { display:flex; align-items:center; padding:14px 20px; border-top:1px solid #E0E0E0; }
 #hoursPopup .hp-btn, #resPopup .hp-btn, #resTimePopup .hp-btn, #itemPopup .hp-btn { height:38px; padding:0 22px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s; border:none; font-family:inherit; }
-#hoursPopup .hp-btn-cancel, #resPopup .hp-btn-cancel, #resTimePopup .hp-btn-cancel, #itemPopup .hp-btn-cancel { background:#fff; border:1px solid #6161FF; color:#6161FF; }
-#hoursPopup .hp-btn-cancel:hover, #resPopup .hp-btn-cancel:hover, #resTimePopup .hp-btn-cancel:hover, #itemPopup .hp-btn-cancel:hover { background:#6161FF; color:#fff; }
-#hoursPopup .hp-btn-save, #resPopup .hp-btn-save, #resTimePopup .hp-btn-save, #itemPopup .hp-btn-save { background:#6161FF; color:#fff; box-shadow:0 2px 8px rgba(26,156,140,.3); }
+#hoursPopup .hp-btn-cancel, #resPopup .hp-btn-cancel, #resTimePopup .hp-btn-cancel, #itemPopup .hp-btn-cancel { background:#fff; border:1px solid #BDBDBD; color:#616161; }
+#hoursPopup .hp-btn-cancel:hover, #resPopup .hp-btn-cancel:hover, #resTimePopup .hp-btn-cancel:hover, #itemPopup .hp-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+#hoursPopup .hp-btn-save, #resPopup .hp-btn-save, #resTimePopup .hp-btn-save, #itemPopup .hp-btn-save { background:#6161FF; color:#fff; box-shadow:0 2px 8px rgba(97,97,255,.3); }
 #hoursPopup .hp-btn-save:hover, #resPopup .hp-btn-save:hover, #resTimePopup .hp-btn-save:hover, #itemPopup .hp-btn-save:hover { background:#4F4FE0; }
+#hoursPopup .hp-btn-save:active, #resPopup .hp-btn-save:active, #resTimePopup .hp-btn-save:active, #itemPopup .hp-btn-save:active { background:#3D3DC0; }
 #hoursPopup .hp-btn-delete, #resPopup .hp-btn-delete, #resTimePopup .hp-btn-delete, #itemPopup .hp-btn-delete { background:none; border:none; color:#F06060; font-size:13px; font-weight:500; cursor:pointer; padding:0; transition:0.2s; }
 #hoursPopup .hp-btn-delete:hover, #resPopup .hp-btn-delete:hover, #resTimePopup .hp-btn-delete:hover, #itemPopup .hp-btn-delete:hover { color:#E24B4A;  }
 #hoursPopup .hp-footer-right, #resPopup .hp-footer-right, #resTimePopup .hp-footer-right, #itemPopup .hp-footer-right { display:flex; gap:8px; margin-left:auto; }
@@ -2296,9 +2299,9 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #serviceSetupView .sv-checkbox-label input[type="checkbox"] { display:none; }
 #serviceSetupView .sv-selected-badge { background:#EEF0FF; color:#6161FF; border:1px solid #E0E0E0; border-radius:14px; padding:2px 10px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:5px; }
 #serviceSetupView .sv-selected-badge svg { flex-shrink:0; }
-#serviceSetupView .sv-reg-btn { height:32px; padding:0 16px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#serviceSetupView .sv-reg-btn { height:36px; padding:0 24px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #serviceSetupView .sv-reg-btn:hover { background:#4F4FE0; }
-#serviceSetupView .sv-svc-reg-btn { height:32px; padding:0 16px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#serviceSetupView .sv-svc-reg-btn { height:36px; padding:0 24px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #serviceSetupView .sv-svc-reg-btn:hover { background:#4F4FE0; }
 #serviceSetupView .sv-table { width:100%; border-collapse:collapse; }
 #serviceSetupView .sv-table th { background:#FAFAFA; padding:9px 12px; font-size:12px; font-weight:600; color:#616161; text-align:center; border-bottom:1px solid #E0E0E0; white-space:nowrap; }
@@ -2311,15 +2314,15 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #serviceSetupView .sv-drag-col { width:28px; padding:0 4px !important; text-align:center !important; }
 #serviceSetupView .sv-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; vertical-align:middle; }
 #serviceSetupView .sv-drag-handle:active { cursor:grabbing; }
-#serviceSetupView .sv-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; }
+#serviceSetupView .sv-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
 #serviceSetupView .sv-table tbody tr.sv-dragging { opacity:0.4; }
 #serviceSetupView .sv-table tbody tr.sv-drop-over td { border-top:2px solid #6161FF; }
-#serviceSetupView .sv-edit-btn { height:28px; padding:0 12px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#serviceSetupView .sv-edit-btn { height:28px; padding:0 12px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #serviceSetupView .sv-edit-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
-#serviceSetupView .sv-view-btn { width:32px; height:28px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:13px; color:#6161FF; cursor:pointer; font-family:inherit; transition:0.15s; display:inline-flex; align-items:center; justify-content:center; }
+#serviceSetupView .sv-view-btn { width:32px; height:28px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:13px; color:#6161FF; cursor:pointer; font-family:inherit; transition:0.15s; display:inline-flex; align-items:center; justify-content:center; }
 #serviceSetupView .sv-view-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #serviceSetupView .sv-view-btn.active { background:#6161FF; color:#fff; border-color:#6161FF; }
-#serviceSetupView .sv-add-btn { height:28px; padding:0 12px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#serviceSetupView .sv-add-btn { height:28px; padding:0 12px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #serviceSetupView .sv-add-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #serviceSetupView .sv-drag-hint { font-size:11px; color:#9E9E9E; margin-top:0; padding:10px 14px; background:#fff; border-top:1px solid #F5F4F1; }
 /* 미사용 서비스 행 — 회색 처리 */
@@ -2336,8 +2339,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #svSvcModal .svsm-header-left { display:flex; align-items:center; gap:8px; }
 #svSvcModal .svsm-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #svSvcModal .svsm-title { font-size:15px; font-weight:700; color:#212121; }
-#svSvcModal .svsm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; transition:0.15s; }
-#svSvcModal .svsm-close:hover { background:#F0EEE9; color:#616161; }
+#svSvcModal .svsm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; transition:0.15s; }
+#svSvcModal .svsm-close:hover { background:#EEEEEE; }
 #svSvcModal .svsm-tabs { display:flex; gap:0; padding:0 20px; border-bottom:1px solid #E0E0E0; background:#fff; flex-shrink:0; }
 #svSvcModal .svsm-tab { padding:10px 20px; font-size:13px; font-weight:500; color:#9E9E9E; cursor:pointer; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; transition:0.15s; background:none; border-radius:0; }
 #svSvcModal .svsm-tab.active { color:#6161FF; font-weight:600; border-bottom-color:#6161FF; }
@@ -2385,10 +2388,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #svSvcModal .svsm-staff-item input[type="checkbox"]:checked + .sv-checkmark { background:#6161FF; border-color:#6161FF; color:#fff; }
 /* 하단 버튼 — 취소 → 저장 (우측 정렬) */
 #svSvcModal .svsm-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 20px 16px; flex-shrink:0; }
-#svSvcModal .svsm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #E0E0E0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-#svSvcModal .svsm-btn-cancel:hover { background:#F5F5F5; }
-#svSvcModal .svsm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svSvcModal .svsm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svSvcModal .svsm-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+#svSvcModal .svsm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 #svSvcModal .svsm-btn-save:hover { background:#4F4FE0; }
+#svSvcModal .svsm-btn-save:active { background:#3D3DC0; }
+#svSvcModal .svsm-btn-save:disabled { opacity:0.5; pointer-events:none; }
 
 /* ── 분류 등록/수정 팝업 ── */
 #svCatModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; }
@@ -2398,8 +2403,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #svCatModal .svcm-header-left { display:flex; align-items:center; gap:8px; }
 #svCatModal .svcm-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #svCatModal .svcm-title { font-size:15px; font-weight:700; color:#212121; }
-#svCatModal .svcm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; transition:0.15s; }
-#svCatModal .svcm-close:hover { background:#F0EEE9; color:#616161; }
+#svCatModal .svcm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; transition:0.15s; }
+#svCatModal .svcm-close:hover { background:#EEEEEE; }
 #svCatModal .svcm-body { padding:24px 20px 20px; }
 #svCatModal .svcm-row { display:flex; align-items:center; gap:16px; }
 #svCatModal .svcm-label { font-size:13px; font-weight:500; color:#616161; min-width:56px; flex-shrink:0; display:flex; align-items:center; gap:3px; }
@@ -2410,12 +2415,14 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #svCatModal .svcm-input.sv-input-error:focus { border-color:#F06060 !important; box-shadow:0 0 0 3px rgba(240,96,96,0.15) !important; }
 /* 하단 버튼 — 취소 → 삭제 → 저장 (우측 정렬) */
 #svCatModal .svcm-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 20px 16px; }
-#svCatModal .svcm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #E0E0E0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-#svCatModal .svcm-btn-cancel:hover { background:#F5F5F5; }
-#svCatModal .svcm-btn-delete { height:36px; padding:0 20px; background:#fff; color:#F06060; border:1px solid #F06060; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; display:none; }
-#svCatModal .svcm-btn-delete:hover { background:#FFF5F5; }
-#svCatModal .svcm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svCatModal .svcm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svCatModal .svcm-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+#svCatModal .svcm-btn-delete { height:36px; padding:0 20px; background:#fff; color:#F06060; border:1px solid #F0B0B0; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; display:none; }
+#svCatModal .svcm-btn-delete:hover { background:#F06060; color:#fff; border-color:#F06060; }
+#svCatModal .svcm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 #svCatModal .svcm-btn-save:hover { background:#4F4FE0; }
+#svCatModal .svcm-btn-save:active { background:#3D3DC0; }
+#svCatModal .svcm-btn-save:disabled { opacity:0.5; pointer-events:none; }
 #svCatModal .svcm-toggle-row { display:flex; align-items:center; gap:16px; margin-top:16px; }
 #svCatModal .svcm-toggle-wrap { display:flex; align-items:center; gap:8px; }
 #svCatModal .svcm-toggle { position:relative; width:40px; height:22px; flex-shrink:0; }
@@ -2434,8 +2441,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #svTktModal .svtm-header-left { display:flex; align-items:center; gap:8px; }
 #svTktModal .svtm-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #svTktModal .svtm-title { font-size:15px; font-weight:700; color:#212121; }
-#svTktModal .svtm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; transition:0.15s; }
-#svTktModal .svtm-close:hover { background:#F0EEE9; color:#616161; }
+#svTktModal .svtm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; transition:0.15s; }
+#svTktModal .svtm-close:hover { background:#EEEEEE; }
 #svTktModal .svtm-body { flex:1; overflow-y:auto; padding:24px 20px 8px; }
 #svTktModal .svtm-panel-inner { border:1px solid #E0E0E0; border-radius:8px; padding:20px; }
 #svTktModal .svtm-row { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
@@ -2471,10 +2478,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 /* svtm-auto-value removed — 1회당 매출 is now an editable input */
 /* 하단 버튼 — 취소 → 저장 (우측 정렬) */
 #svTktModal .svtm-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 20px 16px; flex-shrink:0; }
-#svTktModal .svtm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #E0E0E0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-#svTktModal .svtm-btn-cancel:hover { background:#F5F5F5; }
-#svTktModal .svtm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svTktModal .svtm-btn-cancel { height:36px; padding:0 20px; background:#fff; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+#svTktModal .svtm-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+#svTktModal .svtm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 #svTktModal .svtm-btn-save:hover { background:#4F4FE0; }
+#svTktModal .svtm-btn-save:active { background:#3D3DC0; }
+#svTktModal .svtm-btn-save:disabled { opacity:0.5; pointer-events:none; }
 
 /* ── 서비스 설정 체크박스 통일 ── */
 #serviceSetupView .sv-checkbox-label input[type="checkbox"] { display:none; }
@@ -2487,7 +2496,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #customerListView .cl-header h3 { font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:8px; }
 #customerListView .cl-header h3::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #customerListView .cl-header-actions { display:flex; gap:6px; align-items:center; }
-#customerListView .cl-action-btn { padding:7px 16px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; font-weight:500; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; }
+#customerListView .cl-action-btn { padding:0 24px; height:36px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:13px; font-weight:600; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; }
 #customerListView .cl-action-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #customerListView .cl-action-btn.primary { background:#6161FF; color:#fff; border-color:#6161FF; }
 #customerListView .cl-action-btn.primary:hover { background:#4F4FE0; }
@@ -2507,7 +2516,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #customerListView .cl-table td.memo-cell { text-align:left; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; color:#757575; }
 #customerListView .cl-table td.name-cell { color:#212121; cursor:pointer; }
 #customerListView .cl-table td.name-cell:hover { text-decoration:underline; }
-#customerListView .cl-tbl-btn { padding:4px 12px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#customerListView .cl-tbl-btn { padding:4px 12px; border:1px solid #B0B0FF; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #customerListView .cl-tbl-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #customerListView .cl-tbl-link { padding:4px 10px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #customerListView .cl-tbl-link:hover { border-color:#6161FF; color:#6161FF; background:#EEF0FF; }
@@ -2546,7 +2555,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #familyListView .fl-table tr:hover td { background:#FAFAFA; }
 #familyListView .fl-table td.amount { text-align:right; font-weight:500; }
 #familyListView .fl-table td.fl-members-cell { text-align:center; }
-#familyListView .fl-tbl-btn { padding:4px 12px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#familyListView .fl-tbl-btn { padding:4px 12px; border:1px solid #B0B0FF; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #familyListView .fl-tbl-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #familyListView .fl-sort-icon { display:inline-block; width:12px; font-size:10px; color:#BDBDBD; margin-left:2px; vertical-align:middle; }
 #familyListView .fl-sortable.asc .fl-sort-icon::after { content:'▲'; color:#6161FF; }
@@ -2569,7 +2578,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .fl-detail-table tr:last-child td { border-bottom:none; }
 .fl-detail-table tr:hover td { background:#FAFAFA; }
 .fl-detail-table .fl-manage-btns { display:flex; gap:6px; justify-content:center; }
-.fl-detail-table .fl-manage-btn { padding:4px 12px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+.fl-detail-table .fl-manage-btn { padding:4px 12px; border:1px solid #B0B0FF; background:#fff; border-radius:5px; font-size:11px; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 .fl-detail-table .fl-manage-btn.fl-edit { color:#6161FF; }
 .fl-detail-table .fl-manage-btn.fl-edit:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .fl-detail-table .fl-manage-btn.fl-del { color:#F06060; border-color:#F06060; }
@@ -2621,6 +2630,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #dupClientListView .dc-bulk-btn { height:32px; padding:0 16px; border:1px solid #E0E0E0; border-radius:6px; font-size:12px; font-weight:600; cursor:default; font-family:inherit; transition:0.15s; background:#fff; color:#9E9E9E; opacity:0.6; }
 #dupClientListView .dc-bulk-btn.active { opacity:1; cursor:pointer; background:#6161FF; color:#fff; border-color:#6161FF; }
 #dupClientListView .dc-bulk-btn.active:hover { background:#4F4FE0; border-color:#4F4FE0; }
+#dupClientListView .dc-bulk-btn.active.dc-danger { background:#F06060; color:#fff; border-color:#F06060; }
+#dupClientListView .dc-bulk-btn.active.dc-danger:hover { background:#E24B4A; border-color:#E24B4A; }
 /* ══ [FEAT-DUP-CLIENT] 중복 고객 관리 페이지 END ══ */
 
 /* ══ [FEAT-DEL-CLIENT] 삭제 고객 관리 페이지 START ══ */
@@ -2660,6 +2671,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #deletedClientView .dlc-bulk-btn { height:32px; padding:0 16px; border:1px solid #E0E0E0; border-radius:6px; font-size:12px; font-weight:600; cursor:default; font-family:inherit; transition:0.15s; background:#fff; color:#9E9E9E; opacity:0.6; }
 #deletedClientView .dlc-bulk-btn.active { opacity:1; cursor:pointer; background:#6161FF; color:#fff; border-color:#6161FF; }
 #deletedClientView .dlc-bulk-btn.active:hover { background:#4F4FE0; border-color:#4F4FE0; }
+#deletedClientView .dlc-bulk-btn.active.dlc-danger { background:#F06060; color:#fff; border-color:#F06060; }
+#deletedClientView .dlc-bulk-btn.active.dlc-danger:hover { background:#E24B4A; border-color:#E24B4A; }
 /* ══ [FEAT-DEL-CLIENT] 삭제 고객 관리 페이지 END ══ */
 /* 정렬 가능 컬럼 */
 #customerListView .cl-sort-icon { display:inline-block; width:12px; font-size:10px; color:#BDBDBD; margin-left:2px; vertical-align:middle; }
@@ -3882,7 +3895,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #prepaidSetupView.show { display:flex; }
 #prepaidSetupView .ps-header-bg { }
 #prepaidSetupView .ps-header { }
-#prepaidSetupView .ps-reg-btn { height:32px; padding:0 16px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#prepaidSetupView .ps-reg-btn { height:36px; padding:0 24px; border:none; border-radius:6px; background:#6161FF; color:#fff; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #prepaidSetupView .ps-reg-btn:hover { background:#4F4FE0; }
 #prepaidSetupView .ps-body { flex:1; overflow-y:auto; padding:20px; }
 #prepaidSetupView .ps-panel { background:#fff; border:1px solid #E0E0E0; border-radius:8px; overflow:hidden; max-width:1560px; }
@@ -3900,10 +3913,10 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #prepaidSetupView .ps-drag-col { width:28px; padding:0 4px !important; text-align:center !important; }
 #prepaidSetupView .ps-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; vertical-align:middle; }
 #prepaidSetupView .ps-drag-handle:active { cursor:grabbing; }
-#prepaidSetupView .ps-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; }
+#prepaidSetupView .ps-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
 #psCardTbody tr.sortable-ghost { opacity:0.4; }
 #psCardTbody tr.sortable-drag { background:#F5F5F5 !important; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-#prepaidSetupView .ps-edit-btn { height:28px; padding:0 12px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
+#prepaidSetupView .ps-edit-btn { height:28px; padding:0 12px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 #prepaidSetupView .ps-edit-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #prepaidSetupView .ps-drag-hint { font-size:11px; color:#9E9E9E; margin-top:8px; padding:10px 26px 14px; background:#fff; }
 #psCardTbody tr.ps-unused { display:none; }
@@ -3917,8 +3930,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #ppRegModal .ppm-header-left { display:flex; align-items:center; gap:8px; }
 #ppRegModal .ppm-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #ppRegModal .ppm-title { font-size:15px; font-weight:700; color:#212121; }
-#ppRegModal .ppm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; transition:0.15s; }
-#ppRegModal .ppm-close:hover { background:#F0EEE9; color:#616161; }
+#ppRegModal .ppm-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; transition:0.15s; }
+#ppRegModal .ppm-close:hover { background:#EEEEEE; color:#616161; }
 #ppRegModal .ppm-body { flex:1; overflow-y:auto; padding:20px; }
 #ppRegModal .ppm-panel-inner { border:1px solid #E0E0E0; border-radius:8px; padding:20px; }
 #ppRegModal .ppm-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
@@ -3951,12 +3964,14 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #ppRegModal .ppm-toggle input:checked + .ppm-toggle-slider::before { transform:translateX(18px); }
 #ppRegModal #ppStatusLabel { font-size:13px; color:#212121; }
 #ppRegModal .ppm-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; border-top:1px solid #E0E0E0; flex-shrink:0; }
-#ppRegModal .ppm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+#ppRegModal .ppm-btn-save { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 #ppRegModal .ppm-btn-save:hover { background:#4F4FE0; }
-#ppRegModal .ppm-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-#ppRegModal .ppm-btn-cancel:hover { background:#F5F5F5; }
-#ppRegModal .ppm-btn-delete { height:36px; padding:0 20px; background:#fff; color:#F06060; border:1px solid #F06060; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-#ppRegModal .ppm-btn-delete:hover { background:#FFF5F5; }
+#ppRegModal .ppm-btn-save:active { background:#3D3DC0; }
+#ppRegModal .ppm-btn-save:disabled { opacity:0.5; pointer-events:none; }
+#ppRegModal .ppm-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+#ppRegModal .ppm-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+#ppRegModal .ppm-btn-delete { height:36px; padding:0 20px; background:#fff; color:#F06060; border:1px solid #F0B0B0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+#ppRegModal .ppm-btn-delete:hover { background:#F06060; color:#fff; border-color:#F06060; }
 #ppRegModal .ppm-expiry-wrap { display:flex; align-items:center; gap:8px; flex:1; }
 #ppRegModal .ppm-check-label { display:flex; align-items:center; gap:6px; font-size:13px; color:#212121; cursor:pointer; user-select:none; }
 #ppRegModal .ppm-check-label input[type="checkbox"] { display:none; }
@@ -3977,7 +3992,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #packageSetupView .pkg-body { flex:1; overflow-y:auto; padding:20px; }
 #packageSetupView .pkg-layout { display:flex; gap:16px; align-items:flex-start; max-width:1560px; }
 #packageSetupView .pkg-panel { background:#fff; border:1px solid #E0E0E0; border-radius:8px; overflow:hidden; flex:0 0 530px; }
-.pkg-reg-btn-inner { height:30px; padding:0 14px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.pkg-reg-btn-inner { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .pkg-reg-btn-inner:hover { background:#4F4FE0; }
 /* 상세 패널 */
 #packageSetupView .pkg-detail-panel { flex:1; min-width:0; background:#fff; border:1px solid #E0E0E0; border-radius:8px; overflow:hidden; }
@@ -4005,10 +4020,10 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 #packageSetupView .pkg-drag-col { width:28px; padding:0 4px !important; text-align:center !important; }
 #packageSetupView .pkg-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; vertical-align:middle; }
 #packageSetupView .pkg-drag-handle:active { cursor:grabbing; }
-#packageSetupView .pkg-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; }
-#packageSetupView .pkg-edit-btn { height:28px; padding:0 12px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; white-space:nowrap; transition:0.15s; }
+#packageSetupView .pkg-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
+#packageSetupView .pkg-edit-btn { height:28px; padding:0 12px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; white-space:nowrap; transition:0.15s; }
 #packageSetupView .pkg-edit-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
-#packageSetupView .pkg-view-btn { width:32px; height:28px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:13px; color:#6161FF; cursor:pointer; font-family:inherit; transition:0.15s; display:inline-flex; align-items:center; justify-content:center; }
+#packageSetupView .pkg-view-btn { width:32px; height:28px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:13px; color:#6161FF; cursor:pointer; font-family:inherit; transition:0.15s; display:inline-flex; align-items:center; justify-content:center; }
 #packageSetupView .pkg-view-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 #packageSetupView .pkg-view-btn.active,
 #packageSetupView .pkg-table tbody tr.active .pkg-view-btn,
@@ -4028,8 +4043,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .pkm-header-left { display:flex; align-items:center; gap:8px; }
 .pkm-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; flex-shrink:0; }
 .pkm-title { font-size:15px; font-weight:700; color:#212121; }
-.pkm-close { width:28px; height:28px; background:#F5F5F5; border:none; border-radius:50%; color:#616161; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; }
-.pkm-close:hover { background:#E0E0E0; }
+.pkm-close { width:28px; height:28px; background:#F5F5F5; border:none; border-radius:50%; color:#757575; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; }
+.pkm-close:hover { background:#EEEEEE; }
 .pkm-body { flex:1; overflow:hidden; display:flex; flex-direction:column; padding:14px 16px; gap:10px; min-height:0; }
 .pkm-tabs { display:flex; gap:4px; flex-shrink:0; }
 .pkm-tab { height:34px; padding:0 20px; border:1px solid #BDBDBD; background:#fff; border-radius:6px; font-size:13px; font-weight:500; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
@@ -4094,25 +4109,27 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .pkm-toggle input:checked + .pkm-toggle-slider::before { transform:translateX(18px); }
 #pkgStatusLabel { font-size:13px; color:#212121; }
 .pkm-btn-col { display:flex; flex-direction:column; gap:8px; flex-shrink:0; padding-top:2px; }
-.pkm-btn-save { height:36px; min-width:80px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
+.pkm-btn-save { height:36px; min-width:80px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
 .pkm-btn-save:hover { background:#4F4FE0; }
-.pkm-btn-cancel { height:36px; min-width:80px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
-.pkm-btn-cancel:hover { background:#F5F5F5; }
-.pkm-btn-delete { height:36px; min-width:80px; background:#fff; color:#F06060; border:1px solid #F06060; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
-.pkm-btn-delete:hover { background:#FFF5F5; }
+.pkm-btn-save:active { background:#3D3DC0; }
+.pkm-btn-save:disabled { opacity:0.5; pointer-events:none; }
+.pkm-btn-cancel { height:36px; min-width:80px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+.pkm-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+.pkm-btn-delete { height:36px; min-width:80px; background:#fff; color:#F06060; border:1px solid #F0B0B0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
+.pkm-btn-delete:hover { background:#F06060; color:#fff; border-color:#F06060; }
 /* ══ [FEAT-PRODUCT-SETUP] 제품 설정 페이지 ══ */
 #productSetupView { display:none; flex-direction:column; height:100%; }
 #productSetupView.show { display:flex; }
 .prd-header-bg { }
 .prd-header { }
 .prd-header-btns { display:flex; gap:8px; }
-.prd-reg-btn { height:32px; padding:0 16px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; }
+.prd-reg-btn { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
 .prd-reg-btn:hover { background:#4F4FE0; }
-.prd-excel-btn { height:32px; padding:0 16px; background:#fff; color:#6161FF; border:1px solid #6161FF; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; }
-.prd-excel-btn:hover { background:#EEF0FF; }
+.prd-excel-btn { height:32px; padding:0 16px; background:#fff; color:#6161FF; border:1px solid #B0B0FF; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; }
+.prd-excel-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .prd-body { flex:1; overflow-y:auto; padding:20px; }
 .prd-panel { background:#fff; border-radius:8px; border:1px solid #E0E0E0; overflow:hidden; max-width:1560px; }
-.prd-filter-bar { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #F5F4F1; flex-wrap:wrap; background: #F7F7FF;}
+.prd-filter-bar { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #F5F4F1; flex-wrap:wrap; background: #FFFFFF;}
 .prd-filter-label { font-size:13px; font-weight:500; color:#616161; white-space:nowrap; }
 .prd-filter-sel { height:34px; border:1px solid #E0E0E0; border-radius:6px; padding:0 28px 0 10px; font-size:13px; font-family:inherit; color:#212121; background:#fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239E9E9E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center; appearance:none; min-width:160px; cursor:pointer; }
 .prd-filter-sel:focus { border-color:#6161FF; outline:none; }
@@ -4135,8 +4152,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prd-table tbody tr:hover { background:#FAFAFA; }
 .prd-table tbody tr.prd-inactive td { color:#BDBDBD; }
 .prd-table tbody td.prd-empty { text-align:center; color:#9E9E9E; padding:32px; }
-.prd-edit-btn { height:28px; padding:0 12px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-family:inherit; white-space:nowrap; }
-.prd-edit-btn:hover { background:#F5F5F5; }
+.prd-edit-btn { height:28px; padding:0 12px; border:1px solid #B0B0FF; background:#fff; border-radius:6px; font-size:12px; color:#6161FF; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.prd-edit-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .prd-bottom-bar { display:flex; gap:8px; padding:12px 16px; border-top:1px solid #F5F4F1; }
 .prd-bulk-btn { height:32px; padding:0 16px; border:1px solid #E0E0E0; border-radius:6px; font-size:12px; font-weight:600; cursor:default; font-family:inherit; transition:0.15s; background:#fff; color:#9E9E9E; opacity:0.6; }
 .prd-bulk-btn.active { opacity:1; cursor:pointer; background:#6161FF; color:#fff; border-color:#6161FF; }
@@ -4150,8 +4167,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prd-modal-header-left { display:flex; align-items:center; gap:10px; }
 .prd-modal-header-bar { width:4px; height:20px; background:#6161FF; border-radius:2px; }
 .prd-modal-title { font-size:16px; font-weight:700; color:#212121; }
-.prd-modal-close { width:28px; height:28px; border:none; background:#F5F4F1; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; }
-.prd-modal-close:hover { background:#E0E0E0; }
+.prd-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; }
+.prd-modal-close:hover { background:#EEEEEE; }
 .prd-modal-body { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
 .prd-form-row { display:flex; align-items:center; gap:12px; }
 .prd-form-row-top { align-items:flex-start; }
@@ -4203,10 +4220,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prd-code-note { font-size:12px; color:#616161; margin:0; line-height:1.5; }
 .prd-code-note-em { color:#E24B4A; font-weight:600; }
 .prd-modal-footer { display:flex; justify-content:center; gap:10px; padding:16px 20px; border-top:1px solid #F5F4F1; flex-shrink:0; }
-.prd-modal-save { height:38px; min-width:100px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:500; cursor:pointer; font-family:inherit; }
+.prd-modal-save { height:38px; min-width:100px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
 .prd-modal-save:hover { background:#4F4FE0; }
-.prd-modal-cancel { height:38px; min-width:100px; background:#fff; color:#616161; border:1.5px solid #BDBDBD; border-radius:6px; font-size:14px; font-weight:500; cursor:pointer; font-family:inherit; }
-.prd-modal-cancel:hover { background:#F5F5F5; }
+.prd-modal-save:active { background:#3D3DC0; }
+.prd-modal-save:disabled { opacity:0.5; pointer-events:none; }
+.prd-modal-cancel { height:38px; min-width:100px; background:#fff; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:14px; font-weight:500; cursor:pointer; font-family:inherit; }
+.prd-modal-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
 /* ══ [FEAT-PRODUCT-SETUP] END ══ */
 
 /* ══ [FEAT-PRODUCTCAT-SETUP] 제품 분류 설정 ══ */
@@ -4216,7 +4235,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prdcat-header { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; max-width:1600px; }
 .prdcat-header h3 { margin:0; font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:8px; }
 .prdcat-header h3::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; flex-shrink:0; }
-.prdcat-reg-btn { height:32px; padding:0 16px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.prdcat-reg-btn { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .prdcat-reg-btn:hover { background:#4F4FE0; }
 .prdcat-body { flex:1; overflow-y:auto; padding:20px; }
 .prdcat-panel { background:#fff; border-radius:10px; box-shadow:0 0 0 1px #D0D0D0; overflow:hidden; max-width:1560px; }
@@ -4240,9 +4259,9 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prdcat-drag-col { width:28px; padding:0 4px !important; text-align:center !important; }
 .prdcat-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; vertical-align:middle; }
 .prdcat-drag-handle:active { cursor:grabbing; }
-.prdcat-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; }
-.prdcat-edit-btn { height:28px; padding:0 14px; background:#fff; border:1px solid #BDBDBD; border-radius:5px; font-size:12px; color:#424242; cursor:pointer; font-family:inherit; white-space:nowrap; }
-.prdcat-edit-btn:hover { background:#F5F4F1; }
+.prdcat-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
+.prdcat-edit-btn { height:28px; padding:0 14px; background:#fff; border:1px solid #B0B0FF; border-radius:5px; font-size:12px; color:#6161FF; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.prdcat-edit-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .prdcat-drag-hint { padding:8px 20px 12px; font-size:12px; color:#9E9E9E; }
 /* 제품 분류 모달 */
 .prdcat-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); z-index:2000; align-items:center; justify-content:center; }
@@ -4252,8 +4271,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prdcat-modal-header-left { display:flex; align-items:center; gap:8px; }
 .prdcat-modal-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 .prdcat-modal-header span#prdcatModalTitle { font-size:15px; font-weight:700; color:#212121; }
-.prdcat-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
-.prdcat-modal-close:hover { background:#F0EEE9; color:#616161; }
+.prdcat-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
+.prdcat-modal-close:hover { background:#EEEEEE; color:#616161; }
 .prdcat-modal-body { padding:24px 20px 16px; display:flex; flex-direction:column; gap:0; }
 .prdcat-modal-inner { border:1px solid #E0E0E0; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:16px; }
 .prdcat-field-row { display:flex; align-items:center; gap:12px; }
@@ -4269,12 +4288,14 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .prdcat-toggle input:checked + .prdcat-toggle-slider { background:#6161FF; }
 .prdcat-toggle input:checked + .prdcat-toggle-slider::before { transform:translateX(18px); }
 .prdcat-modal-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; border-top:1px solid #E0E0E0; flex-shrink:0; }
-.prdcat-btn-save { height:36px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+.prdcat-btn-save { height:36px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 .prdcat-btn-save:hover { background:#4F4FE0; }
-.prdcat-btn-delete { height:36px; padding:0 20px; background:transparent; color:#E24B4A; border:1px solid #E24B4A; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-.prdcat-btn-delete:hover { background:#FFF5F5; }
-.prdcat-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-.prdcat-btn-cancel:hover { background:#F5F5F5; }
+.prdcat-btn-save:active { background:#3D3DC0; }
+.prdcat-btn-save:disabled { opacity:0.5; pointer-events:none; }
+.prdcat-btn-delete { height:36px; padding:0 20px; background:transparent; color:#F06060; border:1px solid #F0B0B0; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+.prdcat-btn-delete:hover { background:#F06060; color:#fff; border-color:#F06060; }
+.prdcat-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+.prdcat-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
 /* ══ [FEAT-PRODUCTCAT-SETUP] END ══ */
 
 /* ══ [FEAT-OTHERCODE-SETUP] 기타 코드 설정 ══ */
@@ -4287,7 +4308,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .otc-container { display:flex; gap:16px; align-items:flex-start; background:transparent; border-radius:0; box-shadow:none; overflow:visible; }
 /* 왼쪽 패널 */
 .otc-left-panel { flex:0 0 530px; background:#fff; border-radius:10px; box-shadow:0 0 0 1px #D0D0D0; overflow:hidden; display:flex; flex-direction:column; border-right:none; }
-.otc-left-title { padding:10px 14px; background:#FAFAFA; border-bottom:1px solid #E0E0E0; font-size:13px; font-weight:600; color:#212121; }
+.otc-left-title { padding:10px 14px; background:#FFFFFF; border-bottom:1px solid #E0E0E0; font-size:13px; font-weight:600; color:#212121; }
 .otc-cat-item { padding:11px 16px; font-size:13px; color:#424242; cursor:pointer; border-bottom:1px solid #F5F4F1; transition:background 0.15s; display:flex; align-items:center; justify-content:space-between; }
 .otc-cat-item:last-child { border-bottom:none; }
 .otc-cat-item:hover { background:#EEF0FF; color:#6161FF; }
@@ -4305,7 +4326,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .otc-checkbox-label input[type="checkbox"] { display:none; }
 .otc-checkbox-label .otc-checkmark { width:18px; height:18px; border:1px solid #BDBDBD; border-radius:4px; display:flex; align-items:center; justify-content:center; transition:0.2s; font-size:10px; color:transparent; flex-shrink:0; }
 .otc-checkbox-label input[type="checkbox"]:checked + .otc-checkmark { background:#6161FF; border-color:#6161FF; color:#fff; }
-.otc-reg-btn { height:32px; padding:0 16px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.otc-reg-btn { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .otc-reg-btn:hover { background:#4F4FE0; }
 .otc-item-table { width:100%; border-collapse:collapse; }
 .otc-item-table th { background:#FAFAFA; padding:10px 16px; font-size:12px; font-weight:600; color:#616161; text-align:center; border-bottom:1px solid #E0E0E0; white-space:nowrap; }
@@ -4321,7 +4342,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .otc-drag-col { width:28px; padding:0 4px !important; text-align:center !important; }
 .otc-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; vertical-align:middle; }
 .otc-drag-handle:active { cursor:grabbing; }
-.otc-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; }
+.otc-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
 .otc-edit-btn { height:28px; padding:0 14px; background:#fff; border:1px solid #BDBDBD; border-radius:5px; font-size:12px; color:#424242; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .otc-edit-btn:hover { background:#F5F4F1; }
 .otc-drag-hint { padding:8px 16px 12px; font-size:12px; color:#9E9E9E; }
@@ -4333,8 +4354,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .otc-modal-header-left { display:flex; align-items:center; gap:8px; }
 .otc-modal-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 #otcModalTitle { font-size:15px; font-weight:700; color:#212121; }
-.otc-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
-.otc-modal-close:hover { background:#F0EEE9; color:#616161; }
+.otc-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
+.otc-modal-close:hover { background:#EEEEEE; color:#616161; }
 .otc-modal-body { padding:24px 20px 16px; }
 .otc-modal-inner { border:1px solid #E0E0E0; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:16px; }
 .otc-field-row { display:flex; align-items:center; gap:12px; }
@@ -4354,10 +4375,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .otc-toggle input:checked + .otc-toggle-slider { background:#6161FF; }
 .otc-toggle input:checked + .otc-toggle-slider::before { transform:translateX(18px); }
 .otc-modal-footer { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; border-top:1px solid #E0E0E0; flex-shrink:0; }
-.otc-btn-save { height:36px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
+.otc-btn-save { height:36px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
 .otc-btn-save:hover { background:#4F4FE0; }
-.otc-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:0.15s; }
-.otc-btn-cancel:hover { background:#F5F5F5; }
+.otc-btn-save:active { background:#3D3DC0; }
+.otc-btn-save:disabled { opacity:0.5; pointer-events:none; }
+.otc-btn-cancel { height:36px; padding:0 20px; background:transparent; color:#616161; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:0.15s; }
+.otc-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
 /* ══ [FEAT-OTHERCODE-SETUP] END ══ */
 
 /* ── 매출집계 직원 select 스타일 (sh-filter-select 공유 클래스) ── */
@@ -4502,14 +4525,14 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .pts-right { flex:1; display:flex; flex-direction:column; }
 .pts-right .pts-card { flex:1; display:flex; flex-direction:column; }
 .pts-card { background:#fff; border-radius:10px; box-shadow:0 0 0 1px #D0D0D0; overflow:hidden; display:flex; flex-direction:column; }
-.pts-card-title { padding:12px 16px; font-size:13px; font-weight:600; color:#212121; border-bottom:1px solid #E0E0E0; background:#FAFAFA; }
+.pts-card-title { padding:12px 16px; font-size:13px; font-weight:600; color:#212121; border-bottom:1px solid #E0E0E0; background:#FFFFFF; }
 .pts-table {
   width:100%;
   border-collapse:collapse;
   font-size:12px;
 }
 .pts-table thead th {
-  background:#F7F7FF;
+  background:#FAFAFA;
   padding:10px 12px;
   font-size:12px;
   font-weight:600;
@@ -4519,7 +4542,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   border-bottom:1px solid #E0E0E0;
 }
 .pts-table thead tr:first-child th { border-bottom:1px solid #E0E0E0; }
-.pts-colname-row th { background:#F7F7FF !important; font-weight:600; color:#616161; border-bottom:1px solid #E0E0E0; }
+.pts-colname-row th { background:#FAFAFA !important; font-weight:600; color:#616161; border-bottom:1px solid #E0E0E0; }
 .pts-th-label {
   text-align:left !important;
   padding-left:14px !important;
@@ -4631,11 +4654,18 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
   border-radius:6px;
   font-size:13px;
   font-family:inherit;
-  font-weight:500;
+  font-weight:600;
   cursor:pointer;
 }
 .pts-save-btn:hover {
   background:#4F4FE0;
+}
+.pts-save-btn:active {
+  background:#3D3DC0;
+}
+.pts-save-btn:disabled {
+  opacity:0.5;
+  pointer-events:none;
 }
 /* 소개 포인트 */
 .pts-ref-row {
@@ -4712,7 +4742,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .pts-ref-table { width:100%; border-collapse:collapse; margin-bottom:0; }
 .pts-ref-table td { border-bottom:1px solid #E0E0E0; padding:10px 14px; font-size:12px; }
 .pts-ref-table tr:last-child td { border-bottom:none; }
-.pts-ref-td-label { background:#F7F7FF; font-size:12px; font-weight:600; color:#616161; text-align:center; white-space:nowrap; width:40%; border-right:1px solid #E0E0E0; }
+.pts-ref-td-label { background:#FAFAFA; font-size:12px; font-weight:600; color:#616161; text-align:center; white-space:nowrap; width:40%; border-right:1px solid #E0E0E0; }
 .pts-ref-td-input { text-align:center; background:#fff; }
 .pts-ref-td-input .pts-ref-input { width:100%; max-width:none; border:1px solid #E0E0E0; border-radius:6px; text-align:center; height:30px; background:#fff; font-size:12px; font-family:inherit; color:#212121; outline:none; padding:0 8px; transition:border-color 0.15s; }
 .pts-ref-td-input .pts-ref-input:focus { border-color:#6161FF; box-shadow:0 0 0 3px rgba(97,97,255,0.1); }
@@ -4729,13 +4759,13 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .cst-header { }
 #consentSetupView .sv-help-btn { width:18px; height:18px; border-radius:50%; border:1.5px solid #BDBDBD; background:#fff; font-size:11px; font-weight:700; color:#9E9E9E; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; line-height:1; flex-shrink:0; text-decoration:none; }
 .cst-header-right { display:flex; align-items:center; gap:8px; }
-.cst-msg-btn { height:32px; padding:0 14px; background:#fff; border:1px solid #6161FF; border-radius:6px; font-size:13px; font-family:inherit; font-weight:500; color:#6161FF; cursor:pointer; }
-.cst-msg-btn:hover { background:#EEF0FF; }
-.cst-reg-btn { height:32px; padding:0 14px; background:#6161FF; border:none; border-radius:6px; font-size:13px; font-family:inherit; font-weight:500; color:#fff; cursor:pointer; }
+.cst-msg-btn { height:32px; padding:0 14px; background:#fff; border:1px solid #B0B0FF; border-radius:6px; font-size:13px; font-family:inherit; font-weight:500; color:#6161FF; cursor:pointer; }
+.cst-msg-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
+.cst-reg-btn { height:36px; padding:0 24px; background:#6161FF; border:none; border-radius:6px; font-size:13px; font-family:inherit; font-weight:600; color:#fff; cursor:pointer; }
 .cst-reg-btn:hover { background:#4F4FE0; }
-.cst-back-btn { height:32px; padding:0 14px; background:#fff; border:1px solid #BDBDBD; border-radius:6px; font-size:13px; font-family:inherit; color:#616161; cursor:pointer; }
-.cst-back-btn:hover { background:#F5F5F5; }
-.cst-save-btn { height:32px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-family:inherit; font-weight:500; cursor:pointer; }
+.cst-back-btn { padding:7px 16px; background:#fff; border:1px solid #E0E0E0; border-radius:6px; font-size:12px; font-family:inherit; font-weight:500; color:#616161; cursor:pointer; transition:0.15s; }
+.cst-back-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
+.cst-save-btn { height:32px; padding:0 20px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-family:inherit; font-weight:600; cursor:pointer; }
 .cst-save-btn:hover { background:#4F4FE0; }
 
 .cst-body { flex:1; overflow-y:auto; padding:20px; min-height:0; }
@@ -4754,8 +4784,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .cst-table td:first-child { text-align:left; }
 .cst-table tbody tr:last-child td { border-bottom:none; }
 .cst-empty { text-align:center !important; color:#9E9E9E; padding:40px 0 !important; }
-.cst-view-btn { height:28px; padding:0 12px; background:#fff; border:1px solid #E0E0E0; border-radius:4px; font-size:12px; font-family:inherit; color:#616161; cursor:pointer; }
-.cst-view-btn:hover { background:#F5F5F5; border-color:#BDBDBD; }
+.cst-view-btn { height:28px; padding:0 12px; background:#fff; border:1px solid #B0B0FF; border-radius:5px; font-size:12px; font-family:inherit; color:#6161FF; cursor:pointer; }
+.cst-view-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .cst-signer-y { color:#6161FF; font-weight:600; cursor:pointer; font-size:13px; }
 .cst-signer-y:hover { text-decoration:underline; }
 .cst-signer-n { color:#9E9E9E; font-size:13px; }
@@ -4889,12 +4919,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 }
 .cst-modal-close {
   width:28px; height:28px; border-radius:50%;
-  background:#F5F5F5; border:none; color:#9E9E9E;
+  background:#F5F5F5; border:none; color:#757575;
   font-size:13px; cursor:pointer; display:flex;
   align-items:center; justify-content:center;
   transition:background 0.12s;
 }
-.cst-modal-close:hover { background:#E0E0E0; }
+.cst-modal-close:hover { background:#EEEEEE; }
 .cst-modal-body { flex:1; overflow-y:auto; padding:20px; }
 .cst-modal-footer {
   padding:14px 20px; border-top:1px solid #E0E0E0;
@@ -4907,7 +4937,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 }
 .cst-modal-btn-primary:hover { background:#4F4FE0; }
 .cst-modal-btn-outline {
-  height:36px; padding:0 40px; background:#fff; color:#424242;
+  height:36px; padding:0 40px; background:#fff; color:#616161;
   border:1px solid #BDBDBD; border-radius:6px; font-size:13px;
   font-weight:500; font-family:inherit; cursor:pointer; transition:background 0.12s;
 }
@@ -4952,10 +4982,11 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .cst-client-info-desc { font-size:12px; color:#6161FF; margin-bottom:10px; }
 .cst-info-checks { display:flex; flex-wrap:wrap; gap:10px 20px; }
 .cst-reg-btn-row { display:flex; gap:8px; margin:16px 0; flex-wrap:wrap; justify-content:flex-end; }
-.cst-reg-action-btn { height:36px; padding:0 16px; background:#fff; border:1px solid #6161FF; border-radius:8px; font-size:13px; font-family:inherit; color:#6161FF; cursor:pointer; font-weight:500; transition:all 0.15s; }
-.cst-reg-action-btn:hover { background:#EEF0FF; }
+.cst-reg-action-btn { height:36px; padding:0 16px; background:#fff; border:1px solid #B0B0FF; border-radius:6px; font-size:13px; font-family:inherit; color:#6161FF; cursor:pointer; font-weight:500; transition:all 0.15s; }
+.cst-reg-action-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .cst-preview-action { color:#757575; border-color:#E0E0E0; }
 .cst-preview-action:hover { background:#F5F5F5; border-color:#BDBDBD; color:#424242; }
+.cst-drag-hint { font-size:11px; color:#9E9E9E; margin-top:4px; text-align:right; }
 .cst-content-add { background:#fff; color:#6161FF; border-color:#6161FF; }
 .cst-content-add:hover { background:#EEF0FF; }
 .cst-chk-label { display:inline-flex; align-items:flex-start; gap:6px; font-size:13px; color:#424242; cursor:pointer; }
@@ -4976,7 +5007,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .cst-section-header { display:flex; align-items:center; gap:6px; margin-bottom:12px; font-size:13px; }
 .cst-section-drag-handle { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; cursor:grab; color:#BDBDBD; flex-shrink:0; margin-right:4px; }
 .cst-section-drag-handle:active { cursor:grabbing; }
-.cst-section-drag-handle::before { content:'\2807 \2807'; font-family:sans-serif; letter-spacing:-2px; font-size:8px; line-height:1; transform:scale(1.2); }
+.cst-section-drag-handle::before { content:'⠿'; font-size:14px; line-height:1; }
 .cst-section-name { font-weight:700; color:#212121; white-space:nowrap; }
 .cst-section-desc { font-size:12px; color:#6161FF; }
 .cst-section-del { width:28px; height:28px; background:transparent; border:none; cursor:pointer; color:#BDBDBD; display:inline-flex; align-items:center; justify-content:center; transition:0.15s; padding:0; font-size:16px; margin-left:auto; }
@@ -5037,8 +5068,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .cst-form-preview-header-left { display:flex; align-items:center; gap:8px; }
 .cst-form-preview-header-bar { width:4px; height:18px; background:#6161FF; border-radius:2px; }
 .cst-form-preview-title { font-size:15px; font-weight:700; color:#212121; }
-.cst-form-preview-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
-.cst-form-preview-close:hover { background:#F0EEE9; color:#616161; }
+.cst-form-preview-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
+.cst-form-preview-close:hover { background:#EEEEEE; color:#616161; }
 .cst-form-preview-body { padding:24px; overflow-y:auto; flex:1; }
 .cst-pv-section { padding:14px 0; border-bottom:1px solid #E0E0E0; }
 .cst-pv-section:last-child { border-bottom:none; }
@@ -5211,8 +5242,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .env-modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E0E0E0; font-size:15px; font-weight:700; color:#212121; }
 .env-modal-header span { display:flex; align-items:center; gap:8px; }
 .env-modal-header span::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; }
-.env-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
-.env-modal-close:hover { background:#E0E0E0; color:#616161; }
+.env-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
+.env-modal-close:hover { background:#EEEEEE; color:#616161; }
 .env-modal-body { padding:24px 24px 20px; }
 .env-modal-field { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
 .env-modal-field label { font-size:13px; color:#424242; white-space:nowrap; min-width:80px; }
@@ -5223,10 +5254,12 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .env-modal-input-wrap { margin-bottom:18px; }
 .env-modal-btns { display:flex; gap:8px; justify-content:flex-end; }
 .env-modal-btn { height:36px; padding:0 28px; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
-.env-modal-btn-cancel { background:#fff; border:1px solid #E0E0E0; color:#616161; }
+.env-modal-btn-cancel { background:#fff; border:1px solid #BDBDBD; color:#616161; }
 .env-modal-btn-cancel:hover { background:#F5F5F5; border-color:#BDBDBD; }
-.env-modal-btn-save { background:#6161FF; color:#fff; }
+.env-modal-btn-save { background:#6161FF; color:#fff; font-weight:600; }
 .env-modal-btn-save:hover { background:#4F4FE0; }
+.env-modal-btn-save:active { background:#3D3DC0; }
+.env-modal-btn-save:disabled { opacity:0.5; pointer-events:none; }
 /* ══ [FEAT-ENV-SETUP] END ══ */
 
 /* ══ [FEAT-AHACALL-SETUP] 아하콜 서비스 ══ */
@@ -5242,7 +5275,7 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .ac-desc-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; padding:14px 20px; background:#fff; border:1px solid #E0E0E0; border-radius:8px; }
 .ac-desc { flex:1; }
 .ac-desc p { font-size:13px; color:#212121; line-height:1.8; margin:0; }
-.ac-history-btn { height:34px; padding:0 18px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:background 0.15s; flex-shrink:0; margin-left:20px; }
+.ac-history-btn { height:36px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:background 0.15s; flex-shrink:0; margin-left:20px; }
 .ac-history-btn:hover { background:#4F4FE0; }
 
 /* 섹션 */
@@ -5339,13 +5372,13 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 /* 고객명 셀 */
 .ach-client-cell { display:flex; align-items:center; justify-content:center; gap:8px; }
 .ach-unreg-label { font-size:12px; color:#757575; }
-.ach-reg-btn { height:26px; padding:0 10px; background:#fff; color:#6161FF; border:1px solid #6161FF; border-radius:5px; font-size:11px; font-weight:500; cursor:pointer; font-family:inherit; transition:all 0.15s; white-space:nowrap; }
-.ach-reg-btn:hover { background:#EEF0FF; }
+.ach-reg-btn { height:26px; padding:0 10px; background:#fff; color:#6161FF; border:1px solid #B0B0FF; border-radius:5px; font-size:11px; font-weight:500; cursor:pointer; font-family:inherit; transition:all 0.15s; white-space:nowrap; }
+.ach-reg-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 
 /* 액션 버튼 — 고객 목록 cl-tbl-btn 스타일 통일 */
-.ach-tbl-btn { padding:4px 12px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
-.ach-tbl-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
-.ach-tbl-btn.danger { color:#F06060; border-color:#F06060; }
+.ach-tbl-btn { padding:4px 10px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
+.ach-tbl-btn:hover { border-color:#6161FF; color:#6161FF; background:#EEF0FF; }
+.ach-tbl-btn.danger { color:#F06060; border-color:#F0B0B0; }
 .ach-tbl-btn.danger:hover { background:#F06060; color:#fff; border-color:#F06060; }
 
 /* ── 모달 공통 (디자인 시스템) ── */
@@ -5355,8 +5388,8 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .ach-modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E0E0E0; }
 .ach-modal-title { font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:10px; }
 .ach-modal-title::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; flex-shrink:0; }
-.ach-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#9E9E9E; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
-.ach-modal-close:hover { background:#E0E0E0; color:#616161; }
+.ach-modal-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; font-size:14px; color:#757575; display:flex; align-items:center; justify-content:center; padding:0; transition:0.15s; }
+.ach-modal-close:hover { background:#EEEEEE; color:#616161; }
 .ach-modal-body { padding:24px 24px 20px; }
 .ach-modal-field { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
 .ach-modal-field label { font-size:13px; color:#424242; white-space:nowrap; min-width:70px; font-weight:500; }
@@ -5368,12 +5401,12 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .ach-modal-footer-btns .btn { height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
 .btn-primary { background:#6161FF; color:#fff; border:none; }
 .btn-primary:hover { background:#4F4FE0; }
-.btn-secondary { background:#fff; color:#616161; border:1px solid #E0E0E0; }
-.btn-secondary:hover { background:#F5F5F5; border-color:#BDBDBD; }
+.btn-secondary { background:#fff; color:#616161; border:1px solid #BDBDBD; }
+.btn-secondary:hover { background:#F5F5F5; border-color:#9E9E9E; }
 .btn-danger { background:#F06060; color:#fff; border:none; }
 .btn-danger:hover { background:#E24B4A; }
-.btn-danger-outline { background:#fff; color:#F06060; border:1px solid #F06060; }
-.btn-danger-outline:hover { background:#FFF5F5; border-color:#E24B4A; color:#E24B4A; }
+.btn-danger-outline { background:#fff; color:#F06060; border:1px solid #F0B0B0; }
+.btn-danger-outline:hover { background:#F06060; color:#fff; border-color:#F06060; }
 
 /* ══════════════════════════════════════════
    [VIEW-12] 고객 관리 / 문자 발송 (cm-)
@@ -5434,11 +5467,11 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-search-header h3 { font-size:15px; font-weight:700; color:#212121; display:flex; align-items:center; gap:8px; }
 .cm-search-header h3::before { content:''; width:4px; height:18px; background:#6161FF; border-radius:2px; }
 .cm-back-btn {
-  height:32px; padding:0 14px; background:#fff; border:1px solid #BDBDBD;
-  border-radius:6px; font-size:13px; font-family:'Pretendard',sans-serif;
-  color:#616161; cursor:pointer;
+  padding:7px 16px; background:#fff; border:1px solid #E0E0E0;
+  border-radius:6px; font-size:12px; font-family:'Pretendard',sans-serif;
+  font-weight:500; color:#616161; cursor:pointer; transition:0.15s;
 }
-.cm-back-btn:hover { background:#F5F5F5; }
+.cm-back-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
 .cm-search-view { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .cm-search-body { flex:1; overflow-y:auto; padding:20px 20px; max-width:1600px; width:100%; box-sizing:border-box; }
 .cm-search-panel {
@@ -5462,8 +5495,11 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-fieldset legend { font-size:12px; font-weight:600; color:#424242; padding:0 6px; }
 .cm-field-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 32px; }
 .cm-field-row { display:flex; align-items:center; gap:8px; font-size:12px; color:#424242; min-height:32px; flex-wrap:wrap; }
+.cm-field-row.cm-field-row--disabled { opacity:0.45; pointer-events:none; }
 .cm-field-row label { display:flex; align-items:center; gap:5px; white-space:nowrap; min-width:130px; }
 .cm-field-col { flex-direction:column; align-items:flex-start; grid-column:1; }
+.cm-visit-grid { display:flex; gap:32px; }
+.cm-visit-left, .cm-visit-right { flex:1; display:flex; flex-direction:column; gap:10px; }
 .cm-radio-group { display:flex; align-items:center; gap:8px; margin-left:24px; margin-top:4px; }
 .cm-radio { display:flex; align-items:center; gap:4px; white-space:nowrap; }
 .cm-tilde { color:#757575; margin:0 2px; }
@@ -5472,7 +5508,7 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-input-date { width:140px; }
 .cm-tooltip-wrap { position:relative; display:inline-flex; align-items:center; margin-left:2px; }
 .cm-tooltip-icon { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #BDBDBD; font-size:10px; color:#757575; cursor:help; font-weight:700; }
-.cm-tooltip-text { display:none; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#333; color:#fff; font-size:11px; padding:6px 10px; border-radius:6px; white-space:nowrap; z-index:100; }
+.cm-tooltip-text { display:none; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#1A1A4E; color:#fff; font-size:11px; padding:6px 10px; border-radius:6px; white-space:nowrap; z-index:100; }
 .cm-tooltip-wrap:hover .cm-tooltip-text { display:block; }
 
 /* 검색 버튼 */
@@ -5500,7 +5536,7 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-result-actions { display:flex; align-items:center; gap:8px; }
 .cm-btn-sms {
   background:#6161FF; color:#fff; border:none;
-  height:32px; padding:0 16px; border-radius:6px; font-size:13px; font-weight:600;
+  height:36px; padding:0 16px; border-radius:6px; font-size:13px; font-weight:600;
   cursor:pointer; font-family:'Pretendard',sans-serif;
 }
 .cm-btn-sms:hover { background:#4F4FE0; }
@@ -5511,12 +5547,12 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 }
 .cm-btn-research:hover { background:#F5F5F5; }
 .cm-btn-other {
-  background:#fff; color:#424242; border:1px solid #E0E0E0;
+  background:#fff; color:#616161; border:1px solid #BDBDBD;
   height:36px; padding:0 16px 0 20px; border-radius:6px; font-size:13px; font-weight:500;
   cursor:pointer; font-family:'Pretendard',sans-serif; display:flex; align-items:center; gap:24px;
   min-width:140px;
 }
-.cm-btn-other:hover { background:#F5F5F5; border-color:#BDBDBD; }
+.cm-btn-other:hover { background:#F5F5F5; border-color:#9E9E9E; }
 .cm-dropdown-arrow { display:inline-flex; align-items:center; margin-left:auto; }
 .cm-dropdown-wrap { position:relative; }
 .cm-dropdown-menu {
@@ -5560,9 +5596,22 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-sms-modal-scroll { flex:1; overflow-y:auto; }
 .cm-sms-modal-body { display:flex; gap:28px; padding:24px; }
 
-/* 좌측: 메시지 편집 */
-.cm-sms-left { width:280px; flex-shrink:0; }
-.cm-sms-editor { border:1px solid #E0E0E0; border-radius:10px; padding:16px; }
+/* 좌측: 폰 목업 */
+.cm-sms-left { width:280px; flex-shrink:0; display:flex; flex-direction:column; gap:12px; }
+.cm-phone-mock { background:#fff; border-radius:16px; overflow:visible; border:1px solid #E0E0E0; box-shadow:0 2px 12px rgba(0,0,0,0.08); display:flex; flex-direction:column; min-height:480px; }
+.cm-phone-mock .cm-sms-type-row { padding:10px 14px 6px; background:#fff; border-bottom:1px solid #EBEBEB; margin-bottom:0; border-radius:16px 16px 0 0; }
+.cm-phone-screen { display:flex; flex-direction:column; flex:1; }
+.cm-phone-fixed-line { background:#F8F8F8; font-size:13.5px; color:#888; line-height:1.7; padding:10px 14px 6px; max-height:40px; overflow:hidden; transition:max-height 0.25s ease, padding 0.25s ease, opacity 0.25s ease; opacity:1; }
+.cm-phone-fixed-line.cm-hidden { max-height:0; padding-top:0; padding-bottom:0; opacity:0; }
+.cm-phone-bubble { background:#fff; font-size:14px; color:#222; line-height:1.7; width:100%; min-height:120px; flex:1; border:none; outline:none; resize:none; font-family:inherit; padding:6px 14px; transition:flex 0.25s ease; }
+.cm-phone-fixed-bottom { background:#F8F8F8; font-size:13.5px; color:#888; line-height:1.7; padding:6px 14px 10px; border-top:1px solid #EBEBEB; max-height:40px; overflow:hidden; transition:max-height 0.25s ease, padding 0.25s ease, opacity 0.25s ease, border-top 0.25s ease; opacity:1; }
+.cm-phone-fixed-bottom.cm-hidden { max-height:0; padding-top:0; padding-bottom:0; opacity:0; border-top-color:transparent; }
+.cm-phone-btn-area { background:#fff; padding:4px 14px 12px; display:flex; gap:8px; }
+.cm-phone-btn-test { flex:1; padding:11px; background:#fff; border:1.5px solid #6161FF; border-radius:10px; color:#6161FF; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.cm-phone-btn-test:hover { background:#EEF0FF; }
+.cm-phone-btn-send { flex:2; padding:11px; background:#6161FF; border:none; border-radius:10px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.cm-phone-btn-send:hover { background:#4F4FE0; }
+.cm-sms-editor { border:1px solid #E0E0E0; border-radius:10px; padding:12px; position:relative; }
 .cm-sms-type-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:13px; color:#424242; font-weight:500; }
 .cm-sms-type-row select { min-width:auto; height:32px; border:1px solid #E0E0E0; border-radius:6px; font-size:12px; font-family:inherit; padding:0 28px 0 10px; appearance:none; -webkit-appearance:none; background:#fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239E9E9E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center; cursor:pointer; outline:none; color:#212121; }
 .cm-sms-type-row select:focus { border-color:#6161FF; }
@@ -5579,15 +5628,18 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-sms-help-popup-notes { padding:10px 14px; border-top:1px solid #E0E0E0; font-size:11px; color:#757575; line-height:1.9; background:#FAFAFA; }
 /* 수신거부 ? 도움말 팝업 (다크) */
 .cm-optout-help-wrap { position:relative; display:inline-flex; align-items:center; }
-.cm-optout-help-popup { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); min-width:360px; background:#1A1A4E; color:#fff; font-size:12px; line-height:1.8; padding:14px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.2); z-index:200; opacity:0; visibility:hidden; transition:opacity 0.15s, visibility 0.15s; pointer-events:none; }
+.cm-optout-help-popup { position:absolute; top:calc(100% + 8px); left:0; min-width:360px; background:#1A1A4E; color:#fff; font-size:12px; line-height:1.8; padding:14px 16px; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.2); z-index:200; opacity:0; visibility:hidden; transition:opacity 0.15s, visibility 0.15s; pointer-events:none; }
 .cm-optout-help-wrap:hover .cm-optout-help-popup { opacity:1; visibility:visible; pointer-events:auto; }
 .cm-optout-help-highlight { color:#FFD600; font-weight:600; }
 /* MMS 이미지 영역 */
-.cm-mms-image-area { margin-bottom:8px; }
-.cm-mms-image-placeholder { background:#F5F5F5; border:1px dashed #BDBDBD; border-radius:6px; padding:30px 16px; text-align:center; font-size:12px; color:#9E9E9E; line-height:1.6; }
-.cm-mms-image-placeholder span { font-size:11px; }
-.cm-mms-image-btn { display:block; margin:8px 0 0 auto; background:#424242; color:#fff; border:none; height:30px; padding:0 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
-.cm-mms-image-btn:hover { background:#333; }
+.cm-mms-dropzone { margin:10px 14px 0; padding:10px; background:#F9F9FB; border:1px dashed #BDBDBD; border-radius:6px; cursor:pointer; transition:border-color 0.15s, background 0.15s, max-height 0.25s ease, padding 0.25s ease, opacity 0.25s ease, margin 0.25s ease; max-height:120px; opacity:1; overflow:hidden; }
+.cm-mms-dropzone.cm-hidden { max-height:0; padding-top:0; padding-bottom:0; opacity:0; margin-top:0; margin-bottom:0; border-color:transparent; }
+.cm-mms-dropzone:hover, .cm-mms-dropzone.cm-dragover { border-color:#6161FF; background:#EEF0FF; }
+.cm-mms-dropzone-empty { display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; color:#9E9E9E; padding:4px 0; min-height:20px; }
+.cm-mms-dropzone-empty svg { flex-shrink:0; }
+.cm-mms-dropzone-preview { position:relative; text-align:center; }
+.cm-mms-dropzone-preview img { max-height:80px; max-width:100%; border-radius:4px; object-fit:contain; }
+.cm-mms-dropzone-remove { position:absolute; top:-4px; right:-4px; width:20px; height:20px; border-radius:50%; border:none; background:#F06060; color:#fff; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
 /* MMS 뷰 토글 */
 .cm-mms-view-toggle { display:flex; gap:16px; margin-bottom:12px; font-size:13px; color:#424242; }
 .cm-mms-view-toggle label { display:flex; align-items:center; gap:4px; cursor:pointer; }
@@ -5598,19 +5650,30 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-mms-image-card:hover { border-color:#6161FF; }
 .cm-mms-image-card img { width:100%; display:block; }
 .cm-sms-textarea {
-  width:100%; height:280px; border:1px solid #E0E0E0; border-radius:6px;
+  width:100%; height:200px; border:1px solid #E0E0E0; border-radius:6px;
   padding:10px; font-size:12px; font-family:'Pretendard',sans-serif; resize:vertical; outline:none; color:#424242; line-height:1.6;
 }
 .cm-sms-textarea:focus { border-color:#6161FF; }
-.cm-sms-bytes { text-align:right; font-size:11px; color:#9E9E9E; margin:4px 0 10px; }
-.cm-sms-btn-row { display:flex; gap:8px; margin-bottom:8px; }
-.cm-sms-btn-row button { flex:1; }
+.cm-sms-bytes { text-align:center; font-size:11px; color:#9E9E9E; margin:2px 0 0; }
+.cm-sms-btn-row { display:flex; gap:6px; align-items:center; }
+.cm-phone-mock .cm-sms-btn-row { padding:12px 14px 4px; }
+.cm-sms-btn-row .cm-sms-btn-outline { flex:1; white-space:nowrap; }
+.cm-sms-btn-row .cm-sms-btn-icon { flex:none; }
 .cm-sms-btn-outline {
   background:#fff; color:#616161; border:1px solid #BDBDBD;
   height:30px; padding:0 12px; border-radius:4px; font-size:12px; font-weight:400;
   cursor:pointer; font-family:'Pretendard',sans-serif;
 }
 .cm-sms-btn-outline:hover { background:#F5F5F5; border-color:#9E9E9E; }
+.cm-sms-btn-icon {
+  width:30px; height:30px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center;
+  background:#fff; color:#9E9E9E; border:1px solid #BDBDBD; border-radius:4px; cursor:pointer; padding:0;
+}
+.cm-sms-btn-icon:hover { background:#F5F5F5; color:#616161; border-color:#9E9E9E; }
+.cm-sms-btn-icon-wrap { position:relative; display:inline-flex; }
+.cm-sms-btn-tooltip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#3A3A6E; color:#fff; font-size:11px; font-weight:500; white-space:nowrap; padding:5px 10px; border-radius:4px; pointer-events:none; opacity:0; transition:opacity 0.15s; }
+.cm-sms-btn-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#3A3A6E; }
+.cm-sms-btn-icon-wrap:hover .cm-sms-btn-tooltip { opacity:1; }
 .cm-sms-btn-primary {
   background:#6161FF; color:#fff; border:none;
   height:30px; padding:0 12px; border-radius:4px; font-size:12px; font-weight:500;
@@ -5618,8 +5681,9 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 }
 .cm-sms-btn-primary:hover { background:#4F4FE0; }
 
-/* 우측: 수신자 정보 */
-.cm-sms-right { flex:1; min-width:0; }
+/* 우측: 발송 설정 */
+.cm-sms-right { flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
+.cm-sms-right-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .cm-sms-section { margin-bottom:16px; }
 .cm-sms-section-title { font-size:13px; font-weight:600; color:#424242; margin-bottom:8px; }
 .cm-sms-section-desc { font-size:12px; color:#757575; margin-bottom:8px; line-height:1.5; }
@@ -5631,21 +5695,39 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-sms-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; color:#424242; flex-wrap:wrap; }
 .cm-sms-label { font-size:13px; font-weight:600; color:#424242; white-space:nowrap; }
 .cm-sms-tag-btn { height:28px; padding:0 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; border:none; }
-.cm-sms-tag-yellow { background:#FFC107; color:#212121; }
-.cm-sms-tag-yellow:hover { background:#FFB300; }
-.cm-sms-tag-green { background:#4CAF50; color:#fff; }
-.cm-sms-tag-green:hover { background:#43A047; }
+.cm-sms-tag-indigo { background:#EEF0FF; color:#6161FF; border:1px solid #6161FF; }
+.cm-sms-tag-indigo:hover { background:#6161FF; color:#fff; }
 
-.cm-sms-tab-group { display:flex; gap:0; }
-.cm-sms-tab {
-  height:32px; padding:0 16px; border:1px solid #E0E0E0; background:#fff;
-  font-size:13px; color:#616161; cursor:pointer; font-family:'Pretendard',sans-serif;
-}
-.cm-sms-tab:first-child { border-radius:6px 0 0 6px; }
-.cm-sms-tab:last-child { border-radius:0 6px 6px 0; border-left:none; }
+/* 비용 요약 (세로 카드) */
+.cm-sms-cost-wrap { background:#fff; border-radius:12px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:8px; }
+.cm-sms-cost-row { display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#888; padding-bottom:8px; margin-bottom:8px; border-bottom:1px solid #EEE; }
+.cm-sms-cost-val { font-weight:600; color:#333; }
+.cm-sms-cost-unit { font-weight:400; color:#888; }
+.cm-sms-cost-total-lbl { font-size:12px; color:#AAA; margin-bottom:4px; }
+.cm-sms-cost-total-num { font-size:18px; font-weight:700; color:#555; line-height:1; }
+.cm-sms-cost-total-sub { font-size:11.5px; color:#BBB; margin-top:5px; }
+
+/* 발송 설정 카드 */
+.cm-sms-setting-card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.06); overflow:hidden; margin-bottom:8px; }
+.cm-sms-setting-row { display:flex; align-items:center; gap:8px; padding:10px 14px; font-size:13px; }
+.cm-sms-setting-lbl { font-size:12px; color:#555; font-weight:600; min-width:60px; }
+.cm-sms-setting-val { font-weight:500; color:#333; }
+.cm-sms-setting-val select { border:none; font-size:13px; font-family:inherit; color:#333; font-weight:500; outline:none; background:transparent; }
+.cm-sms-setting-btn { flex-shrink:0; padding:4px 12px; background:#F4F5F7; border:1px solid #DDD; border-radius:6px; font-size:12px; color:#555; cursor:pointer; font-family:inherit; }
+.cm-sms-setting-btn:hover { background:#E8E8E8; }
+.cm-sms-schedule-toggle { display:flex; background:#F4F5F7; border-radius:8px; overflow:hidden; border:1px solid #E8E8E8; }
+.cm-sms-sch-btn { flex:1; padding:6px 12px; border:none; background:#fff; font-size:12.5px; font-weight:600; color:#888; cursor:pointer; font-family:inherit; }
+.cm-sms-sch-btn.active { background:#EEF0FF; color:#6161FF; }
+.cm-sms-schedule-row { display:flex; gap:8px; padding:0 14px 10px; }
+.cm-sms-schedule-input { flex:1; border:1px solid #E0E0E0; border-radius:6px; padding:7px 10px; font-size:13px; color:#333; font-family:inherit; outline:none; }
+.cm-sms-schedule-input:focus { border-color:#6161FF; }
+
+/* 경고 박스 */
+.cm-sms-warning-box { background:#FFFBEB; border:1.5px solid #FCD34D; border-radius:10px; padding:12px 14px; font-size:12px; color:#555; line-height:1.7; }
+.cm-sms-warning-box strong { color:#D97706; }
 .cm-sms-tab.active { background:#6161FF; color:#fff; border-color:#6161FF; }
 
-.cm-sms-schedule-row { display:flex; align-items:center; gap:6px; margin-bottom:14px; padding-left:0; }
+.cm-sms-schedule-row { display:flex; align-items:center; gap:6px; margin-bottom:14px; padding-left:14px; }
 .cm-sms-schedule-input { height:30px; border:1px solid #E0E0E0; border-radius:4px; padding:0 8px; font-size:12px; font-family:'Pretendard',sans-serif; color:#212121; outline:none; }
 .cm-sms-schedule-input:focus { border-color:#6161FF; }
 .cm-sms-schedule-select { height:30px; border:1px solid #E0E0E0; border-radius:4px; padding:0 6px; font-size:12px; font-family:'Pretendard',sans-serif; color:#212121; outline:none; min-width:52px; }
@@ -5675,7 +5757,7 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-sms-caution-label { color:#F06060; font-weight:700; font-size:13px; }
 .cm-sms-caution-link { color:#6161FF; font-weight:700; text-decoration:underline; cursor:pointer; }
 
-.cm-sms-sample-tabs { display:flex; gap:0; border-bottom:none; }
+.cm-sms-sample-tabs { display:flex; gap:0; border-bottom:none; justify-content:center; }
 .cm-sms-sample-tab { padding:10px 24px; font-size:13px; font-weight:500; color:#9E9E9E; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:0.15s; }
 .cm-sms-sample-tab:hover { color:#6161FF; background:#EEF0FF; border-radius:4px 4px 0 0; }
 .cm-sms-sample-tab.active { color:#6161FF; border-bottom-color:#6161FF; font-weight:600; }
@@ -5687,25 +5769,25 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-mymsg-header-left select { height:30px; border:1px solid #E0E0E0; border-radius:4px; font-size:12px; font-family:inherit; padding:0 28px 0 10px; appearance:none; -webkit-appearance:none; background:#fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239E9E9E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center; cursor:pointer; outline:none; color:#212121; min-width:140px; }
 .cm-mymsg-add-btn { width:34px; height:34px; border:1px solid #6161FF; background:#fff; border-radius:6px; cursor:pointer; font-size:16px; color:#6161FF; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:400; line-height:1; }
 .cm-mymsg-add-btn:hover { background:#EEF0FF; }
-.cm-mymsg-register-btn { background:#6161FF; color:#fff; border:none; height:32px; padding:0 16px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
+.cm-mymsg-register-btn { background:#6161FF; color:#fff; border:none; height:36px; padding:0 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
 .cm-mymsg-register-btn:hover { background:#4F4FE0; }
 .cm-mymsg-divider { height:1px; background:#E0E0E0; margin:0 24px; }
 
 /* 내 메세지 그리드 */
-.cm-mymsg-grid { padding:20px 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; grid-auto-rows:1fr; }
-.cm-mymsg-card { border:1px solid #E0E0E0; border-radius:8px; overflow:hidden; background:#fff; display:flex; flex-direction:column; }
+.cm-mymsg-grid { padding:20px 24px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.cm-mymsg-card { border:1px solid #E0E0E0; border-radius:12px; overflow:hidden; background:#fff; display:flex; flex-direction:column; min-height:280px; }
 .cm-mymsg-card:hover { border-color:#6161FF; }
-.cm-mymsg-card-body { padding:12px; font-size:11px; color:#424242; line-height:1.5; white-space:pre-line; flex:1; cursor:pointer; }
+.cm-mymsg-card-body { padding:14px; font-size:12px; color:#424242; line-height:1.6; white-space:pre-line; flex:1; cursor:pointer; }
 .cm-mymsg-card-body:hover { background:#F7F7FF; }
 .cm-mymsg-card-bytes { padding:6px 12px; font-size:11px; color:#757575; border-top:1px solid #E0E0E0; background:#FAFAFA; text-align:center; margin-top:auto; }
-.cm-mymsg-card-btns { display:flex; justify-content:flex-end; gap:8px; padding:8px 12px; border-top:1px solid #E0E0E0; }
+.cm-mymsg-card-btns { display:flex; justify-content:center; gap:8px; padding:8px 12px; border-top:1px solid #E0E0E0; }
 .cm-mymsg-card-btn { background:#fff; border:1px solid #E0E0E0; height:28px; padding:0 14px; border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
 .cm-mymsg-card-btn.sv-save { color:#6161FF; border-color:#6161FF; }
 .cm-mymsg-card-btn.sv-save:hover { background:#EEF0FF; }
 .cm-mymsg-card-btn.sv-del { color:#F06060; border-color:#F06060; }
 .cm-mymsg-card-btn.sv-del:hover { background:#FFF5F5; }
 /* 내 메세지 에디터 카드 (편집 중) */
-.cm-mymsg-card textarea { width:100%; height:100%; min-height:140px; border:none; padding:12px; font-size:11px; font-family:'Pretendard',sans-serif; resize:none; outline:none; color:#424242; line-height:1.5; }
+.cm-mymsg-card textarea { width:100%; height:100%; min-height:200px; border:none; padding:14px; font-size:12px; font-family:'Pretendard',sans-serif; resize:none; outline:none; color:#424242; line-height:1.6; }
 
 /* 내 메세지 분류 등록 모달 */
 .cm-mymsg-cat-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); z-index:1200; display:none; align-items:center; justify-content:center; }
@@ -5730,10 +5812,12 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-mymsg-cat-toggle input:checked + .cm-mymsg-cat-track .cm-mymsg-cat-thumb { left:20px; }
 .cm-mymsg-cat-status-text { font-size:13px; color:#424242; }
 .cm-mymsg-cat-btns { display:flex; gap:10px; justify-content:flex-end; margin-bottom:20px; }
-.cm-mymsg-cat-btn-cancel { background:#fff; color:#424242; border:1px solid #E0E0E0; height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
-.cm-mymsg-cat-btn-cancel:hover { background:#F5F5F5; border-color:#BDBDBD; }
-.cm-mymsg-cat-btn-save { background:#6161FF; color:#fff; border:none; height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
+.cm-mymsg-cat-btn-cancel { background:#fff; color:#616161; border:1px solid #BDBDBD; height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
+.cm-mymsg-cat-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
+.cm-mymsg-cat-btn-save { background:#6161FF; color:#fff; border:none; height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
 .cm-mymsg-cat-btn-save:hover { background:#4F4FE0; }
+.cm-mymsg-cat-btn-save:active { background:#3D3DC0; }
+.cm-mymsg-cat-btn-save:disabled { background:#BDBDBD; cursor:default; }
 .cm-mymsg-cat-info { background:#EEF0FF; border:1px solid #D0D4FF; border-radius:8px; padding:12px 16px; font-size:12px; color:#424242; line-height:1.7; text-align:center; }
 .cm-mymsg-cat-body { padding:24px; }
 
@@ -5760,7 +5844,7 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-testsend-field label { font-size:13px; font-weight:600; color:#424242; width:26px; flex-shrink:0; }
 .cm-testsend-input { width:100%; flex:1; height:32px; border:1px solid #E0E0E0; border-radius:4px; padding:0 10px; font-size:12px; font-family:'Pretendard',sans-serif; outline:none; }
 .cm-testsend-input:focus { border-color:#6161FF; }
-.cm-testsend-btn { width:100%; margin-top:12px; background:#6161FF; color:#fff; border:none; height:36px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
+.cm-testsend-btn { width:100%; margin-top:12px; background:#6161FF; color:#fff; border:none; height:36px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
 .cm-testsend-btn:hover { background:#4F4FE0; }
 
 /* 하단: 추천 문자 샘플 */
@@ -5812,9 +5896,9 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-action-desc { font-size:14px; color:#212121; line-height:1.6; margin-bottom:12px; }
 .cm-action-warn { font-size:13px; color:#757575; line-height:1.6; margin-bottom:16px; }
 .cm-owner-btns { display:flex; gap:8px; justify-content:flex-end; padding-top:12px; border-top:1px solid #E0E0E0; }
-.cm-owner-btn { height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; }
-.cm-owner-btn-cancel { background:#fff; color:#616161; border:1px solid #E0E0E0; }
-.cm-owner-btn-cancel:hover { background:#F5F5F5; border-color:#BDBDBD; }
+.cm-owner-btn { height:36px; padding:0 28px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Pretendard',sans-serif; }
+.cm-owner-btn-cancel { background:#fff; color:#616161; border:1px solid #BDBDBD; }
+.cm-owner-btn-cancel:hover { background:#F5F5F5; border-color:#9E9E9E; }
 .cm-owner-btn-confirm { background:#6161FF; color:#fff; border:none; }
 .cm-owner-btn-confirm:hover { background:#4F4FE0; }
 
@@ -5837,4 +5921,107 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .cm-pass-agree-list a { color:#616161; text-decoration:underline; cursor:pointer; }
 .cm-pass-submit { width:100%; height:44px; background:#F5F5F5; border:1px solid #E0E0E0; border-radius:6px; font-size:15px; font-weight:500; color:#9E9E9E; cursor:pointer; font-family:'Pretendard',sans-serif; transition:0.15s; }
 .cm-pass-submit:hover { background:#E0E0E0; }
+.cm-pass-submit.active { background:#6161FF; color:#fff; border:none; cursor:pointer; }
+.cm-pass-submit.active:hover { background:#4F4FE0; }
 .cm-pass-footer { display:flex; align-items:center; gap:8px; padding:10px 24px; background:#4FC3F7; font-size:12px; color:#fff; }
+
+/* ══ 고객관리 결과뷰 - 검색조건 요약 ══ */
+.cm-condition-area {
+  background:#fff; border:1px solid #E0E0E0; border-radius:10px;
+  padding:16px 20px; margin-bottom:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.cm-condition-title-row {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+}
+.cm-condition-cat-title {
+  font-size:14px; font-weight:700; color:#212121;
+  border-bottom:2px solid #6161FF; display:inline-block; padding-bottom:4px;
+}
+.cm-condition-label { font-size:12px; font-weight:600; color:#757575; flex-shrink:0; line-height:26px; }
+.cm-btn-edit-condition {
+  background:#6161FF; color:#fff; border:none;
+  height:32px; padding:0 16px; border-radius:6px; font-size:12px; font-weight:600;
+  cursor:pointer; font-family:'Pretendard',sans-serif;
+}
+.cm-btn-edit-condition:hover { background:#4F4FE0; }
+.cm-condition-chips {
+  display:grid; grid-template-columns:auto 1fr; gap:6px; align-items:start;
+}
+.cm-condition-chips-inner {
+  display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+}
+.cm-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#EEF0FF; color:#6161FF; border-radius:16px;
+  padding:4px 12px; font-size:12px; font-weight:500;
+  line-height:1.4; white-space:nowrap;
+}
+.cm-chip-primary {
+  background:#6161FF; color:#fff; font-weight:600;
+}
+.cm-chip-cat {
+  background:#FFF3E0; color:#E65100;
+}
+.cm-chip-close {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:14px; height:14px; border:none; background:none;
+  color:inherit; font-size:11px; cursor:pointer; padding:0;
+  border-radius:50%; opacity:0.7;
+}
+.cm-chip-close:hover { opacity:1; background:rgba(0,0,0,0.08); }
+
+/* ══ 인라인 검색 패널 (슬라이드) ══ */
+.cm-inline-search {
+  overflow:hidden; transition:max-height 0.3s ease-out, opacity 0.2s ease-out;
+  max-height:0; opacity:0;
+}
+.cm-inline-search.open {
+  max-height:1200px; opacity:1; margin-bottom:12px;
+}
+.cm-inline-search .cm-search-panel {
+  margin-top:0;
+}
+
+/* ══ 결과 테이블 노트 ══ */
+.cm-result-note {
+  font-size:12px; color:#757575; padding:8px 12px; margin-top:4px;
+}
+
+/* ══ 비활성 버튼 ══ */
+.cm-btn-sms.disabled,
+.cm-btn-other.disabled {
+  opacity:0.4; pointer-events:none; cursor:default;
+}
+
+/* ══ 페이징 ══ */
+.cm-paging {
+  display:flex; align-items:center; gap:6px; padding:14px 0 4px; flex-shrink:0;
+  font-size:13px; color:#616161;
+}
+.cm-paging-info { font-size:13px; color:#616161; margin-right:8px; font-weight:500; }
+.cm-paging-info b { color:#212121; font-weight:700; }
+.cm-paging-btn {
+  min-width:32px; height:32px; padding:0 6px; border:1px solid #E0E0E0;
+  background:#fff; border-radius:4px; font-size:13px; color:#616161; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:0.15s;
+  font-family:'Pretendard',sans-serif;
+}
+.cm-paging-btn:hover:not(:disabled) { border-color:#6161FF; color:#6161FF; }
+.cm-paging-btn:disabled { opacity:0.35; cursor:default; }
+.cm-paging-go { display:flex; align-items:center; gap:4px; margin-left:4px; }
+.cm-paging-go select {
+  height:32px; padding:0 24px 0 8px; border:1px solid #E0E0E0; border-radius:4px;
+  font-size:13px; font-family:inherit; color:#212121;
+  background:#fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239E9E9E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center;
+  appearance:none; -webkit-appearance:none; cursor:pointer; min-width:44px; outline:none;
+}
+
+/* ══ 테이블 — 고객 목록과 동일 ══ */
+.cm-table thead { background:#FAFAFA; }
+.cm-table th { font-size:11px; font-weight:600; color:#9E9E9E; }
+.cm-table td { font-size:12px; color:#212121; }
+.cm-table .cm-td-empty {
+  text-align:center; color:#9E9E9E; padding:32px 12px;
+  font-size:13px;
+}

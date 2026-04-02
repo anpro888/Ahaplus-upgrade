@@ -1650,45 +1650,47 @@ function svSaveTkt() {
 
 /* ── 드래그 앤 드롭 (서비스 설정 테이블) ── */
 function svInitDragDrop(tbody) {
-  if (!tbody) return;
+  if (!tbody || tbody._svDragInited) return;
+  tbody._svDragInited = true;
   var dragEl = null;
-  tbody.querySelectorAll('tr[draggable="true"]').forEach(function(row) {
-    row.addEventListener('dragstart', function(e) {
-      dragEl = row;
-      row.classList.add('sv-dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', '');
-    });
-    row.addEventListener('dragend', function() {
-      row.classList.remove('sv-dragging');
-      tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
-      dragEl = null;
-    });
-    row.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      if (dragEl && dragEl !== row) {
-        tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
-        row.classList.add('sv-drop-over');
-      }
-    });
-    row.addEventListener('dragleave', function() {
-      row.classList.remove('sv-drop-over');
-    });
-    row.addEventListener('drop', function(e) {
-      e.preventDefault();
-      if (dragEl && dragEl !== row) {
-        var rows = Array.from(tbody.querySelectorAll('tr'));
-        var fromIdx = rows.indexOf(dragEl);
-        var toIdx = rows.indexOf(row);
-        if (fromIdx < toIdx) {
-          tbody.insertBefore(dragEl, row.nextSibling);
-        } else {
-          tbody.insertBefore(dragEl, row);
-        }
-      }
-      tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
-    });
+  tbody.addEventListener('dragstart', function(e) {
+    var row = e.target.closest('tr');
+    if (!row || row.parentNode !== tbody) return;
+    dragEl = row;
+    row.classList.add('sv-dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+  });
+  tbody.addEventListener('dragend', function() {
+    if (dragEl) dragEl.classList.remove('sv-dragging');
+    tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
+    dragEl = null;
+  });
+  tbody.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    var row = e.target.closest('tr');
+    if (!row || row.parentNode !== tbody || !dragEl || dragEl === row) return;
+    tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
+    row.classList.add('sv-drop-over');
+  });
+  tbody.addEventListener('dragleave', function(e) {
+    var row = e.target.closest('tr');
+    if (row) row.classList.remove('sv-drop-over');
+  });
+  tbody.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var row = e.target.closest('tr');
+    if (!row || row.parentNode !== tbody || !dragEl || dragEl === row) return;
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    var fromIdx = rows.indexOf(dragEl);
+    var toIdx = rows.indexOf(row);
+    if (fromIdx < toIdx) {
+      tbody.insertBefore(dragEl, row.nextSibling);
+    } else {
+      tbody.insertBefore(dragEl, row);
+    }
+    tbody.querySelectorAll('tr').forEach(function(r) { r.classList.remove('sv-drop-over'); });
   });
 }
 
@@ -1700,7 +1702,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // 금액 입력칸 3자리 콤마 바인딩
   ['svSvcPriceInput','svTktPriceInput','svTktRevenueInput',
    'ppPriceInput','ppDepositInput','prdBuyPrice','prdSellPrice',
-   'tkeNewPerUse'].forEach(bindMoneyInput);
+   'tkeNewPerUse',
+   'cmNumFrom','cmNumTo','cmNoVisitDays','cmRecentDays',
+   'cmPointsFrom','cmPointsTo','cmPrepaidFrom','cmPrepaidTo',
+   'cmAvgSpendFrom','cmAvgSpendTo','cmReferralCountFrom','cmReferralCountTo',
+   'cmTotalSalesFrom','cmTotalSalesTo','cmTotalVisitsFrom','cmTotalVisitsTo'
+  ].forEach(bindMoneyInput);
   // 기타 코드 할인 - 금액 선택 시만 콤마 적용 (input 이벤트에서 처리)
   var otcDiscInp = document.getElementById('otcDiscountInput');
   if (otcDiscInp && !otcDiscInp._isDummy) {
@@ -5264,59 +5271,252 @@ function openClientMgmt() {
 var cmCategories = {
   all:          { ko: '전체 고객',        en: 'All Clients' },
   dormant:      { ko: '휴면고객',         en: 'Dormant Clients' },
-  byService:    { ko: '판매 서비스별 고객', en: 'Clients by Service' },
-  byProduct:    { ko: '판매 제품별 고객',  en: 'Clients by Product' },
+  byService:    { ko: '판매 서비스별 고객', en: 'Clients by Sales Service' },
+  byProduct:    { ko: '판매 제품별 고객',  en: 'Clients by Sales Product' },
   byAmount:     { ko: '판매 금액별 고객',  en: 'Clients by Sales Amount' },
-  membership:   { ko: '회원권 보유 고객',  en: 'Membership Holders' },
-  prepaid:      { ko: '정액권별 고객',     en: 'Prepaid Card Clients' },
-  ticket:       { ko: '티켓별 고객',       en: 'Prepaid Service Clients' },
-  noMembership: { ko: '회원권 미보유 고객', en: 'Non-Membership Clients' },
+  membership:   { ko: '회원권 보유 고객',  en: 'Clients with Prepaid Goods' },
+  prepaid:      { ko: '정액권별 고객',     en: 'Clients by Prepaid Card' },
+  ticket:       { ko: '티켓별 고객',       en: 'Clients by Prepaid Service' },
+  noMembership: { ko: '회원권 미보유 고객', en: 'Clients with no Prepaid Goods' },
   birthday:     { ko: '생일 고객',        en: 'Birthday Clients' },
-  referral:     { ko: '소개 고객',        en: 'Referral Clients' }
+  referral:     { ko: '소개 고객',        en: 'Recommended Clients' }
 };
+
+// ── 메뉴별 테이블 컬럼 설정 ──
+var cmAllColumns = {
+  name:           { ko:'고객명',       en:'Client Name' },
+  phone:          { ko:'휴대폰 번호',  en:'Mobile Number' },
+  lastVisit:      { ko:'최근 방문일',  en:'Recent Visit Date' },
+  grade:          { ko:'고객 등급',    en:'Client Rating' },
+  staff:          { ko:'담당자',       en:'Preferred Staff' },
+  totalSales:     { ko:'총 판매액',    en:'Total Sales', cls:'cm-td-amount' },
+  visitRoute:     { ko:'방문 경로',    en:'Referral Source' },
+  periodSales:    { ko:'기간 판매 합계', en:'Period Sales Total', cls:'cm-td-amount' },
+  prepaid:        { ko:'정액권',       en:'Prepaid Cards' },
+  prepaidBalance: { ko:'정액권 잔액',  en:'Balance', cls:'cm-td-amount' },
+  expiry:         { ko:'만료일',       en:'Expiry Date' },
+  firstVisit:     { ko:'첫 방문일',    en:'First Visit Date' },
+  visitCount:     { ko:'방문횟수',     en:'Number of Visits' },
+  regDate:        { ko:'등록일',       en:'Registered Date' },
+  referrer:       { ko:'소개한 고객 / 휴대폰 번호', en:'Recommender Name / Mobile Number' },
+  points:         { ko:'포인트',       en:'Points' },
+  membership:     { ko:'회원권',        en:'Prepaid Goods' },
+  memberBalance:  { ko:'정액권 잔액/잔여횟수', en:'Balance/Qty' },
+  ticket:         { ko:'티켓',         en:'Prepaid Service' },
+  ticketRemain:   { ko:'잔여 횟수',    en:'Quantity' },
+  birthday:       { ko:'생일',         en:'Birthday' },
+  memo:           { ko:'메모',         en:'Notes' },
+  gender:         { ko:'성별',         en:'Gender' },
+  avgSpend:       { ko:'객단가',       en:'Average Revenue per Sales', cls:'cm-td-amount' },
+  clientNumber:   { ko:'고객번호',     en:'Client No.' },
+  group:          { ko:'고객그룹',     en:'Client Group' },
+  address:        { ko:'주소',         en:'Address' },
+  referralCount:  { ko:'추천 고객 수', en:'Number of Recommendations' }
+};
+
+var cmBaseColumns = {
+  all:          ['name','phone','lastVisit','grade','staff','totalSales'],
+  dormant:      ['name','phone','lastVisit','totalSales','prepaidBalance','points'],
+  byService:    ['name','phone','lastVisit','totalSales','staff','visitRoute'],
+  byProduct:    ['name','phone','lastVisit','totalSales','staff','visitRoute'],
+  byAmount:     ['name','phone','lastVisit','grade','periodSales'],
+  membership:   ['name','phone','lastVisit','membership','memberBalance','expiry'],
+  prepaid:      ['name','phone','lastVisit','prepaid','prepaidBalance','expiry'],
+  ticket:       ['name','phone','lastVisit','ticket','ticketRemain','expiry'],
+  noMembership: ['name','phone','lastVisit','firstVisit','visitCount','totalSales'],
+  birthday:     ['name','phone','lastVisit','birthday','grade','totalSales'],
+  referral:     ['regDate','name','phone','referrer']
+};
+
+// 상세 검색 체크 → 추가되는 컬럼 매핑 (기존 검색 폼 ID 사용)
+var cmAdvColumnMap = {
+  cmChkStaff:          'staff',
+  cmChkVisitRoute:     'visitRoute',
+  cmChkGrade:          'grade',
+  cmChkNumber:         'clientNumber',
+  cmChkGroup:          'group',
+  cmChkGender:         'gender',
+  cmChkAddress:        'address',
+  cmChkBirthday:       'birthday',
+  cmChkMemo:           'memo',
+  cmChkSmsOpt:         null,
+  cmChkNoNumber:       null,
+  cmChkRegDate:        'regDate',
+  cmChkFirstVisit:     'firstVisit',
+  cmChkPoints:         'points',
+  cmChkLastVisit:      null,
+  cmChkPrepaidBalance: 'prepaidBalance',
+  cmChkAvgSpend:       'avgSpend',
+  cmChkReferralCount:  'referralCount',
+  cmChkTotalSales:     'totalSales',
+  cmChkTotalVisits:    'visitCount'
+};
+
+// 판매 금액별 고객 전용 노트
+var cmNotes = {
+  byAmount: { ko:'* 기간 판매 합계: 조회 기간 동안의 판매 금액 합계', en:'* Period Sales: Total sales during the inquiry period' }
+};
+
+// ── 고객 마스터 데이터 (고객 목록에서 추출) ──
+var cmMasterClients = [
+  { regDate:'2026-03-19', no:45, name:'김하늘', phone:'010-9876-5432', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:0, memo:'', lastVisit:'2026-03-19', firstVisit:'2026-03-19', visitCount:1, gender:'', birthday:'', address:'', points:0, avgSpend:0 },
+  { regDate:'2026-02-06', no:44, name:'박서연', phone:'010-5555-1234', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:0, memo:'', lastVisit:'2026-02-06', firstVisit:'2024-09-12', visitCount:2, gender:'', birthday:'', address:'', points:0, avgSpend:0 },
+  { regDate:'2025-12-15', no:43, name:'이수진', phone:'010-3456-7890', grade:'', group:'', staff:'Suji', prepaidBalance:0, totalSales:850000, memo:'', lastVisit:'2025-12-15', firstVisit:'2025-01-15', visitCount:3, gender:'여성', birthday:'', address:'', points:0, avgSpend:283333 },
+  { regDate:'2025-12-10', no:42, name:'최윤서', phone:'010-2222-3333', grade:'', group:'', staff:'Jenny', prepaidBalance:800000, totalSales:2450000, memo:'커트+염색 선호', lastVisit:'2025-12-10', firstVisit:'2024-05-10', visitCount:5, gender:'여성', birthday:'', address:'', points:0, avgSpend:490000 },
+  { regDate:'2025-11-28', no:41, name:'이지은', phone:'010-8765-4321', grade:'', group:'', staff:'Suji', prepaidBalance:1100000, totalSales:3850000, memo:'정기방문 고객', lastVisit:'2025-11-28', firstVisit:'2024-07-30', visitCount:8, gender:'여성', birthday:'', address:'', points:0, avgSpend:481250 },
+  { regDate:'2025-11-15', no:40, name:'정민지', phone:'010-1111-9999', grade:'VVIP', group:'', staff:'Jimmy', prepaidBalance:0, totalSales:1200000, memo:'', lastVisit:'2025-11-15', firstVisit:'2024-12-05', visitCount:4, gender:'여성', birthday:'', address:'', points:0, avgSpend:300000 },
+  { regDate:'2025-10-22', no:39, name:'김세나', phone:'019-8000-9000', grade:'Gold', group:'', staff:'Jenny', prepaidBalance:0, totalSales:1680000, memo:'', lastVisit:'2025-10-22', firstVisit:'2024-08-25', visitCount:6, gender:'여성', birthday:'', address:'', points:0, avgSpend:280000 },
+  { regDate:'2025-10-09', no:38, name:'한소희', phone:'010-4444-5555', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:320000, memo:'두피 민감', lastVisit:'2025-10-09', firstVisit:'2024-11-20', visitCount:3, gender:'여성', birthday:'', address:'', points:0, avgSpend:106667 },
+  { regDate:'2025-09-18', no:37, name:'오서준', phone:'010-6666-7777', grade:'', group:'', staff:'Suji', prepaidBalance:250000, totalSales:980000, memo:'', lastVisit:'2025-09-18', firstVisit:'2024-10-08', visitCount:4, gender:'남성', birthday:'', address:'', points:0, avgSpend:245000 },
+  { regDate:'2025-08-30', no:36, name:'윤채원', phone:'010-2233-4455', grade:'Gold', group:'', staff:'Jenny', prepaidBalance:500000, totalSales:3950000, memo:'클리닉 + 커트 세트 선호', lastVisit:'2025-08-30', firstVisit:'2024-06-18', visitCount:10, gender:'여성', birthday:'', address:'', points:0, avgSpend:395000 },
+  { regDate:'2025-08-12', no:35, name:'장유진', phone:'010-6677-8899', grade:'VVIP', group:'', staff:'Jenny', prepaidBalance:3200000, totalSales:12500000, memo:'풀케어 정기 고객, 항상 오전 선호', lastVisit:'2025-08-12', firstVisit:'2024-01-05', visitCount:20, gender:'여성', birthday:'', address:'서울', points:5000, avgSpend:625000 },
+  { regDate:'2025-07-20', no:34, name:'송다은', phone:'010-4321-8765', grade:'', group:'', staff:'Suji', prepaidBalance:0, totalSales:980000, memo:'레이어드컷만', lastVisit:'2025-07-20', firstVisit:'2025-07-20', visitCount:2, gender:'여성', birthday:'', address:'', points:0, avgSpend:490000 },
+  { regDate:'2025-07-05', no:33, name:'백서현', phone:'010-7777-2345', grade:'Gold', group:'', staff:'Jimmy', prepaidBalance:150000, totalSales:2340000, memo:'셋팅펌 위주, 볼륨 원함', lastVisit:'2025-07-05', firstVisit:'2024-03-15', visitCount:7, gender:'여성', birthday:'', address:'', points:0, avgSpend:334286 },
+  { regDate:'2025-06-15', no:32, name:'임하준', phone:'010-8888-1111', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:450000, memo:'', lastVisit:'2025-06-15', firstVisit:'2025-06-15', visitCount:1, gender:'남성', birthday:'', address:'', points:0, avgSpend:450000 },
+  { regDate:'2025-06-01', no:31, name:'권나연', phone:'010-3333-6666', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:0, memo:'', lastVisit:'', firstVisit:'', visitCount:0, gender:'여성', birthday:'', address:'', points:0, avgSpend:0 },
+  { regDate:'2025-05-20', no:30, name:'조예린', phone:'010-1234-5678', grade:'', group:'', staff:'Jenny', prepaidBalance:0, totalSales:2100000, memo:'매직 스트레이트 선호', lastVisit:'2025-05-20', firstVisit:'2024-11-10', visitCount:5, gender:'여성', birthday:'', address:'', points:0, avgSpend:420000 },
+  { regDate:'2025-05-05', no:29, name:'강지호', phone:'010-9999-0000', grade:'', group:'', staff:'Suji', prepaidBalance:450000, totalSales:1650000, memo:'', lastVisit:'2025-05-05', firstVisit:'2024-09-20', visitCount:6, gender:'남성', birthday:'', address:'', points:0, avgSpend:275000 },
+  { regDate:'2025-04-18', no:28, name:'신미래', phone:'010-7654-3210', grade:'Gold', group:'', staff:'Jimmy', prepaidBalance:0, totalSales:4200000, memo:'탈색 이력 있음', lastVisit:'2025-04-18', firstVisit:'2024-02-14', visitCount:12, gender:'여성', birthday:'', address:'', points:0, avgSpend:350000 },
+  { regDate:'2025-04-01', no:27, name:'류하은', phone:'010-5432-1098', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:380000, memo:'', lastVisit:'2025-04-01', firstVisit:'2025-04-01', visitCount:1, gender:'여성', birthday:'', address:'', points:0, avgSpend:380000 },
+  { regDate:'2025-03-22', no:26, name:'문태경', phone:'010-2468-1357', grade:'', group:'', staff:'Jenny', prepaidBalance:0, totalSales:1850000, memo:'단발 선호', lastVisit:'2025-03-22', firstVisit:'2024-06-05', visitCount:7, gender:'여성', birthday:'', address:'', points:0, avgSpend:264286 },
+  { regDate:'2025-03-10', no:25, name:'황보윤', phone:'010-1357-2468', grade:'VVIP', group:'', staff:'Suji', prepaidBalance:1500000, totalSales:8500000, memo:'', lastVisit:'2025-03-10', firstVisit:'2023-11-20', visitCount:18, gender:'여성', birthday:'', address:'서울', points:10000, avgSpend:472222 },
+  { regDate:'2025-02-20', no:24, name:'김하늘', phone:'010-8888-7777', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:120000, memo:'', lastVisit:'2025-02-20', firstVisit:'2025-02-20', visitCount:1, gender:'', birthday:'', address:'', points:0, avgSpend:120000 },
+  { regDate:'2025-01-15', no:23, name:'이수진', phone:'010-3456-7890', grade:'', group:'', staff:'Jenny', prepaidBalance:0, totalSales:450000, memo:'', lastVisit:'2025-01-15', firstVisit:'2025-01-15', visitCount:2, gender:'여성', birthday:'', address:'', points:0, avgSpend:225000 },
+  { regDate:'2024-12-05', no:22, name:'정민지', phone:'010-1111-9999', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:300000, memo:'', lastVisit:'2024-12-05', firstVisit:'2024-12-05', visitCount:1, gender:'여성', birthday:'', address:'', points:0, avgSpend:300000 },
+  { regDate:'2024-11-20', no:21, name:'한소희', phone:'010-4444-5555', grade:'', group:'', staff:'Suji', prepaidBalance:200000, totalSales:560000, memo:'', lastVisit:'2024-11-20', firstVisit:'2024-11-20', visitCount:2, gender:'여성', birthday:'', address:'', points:0, avgSpend:280000 },
+  { regDate:'2024-10-08', no:20, name:'오서준', phone:'010-6666-7777', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:0, memo:'', lastVisit:'', firstVisit:'', visitCount:0, gender:'남성', birthday:'', address:'', points:0, avgSpend:0 },
+  { regDate:'2024-09-12', no:19, name:'박서연', phone:'010-5555-1234', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:180000, memo:'', lastVisit:'2024-09-12', firstVisit:'2024-09-12', visitCount:1, gender:'', birthday:'', address:'', points:0, avgSpend:180000 },
+  { regDate:'2024-08-25', no:18, name:'김세나', phone:'019-8000-9000', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:95000, memo:'', lastVisit:'2024-08-25', firstVisit:'2024-08-25', visitCount:1, gender:'여성', birthday:'', address:'', points:0, avgSpend:95000 },
+  { regDate:'2024-07-30', no:17, name:'이지은', phone:'010-8765-4321', grade:'', group:'', staff:'Jenny', prepaidBalance:0, totalSales:720000, memo:'', lastVisit:'2024-07-30', firstVisit:'2024-07-30', visitCount:2, gender:'여성', birthday:'', address:'', points:0, avgSpend:360000 },
+  { regDate:'2024-06-18', no:16, name:'윤채원', phone:'010-2233-4455', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:2100000, memo:'', lastVisit:'2024-06-18', firstVisit:'2024-06-18', visitCount:3, gender:'여성', birthday:'', address:'', points:0, avgSpend:700000 },
+  { regDate:'2024-05-10', no:15, name:'최윤서', phone:'010-2222-3333', grade:'', group:'', staff:'', prepaidBalance:0, totalSales:380000, memo:'', lastVisit:'2024-05-10', firstVisit:'2024-05-10', visitCount:1, gender:'여성', birthday:'', address:'', points:0, avgSpend:380000 }
+];
+
+// ── 고객 마스터에서 검색 조건으로 필터링 ──
+function cmFilterClients(cat) {
+  var result = cmMasterClients.slice();
+  var advOn = document.getElementById('cmAdvToggle') && document.getElementById('cmAdvToggle').checked;
+
+  // 상세 검색 필터 적용
+  if (advOn) {
+    var chk, el;
+    // 담당자
+    chk = document.getElementById('cmChkStaff');
+    if (chk && chk.checked) {
+      el = document.getElementById('cmStaff');
+      var sv = el ? el.options[el.selectedIndex].text : '';
+      if (sv && sv !== '전체' && sv !== 'All') {
+        if (sv === '담당자 없음' || sv === 'No Staff') result = result.filter(function(c) { return !c.staff; });
+        else result = result.filter(function(c) { return c.staff === sv || c.staff.toLowerCase() === sv.toLowerCase(); });
+      }
+    }
+    // 고객 등급
+    chk = document.getElementById('cmChkGrade');
+    if (chk && chk.checked) {
+      el = document.getElementById('cmGrade');
+      var gv = el ? el.options[el.selectedIndex].text : '';
+      if (gv && gv !== '전체' && gv !== 'All') {
+        if (gv === '고객 등급 없음' || gv === 'None') result = result.filter(function(c) { return !c.grade; });
+        else result = result.filter(function(c) { return c.grade === gv; });
+      }
+    }
+    // 성별
+    chk = document.getElementById('cmChkGender');
+    if (chk && chk.checked) {
+      el = document.getElementById('cmGender');
+      var genv = el ? el.options[el.selectedIndex].text : '';
+      if (genv && genv !== '전체' && genv !== 'All') {
+        if (genv === '성별 없음' || genv === 'None') result = result.filter(function(c) { return !c.gender; });
+        else result = result.filter(function(c) { return c.gender === genv; });
+      }
+    }
+    // 메모
+    chk = document.getElementById('cmChkMemo');
+    if (chk && chk.checked) {
+      el = document.getElementById('cmMemo');
+      var mv = el ? el.value.trim() : '';
+      if (mv) result = result.filter(function(c) { return c.memo && c.memo.indexOf(mv) !== -1; });
+      else result = result.filter(function(c) { return !!c.memo; });
+    }
+    // 주소
+    chk = document.getElementById('cmChkAddress');
+    if (chk && chk.checked) {
+      el = document.getElementById('cmAddress');
+      var adv = el ? el.value.trim() : '';
+      if (adv) result = result.filter(function(c) { return c.address && c.address.indexOf(adv) !== -1; });
+    }
+    // 총 판매액
+    chk = document.getElementById('cmChkTotalSales');
+    if (chk && chk.checked) {
+      var tsf = document.getElementById('cmTotalSalesFrom'), tst = document.getElementById('cmTotalSalesTo');
+      var tsMin = tsf ? parseInt(tsf.value.replace(/,/g,'')) || 0 : 0;
+      var tsMax = tst ? parseInt(tst.value.replace(/,/g,'')) || Infinity : Infinity;
+      result = result.filter(function(c) { return c.totalSales >= tsMin && c.totalSales <= tsMax; });
+    }
+    // 방문 경로 - 데이터에 없으므로 스킵
+    // 고객그룹 - 데이터에 없으므로 스킵
+  }
+
+  return result;
+}
+
+// 숫자 포맷
+function cmFmtNum(n) {
+  if (!n && n !== 0) return '';
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 
 function cmOpenCategory(cat) {
   cmCurrentCategory = cat;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var info = cmCategories[cat] || cmCategories.all;
 
-  // 타이틀 설정
+  // 기존 검색뷰 타이틀 설정 (호환성)
   var titleEl = document.getElementById('cmSearchPanelTitle');
-  titleEl.textContent = isEn ? info.en : info.ko;
-  titleEl.setAttribute('data-ko', info.ko);
-  titleEl.setAttribute('data-en', info.en);
+  if (titleEl) {
+    titleEl.textContent = isEn ? info.en : info.ko;
+    titleEl.setAttribute('data-ko', info.ko);
+    titleEl.setAttribute('data-en', info.en);
+  }
 
-  // 카테고리별 고유 필터 빌드
+  // 기존 검색뷰 필터 빌드 (호환성)
   var filterHtml = cmBuildCategoryFilter(cat, isEn);
-  document.getElementById('cmCategoryFilters').innerHTML = filterHtml;
+  var catFilters = document.getElementById('cmCategoryFilters');
+  if (catFilters) catFilters.innerHTML = filterHtml;
+
+  // 정액권/티켓 초기 상태 적용
+  if (cat === 'prepaid') { cmPopulatePrepaidCards(); cmTogglePrepaidExpiry(); }
+  if (cat === 'ticket') cmToggleTicketExpiry();
 
   // 안내 메시지 표시 여부
   var guideEl = document.getElementById('cmSearchGuide');
-  guideEl.style.display = (cat === 'all') ? '' : 'none';
+  if (guideEl) guideEl.style.display = (cat === 'all') ? '' : 'none';
 
-  // 상세 검색 리셋
-  document.getElementById('cmAdvToggle').checked = false;
-  document.getElementById('cmAdvancedPanel').style.display = 'none';
+  // 기존 상세 검색 리셋
+  var advToggle = document.getElementById('cmAdvToggle');
+  if (advToggle) { advToggle.checked = false; }
+  var advPanel = document.getElementById('cmAdvancedPanel');
+  if (advPanel) advPanel.style.display = 'none';
   cmResetAdvancedFields();
 
-  // 생일 고객은 상세 검색 자동 체크 + 생일 필드 자동 체크
+  // 생일 고객 특수 처리: 상세검색 자동 체크 + 생일 이번달
   if (cat === 'birthday') {
-    document.getElementById('cmAdvToggle').checked = true;
-    document.getElementById('cmAdvancedPanel').style.display = '';
-    var chk = document.getElementById('cmChkBirthday');
-    chk.checked = true;
-    cmToggleField(chk);
-    var today = new Date();
-    var m = today.getMonth() + 1;
-    var d = today.getDate();
-    document.getElementById('cmBirthM1').value = m;
-    document.getElementById('cmBirthD1').value = d;
-    var lastDay = new Date(today.getFullYear(), m, 0).getDate();
-    document.getElementById('cmBirthM2').value = m;
-    document.getElementById('cmBirthD2').value = lastDay;
+    if (advToggle) {
+      advToggle.checked = true;
+      if (advPanel) advPanel.style.display = '';
+      var chk = document.getElementById('cmChkBirthday');
+      if (chk) { chk.checked = true; cmToggleField(chk); }
+      var today = new Date();
+      var m = today.getMonth() + 1;
+      var lastDay = new Date(today.getFullYear(), m, 0).getDate();
+      var el = document.getElementById('cmBirthM1'); if(el) el.value = m;
+      el = document.getElementById('cmBirthD1'); if(el) el.value = 1;
+      el = document.getElementById('cmBirthM2'); if(el) el.value = m;
+      el = document.getElementById('cmBirthD2'); if(el) el.value = lastDay;
+    }
   }
 
-  // 뷰 전환
+  // 뷰 전환: 검색 폼 페이지로 이동
   document.getElementById('cmMain').style.display = 'none';
   document.getElementById('cmSearchView').style.display = '';
   document.getElementById('cmResultView').style.display = 'none';
@@ -5324,13 +5524,14 @@ function cmOpenCategory(cat) {
 
 function cmBuildCategoryFilter(cat, isEn) {
   var today = new Date().toISOString().split('T')[0];
+  var monthStart = today.substring(0, 8) + '01';
 
   switch(cat) {
     case 'dormant':
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.no_visit" data-ko="미 방문" data-en="No visit">' + (isEn ? 'No visit' : '미 방문') + '</label>' +
-        '<input type="text" class="cm-input cm-input-sm" id="cmDormantDays">' +
-        '<span data-i18n="cm.days_more" data-ko="일 이상" data-en="days or more">' + (isEn ? 'days or more' : '일 이상') + '</span>' +
+        '<label data-i18n="cm.no_visit" data-ko="미 방문" data-en="Not visited more than">' + (isEn ? 'Not visited more than' : '미 방문') + '</label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmDormantDays" oninput="cmFormatNumberInput(this)">' +
+        '<span data-i18n="cm.days_more" data-ko="일 이상" data-en="days">' + (isEn ? 'days' : '일 이상') + '</span>' +
         '</div>';
 
     case 'byService':
@@ -5339,93 +5540,110 @@ function cmBuildCategoryFilter(cat, isEn) {
         svcCatOpts += '<option value="' + catName + '">' + catName + '</option>';
       });
       return '<div class="cm-cat-filter-row">' +
-        '<label data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
-        '<input type="date" class="cm-input-date" id="cmSvcDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmSvcDateTo" value="' + today + '">' +
+        '<label data-ko="기간" data-en="Date Range">' + (isEn ? 'Date Range' : '기간') + '</label>' +
+        '<input type="date" class="cm-input-date" id="cmSvcDateFrom" value="' + monthStart + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input-date" id="cmSvcDateTo" value="' + today + '">' +
         '<label data-ko="서비스" data-en="Service" style="margin-left:16px;">' + (isEn ? 'Service' : '서비스') + '</label>' +
         '<select id="cmSvcCat" onchange="cmSvcCatChange()">' + svcCatOpts + '</select>' +
         '<select id="cmSvcItem" disabled><option data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
         '</div>';
 
     case 'byProduct':
+      var prodCatOpts = '<option value="" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+      prdCats.forEach(function(c) { prodCatOpts += '<option value="' + c + '">' + c + '</option>'; });
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
-        '<input type="date" class="cm-input cm-input-date" id="cmProdDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmProdDateTo" value="' + today + '">' +
+        '<label data-i18n="cm.period" data-ko="기간" data-en="Date Range">' + (isEn ? 'Date Range' : '기간') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmProdDateFrom" value="' + monthStart + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmProdDateTo" value="' + today + '">' +
         '<label data-i18n="cm.product" data-ko="제품" data-en="Product" style="margin-left:16px;">' + (isEn ? 'Product' : '제품') + '</label>' +
-        '<select class="cm-select" id="cmProdCat"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
-        '<select class="cm-select" id="cmProdItem"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<select class="cm-select" id="cmProdCat" onchange="cmProdCatChange()">' + prodCatOpts + '</select>' +
+        '<select class="cm-select" id="cmProdItem" disabled style="opacity:0.4;"><option value="" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
         '</div>';
 
     case 'byAmount':
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</label>' +
-        '<input type="date" class="cm-input cm-input-date" id="cmAmtDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmAmtDateTo" value="' + today + '">' +
+        '<label data-i18n="cm.period" data-ko="기간" data-en="Date Range">' + (isEn ? 'Date Range' : '기간') + '</label>' +
+        '<input type="date" class="cm-input cm-input-date" id="cmAmtDateFrom" value="' + monthStart + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmAmtDateTo" value="' + today + '">' +
         '<label data-i18n="cm.sales_amount" data-ko="판매액" data-en="Sales Amount" style="margin-left:16px;">' + (isEn ? 'Sales Amount' : '판매액') + '</label>' +
         '<input type="text" class="cm-input cm-input-sm" id="cmAmtFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmAmtTo">' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmAmtIncProduct" checked> <span data-i18n="cm.inc_product" data-ko="제품 포함" data-en="Include Products">' + (isEn ? 'Include Products' : '제품 포함') + '</span></label>' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmAmtIncProduct" checked><span class="cm-checkmark">✓</span> <span data-i18n="cm.inc_product" data-ko="제품 포함" data-en="Include Products">' + (isEn ? 'Include Products' : '제품 포함') + '</span></label>' +
         '</div>';
 
     case 'membership':
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.membership_type" data-ko="회원권" data-en="Membership">' + (isEn ? 'Membership' : '회원권') + '</label>' +
+        '<label data-i18n="cm.membership_type" data-ko="회원권" data-en="Prepaid Goods">' + (isEn ? 'Prepaid Goods' : '회원권') + '</label>' +
         '<label class="cm-radio"><input type="radio" name="cmMemType" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmMemType" value="prepaid"> <span data-i18n="cm.prepaid_card" data-ko="정액권" data-en="Prepaid">' + (isEn ? 'Prepaid' : '정액권') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmMemType" value="ticket"> <span data-i18n="cm.ticket" data-ko="티켓" data-en="Ticket">' + (isEn ? 'Ticket' : '티켓') + '</span></label>' +
-        '<label style="margin-left:16px;"><input type="checkbox" id="cmMemFamily"> <span data-i18n="cm.inc_family" data-ko="가족 회원권 포함" data-en="Include Family Memberships">' + (isEn ? 'Include Family' : '가족 회원권 포함') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmMemType" value="prepaid"> <span data-i18n="cm.prepaid_card" data-ko="정액권" data-en="Prepaid Card">' + (isEn ? 'Prepaid Card' : '정액권') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmMemType" value="ticket"> <span data-i18n="cm.ticket" data-ko="티켓" data-en="Prepaid Service">' + (isEn ? 'Prepaid Service' : '티켓') + '</span></label>' +
+        '<label class="cm-chk-label" style="margin-left:16px;"><input type="checkbox" id="cmMemFamily" checked><span class="cm-checkmark">✓</span> <span data-i18n="cm.inc_family" data-ko="가족 회원권 포함" data-en="Include Family Prepaid Goods">' + (isEn ? 'Include Family Prepaid Goods' : '가족 회원권 포함') + '</span></label>' +
         '</div>';
 
     case 'prepaid':
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sale Date">' + (isEn ? 'Sale Date' : '판매일') + '</label>' +
-        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="period"> <span data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</span></label>' +
+        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sales Date">' + (isEn ? 'Sales Date' : '판매일') + '</label>' +
+        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="all" checked onchange="cmTogglePrepaidDateRange()"> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmPrepaidDate" value="period" onchange="cmTogglePrepaidDateRange()"> <span data-i18n="cm.period" data-ko="기간" data-en="Date Range">' + (isEn ? 'Date Range' : '기간') + '</span></label>' +
+        '<span id="cmPrepaidDateRange" style="display:none;margin-left:8px;">' +
+        '<input type="date" class="cm-input cm-input-date" id="cmPrepaidSaleDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmPrepaidSaleDateTo" value="' + today + '">' +
+        '</span>' +
         '</div>' +
         '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry">' + (isEn ? 'Expiry' : '만료일') + '</label>' +
+        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry Date">' + (isEn ? 'Expiry Date' : '만료일') + '</label>' +
         '<input type="date" class="cm-input cm-input-date" id="cmPrepaidExpFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmPrepaidExpTo" value="' + today + '">' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmPrepaidNoLimit" checked> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
-        '<label style="margin-left:16px;" data-i18n="cm.prepaid_balance_range" data-ko="정액권별 잔액" data-en="Prepaid Balance">' + (isEn ? 'Prepaid Balance' : '정액권별 잔액') + '</label>' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmPrepaidNoLimit" checked onchange="cmTogglePrepaidExpiry()"><span class="cm-checkmark">✓</span> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '<label style="margin-left:16px;" data-i18n="cm.prepaid_balance_range" data-ko="정액권별 잔액" data-en="Balance by Prepaid Card">' + (isEn ? 'Balance by Prepaid Card' : '정액권별 잔액') + '</label>' +
         '<input type="text" class="cm-input cm-input-sm" id="cmPrepaidBalFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmPrepaidBalTo">' +
         '</div>' +
         '<div class="cm-cat-filter-row">' +
         '<label data-i18n="cm.prepaid_card" data-ko="정액권" data-en="Prepaid Card">' + (isEn ? 'Prepaid Card' : '정액권') + '</label>' +
         '<select class="cm-select" id="cmPrepaidCard"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmPrepaidShowUnused"> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Unused">' + (isEn ? 'Show Unused' : '미사용 보기') + '</span></label>' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmPrepaidShowUnused"><span class="cm-checkmark">✓</span> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Inactive">' + (isEn ? 'Show Inactive' : '미사용 보기') + '</span></label>' +
         '</div>';
 
     case 'ticket':
       return '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sale Date">' + (isEn ? 'Sale Date' : '판매일') + '</label>' +
-        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="period"> <span data-i18n="cm.period" data-ko="기간" data-en="Period">' + (isEn ? 'Period' : '기간') + '</span></label>' +
+        '<label data-i18n="cm.sale_date" data-ko="판매일" data-en="Sales Date">' + (isEn ? 'Sales Date' : '판매일') + '</label>' +
+        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="all" checked onchange="cmToggleTicketDateRange()"> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmTicketDate" value="period" onchange="cmToggleTicketDateRange()"> <span data-i18n="cm.period" data-ko="기간" data-en="Date Range">' + (isEn ? 'Date Range' : '기간') + '</span></label>' +
+        '<span id="cmTicketDateRange" style="display:none;margin-left:8px;">' +
+        '<input type="date" class="cm-input cm-input-date" id="cmTicketSaleDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmTicketSaleDateTo" value="' + today + '">' +
+        '</span>' +
         '</div>' +
         '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry">' + (isEn ? 'Expiry' : '만료일') + '</label>' +
+        '<label data-i18n="cm.expiry" data-ko="만료일" data-en="Expiry Date">' + (isEn ? 'Expiry Date' : '만료일') + '</label>' +
         '<input type="date" class="cm-input cm-input-date" id="cmTicketExpFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmTicketExpTo" value="' + today + '">' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketNoLimit" checked> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmTicketNoLimit" checked onchange="cmToggleTicketExpiry()"><span class="cm-checkmark">✓</span> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
         '<label style="margin-left:16px;" data-i18n="cm.remaining" data-ko="잔여 횟수" data-en="Remaining">' + (isEn ? 'Remaining' : '잔여 횟수') + '</label>' +
-        '<input type="text" class="cm-input cm-input-sm" id="cmTicketRemFrom"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmTicketRemTo">' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketRemNoLimit"> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
+        '<input type="text" class="cm-input cm-input-sm" id="cmTicketRemFrom" oninput="cmFormatNumberInput(this)"> <span class="cm-tilde">~</span> <input type="text" class="cm-input cm-input-sm" id="cmTicketRemTo" oninput="cmFormatNumberInput(this)">' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmTicketRemNoLimit"><span class="cm-checkmark">✓</span> <span data-i18n="cm.unlimited" data-ko="무제한" data-en="Unlimited">' + (isEn ? 'Unlimited' : '무제한') + '</span></label>' +
         '</div>' +
         '<div class="cm-cat-filter-row">' +
-        '<label data-i18n="cm.ticket" data-ko="티켓" data-en="Ticket">' + (isEn ? 'Ticket' : '티켓') + '</label>' +
-        '<select class="cm-select" id="cmTicketCat"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
-        '<select class="cm-select" id="cmTicketItem"><option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option></select>' +
-        '<label style="margin-left:8px;"><input type="checkbox" id="cmTicketShowUnused"> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Unused">' + (isEn ? 'Show Unused' : '미사용 보기') + '</span></label>' +
+        '<label data-i18n="cm.ticket" data-ko="티켓" data-en="Prepaid Service">' + (isEn ? 'Prepaid Service' : '티켓') + '</label>' +
+        '<select class="cm-select" id="cmTicketCat" onchange="cmTicketCatChange()"><option value="">' + (isEn ? 'All' : '전체') + '</option>' + (function(){ var o=''; Object.keys(svServiceData).forEach(function(c){ o+='<option value="'+c+'">'+c+'</option>'; }); return o; })() + '</select>' +
+        '<select class="cm-select" id="cmTicketItem" disabled style="opacity:0.4;"><option value="">' + (isEn ? 'All' : '전체') + '</option></select>' +
+        '<label class="cm-chk-label" style="margin-left:8px;"><input type="checkbox" id="cmTicketShowUnused"><span class="cm-checkmark">✓</span> <span data-i18n="cm.show_unused" data-ko="미사용 보기" data-en="Show Inactive">' + (isEn ? 'Show Inactive' : '미사용 보기') + '</span></label>' +
         '</div>';
 
     case 'noMembership':
       return '<div class="cm-cat-filter-row">' +
-        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="all" checked> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="hasPurchased"> <span data-i18n="cm.has_purchased" data-ko="회원권 구매 이력 있는 고객" data-en="Has Purchase History">' + (isEn ? 'Has Purchase History' : '회원권 구매 이력 있는 고객') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="noPurchase"> <span data-i18n="cm.no_purchase" data-ko="회원권 구매 이력 없는 고객" data-en="No Purchase History">' + (isEn ? 'No Purchase History' : '회원권 구매 이력 없는 고객') + '</span></label>' +
-        '<label style="margin-left:16px;"><input type="checkbox" id="cmNoMemFamily" checked> <span data-i18n="cm.inc_family_prepaid" data-ko="가족 정액권 포함" data-en="Include Family Prepaid">' + (isEn ? 'Include Family Prepaid' : '가족 정액권 포함') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="all" checked onchange="cmToggleNoMemFamily()"> <span data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="hasPurchased" onchange="cmToggleNoMemFamily()"> <span data-i18n="cm.has_purchased" data-ko="회원권 구매 이력 있는 고객" data-en="Clients with prepaid goods sales history">' + (isEn ? 'Clients with prepaid goods sales history' : '회원권 구매 이력 있는 고객') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmNoMemType" value="noPurchase" onchange="cmToggleNoMemFamily()"> <span data-i18n="cm.no_purchase" data-ko="회원권 구매 이력 없는 고객" data-en="Clients with no prepaid goods sales history">' + (isEn ? 'Clients with no prepaid goods sales history' : '회원권 구매 이력 없는 고객') + '</span></label>' +
+        '<label class="cm-chk-label" id="cmNoMemFamilyLabel" style="margin-left:16px;"><input type="checkbox" id="cmNoMemFamily" checked><span class="cm-checkmark">✓</span> <span data-i18n="cm.inc_family_prepaid" data-ko="가족 정액권 포함" data-en="Include Family Prepaid Card">' + (isEn ? 'Include Family Prepaid Card' : '가족 정액권 포함') + '</span></label>' +
         '</div>';
 
     case 'referral':
       return '<div class="cm-cat-filter-row">' +
-        '<label class="cm-radio"><input type="radio" name="cmRefType" value="regDate" checked> <span data-i18n="cm.reg_date" data-ko="등록일" data-en="Registration Date">' + (isEn ? 'Registration Date' : '등록일') + '</span></label>' +
-        '<label class="cm-radio"><input type="radio" name="cmRefType" value="client"> <span data-i18n="cm.client" data-ko="고객" data-en="Client">' + (isEn ? 'Client' : '고객') + '</span></label>' +
-        '<input type="date" class="cm-input cm-input-date" id="cmRefDateFrom" value="' + today + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmRefDateTo" value="' + today + '">' +
+        '<label class="cm-radio"><input type="radio" name="cmRefType" value="regDate" checked onchange="cmToggleRefType()"> <span data-i18n="cm.reg_date" data-ko="등록일" data-en="Registration Date">' + (isEn ? 'Registration Date' : '등록일') + '</span></label>' +
+        '<label class="cm-radio"><input type="radio" name="cmRefType" value="client" onchange="cmToggleRefType()"> <span data-i18n="cm.client" data-ko="고객" data-en="Client">' + (isEn ? 'Client' : '고객') + '</span></label>' +
+        '<span id="cmRefDateRange">' +
+        '<input type="date" class="cm-input cm-input-date" id="cmRefDateFrom" value="' + monthStart + '"> <span class="cm-tilde">~</span> <input type="date" class="cm-input cm-input-date" id="cmRefDateTo" value="' + today + '">' +
+        '</span>' +
+        '<span id="cmRefClientRange" style="display:none;">' +
+        '<select class="cm-select" id="cmRefClientType">' +
+        '<option value="referrer" data-ko="소개한 고객" data-en="Referrer">' + (isEn ? 'Referrer' : '소개한 고객') + '</option>' +
+        '<option value="referred" data-ko="소개받은 고객" data-en="Referred">' + (isEn ? 'Referred' : '소개받은 고객') + '</option>' +
+        '</select>' +
+        '<input type="text" class="cm-input" id="cmRefClientSearch" placeholder="' + (isEn ? 'Client name or phone' : '고객명 또는 휴대폰번호') + '" data-i18n-ph-ko="고객명 또는 휴대폰번호" data-i18n-ph-en="Client name or phone" style="width:200px;">' +
+        '</span>' +
         '</div>';
 
     default: // all, birthday
@@ -5453,6 +5671,129 @@ function cmSvcCatChange() {
   }
 }
 
+function cmPopulatePrepaidCards() {
+  var sel = document.getElementById('cmPrepaidCard');
+  if (!sel) return;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  // 기존 옵션 유지 (전체)
+  sel.innerHTML = '<option>' + (isEn ? 'All' : '전체') + '</option>';
+  // 설정 > 정액권 테이블에서 이름 가져오기
+  var rows = document.querySelectorAll('#psCardTbody tr');
+  rows.forEach(function(row) {
+    var nameCell = row.querySelector('.ps-td-name');
+    if (nameCell) {
+      var name = nameCell.textContent.trim();
+      if (name) {
+        var opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      }
+    }
+  });
+}
+function cmTicketCatChange() {
+  var catSel = document.getElementById('cmTicketCat');
+  var itemSel = document.getElementById('cmTicketItem');
+  if (!catSel || !itemSel) return;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var cat = catSel.value;
+  itemSel.innerHTML = '<option value="">' + (isEn ? 'All' : '전체') + '</option>';
+  if (cat) {
+    itemSel.disabled = false;
+    itemSel.style.opacity = '1';
+    var tickets = pkgTicketData[cat] || [];
+    tickets.forEach(function(t) {
+      var opt = document.createElement('option');
+      opt.value = t.name || t;
+      opt.textContent = t.name || t;
+      itemSel.appendChild(opt);
+    });
+  } else {
+    itemSel.disabled = true;
+    itemSel.style.opacity = '0.4';
+  }
+}
+function cmProdCatChange() {
+  var catSel = document.getElementById('cmProdCat');
+  var itemSel = document.getElementById('cmProdItem');
+  if (!catSel || !itemSel) return;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var cat = catSel.value;
+  itemSel.innerHTML = '<option value="">' + (isEn ? 'All' : '전체') + '</option>';
+  if (cat) {
+    itemSel.disabled = false;
+    itemSel.style.opacity = '1';
+    prdData.forEach(function(p) {
+      if (p.cat === cat && !p.inactive) {
+        var opt = document.createElement('option');
+        opt.value = p.name;
+        opt.textContent = p.name;
+        itemSel.appendChild(opt);
+      }
+    });
+  } else {
+    itemSel.disabled = true;
+    itemSel.style.opacity = '0.4';
+  }
+}
+function cmFormatNumberInput(el) {
+  var pos = el.selectionStart;
+  var oldLen = el.value.length;
+  var raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  var newLen = el.value.length;
+  el.selectionStart = el.selectionEnd = pos + (newLen - oldLen);
+}
+function cmToggleRefType() {
+  var sel = document.querySelector('input[name="cmRefType"]:checked');
+  var dateRange = document.getElementById('cmRefDateRange');
+  var clientRange = document.getElementById('cmRefClientRange');
+  if (!sel || !dateRange || !clientRange) return;
+  if (sel.value === 'regDate') {
+    dateRange.style.display = '';
+    clientRange.style.display = 'none';
+  } else {
+    dateRange.style.display = 'none';
+    clientRange.style.display = '';
+  }
+}
+function cmToggleNoMemFamily() {
+  var sel = document.querySelector('input[name="cmNoMemType"]:checked');
+  var chk = document.getElementById('cmNoMemFamily');
+  var label = document.getElementById('cmNoMemFamilyLabel');
+  if (!sel || !chk || !label) return;
+  var disabled = sel.value !== 'all';
+  chk.disabled = disabled;
+  label.style.opacity = disabled ? '0.4' : '1';
+  label.style.pointerEvents = disabled ? 'none' : '';
+}
+function cmTogglePrepaidDateRange() {
+  var sel = document.querySelector('input[name="cmPrepaidDate"]:checked');
+  var range = document.getElementById('cmPrepaidDateRange');
+  if (range) range.style.display = (sel && sel.value === 'period') ? 'inline' : 'none';
+}
+function cmTogglePrepaidExpiry() {
+  var chk = document.getElementById('cmPrepaidNoLimit');
+  var toEl = document.getElementById('cmPrepaidExpTo');
+  if (!chk || !toEl) return;
+  var disabled = chk.checked;
+  toEl.disabled = disabled;
+  toEl.style.opacity = disabled ? '0.4' : '1';
+}
+function cmToggleTicketDateRange() {
+  var sel = document.querySelector('input[name="cmTicketDate"]:checked');
+  var range = document.getElementById('cmTicketDateRange');
+  if (range) range.style.display = (sel && sel.value === 'period') ? 'inline' : 'none';
+}
+function cmToggleTicketExpiry() {
+  var chk = document.getElementById('cmTicketNoLimit');
+  var toEl = document.getElementById('cmTicketExpTo');
+  if (!chk || !toEl) return;
+  var disabled = chk.checked;
+  toEl.disabled = disabled;
+  toEl.style.opacity = disabled ? '0.4' : '1';
+}
 function cmToggleAdvanced() {
   var panel = document.getElementById('cmAdvancedPanel');
   panel.style.display = document.getElementById('cmAdvToggle').checked ? '' : 'none';
@@ -5468,6 +5809,34 @@ function cmToggleField(chk) {
   });
 }
 
+// 고객번호 없음 체크 시 고객 번호 행 비활성화
+function cmToggleNoNumber(chk) {
+  var numberChk = document.getElementById('cmChkNumber');
+  if (!numberChk) return;
+  var numberRow = numberChk.closest('.cm-field-row');
+  if (!numberRow) return;
+  if (chk.checked) {
+    numberRow.classList.add('cm-field-row--disabled');
+    numberChk.checked = false;
+    numberRow.querySelectorAll('select, input[type="text"]').forEach(function(el) { el.disabled = true; });
+  } else {
+    numberRow.classList.remove('cm-field-row--disabled');
+  }
+}
+
+// 날짜 범위 체크 시 이번달 1일 ~ 오늘 기본값 설정
+function cmSetDateRangeDefault(fromId, toId, chk) {
+  if (!chk.checked) return;
+  var today = new Date();
+  var y = today.getFullYear();
+  var m = String(today.getMonth() + 1).padStart(2, '0');
+  var d = String(today.getDate()).padStart(2, '0');
+  var fromEl = document.getElementById(fromId);
+  var toEl = document.getElementById(toId);
+  if (fromEl) fromEl.value = y + '-' + m + '-01';
+  if (toEl) toEl.value = y + '-' + m + '-' + d;
+}
+
 // 상세 검색 패널 내 모든 필드 초기화 (disabled 상태로)
 function cmResetAdvancedFields() {
   var panel = document.getElementById('cmAdvancedPanel');
@@ -5476,36 +5845,432 @@ function cmResetAdvancedFields() {
   panel.querySelectorAll('input[type="radio"]').forEach(function(r) { r.checked = false; r.disabled = true; });
   panel.querySelectorAll('select').forEach(function(s) { s.selectedIndex = 0; s.disabled = true; });
   panel.querySelectorAll('input[type="text"], input[type="date"]').forEach(function(inp) { inp.value = ''; inp.disabled = true; });
+  panel.querySelectorAll('.cm-field-row--disabled').forEach(function(row) { row.classList.remove('cm-field-row--disabled'); });
 }
 
 function cmGoBack() {
   if (document.getElementById('cmResultView').style.display !== 'none') {
-    // 결과 → 검색
+    // 결과 → 검색 폼
     document.getElementById('cmResultView').style.display = 'none';
     document.getElementById('cmSearchView').style.display = '';
-  } else {
-    // 검색 → 메인
+  } else if (document.getElementById('cmSearchView').style.display !== 'none') {
+    // 검색 → 메인 카드그리드
     document.getElementById('cmSearchView').style.display = 'none';
     document.getElementById('cmMain').style.display = '';
   }
 }
 
+// 알림 모달 열기/닫기
+function cmShowAlert(msg) {
+  var modal = document.getElementById('cmAlertModal');
+  var msgEl = document.getElementById('cmAlertMsg');
+  if (msgEl) msgEl.textContent = msg;
+  if (modal) modal.style.display = '';
+}
+function cmCloseAlert() {
+  var modal = document.getElementById('cmAlertModal');
+  if (modal) modal.style.display = 'none';
+}
+
 function cmDoSearch() {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  var info = cmCategories[cmCurrentCategory] || cmCategories.all;
+  var cat = cmCurrentCategory;
+  var info = cmCategories[cat] || cmCategories.all;
 
-  // 검색 조건 요약
-  var summary = '· ' + (isEn ? info.en : info.ko);
-  document.getElementById('cmConditionSummary').textContent = summary;
+  // 생일 유효성 검사: 시작 월/일이 종료 월/일보다 크면 알림
+  var chkBirth = document.getElementById('cmChkBirthday');
+  if (chkBirth && chkBirth.checked) {
+    var bm1 = parseInt(document.getElementById('cmBirthM1').value) || 0;
+    var bd1 = parseInt(document.getElementById('cmBirthD1').value) || 0;
+    var bm2 = parseInt(document.getElementById('cmBirthM2').value) || 0;
+    var bd2 = parseInt(document.getElementById('cmBirthD2').value) || 0;
+    if (bm1 > bm2 || (bm1 === bm2 && bd1 > bd2)) {
+      cmShowAlert(isEn
+        ? 'Birthday month start value must be less than or equal to end value.'
+        : '생년 월 은 시작 값이 종료 값보다 작거나 같아야합니다.');
+      return;
+    }
+  }
 
-  // 뷰 전환
+  // 0) 카테고리 제목 설정
+  var catTitleEl = document.getElementById('cmConditionCatTitle');
+  if (catTitleEl) catTitleEl.textContent = isEn ? info.en : info.ko;
+
+  // 1) 검색 조건 칩 빌드
+  cmBuildConditionChips(cat, isEn);
+
+  // 2) 동적 테이블 컬럼 결정
+  var cols = (cmBaseColumns[cat] || cmBaseColumns.all).slice();
+  // 상세 검색으로 추가된 컬럼 (기존 검색 폼의 체크박스 읽기)
+  var advToggle = document.getElementById('cmAdvToggle');
+  if (advToggle && advToggle.checked) {
+    Object.keys(cmAdvColumnMap).forEach(function(chkId) {
+      var chk = document.getElementById(chkId);
+      if (chk && chk.checked && cmAdvColumnMap[chkId]) {
+        var colKey = cmAdvColumnMap[chkId];
+        if (cols.indexOf(colKey) === -1) cols.push(colKey);
+      }
+    });
+  }
+
+  // 3) 테이블 헤더 생성
+  cmBuildTableHeaders(cols, isEn);
+
+  // 4) 테이블 바디 생성 (샘플 데이터)
+  cmBuildTableBody(cat, cols);
+
+  // 5) 노트 표시 (판매 금액별)
+  var noteEl = document.getElementById('cmResultNote');
+  if (noteEl) {
+    if (cmNotes[cat]) {
+      noteEl.style.display = '';
+      noteEl.textContent = isEn ? cmNotes[cat].en : cmNotes[cat].ko;
+    } else {
+      noteEl.style.display = 'none';
+    }
+  }
+
+  // 6) 결과 수에 따른 버튼 상태
+  cmUpdateResultButtons();
+
+  // 뷰 전환 (이미 결과뷰에 있을 수도 있음)
   document.getElementById('cmSearchView').style.display = 'none';
   document.getElementById('cmResultView').style.display = '';
 }
 
 function cmEditCondition() {
+  // 결과 → 검색 폼으로 돌아가기
   document.getElementById('cmResultView').style.display = 'none';
   document.getElementById('cmSearchView').style.display = '';
+}
+
+// ── 검색 조건 칩 빌드 ──
+function cmBuildConditionChips(cat, isEn) {
+  var chips = [];
+  var info = cmCategories[cat] || cmCategories.all;
+
+  // 카테고리별 고유 필터 칩
+  var catChips = cmBuildCategoryChips(cat, isEn);
+  chips = chips.concat(catChips);
+
+  // 상세 검색 칩
+  var advToggle2 = document.getElementById('cmAdvToggle');
+  if (advToggle2 && advToggle2.checked) {
+    var advChips = cmBuildAdvancedChips(isEn);
+    chips = chips.concat(advChips);
+  }
+
+  var container = document.getElementById('cmConditionChips');
+  if (container) {
+    if (chips.length > 0) {
+      container.innerHTML = '<span class="cm-condition-label" data-ko="검색 조건" data-en="Search Conditions">' + (isEn ? 'Search Conditions' : '검색 조건') + '</span><div class="cm-condition-chips-inner">' + chips.join('') + '</div>';
+    } else {
+      container.innerHTML = '';
+    }
+  }
+}
+
+// ── 카테고리별 고유 필터 → 칩 변환 ──
+function cmBuildCategoryChips(cat, isEn) {
+  var chips = [];
+  var c = function(label, value) {
+    if (value) chips.push('<span class="cm-chip cm-chip-cat">' + label + ': ' + value + '</span>');
+    else chips.push('<span class="cm-chip cm-chip-cat">' + label + '</span>');
+  };
+
+  switch(cat) {
+    case 'dormant':
+      var days = document.getElementById('cmDormantDays');
+      if (days && days.value) c(isEn ? 'Not visited more than' : '미 방문', days.value + (isEn ? ' days' : ' 일 이상'));
+      break;
+    case 'byService':
+      var df = document.getElementById('cmSvcDateFrom'), dt = document.getElementById('cmSvcDateTo');
+      if (df && df.value) c(isEn ? 'Date Range' : '기간', df.value + '~' + (dt ? dt.value : ''));
+      var sc = document.getElementById('cmSvcCat'), si = document.getElementById('cmSvcItem');
+      if (sc && sc.value && sc.selectedIndex > 0) {
+        var svcLabel = sc.value;
+        if (si && si.value && si.selectedIndex > 0) svcLabel += ' > ' + si.value;
+        c(isEn ? 'Service' : '서비스', svcLabel);
+      }
+      break;
+    case 'byProduct':
+      var pf = document.getElementById('cmProdDateFrom'), pt = document.getElementById('cmProdDateTo');
+      if (pf && pf.value) c(isEn ? 'Date Range' : '기간', pf.value + '~' + (pt ? pt.value : ''));
+      var pc = document.getElementById('cmProdCat'), pi = document.getElementById('cmProdItem');
+      if (pc && pc.value && pc.selectedIndex > 0) {
+        var pLabel = pc.value;
+        if (pi && pi.value && pi.selectedIndex > 0) pLabel += ' > ' + pi.value;
+        c(isEn ? 'Product' : '제품', pLabel);
+      }
+      break;
+    case 'byAmount':
+      var af = document.getElementById('cmAmtDateFrom'), at2 = document.getElementById('cmAmtDateTo');
+      if (af && af.value) c(isEn ? 'Date Range' : '기간', af.value + '~' + (at2 ? at2.value : ''));
+      var incProd = document.getElementById('cmAmtIncProduct');
+      if (incProd && incProd.checked) c(isEn ? 'Include Products' : '제품 포함', '');
+      break;
+    case 'membership':
+      var memType = document.querySelector('input[name="cmMemType"]:checked');
+      if (memType) {
+        var labels = { all: isEn?'All':'전체', prepaid: isEn?'Prepaid Card':'정액권', ticket: isEn?'Prepaid Service':'티켓' };
+        c(labels[memType.value] || '', '');
+      }
+      var famMem = document.getElementById('cmMemFamily');
+      if (famMem && famMem.checked) c(isEn ? 'Include Family Prepaid Goods' : '가족 회원권 포함', '');
+      break;
+    case 'prepaid':
+      var pef = document.getElementById('cmPrepaidExpFrom'), pet = document.getElementById('cmPrepaidExpTo');
+      if (pef && pef.value) {
+        var expStr = pef.value + '~';
+        var noLim = document.getElementById('cmPrepaidNoLimit');
+        expStr += (noLim && noLim.checked) ? (isEn ? 'Unlimited' : '무제한') : (pet ? pet.value : '');
+        c(isEn ? 'Expiry Date' : '만료일', expStr);
+      }
+      break;
+    case 'ticket':
+      var tef = document.getElementById('cmTicketExpFrom'), tet = document.getElementById('cmTicketExpTo');
+      if (tef && tef.value) {
+        var tExpStr = tef.value + '~';
+        var tNoLim = document.getElementById('cmTicketNoLimit');
+        tExpStr += (tNoLim && tNoLim.checked) ? (isEn ? 'Unlimited' : '무제한') : (tet ? tet.value : '');
+        c(isEn ? 'Expiry Date' : '만료일', tExpStr);
+      }
+      var tcCat = document.getElementById('cmTicketCat');
+      if (tcCat && tcCat.selectedIndex > 0) c(isEn ? 'Category' : '분류', tcCat.value);
+      break;
+    case 'noMembership':
+      var nmType = document.querySelector('input[name="cmNoMemType"]:checked');
+      if (nmType) {
+        var nmLabels = { all: isEn?'All':'전체', hasPurchased: isEn?'Has History':'회원권 구매 이력 있는 고객', noPurchase: isEn?'No History':'회원권 구매 이력 없는 고객' };
+        c(nmLabels[nmType.value] || '', '');
+      }
+      var nmFam = document.getElementById('cmNoMemFamily');
+      if (nmFam && nmFam.checked) c(isEn ? 'Include Family Prepaid Card' : '가족 정액권 포함', '');
+      break;
+    case 'referral':
+      var refType = document.querySelector('input[name="cmRefType"]:checked');
+      if (refType && refType.value === 'regDate') {
+        var rdf = document.getElementById('cmRefDateFrom'), rdt = document.getElementById('cmRefDateTo');
+        if (rdf && rdf.value) c(isEn ? 'Registration Date' : '등록일', rdf.value + '~' + (rdt ? rdt.value : ''));
+      }
+      break;
+    case 'birthday':
+      // 생일 조건은 상세 검색 칩에서 표시
+      break;
+  }
+  return chips;
+}
+
+// ── 상세 검색 → 칩 변환 (기존 검색 폼 ID 참조) ──
+function cmBuildAdvancedChips(isEn) {
+  var chips = [];
+  var c = function(label, value) {
+    if (value) chips.push('<span class="cm-chip">' + label + ': ' + value + '</span>');
+    else chips.push('<span class="cm-chip">' + label + '</span>');
+  };
+
+  var chk;
+  chk = document.getElementById('cmChkStaff');
+  if (chk && chk.checked) { var s = document.getElementById('cmStaff'); c(isEn?'Preferred Staff':'담당자', s ? s.options[s.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkNoNumber');
+  if (chk && chk.checked) c(isEn?'No \'Client Number\'':'고객번호 없음', '');
+  chk = document.getElementById('cmChkNumber');
+  if (chk && chk.checked) { var nf = document.getElementById('cmNumFrom'), nt = document.getElementById('cmNumTo'); c(isEn?'Client No.':'고객 번호', (nf?nf.value:'') + ' ~ ' + (nt?nt.value:'')); }
+  chk = document.getElementById('cmChkGender');
+  if (chk && chk.checked) { var g = document.getElementById('cmGender'); c(isEn?'Gender':'성별', g ? g.options[g.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkBirthday');
+  if (chk && chk.checked) {
+    var bm1 = document.getElementById('cmBirthM1'), bd1 = document.getElementById('cmBirthD1');
+    var bm2 = document.getElementById('cmBirthM2'), bd2 = document.getElementById('cmBirthD2');
+    c(isEn?'Birthday':'생일', (bm1?bm1.value:'')+(isEn?'/':'월 ')+(bd1?bd1.value:'')+(isEn?''+'일':' 일')+' ~ '+(bm2?bm2.value:'')+(isEn?'/':'월 ')+(bd2?bd2.value:'')+(isEn?'':'일'));
+  }
+  chk = document.getElementById('cmChkMemo');
+  if (chk && chk.checked) { var m = document.getElementById('cmMemo'); c(isEn?'Notes':'메모', m?m.value:''); }
+  chk = document.getElementById('cmChkSmsOpt');
+  if (chk && chk.checked) { var so = document.getElementById('cmSmsOpt'); c(isEn?'Don\'t Send Message':'문자 수신거부', so ? so.options[so.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkVisitRoute');
+  if (chk && chk.checked) { var vr = document.getElementById('cmVisitRoute'); c(isEn?'Referral Source':'방문 경로', vr ? vr.options[vr.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkGrade');
+  if (chk && chk.checked) { var gr = document.getElementById('cmGrade'); c(isEn?'Client Rating':'고객 등급', gr ? gr.options[gr.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkGroup');
+  if (chk && chk.checked) { var gp = document.getElementById('cmGroup'); c(isEn?'Client Group':'고객그룹', gp ? gp.options[gp.selectedIndex].text : ''); }
+  chk = document.getElementById('cmChkAddress');
+  if (chk && chk.checked) { var ad = document.getElementById('cmAddress'); c(isEn?'Address':'주소', ad?ad.value:''); }
+  chk = document.getElementById('cmChkRegDate');
+  if (chk && chk.checked) { var rdf = document.getElementById('cmRegDateFrom'), rdt = document.getElementById('cmRegDateTo'); c(isEn?'Registered Date':'등록일', (rdf?rdf.value:'')+'~'+(rdt?rdt.value:'')); }
+
+  chk = document.getElementById('cmChkFirstVisit');
+  if (chk && chk.checked) { var fvf = document.getElementById('cmFirstVisitFrom'), fvt = document.getElementById('cmFirstVisitTo'); c(isEn?'First Visit Date':'첫 방문일', (fvf?fvf.value:'')+'~'+(fvt?fvt.value:'')); }
+  chk = document.getElementById('cmChkLastVisit');
+  if (chk && chk.checked) {
+    var lvType = document.querySelector('input[name="cmLastVisitType"]:checked');
+    if (lvType) {
+      if (lvType.value === 'noVisit') { var nd = document.getElementById('cmNoVisitDays'); c(isEn?'Not visited more than':'미 방문', (nd?nd.value:'') + (isEn?' days':' 일 이상')); }
+      else if (lvType.value === 'recent') { var rd = document.getElementById('cmRecentDays'); c(isEn?'Visited for Last':'최근', (rd?rd.value:'') + (isEn?' days':' 일 이내 방문')); }
+      else if (lvType.value === 'period') { var lvf = document.getElementById('cmLastVisitFrom'), lvt = document.getElementById('cmLastVisitTo'); c(isEn?'Recent Visit Date':'최근 방문일', (lvf?lvf.value:'')+'~'+(lvt?lvt.value:'')); }
+    }
+  }
+  chk = document.getElementById('cmChkPoints');
+  if (chk && chk.checked) { var pf = document.getElementById('cmPointsFrom'), pt = document.getElementById('cmPointsTo'); c(isEn?'Loyalty Points':'포인트 잔액', (pf?pf.value:'')+ ' ~ '+(pt?pt.value:'')); }
+  chk = document.getElementById('cmChkPrepaidBalance');
+  if (chk && chk.checked) { var pbf = document.getElementById('cmPrepaidFrom'), pbt = document.getElementById('cmPrepaidTo'); c(isEn?'Balance':'정액권 잔액', (pbf?pbf.value:'')+' ~ '+(pbt?pbt.value:'')); }
+  chk = document.getElementById('cmChkAvgSpend');
+  if (chk && chk.checked) { var asf = document.getElementById('cmAvgSpendFrom'), ast = document.getElementById('cmAvgSpendTo'); c(isEn?'Average Revenue per Sales':'객단가', (asf?asf.value:'')+' ~ '+(ast?ast.value:'')); }
+  chk = document.getElementById('cmChkReferralCount');
+  if (chk && chk.checked) { var rcf = document.getElementById('cmReferralCountFrom'), rct = document.getElementById('cmReferralCountTo'); c(isEn?'Number of Recommendations':'추천 고객 수', (rcf?rcf.value:'')+' ~ '+(rct?rct.value:'')); }
+  chk = document.getElementById('cmChkTotalSales');
+  if (chk && chk.checked) { var tsf = document.getElementById('cmTotalSalesFrom'), tst = document.getElementById('cmTotalSalesTo'); c(isEn?'Total Sales':'총 판매액', (tsf?tsf.value:'')+' ~ '+(tst?tst.value:'')); }
+  chk = document.getElementById('cmChkTotalVisits');
+  if (chk && chk.checked) { var tvf = document.getElementById('cmTotalVisitsFrom'), tvt = document.getElementById('cmTotalVisitsTo'); c(isEn?'Total Number of Visit':'총 방문수', (tvf?tvf.value:'')+' ~ '+(tvt?tvt.value:'')); }
+
+  return chips;
+}
+
+// ── 테이블 헤더 생성 ──
+function cmBuildTableHeaders(cols, isEn) {
+  var thead = document.getElementById('cmResultThead');
+  if (!thead) return;
+  var tr = '<tr><th class="cm-th-check"><label class="cm-chk-label"><input type="checkbox" id="cmCheckAll" onchange="cmToggleAll(this)"><span class="cm-checkmark">✓</span></label></th>';
+  cols.forEach(function(key) {
+    var col = cmAllColumns[key];
+    if (col) tr += '<th data-ko="' + col.ko + '" data-en="' + col.en + '">' + (isEn ? col.en : col.ko) + '</th>';
+  });
+  tr += '</tr>';
+  thead.innerHTML = tr;
+}
+
+// ── 테이블 바디 생성 (고객 마스터에서 필터링) ──
+var cmPageData = [];
+var cmPageCols = [];
+var cmPageCurrent = 1;
+var cmPageSize = 10;
+
+function cmBuildTableBody(cat, cols) {
+  var tbody = document.getElementById('cmResultTbody');
+  if (!tbody) return;
+
+  cmPageData = cmFilterClients(cat);
+  cmPageCols = cols;
+  cmPageCurrent = 1;
+  var countEl = document.getElementById('cmResultNum');
+
+  if (cmPageData.length === 0) {
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    tbody.innerHTML = '<tr><td class="cm-td-empty" colspan="' + (cols.length + 1) + '">' + (isEn ? 'No data found' : '내역이 없습니다') + '</td></tr>';
+    if (countEl) countEl.textContent = '0';
+    cmUpdatePagingUI();
+    return;
+  }
+
+  if (countEl) countEl.textContent = cmPageData.length;
+  cmRenderPage();
+}
+
+function cmRenderPage() {
+  var tbody = document.getElementById('cmResultTbody');
+  if (!tbody) return;
+  var cols = cmPageCols;
+  var start = (cmPageCurrent - 1) * cmPageSize;
+  var pageData = cmPageData.slice(start, start + cmPageSize);
+
+  var html = '';
+  pageData.forEach(function(c) {
+    html += '<tr><td class="cm-td-check"><label class="cm-chk-label"><input type="checkbox" class="cm-row-check" checked><span class="cm-checkmark">✓</span></label></td>';
+    cols.forEach(function(key) {
+      var val = '';
+      var col = cmAllColumns[key];
+      var cls = (col && col.cls) ? ' class="' + col.cls + '"' : '';
+      switch(key) {
+        case 'name': val = c.name; break;
+        case 'phone': val = c.phone; break;
+        case 'lastVisit': val = c.lastVisit || ''; break;
+        case 'grade': val = c.grade || ''; break;
+        case 'staff': val = c.staff || ''; break;
+        case 'totalSales': val = c.totalSales ? cmFmtNum(c.totalSales) : ''; break;
+        case 'visitRoute': val = ''; break;
+        case 'periodSales': val = c.totalSales ? cmFmtNum(c.totalSales) : ''; break;
+        case 'prepaid': val = c.prepaidBalance > 0 ? '정액권' : ''; break;
+        case 'prepaidBalance': val = c.prepaidBalance ? cmFmtNum(c.prepaidBalance) : ''; break;
+        case 'expiry': val = c.prepaidBalance > 0 ? '무제한' : ''; break;
+        case 'firstVisit': val = c.firstVisit || ''; break;
+        case 'visitCount': val = c.visitCount || ''; break;
+        case 'regDate': val = c.regDate || ''; break;
+        case 'referrer': val = ''; break;
+        case 'points': val = c.points ? cmFmtNum(c.points) : ''; break;
+        case 'membership': val = c.prepaidBalance > 0 ? '정액권' : ''; break;
+        case 'memberBalance': val = c.prepaidBalance ? cmFmtNum(c.prepaidBalance) : ''; break;
+        case 'ticket': val = ''; break;
+        case 'ticketRemain': val = ''; break;
+        case 'birthday': val = c.birthday || ''; break;
+        case 'memo': val = c.memo || ''; break;
+        case 'gender': val = c.gender || ''; break;
+        case 'avgSpend': val = c.avgSpend ? cmFmtNum(c.avgSpend) : ''; break;
+        case 'clientNumber': val = c.no || ''; break;
+        case 'group': val = c.group || ''; break;
+        case 'address': val = c.address || ''; break;
+        case 'referralCount': val = ''; break;
+        default: val = '';
+      }
+      html += '<td' + cls + '>' + val + '</td>';
+    });
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+  cmUpdatePagingUI();
+  // 전체 선택 체크박스 리셋
+  var checkAll = document.getElementById('cmCheckAll');
+  if (checkAll) checkAll.checked = true;
+}
+
+function cmUpdatePagingUI() {
+  var pagingEl = document.getElementById('cmPaging');
+  if (!pagingEl) return;
+  var totalPages = Math.max(1, Math.ceil(cmPageData.length / cmPageSize));
+  if (cmPageData.length > cmPageSize) {
+    pagingEl.style.display = 'flex';
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    var html = '';
+    html += '<span class="cm-paging-info">' + (isEn ? 'Page' : '페이지') + ' <b>' + cmPageCurrent + '</b> ' + (isEn ? 'of' : '의') + ' <b>' + totalPages + '</b></span>';
+    html += '<button class="cm-paging-btn" onclick="cmPageGo(\'first\')" ' + (cmPageCurrent === 1 ? 'disabled' : '') + '>«</button>';
+    html += '<button class="cm-paging-btn" onclick="cmPageGo(\'prev\')" ' + (cmPageCurrent === 1 ? 'disabled' : '') + '>‹</button>';
+    html += '<button class="cm-paging-btn" onclick="cmPageGo(\'next\')" ' + (cmPageCurrent === totalPages ? 'disabled' : '') + '>›</button>';
+    html += '<button class="cm-paging-btn" onclick="cmPageGo(\'last\')" ' + (cmPageCurrent === totalPages ? 'disabled' : '') + '>»</button>';
+    html += '<div class="cm-paging-go"><button class="cm-paging-btn" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'\':\'none\'">' + (isEn ? 'Goto' : '이동') + '</button>';
+    html += '<select style="display:none;" onchange="cmPageGo(parseInt(this.value));this.style.display=\'none\'">';
+    for (var i = 1; i <= totalPages; i++) {
+      html += '<option value="' + i + '"' + (i === cmPageCurrent ? ' selected' : '') + '>' + i + '</option>';
+    }
+    html += '</select></div>';
+    pagingEl.innerHTML = html;
+  } else {
+    pagingEl.style.display = 'none';
+  }
+}
+
+// ── 결과 수에 따른 버튼 활성화/비활성화 ──
+function cmUpdateResultButtons() {
+  var countEl = document.getElementById('cmResultNum');
+  var count = countEl ? parseInt(countEl.textContent) || 0 : 0;
+  var smsBtn = document.getElementById('cmBtnSms');
+  var otherBtn = document.getElementById('cmBtnOther');
+  if (count === 0) {
+    if (smsBtn) smsBtn.classList.add('disabled');
+    if (otherBtn) otherBtn.classList.add('disabled');
+  } else {
+    if (smsBtn) smsBtn.classList.remove('disabled');
+    if (otherBtn) otherBtn.classList.remove('disabled');
+  }
+}
+
+// ── 페이지 이동 ──
+function cmPageGo(dir) {
+  var totalPages = Math.max(1, Math.ceil(cmPageData.length / cmPageSize));
+  if (typeof dir === 'number') { cmPageCurrent = dir; }
+  else if (dir === 'first') cmPageCurrent = 1;
+  else if (dir === 'prev') cmPageCurrent = Math.max(1, cmPageCurrent - 1);
+  else if (dir === 'next') cmPageCurrent = Math.min(totalPages, cmPageCurrent + 1);
+  else if (dir === 'last') cmPageCurrent = totalPages;
+  cmRenderPage();
 }
 
 // 전체 선택/해제
@@ -5632,12 +6397,13 @@ var cmSmsSamples = {
   ]
 };
 var cmMmsImages = [
-  'https://placehold.co/300x400/FFE0E0/D32F2F?text=봄맞이+쿠폰+전송%0A10%25+할인',
-  'https://placehold.co/300x400/E8F5E9/388E3C?text=봄+시술+할인%0A10%25+할인',
-  'https://placehold.co/300x400/FFF8E1/F9A825?text=봄날+첫방문고객%0ACOUPON+20%25',
-  'https://placehold.co/300x400/FCE4EC/E91E63?text=봄+따라%0A혜택이+왔나봄%0A10%25',
-  'https://placehold.co/300x400/E3F2FD/1565C0?text=봄맞이+설렘쿠폰%0A20%25+할인+제공',
-  'https://placehold.co/300x400/F3E5F5/7B1FA2?text=4월+맞이+특별+이벤트%0A10%25'
+  'images/mms-sample (1).png',
+  'images/mms-sample (2).png',
+  'images/mms-sample (3).png',
+  'images/mms-sample (4).png',
+  'images/mms-sample (5).png',
+  'images/mms-sample (6).png',
+  'images/mms-sample (7).png'
 ];
 var cmSmsTypeInfo = {
   sms: { label:'SMS', cost:22, maxBytes:85, cols:4, perPage:8 },
@@ -5651,6 +6417,12 @@ var cmMmsViewMode = 'image';
 function cmOpenSmsModal() {
   document.getElementById('cmSmsOverlay').classList.add('show');
   document.getElementById('cmSmsModal').classList.add('show');
+  // 상단 네비게이션의 샵 이름을 광고 라인에 반영
+  var shopNameEl = document.querySelector('.nav-shop-name');
+  var adLine = document.getElementById('cmAdLine');
+  if (shopNameEl && adLine) {
+    adLine.textContent = '(광고)' + shopNameEl.textContent.trim();
+  }
   cmUpdateSmsBytes();
   cmSmsTypeChange(document.getElementById('cmSmsType').value);
 }
@@ -5683,7 +6455,7 @@ function cmInsertConvert(text) {
 }
 
 function cmSmsTabSwitch(el, mode) {
-  var tabs = el.parentElement.querySelectorAll('.cm-sms-tab');
+  var tabs = el.parentElement.querySelectorAll('.cm-sms-sch-btn');
   tabs.forEach(function(t) { t.classList.remove('active'); });
   el.classList.add('active');
   var row = document.getElementById('cmSmsScheduleRow');
@@ -5758,17 +6530,25 @@ function cmValidateScheduleTime() {
   }
 }
 
-function cmInsertOptout() {
-  var ta = document.getElementById('cmSmsContent');
-  if (!ta) return;
-  var optoutText = '무료수신거부 080-808-0132';
-  // 이미 삽입되어 있으면 중복 삽입하지 않음
-  if (ta.value.indexOf(optoutText) !== -1) return;
-  // 텍스트 끝에 줄바꿈 후 삽입
-  var newLine = ta.value.length > 0 ? '\n' : '';
-  ta.value = ta.value + newLine + optoutText;
-  ta.selectionStart = ta.selectionEnd = ta.value.length;
-  ta.focus();
+function cmToggleAdOptout() {
+  var fixedLine = document.querySelector('.cm-phone-fixed-line');
+  var fixedBottom = document.querySelector('.cm-phone-fixed-bottom');
+  var btn = document.getElementById('cmOptoutToggleBtn');
+  if (!fixedLine || !fixedBottom || !btn) return;
+  var isVisible = !fixedLine.classList.contains('cm-hidden');
+  if (isVisible) {
+    fixedLine.classList.add('cm-hidden');
+    fixedBottom.classList.add('cm-hidden');
+    btn.textContent = '광고/수신거부 삽입';
+    btn.setAttribute('data-ko', '광고/수신거부 삽입');
+    btn.setAttribute('data-en', 'Add Ad/Opt-out');
+  } else {
+    fixedLine.classList.remove('cm-hidden');
+    fixedBottom.classList.remove('cm-hidden');
+    btn.textContent = '광고/수신거부 삭제';
+    btn.setAttribute('data-ko', '광고/수신거부 삭제');
+    btn.setAttribute('data-en', 'Remove Ad/Opt-out');
+  }
   cmUpdateSmsBytes();
 }
 
@@ -5882,14 +6662,14 @@ function cmSmsTypeChange(type) {
     var labelTd = costRow[1].querySelector('td:first-child');
     if (labelTd) labelTd.textContent = '건당비용 (' + info.label + ')';
   }
-  // MMS 이미지영역 / 문자저장 토글
-  var mmsArea = document.getElementById('cmMmsImageArea');
+  // MMS 이미지 드롭존 토글
+  var mmsDropzone = document.getElementById('cmMmsDropzone');
   var saveMsgBtn = document.querySelector('.cm-sms-btn-row .cm-sms-btn-outline[onclick*="cmOpenMsgSaveModal"]');
   if (type === 'mms') {
-    mmsArea.style.display = '';
+    mmsDropzone.classList.remove('cm-hidden');
     if (saveMsgBtn) saveMsgBtn.style.display = 'none';
   } else {
-    mmsArea.style.display = 'none';
+    mmsDropzone.classList.add('cm-hidden');
     if (saveMsgBtn) saveMsgBtn.style.display = '';
   }
   // MMS 뷰 토글
@@ -5926,6 +6706,7 @@ function cmRenderSamples() {
       var card = document.createElement('div');
       card.className = 'cm-mms-image-card';
       card.innerHTML = '<img src="' + src + '" alt="MMS sample">';
+      card.onclick = function() { cmSelectMmsImage(src); };
       grid.appendChild(card);
     });
     cmUpdatePaging(cmMmsImages.length, info.perPage);
@@ -5970,6 +6751,57 @@ function cmMmsViewSwitch(mode) {
   cmRenderSamples();
 }
 
+/* MMS 이미지 드래그앤드롭 / 파일 선택 */
+function cmHandleMmsFile(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('이미지 파일만 첨부할 수 있습니다.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('cmMmsPreviewImg').src = e.target.result;
+    document.getElementById('cmMmsDropzoneEmpty').style.display = 'none';
+    document.getElementById('cmMmsDropzonePreview').style.display = '';
+  };
+  reader.readAsDataURL(file);
+}
+function cmSelectMmsImage(src) {
+  var dropzone = document.getElementById('cmMmsDropzone');
+  if (dropzone.classList.contains('cm-hidden')) dropzone.classList.remove('cm-hidden');
+  document.getElementById('cmMmsPreviewImg').src = src;
+  document.getElementById('cmMmsDropzoneEmpty').style.display = 'none';
+  document.getElementById('cmMmsDropzonePreview').style.display = '';
+  // 스크롤을 위로 이동하여 이미지 확인
+  var modal = document.getElementById('cmSmsModal');
+  if (modal) modal.scrollTop = 0;
+}
+function cmRemoveMmsImage() {
+  document.getElementById('cmMmsPreviewImg').src = '';
+  document.getElementById('cmMmsDropzonePreview').style.display = 'none';
+  document.getElementById('cmMmsDropzoneEmpty').style.display = 'flex';
+  document.getElementById('cmMmsFileInput').value = '';
+}
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var dz = document.getElementById('cmMmsDropzone');
+    if (!dz) return;
+    ['dragenter','dragover'].forEach(function(evt) {
+      dz.addEventListener(evt, function(e) { e.preventDefault(); dz.classList.add('cm-dragover'); });
+    });
+    ['dragleave','drop'].forEach(function(evt) {
+      dz.addEventListener(evt, function(e) { e.preventDefault(); dz.classList.remove('cm-dragover'); });
+    });
+    dz.addEventListener('drop', function(e) {
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      var input = document.getElementById('cmMmsFileInput');
+      var dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      cmHandleMmsFile(input);
+    });
+  });
+})();
+
 function cmOpenSpamGuide() {
   document.getElementById('cmSpamGuideOverlay').classList.add('show');
 }
@@ -5999,6 +6831,11 @@ function cmSmsSampleTabSwitch(el, mode) {
   } else {
     panelSamples.style.display = 'none';
     panelMymsgs.style.display = '';
+    // 내 메세지 그리드가 비어있으면 기본 편집 카드 1개 추가
+    var grid = document.getElementById('cmMymsgGrid');
+    if (grid && grid.children.length === 0) {
+      cmToggleMymsgEditor();
+    }
   }
 }
 
@@ -6095,7 +6932,7 @@ function cmSendSms() {
 // 드롭다운 외부 클릭 닫기
 document.addEventListener('click', function(e) {
   var menu = document.getElementById('cmOtherMenu');
-  var btn = document.getElementById('cmOtherBtn');
+  var btn = document.getElementById('cmBtnOther');
   if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
     menu.classList.remove('open');
   }
