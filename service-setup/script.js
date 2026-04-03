@@ -4203,6 +4203,32 @@ function cstToggleFallback(checked) {
   if (label) label.textContent = checked ? 'On' : 'Off';
 }
 
+// 동의서 문자설정: 발송타입 전환 (알림톡 ↔ 문자) — AMS 편집 모달과 동일한 슬라이드 전환
+var cstCurrentSendType = 'kakao';
+function cstSwitchSendType(mode) {
+  if (mode === cstCurrentSendType) return;
+  var alimEl = document.getElementById('cstAlimtalkMode');
+  var smsEl = document.getElementById('cstSmsMode');
+  var outEl = mode === 'sms' ? alimEl : smsEl;
+  var inEl = mode === 'sms' ? smsEl : alimEl;
+  var outDir = mode === 'sms' ? 'ams-slide-out-left' : 'ams-slide-out-right';
+  var inDir = mode === 'sms' ? 'ams-slide-in-right' : 'ams-slide-in-left';
+
+  outEl.classList.add(outDir);
+  outEl.addEventListener('animationend', function handler() {
+    outEl.removeEventListener('animationend', handler);
+    outEl.style.display = 'none';
+    outEl.classList.remove(outDir);
+    inEl.style.display = '';
+    inEl.classList.add(inDir);
+    inEl.addEventListener('animationend', function h2() {
+      inEl.removeEventListener('animationend', h2);
+      inEl.classList.remove(inDir);
+    });
+  });
+  cstCurrentSendType = mode;
+}
+
 function cstRenderTable() {
   var tbody = document.getElementById('cstTableBody');
   if (!tbody) return;
@@ -5247,7 +5273,8 @@ function hideAllViews() {
     'clientMgmtView','serviceSetupView','prepaidSetupView','packageSetupView',
     'productSetupView','productCatSetupView','otherCodeSetupView',
     'pointSetupView','consentSetupView','detailReceiptSetupView',
-    'envSetupView','ahaCallSetupView','ahaCallHistoryView','noticeListView'
+    'envSetupView','ahaCallSetupView','ahaCallHistoryView','noticeListView',
+    'msgHistoryView','smsRejectView','autoMsgSetupView'
   ];
   viewIds.forEach(function(id) {
     var el = document.getElementById(id);
@@ -6602,8 +6629,8 @@ function cmAddSavedMsg(text) {
   card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
     + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
     + '</div>';
   card.querySelector('.cm-mymsg-card-body').onclick = function() {
     var smsTA = document.getElementById('cmSmsContent');
@@ -6867,8 +6894,8 @@ function cmToggleMymsgEditor() {
   card.innerHTML = '<textarea placeholder="메세지 내용을 입력하세요" oninput="cmUpdateCardBytes(this)"></textarea>'
     + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
     + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
     + '</div>';
   grid.appendChild(card);
   card.querySelector('textarea').focus();
@@ -6894,8 +6921,8 @@ function cmSaveCard(btn) {
   card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
     + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
     + '</div>';
   card.setAttribute('data-fulltext', text);
   // 클릭 시 문자 입력창에 삽입
@@ -6914,8 +6941,8 @@ function cmEditCard(btn) {
   card.innerHTML = '<textarea oninput="cmUpdateCardBytes(this)">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
     + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
     + '</div>';
   card.querySelector('textarea').focus();
 }
@@ -7025,3 +7052,1818 @@ function cmDownloadExcel() {
   URL.revokeObjectURL(url);
 }
 // ══ [VIEW-12] 고객 관리 / 문자 발송 END ══
+
+// ══════════════════════════════════════════════════════════
+// [FEAT-MSG-HISTORY] 문자 발송 내역 / 수신거부 내역
+// ══════════════════════════════════════════════════════════
+
+function openMsgHistory() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('msgHistoryView').classList.add('show');
+  mhFilteredData = mhAllData.slice();
+  mhPageCurrent = 1;
+  mhRenderTable();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function backToMsgHistory() {
+  hideAllViews();
+  document.getElementById('msgHistoryView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function openSmsRejectView() {
+  hideAllViews();
+  document.getElementById('smsRejectView').classList.add('show');
+  mhSwitchRejectType('sms');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+// ── 데이터 ──
+var mhAllData = [
+  { idx:'5727314', date:'2026-04-03 09:40', type:'SMS', target:1, scheduled:0, success:1, fail:0, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-04-03 09:40:24  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5725100', date:'2026-04-03 08:00', type:'LMS', target:15, scheduled:0, success:13, fail:2, waiting:0, content:'[아하 네일 스튜디오] 4월 봄맞이 할인 이벤트! 전 시술 20% 할인, 네일+속눈썹 동시 시술 시 추가 10% 할인', sender:'01012345678' },
+  { idx:'5715699', date:'2026-04-02 09:24', type:'SMS', target:1, scheduled:0, success:0, fail:1, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-04-02 09:24:15  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5712300', date:'2026-04-01 18:30', type:'MMS', target:8, scheduled:0, success:7, fail:0, waiting:1, content:'[아하 네일 스튜디오] 신규 봄 네일 컬렉션 출시! 파스텔 & 플라워 디자인 입고. 예약 문의 010-1234-5678', sender:'01012345678' },
+  { idx:'5705838', date:'2026-04-01 11:07', type:'SMS', target:1, scheduled:0, success:0, fail:1, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-04-01 11:07:33  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5701200', date:'2026-03-31 20:00', type:'KAO', target:25, scheduled:0, success:24, fail:1, waiting:0, content:'[알림톡] 내일 예약이 확정되었습니다. 아하 네일 스튜디오 / 2026-04-01 14:00 / 젤네일 풀세트', sender:'01012345678' },
+  { idx:'5698245', date:'2026-03-31 15:41', type:'SMS', target:1, scheduled:0, success:0, fail:1, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-03-31 15:41:02  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5695000', date:'2026-03-30 17:00', type:'LMS', target:32, scheduled:0, success:30, fail:1, waiting:1, content:'[아하 네일 스튜디오] 3월 마지막 주 특별 프로모션! 정액권 10만원 이상 구매 시 1만원 추가 충전 혜택', sender:'01012345678' },
+  { idx:'5688551', date:'2026-03-30 16:31', type:'SMS', target:1, scheduled:0, success:0, fail:1, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-03-30 16:31:18  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5680000', date:'2026-03-28 10:00', type:'MMS', target:5, scheduled:0, success:5, fail:0, waiting:0, content:'[아하 네일 스튜디오] 이달의 추천 디자인 모음! 상담 후 시술 시 10% 할인 적용', sender:'01012345678' },
+  { idx:'5670000', date:'2026-03-27 14:30', type:'KAO', target:18, scheduled:0, success:17, fail:0, waiting:1, content:'[알림톡] 시술이 완료되었습니다. 후기 작성 시 다음 방문 5% 할인쿠폰 지급!', sender:'01012345678' },
+  { idx:'5660000', date:'2026-03-26 09:00', type:'LMS', target:42, scheduled:0, success:40, fail:2, waiting:0, content:'[아하 네일 스튜디오] 봄 시즌 네일 트렌드 안내. 체리블라썸, 그라데이션, 프렌치 등 인기 디자인 예약 가능', sender:'01012345678' },
+  { idx:'5635899', date:'2026-03-25 12:13', type:'SMS', target:1, scheduled:0, success:0, fail:1, waiting:0, content:'아하소프트가 로그인 되었습니다. 2026-03-25 12:13:05  [zero_shop] [119.196.186.243]', sender:'15444634' },
+  { idx:'5620000', date:'2026-03-22 11:00', type:'MMS', target:10, scheduled:0, success:9, fail:1, waiting:0, content:'[아하 네일 스튜디오] 직원 교육 완료 기념! 3월 한정 신규 고객 첫 방문 30% 할인 이벤트', sender:'01012345678' },
+  { idx:'5610000', date:'2026-03-20 16:00', type:'KAO', target:22, scheduled:0, success:21, fail:1, waiting:0, content:'[알림톡] 정액권 잔액 안내: 현재 잔액 50,000원. 충전 시 보너스 적립!', sender:'01012345678' },
+  { idx:'5600000', date:'2026-03-18 09:30', type:'LMS', target:35, scheduled:0, success:33, fail:2, waiting:0, content:'[아하 네일 스튜디오] 회원권 만료 임박 안내. 이번 달 내 갱신 시 1개월 무료 연장 혜택!', sender:'01012345678' }
+];
+var mhPageSize = 10;
+var mhPageCurrent = 1;
+var mhFilteredData = mhAllData.slice();
+
+function mhRenderTable() {
+  var totalPages = Math.max(1, Math.ceil(mhFilteredData.length / mhPageSize));
+  if (mhPageCurrent > totalPages) mhPageCurrent = totalPages;
+  var start = (mhPageCurrent - 1) * mhPageSize;
+  var end = Math.min(start + mhPageSize, mhFilteredData.length);
+  var tbody = document.getElementById('mhTbody');
+  var html = '';
+  for (var i = start; i < end; i++) {
+    var d = mhFilteredData[i];
+    html += '<tr>' +
+      '<td><label class="cm-chk-label"><input type="checkbox" class="mh-row-chk"><span class="cm-checkmark">✓</span></label></td>' +
+      '<td>' + d.idx + '</td>' +
+      '<td>' + d.date + '</td>' +
+      '<td>' + d.type + '</td>' +
+      '<td>' + d.target + '</td>' +
+      '<td>' + d.scheduled + '</td>' +
+      '<td>' + d.success + '</td>' +
+      '<td>' + d.fail + '</td>' +
+      '<td>' + d.waiting + '</td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgContent(\'' + d.content.replace(/'/g,"\\'") + '\')" data-ko="보기" data-en="View">보기</button></td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">보기</button></td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">보기</button></td>' +
+      '</tr>';
+  }
+  if (!mhFilteredData.length) {
+    html = '<tr><td colspan="12" class="mh-empty">내역이 없습니다</td></tr>';
+  }
+  tbody.innerHTML = html;
+  var checkAll = document.getElementById('mhCheckAll');
+  if (checkAll) checkAll.checked = false;
+  mhUpdatePagingUI();
+}
+
+function mhUpdatePagingUI() {
+  var pagingEl = document.getElementById('mhPaging');
+  if (!pagingEl) return;
+  var totalPages = Math.max(1, Math.ceil(mhFilteredData.length / mhPageSize));
+  if (mhFilteredData.length > mhPageSize) {
+    pagingEl.style.display = 'flex';
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    var html = '';
+    html += '<span class="cm-paging-info">' + (isEn ? 'Page' : '페이지') + ' <b>' + mhPageCurrent + '</b> ' + (isEn ? 'of' : '의') + ' <b>' + totalPages + '</b></span>';
+    html += '<button class="cm-paging-btn" onclick="mhPageGo(\'first\')" ' + (mhPageCurrent === 1 ? 'disabled' : '') + '>«</button>';
+    html += '<button class="cm-paging-btn" onclick="mhPageGo(\'prev\')" ' + (mhPageCurrent === 1 ? 'disabled' : '') + '>‹</button>';
+    html += '<button class="cm-paging-btn" onclick="mhPageGo(\'next\')" ' + (mhPageCurrent === totalPages ? 'disabled' : '') + '>›</button>';
+    html += '<button class="cm-paging-btn" onclick="mhPageGo(\'last\')" ' + (mhPageCurrent === totalPages ? 'disabled' : '') + '>»</button>';
+    html += '<div class="cm-paging-go"><button class="cm-paging-btn" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'\':\'none\'">' + (isEn ? 'Goto' : '이동') + '</button>';
+    html += '<select style="display:none;" onchange="mhPageGo(parseInt(this.value));this.style.display=\'none\'">';
+    for (var p = 1; p <= totalPages; p++) {
+      html += '<option value="' + p + '"' + (p === mhPageCurrent ? ' selected' : '') + '>' + p + '</option>';
+    }
+    html += '</select></div>';
+    pagingEl.innerHTML = html;
+  } else {
+    pagingEl.style.display = 'none';
+  }
+}
+
+function mhPageGo(dir) {
+  var totalPages = Math.max(1, Math.ceil(mhFilteredData.length / mhPageSize));
+  if (typeof dir === 'number') { mhPageCurrent = dir; }
+  else if (dir === 'first') mhPageCurrent = 1;
+  else if (dir === 'prev') mhPageCurrent = Math.max(1, mhPageCurrent - 1);
+  else if (dir === 'next') mhPageCurrent = Math.min(totalPages, mhPageCurrent + 1);
+  else if (dir === 'last') mhPageCurrent = totalPages;
+  mhRenderTable();
+}
+
+// ── 검색 (6개월 검증 포함) ──
+function mhSearch() {
+  var from = document.getElementById('mhDateFrom').value;
+  var to = document.getElementById('mhDateTo').value;
+  var type = document.getElementById('mhTypeFilter').value;
+  // 6개월 검증
+  var today = new Date();
+  var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+  var fromDate = new Date(from);
+  if (fromDate < sixMonthsAgo) {
+    document.getElementById('mhDateAlertOverlay').style.display = 'flex';
+    return;
+  }
+  // 필터 적용
+  mhFilteredData = mhAllData.filter(function(d) {
+    if (type !== 'all' && d.type !== type) return false;
+    if (from && d.date < from) return false;
+    if (to && d.date > to + ' 23:59') return false;
+    return true;
+  });
+  mhPageCurrent = 1;
+  mhRenderTable();
+}
+function closeMhDateAlert() {
+  document.getElementById('mhDateAlertOverlay').style.display = 'none';
+}
+
+// ── 체크박스 ──
+function mhToggleAll(master) {
+  var checks = document.querySelectorAll('#mhTbody .mh-row-chk');
+  checks.forEach(function(c) { c.checked = master.checked; });
+}
+
+// ── 수신거부 타입 전환 ──
+function mhSwitchRejectType(type) {
+  var smsTable = document.getElementById('mhRejectTableSms');
+  var t080Table = document.getElementById('mhRejectTable080');
+  if (type === 'sms') {
+    smsTable.style.display = '';
+    t080Table.style.display = 'none';
+  } else {
+    smsTable.style.display = 'none';
+    t080Table.style.display = '';
+  }
+}
+
+// ══ 문자발송내역 전용 문자 발송 모달 ══
+function openMhSmsSendModal() {
+  document.getElementById('mhSmsOverlay').classList.add('show');
+  document.getElementById('mhSmsModal').classList.add('show');
+  var shopNameEl = document.querySelector('.nav-shop-name');
+  var adLine = document.getElementById('mhAdLine');
+  if (shopNameEl && adLine) adLine.textContent = '(광고)' + shopNameEl.textContent.trim();
+  mhSms2UpdateBytes();
+  mhRecvUpdateCount();
+  mhSms2CurrentPage = 1;
+  mhSms2RenderSamples();
+}
+function closeMhSmsSendModal() {
+  document.getElementById('mhSmsOverlay').classList.remove('show');
+  document.getElementById('mhSmsModal').classList.remove('show');
+}
+function mhSms2UpdateBytes() {
+  var ta = document.getElementById('mhSmsContent2');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  document.getElementById('mhSmsBytes2').textContent = bytes;
+}
+function mhSms2TypeChange(type) {
+  var info = cmSmsTypeInfo[type];
+  document.getElementById('mhSmsByteLimit2').textContent = info.maxBytes;
+  mhSms2UpdateBytes();
+  mhSms2CurrentPage = 1;
+  mhSms2PerPage = info.perPage;
+  // 건당 비용 업데이트
+  var costEl = document.getElementById('mhSmsCostLabel');
+  if (costEl) costEl.innerHTML = info.cost + '<span class="cm-sms-cost-unit">원 (' + info.label + ')</span>';
+  // 총 비용 업데이트
+  var ta = document.getElementById('mhRecvTextarea');
+  if (ta) {
+    var lines = ta.value.split('\n').filter(function(l) { return l.replace(/[^0-9]/g,'').length >= 10; });
+    var totalCostEl = document.getElementById('mhSmsTotalCost');
+    if (totalCostEl) totalCostEl.innerHTML = (lines.length * info.cost) + '<span>원</span>';
+  }
+  // MMS 뷰 토글
+  var mmsToggle = document.getElementById('mhMmsViewToggle');
+  if (mmsToggle) mmsToggle.style.display = type === 'mms' ? 'flex' : 'none';
+  // 그리드 컬럼 업데이트
+  var grid = document.getElementById('mhSmsPreview');
+  if (grid) grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  // 타입 라벨 업데이트
+  var label = document.getElementById('mhSampleTypeLabel');
+  if (label) label.textContent = info.label;
+  mhSms2RenderSamples();
+}
+function mhSms2SchSwitch(btn, mode) {
+  btn.parentElement.querySelectorAll('.cm-sms-sch-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var row = document.getElementById('mhSms2SchRow');
+  row.style.display = mode === 'later' ? 'flex' : 'none';
+  if (mode === 'later') document.getElementById('mhSms2SchDate').value = new Date().toISOString().slice(0,10);
+}
+function mhSms2TabSwitch(el, mode) {
+  el.parentElement.querySelectorAll('.cm-sms-sample-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('mhSms2PanelSamples').style.display = mode === 'samples' ? '' : 'none';
+  document.getElementById('mhSms2PanelMymsgs').style.display = mode === 'mymsgs' ? '' : 'none';
+}
+function mhSms2InsertOptout() {
+  var ta = document.getElementById('mhSmsContent2');
+  ta.value += '\n무료수신거부 080-808-0132';
+  mhSms2UpdateBytes();
+  ta.focus();
+}
+function mhSms2ToggleAdOptout() {
+  var adLine = document.getElementById('mhAdLine');
+  var bottom = adLine.nextElementSibling;
+  // find cm-phone-fixed-bottom inside same phone-screen
+  var screen = adLine.parentElement;
+  var fixedBottom = screen.querySelector('.cm-phone-fixed-bottom');
+  if (adLine.style.display === 'none') {
+    adLine.style.display = '';
+    if (fixedBottom) fixedBottom.style.display = '';
+  } else {
+    adLine.style.display = 'none';
+    if (fixedBottom) fixedBottom.style.display = 'none';
+  }
+}
+
+// ── 문자발송내역 추천문자 샘플 (고객관리와 동일 데이터 공유) ──
+var mhSms2CurrentPage = 1;
+var mhSms2PerPage = 6;
+var mhMmsViewMode2 = 'image';
+
+function mhSms2RenderSamples() {
+  if (typeof cmSmsSamples === 'undefined') return;
+  var type = (document.getElementById('mhSmsType2') || {}).value || 'lms';
+  var info = cmSmsTypeInfo[type];
+  var grid = document.getElementById('mhSmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  grid.classList.remove('mms-image');
+
+  if (type === 'mms' && mhMmsViewMode2 === 'image') {
+    grid.classList.add('mms-image');
+    var start = (mhSms2CurrentPage - 1) * info.perPage;
+    var items = cmMmsImages.slice(start, start + info.perPage);
+    items.forEach(function(src) {
+      var card = document.createElement('div');
+      card.className = 'cm-mms-image-card';
+      card.innerHTML = '<img src="' + src + '" alt="MMS sample">';
+      grid.appendChild(card);
+    });
+    mhSms2UpdatePaging(cmMmsImages.length, info.perPage);
+  } else {
+    var samples = cmSmsSamples[type] || cmSmsSamples.lms;
+    var start = (mhSms2CurrentPage - 1) * info.perPage;
+    var items = samples.slice(start, start + info.perPage);
+    items.forEach(function(text) {
+      var bytes = cmCalcBytes(text);
+      var card = document.createElement('div');
+      card.className = 'cm-sms-preview-card';
+      card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
+        + '<div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+      grid.appendChild(card);
+    });
+    mhSms2UpdatePaging(samples.length, info.perPage);
+  }
+  // 그리드 컬럼
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+}
+
+function mhSms2UpdatePaging(total, perPage) {
+  var totalPages = Math.max(1, Math.ceil(total / perPage));
+  var cur = document.getElementById('mhSmsPageCur');
+  var tot = document.getElementById('mhSmsPageTotal');
+  if (tot) tot.textContent = totalPages;
+  if (cur) cur.textContent = mhSms2CurrentPage;
+}
+
+function mhSms2PageGo(dir) {
+  if (typeof cmSmsSamples === 'undefined') return;
+  var type = (document.getElementById('mhSmsType2') || {}).value || 'lms';
+  var info = cmSmsTypeInfo[type];
+  var samples = (type === 'mms' && mhMmsViewMode2 === 'image') ? cmMmsImages : (cmSmsSamples[type] || cmSmsSamples.lms);
+  var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
+  if (dir === 'first') mhSms2CurrentPage = 1;
+  else if (dir === 'prev') mhSms2CurrentPage = Math.max(1, mhSms2CurrentPage - 1);
+  else if (dir === 'next') mhSms2CurrentPage = Math.min(totalPages, mhSms2CurrentPage + 1);
+  else if (dir === 'last') mhSms2CurrentPage = totalPages;
+  mhSms2RenderSamples();
+}
+
+function mhMmsViewSwitch2(mode) {
+  mhMmsViewMode2 = mode;
+  mhSms2CurrentPage = 1;
+  mhSms2RenderSamples();
+}
+
+function mhSms2SelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var ta = document.getElementById('mhSmsContent2');
+  if (ta) { ta.value = body.textContent; mhSms2UpdateBytes(); }
+}
+
+function mhRecvUpdateCount() {
+  var ta = document.getElementById('mhRecvTextarea');
+  if (!ta) return;
+  var lines = ta.value.split('\n').filter(function(l) { return l.replace(/[^0-9]/g,'').length >= 10; });
+  var el = document.getElementById('mhRecvCount');
+  if (el) el.textContent = lines.length;
+  var targetEl = document.getElementById('mhSmsTargetCount');
+  var costEl = document.getElementById('mhSmsTotalCost');
+  if (targetEl) targetEl.innerHTML = lines.length + '<span class="cm-sms-cost-unit">명</span>';
+  var type = (document.getElementById('mhSmsType2') || {}).value || 'lms';
+  var info = cmSmsTypeInfo[type];
+  if (costEl) costEl.innerHTML = (lines.length * info.cost) + '<span>원</span>';
+}
+
+// ══ 나의 메세지 등록 (메세지내용 저장용) ══
+function openMhMyMsgReg() {
+  document.getElementById('mhMyMsgRegOverlay').classList.add('show');
+}
+function closeMhMyMsgReg() {
+  document.getElementById('mhMyMsgRegOverlay').classList.remove('show');
+}
+function mhDoRegMyMsg() {
+  alert('메세지가 저장되었습니다.');
+  closeMhMyMsgReg();
+}
+
+// ══ 메세지내용 모달 (cst-modal 패턴) ══
+function openMhMsgContent(text) {
+  document.getElementById('mhMsgContentText').textContent = text || '';
+  document.getElementById('mhMsgContentOverlay').classList.add('show');
+}
+function closeMhMsgContent() {
+  document.getElementById('mhMsgContentOverlay').classList.remove('show');
+}
+function mhSaveMsgContent() {
+  openMhMyMsgReg();
+}
+
+// ══ 메세지 세부내용 모달 ══
+function openMhMsgDetail(idx) {
+  var d = mhFilteredData[idx] || mhFilteredData[0];
+  document.getElementById('mhDetailSenderNo').textContent = d.sender;
+  var tbody = document.getElementById('mhDetailTbody');
+  var failCode = d.fail > 0 ? '30125' : '';
+  tbody.innerHTML = '<tr>' +
+    '<td>' + d.idx + '</td>' +
+    '<td>zero_shop</td>' +
+    '<td>111</td>' +
+    '<td>' + d.date + '</td>' +
+    '<td class="mh-detail-msg-cell"><span class="mh-detail-msg-text">' + d.content.substring(0, 40) + '…</span><div class="mh-detail-msg-tooltip">' + d.content + '</div></td>' +
+    '<td></td>' +
+    '<td>' + d.scheduled + '</td>' +
+    '<td>' + d.success + '</td>' +
+    '<td>' + failCode + '</td>' +
+    '<td>' + d.waiting + '</td></tr>';
+  document.getElementById('mhDetailResultFilter').value = 'all';
+  document.getElementById('mhMsgDetailOverlay').classList.add('show');
+}
+function closeMhMsgDetail() {
+  document.getElementById('mhMsgDetailOverlay').classList.remove('show');
+}
+function mhFilterDetail() {
+  // placeholder for result filtering
+}
+
+// ══ 실패 코드 모달 ══
+var mhFailCodes = [
+  ['20000~29xxx','※ 시스템 관련 오류 (인증, API, 공통)','9800','메시지 중복(내부 시스템)'],
+  ['30000','메시지 중복','30101','단말기 메시지 FULL'],
+  ['30102','타임아웃','30103','무선망에러'],
+  ['30105','메시지 중복 발송','30106','월 송신 건수 초과'],
+  ['30108','기타에러','30109','착신번호 에러(자리수에러)'],
+  ['30110','착신번호 에러(없는 국번)','30111','수신거부 메시지 없음'],
+  ['30112','21 시 이후 광고','30113','성인광고, 대출광고 등 기타 제한'],
+  ['30114','데이콤 스팸 필터링','30115','야간발송차단'],
+  ['30116','사전 미등록 발신번호 사용','30117','전화번호 세칙 미준수 발신번호 사용'],
+  ['30118','메시지 형식 오류','30119','발신번호 변작으로 등록된 발신번호 사용'],
+  ['30120','번호도용문자차단서비스에 가입된 발신번호 사용','30122','단말기착신거부(스팸등)'],
+  ['30125','비가입자,결번,서비스정지','30126','단말기 Power-off 상태'],
+  ['30127','음영','31000','잘못된 번호'],
+  ['31001','잘못된 컨텐츠','31002','기타'],
+  ['31003','건수 부족','31004','중복된 키 접수 차단'],
+  ['31100','포맷 에러','31101','수신번호 에러'],
+  ['31102','컨텐츠 사이즈 및 개수 초과','31103','잘못된 컨텐츠'],
+  ['31104','기업형 MMS 미지원 단말기','31105','단말기 메시지 저장개수 초과'],
+  ['31106','전송시간 초과','31107','전원 꺼짐'],
+  ['31108','음영지역','31109','기타'],
+  ['31110','서버문제로 인한 접수 실패','31111','단말기 일시 서비스 정지'],
+  ['31112','통신사 내부 실패(무선망단)','31113','서비스의 일시적인 에러'],
+  ['31114','계정 차단','31115','허용되지 않은 IP 접근'],
+  ['31116','국제 MMS 발송 권한이 없음','31117','번호이동 에러'],
+  ['31118','내부 시스템 오류','31119','스팸'],
+  ['31120','중복된 수신번호 접수 차단','31122','전화번호 세칙 미준수 발신번호 사용'],
+  ['31123','발신번호 변작으로 등록된 발신번호 사용','31124','번호도용문자차단서비스에 가입된 발신번호 사용'],
+  ['32000','데이터 없음','32004','이미지 오류(용량, 사이즈, 파일형식)'],
+  ['32005','인증 에러','32113','기타에러.'],
+  ['32114','성공불확실(3 일이내수신가능)','32116','전화번호오류'],
+  ['32118','메시지길이초과','32119','템플릿 없음'],
+  ['32120','메시지를 전송할 수 없음','32121','메시지발송불가시간'],
+  ['32123','리포트수신대기 타임아웃','32124','발송시간 지난 데이터'],
+  ['32128','존재하지 않는 첨부파일','32129','0 바이트 첨부파일'],
+  ['32130','지원하지 않는 첨부파일','32133','메시지본문 길이 초과'],
+  ['32134','대체발송(SMS) 메시지본문 길이 초과','32136','MMS 첨부파일 이미지 사이즈 초과'],
+  ['32137','기타 에러','32138','형식 오류'],
+  ['32140','미등록 발신번호, 발신번호 세칙 위반','32143','Block time (날짜/시간제한)'],
+  ['32194','유효하지 않은 발신번호','39000','전원꺼짐'],
+  ['기타','※ 기타 발송 결과 오류','','']
+];
+
+var mhFailCodePage = 1;
+var mhFailCodePerPage = 10;
+
+function openMhFailCode() {
+  mhFailCodePage = 1;
+  mhRenderFailCodes();
+  document.getElementById('mhFailCodeOverlay').classList.add('show');
+}
+function closeMhFailCode() {
+  document.getElementById('mhFailCodeOverlay').classList.remove('show');
+}
+
+function mhRenderFailCodes() {
+  var total = mhFailCodes.length;
+  var totalPages = Math.ceil(total / mhFailCodePerPage);
+  var start = (mhFailCodePage - 1) * mhFailCodePerPage;
+  var end = Math.min(start + mhFailCodePerPage, total);
+  var tbody = document.getElementById('mhFailCodeTbody');
+  var html = '';
+  for (var i = start; i < end; i++) {
+    var r = mhFailCodes[i];
+    html += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+
+  var paging = document.getElementById('mhFailCodePaging');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var html = '';
+  html += '<span class="cm-paging-info">' + (isEn ? 'Page' : '페이지') + ' <b>' + mhFailCodePage + '</b> ' + (isEn ? 'of' : '의') + ' <b>' + totalPages + '</b></span>';
+  html += '<button class="cm-paging-btn" onclick="mhFailCodeGoPage(1)" ' + (mhFailCodePage <= 1 ? 'disabled' : '') + '>«</button>';
+  html += '<button class="cm-paging-btn" onclick="mhFailCodeGoPage(' + (mhFailCodePage - 1) + ')" ' + (mhFailCodePage <= 1 ? 'disabled' : '') + '>‹</button>';
+  html += '<button class="cm-paging-btn" onclick="mhFailCodeGoPage(' + (mhFailCodePage + 1) + ')" ' + (mhFailCodePage >= totalPages ? 'disabled' : '') + '>›</button>';
+  html += '<button class="cm-paging-btn" onclick="mhFailCodeGoPage(' + totalPages + ')" ' + (mhFailCodePage >= totalPages ? 'disabled' : '') + '>»</button>';
+  html += '<div class="cm-paging-go"><button class="cm-paging-btn" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'\':\'none\'">' + (isEn ? 'Goto' : '이동') + '</button>';
+  html += '<select style="display:none;" onchange="mhFailCodeGoPage(parseInt(this.value));this.style.display=\'none\'">';
+  for (var fp = 1; fp <= totalPages; fp++) {
+    html += '<option value="' + fp + '"' + (fp === mhFailCodePage ? ' selected' : '') + '>' + fp + '</option>';
+  }
+  html += '</select></div>';
+  paging.innerHTML = html;
+}
+
+function mhFailCodeGoPage(p) {
+  p = parseInt(p);
+  var totalPages = Math.ceil(mhFailCodes.length / mhFailCodePerPage);
+  if (isNaN(p) || p < 1) p = 1;
+  if (p > totalPages) p = totalPages;
+  mhFailCodePage = p;
+  mhRenderFailCodes();
+}
+
+// ══ 삭제 확인 모달 (svc-popup 패턴) ══
+function openMhDeleteConfirm() {
+  document.getElementById('mhDeleteOverlay').style.display = 'flex';
+}
+function closeMhDeleteConfirm() {
+  document.getElementById('mhDeleteOverlay').style.display = 'none';
+}
+function mhDoDelete() {
+  alert('삭제되었습니다.');
+  closeMhDeleteConfirm();
+}
+
+// ══ 이동통신사 별 스팸규제 안내 팝업 ══
+function openMhSpamInfoPopup() {
+  document.getElementById('mhSpamInfoOverlay').style.display = 'flex';
+}
+function closeMhSpamInfoPopup() {
+  document.getElementById('mhSpamInfoOverlay').style.display = 'none';
+}
+
+// ══ [FEAT-MSG-HISTORY] END ══
+
+// ══════════════════════════════════════════════════════════
+// [FEAT-AUTO-MSG] 문자 자동 발송 설정
+// ══════════════════════════════════════════════════════════
+
+function openAutoMsgSetup() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('autoMsgSetupView').classList.add('show');
+  amsCurrentTab = 'booking';
+  amsCurrentSub = null;
+  amsRender();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+var amsCurrentTab = 'booking';
+var amsCurrentSub = null;
+
+// ── 탭/서브탭 구조 ──
+var amsTabs = {
+  booking: {
+    subs: [
+      { key:'booking_alert', ko:'예약 알림', en:'Booking Alert' },
+      { key:'point_prepaid', ko:'포인트 / 정액권 / 티켓', en:'Points / Prepaid / Ticket' },
+      { key:'deposit_alert', ko:'예약금 알림', en:'Deposit Alert' }
+    ]
+  },
+  care: {
+    subs: [
+      { key:'visit_thanks', ko:'방문 감사', en:'Visit Thanks' },
+      { key:'aftercare', ko:'시술 후 관리', en:'Post-treatment Care' }
+    ]
+  },
+  marketing: {
+    subs: [
+      { key:'revisit', ko:'재방문 유도', en:'Revisit Promotion' },
+      { key:'birthday', ko:'생일 축하', en:'Birthday' }
+    ]
+  }
+};
+
+// ── 카드 데이터 ──
+// conditional: true = 조건부 발송 탭 (재방문/시술후 관리) - 마스터 설정 + 추가 버튼 표시
+var amsCards = {
+  booking_alert: [
+    { id:'ba1', title:{ko:'선택일 알림 (2~30일전)',en:'Selected Date Alert (2-30 days before)'}, type:'SMS', active:false, timing:{ko:'예약 2~30일 전 발송',en:'Sent 2-30 days before booking'}, preview:'((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba2', title:{ko:'전날 알림 (1일전)',en:'Day Before Alert'}, type:'SMS', active:false, timing:{ko:'예약 전날 발송',en:'Sent day before booking'}, preview:'((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba3', title:{ko:'예약일 당일',en:'Day of Booking'}, type:'SMS', active:false, timing:{ko:'예약 당일 오전 발송',en:'Sent on the morning of booking'}, preview:'((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba4', title:{ko:'예약 시간 전',en:'Before Booking Time'}, type:'SMS', active:false, timing:{ko:'예약 시간 1~2시간 전 발송',en:'Sent 1-2 hours before booking time'}, preview:'((성명))님, 곧 ((예약시간)) 예약 시간입니다. 아하 네일 스튜디오' },
+    { id:'ba5', title:{ko:'예약등록 확인',en:'Booking Confirmation'}, type:'SMS', active:false, timing:{ko:'예약 등록 즉시 발송',en:'Sent immediately after booking'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 등록되었습니다.' },
+    { id:'ba6', title:{ko:'예약취소 확인',en:'Booking Cancellation'}, type:'SMS', active:false, timing:{ko:'예약 취소 즉시 발송',en:'Sent immediately after cancellation'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 취소되었습니다.' }
+  ],
+  point_prepaid: [
+    { id:'pp1', title:{ko:'포인트(적립시) 알림',en:'Points Earned Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*적립:((적립))P\n*누적:((누적))P\n방문 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp2', title:{ko:'포인트(사용시) 알림',en:'Points Used Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*차감:((사용))점\n*잔여:((누적))점\n이용 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp3', title:{ko:'정액권 잔액(판매시) 알림',en:'Prepaid Balance (Purchase) Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'((성명))님 회원권 구입안내\n((정액권명)) / ((선적))원 적립되었습니다\n-아하 네일 스튜디오' },
+    { id:'pp4', title:{ko:'정액권 잔액(차감시) 알림',en:'Prepaid Balance (Deduction) Alert'}, type:'LMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'☆ 아하 네일 스튜디오 정액권 사용 안내 ☆\n\n고객님의 정액권 사용내역 입니다.\n\n◇ 정액권명 : ((정액권명))\n◇ 사용금액 : ((선차))원\n◇ 잔액 : ((선잔))원\n\n현재 사용가능한 정액권의 전체잔액은\n((총잔))원 입니다\n\n방문해 주셔서 감사합니다.' },
+    { id:'pp5', title:{ko:'정액권 만료일 알림',en:'Prepaid Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오' },
+    { id:'pp6', title:{ko:'티켓잔여횟수(판매시)',en:'Ticket Count (Purchase)'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'회원권 구매를 감사드립니다.\n*회원권명: ((티켓명))\n*적립횟수: ((적회))회\n-아하 네일 스튜디오' },
+    { id:'pp7', title:{ko:'티켓 잔여횟수(차감시) 알림',en:'Ticket Count (Deduction) Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'*회원권알림\n((성명))님의 ((서비스명)) 회원권이 ((잔회))회 남았습니다\n-아하 네일 스튜디오' },
+    { id:'pp8', title:{ko:'티켓 만료일 알림',en:'Ticket Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오' }
+  ],
+  deposit_alert: [
+    { id:'da1', title:{ko:'예약금 안내',en:'Deposit Info'}, type:'LMS', active:true, timing:{ko:'예약 등록 시 발송',en:'Sent when booking is made'}, preview:'*예약금 입금 안내*\n제로샵입니다\n예약확정을 위해 예약금 입금 부탁드립니다.\n\n1. 예약내용\n-예약일: ((예약월일)) ((예약시각))\n-예약자: ((성명))\n\n2. 예약금 입금정보\n-예약금: ((예약금))원\n-국민은행 000-00000-000\n-예금주 : 000' },
+    { id:'da2', title:{ko:'예약금 입금 확인',en:'Deposit Confirmation'}, type:'LMS', active:true, timing:{ko:'입금 확인 시 발송',en:'Sent when deposit is confirmed'}, preview:'* 제로샵 입니다.예약금 입금확인 되어 아래와 같이 고객님의 예약이 확정 되었습니다\n\n* 예약정보\n예약일시 : ((예약월일)) ((예약시각))\n\n* 예약금 환불규정\n예약일 2일전까지 예약취소시 예약금은 전액환불되며, 전일/당일예약 취소시 예약금은 위약금으로 처리됩니다' }
+  ],
+  visit_thanks: [
+    { id:'vt1', title:{ko:'첫방문 고객',en:'First Visit Client'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 첫 방문 감사합니다! 다음 방문도 기대하겠습니다. 아하 네일 스튜디오' },
+    { id:'vt2', title:{ko:'재방문 고객',en:'Returning Client'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 오늘도 방문해 주셔서 감사합니다! 아하 네일 스튜디오' }
+  ],
+  aftercare: [
+    { id:'ac1', title:{ko:'시술 후 관리 문자',en:'Post-treatment Care'}, type:'SMS', active:true, category:{ko:'커트, 드라이',en:'Cut, Blow Dry'}, timing:{ko:'방문 1일 후 · 10:00 발송',en:'1 day after visit · 10:00'}, preview:'커트 드라이 시술한지 오래되셨네요. 재방문하셔서 관리해주세요' }
+  ],
+  revisit: [
+    { id:'rv1', title:{ko:'재방문 유도 문자',en:'Revisit Promotion'}, type:'SMS', active:true, category:{ko:'전체',en:'All'}, timing:{ko:'방문 5일 후 · 10:00 발송',en:'5 days after visit · 10:00'}, preview:'전체분류에서 재방문해주세요.' }
+  ],
+  birthday: [
+    { id:'bd1', title:{ko:'생일 축하',en:'Birthday'}, type:'SMS', active:false, timing:{ko:'생일 당일 오전 발송',en:'Sent on birthday morning'}, preview:'((성명))님, 생일 축하드립니다! 특별한 혜택을 준비했습니다. 아하 네일 스튜디오' }
+  ]
+};
+
+// 조건부 발송 탭 (마스터 설정 영역 표시)
+var amsConditionalSubs = ['aftercare','revisit'];
+
+// ── 렌더링 ──
+function amsRender() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var tabData = amsTabs[amsCurrentTab];
+  if (!tabData) return;
+
+  // 서브탭
+  var subHtml = '';
+  tabData.subs.forEach(function(s, i) {
+    var isActive = amsCurrentSub ? amsCurrentSub === s.key : i === 0;
+    if (!amsCurrentSub && i === 0) amsCurrentSub = s.key;
+    subHtml += '<button class="ams-subtab' + (isActive ? ' active' : '') + '" onclick="amsSwitchSub(\'' + s.key + '\')" data-ko="' + s.ko + '" data-en="' + s.en + '">' + (isEn ? s.en : s.ko) + '</button>';
+  });
+  document.getElementById('amsSubtabs').innerHTML = subHtml;
+
+  var isConditional = amsConditionalSubs.indexOf(amsCurrentSub) >= 0;
+  var cards = amsCards[amsCurrentSub] || [];
+  var html = '';
+
+  // 조건부 탭: 마스터 설정 + 새 알림 추가 버튼
+  if (isConditional) {
+    var masterLabel = amsCurrentSub === 'revisit'
+      ? {ko:'고객이 일정 기간 미 방문할 경우 재방문 유도 문자가 자동 발송되도록 설정합니다.', en:'Set up automatic revisit promotion messages when clients haven\'t visited for a period.'}
+      : {ko:'시술 후 주의 사항, 관리 주기 안내 등의 문자가 자동 발송 되도록 설정합니다.', en:'Set up automatic post-treatment care messages.'};
+    html += '<div class="ams-master-row">';
+    html += '<span class="ams-master-desc">' + (isEn ? masterLabel.en : masterLabel.ko) + '</span>';
+    html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span data-ko="문자 발송 등록" data-en="Register Message">' + (isEn ? 'Register Message' : '문자 발송 등록') + '</span></button>';
+    html += '</div>';
+  }
+
+  // 카드
+  if (cards.length === 0) {
+    html += '<div class="ams-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#BDBDBD" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="13" y2="13"/></svg>';
+    html += '<p data-ko="등록된 알림이 없습니다." data-en="No alerts registered.">' + (isEn ? 'No alerts registered.' : '등록된 알림이 없습니다.') + '</p>';
+    if (isConditional) {
+      html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span>' + (isEn ? 'Register Message' : '문자 발송 등록') + '</span></button>';
+    }
+    html += '</div>';
+  } else {
+    cards.forEach(function(c) {
+      var titleText = isEn ? c.title.en : c.title.ko;
+      var timingText = isEn ? (c.timing.en || c.timing.ko) : c.timing.ko;
+      var categoryBadge = c.category ? '<span class="ams-card-badge">' + (isEn ? c.category.en : c.category.ko) + '</span>' : '';
+      html += '<div class="ams-card">' +
+        '<div class="ams-card-header">' +
+          '<div class="ams-card-header-left"><span class="ams-card-title">' + titleText + '</span> <span class="ams-card-type">' + c.type + '</span></div>' +
+          '<div class="ams-toggle' + (c.active ? ' on' : '') + '" onclick="amsToggle(\'' + c.id + '\',this)"></div>' +
+        '</div>' +
+        (categoryBadge ? '<div class="ams-card-category-row">' + categoryBadge + '</div>' : '') +
+        '<div class="ams-card-timing">' + timingText + '</div>' +
+        '<div class="ams-card-preview">' + c.preview + '</div>' +
+        '<div class="ams-card-footer">' +
+          (isConditional ? '<button class="ams-card-delete-btn" onclick="amsDeleteCard(\'' + c.id + '\')">' +
+            (isEn ? 'Delete' : '삭제') +
+          '</button>' : '') +
+          '<button class="ams-card-edit-btn" onclick="amsOpenEdit(\'' + c.id + '\')">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> ' +
+            (isEn ? 'Edit Settings' : '내용 및 설정 수정') +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    });
+  }
+  document.getElementById('amsCardList').innerHTML = html;
+}
+
+function amsSwitchTab(btn, tab) {
+  document.querySelectorAll('#amsTabs .ams-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  amsCurrentTab = tab;
+  amsCurrentSub = null;
+  amsRender();
+}
+
+function amsSwitchSub(key) {
+  amsCurrentSub = key;
+  amsRender();
+}
+
+function amsToggle(id, el) {
+  el.classList.toggle('on');
+  for (var key in amsCards) {
+    amsCards[key].forEach(function(c) {
+      if (c.id === id) c.active = el.classList.contains('on');
+    });
+  }
+}
+
+function amsDeleteCard(id) {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!confirm(isEn ? 'Are you sure you want to delete this alert?' : '해당 알림을 삭제하시겠습니까?')) return;
+  for (var key in amsCards) {
+    amsCards[key] = amsCards[key].filter(function(c) { return c.id !== id; });
+  }
+  amsRender();
+}
+
+// ── 새 알림 조건 추가 모달 ──
+var amsNewAlertCardId = null;
+function amsOpenNewAlert() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  // 새 카드 임시 생성
+  var newCard = {
+    id: 'new_' + Date.now(),
+    type: 'SMS',
+    active: false,
+    timing: { ko: '방문 1일 후 · 10:00 발송', en: '1 day(s) after · 10:00' },
+    preview: '',
+    title: amsCurrentSub === 'aftercare'
+      ? { ko: '시술 후 관리 문자', en: 'Post-treatment Care' }
+      : { ko: '재방문 유도 문자', en: 'Revisit Promotion' },
+    category: { ko: '', en: '' }
+  };
+
+  // 카드 데이터에 추가
+  if (!amsCards[amsCurrentSub]) amsCards[amsCurrentSub] = [];
+  amsCards[amsCurrentSub].push(newCard);
+  amsEditCardData = newCard;
+  amsNewAlertCardId = newCard.id;
+
+  // 타이틀
+  document.getElementById('amsEditTitle').textContent = isEn ? newCard.title.en : newCard.title.ko;
+
+  // 안내문
+  var noticeText = amsCurrentSub === 'aftercare'
+    ? { ko: '시술 후 관리 문자가 자동으로 발송되도록 설정합니다', en: 'Automatic post-treatment care messages' }
+    : { ko: '재방문 유도 문자가 자동으로 발송되도록 설정합니다', en: 'Automatic revisit promotion messages' };
+  document.getElementById('amsEditNotice').textContent = isEn ? noticeText.en : noticeText.ko;
+
+  // 모든 모드 숨기기
+  document.getElementById('amsEditAlimtalkMode').style.display = 'none';
+  document.getElementById('amsEditSmsMode').style.display = 'none';
+  document.getElementById('amsEditExpiryMode').style.display = 'none';
+  document.getElementById('amsEditDepositMode').style.display = 'none';
+  document.getElementById('amsEditVisitThanksMode').style.display = 'none';
+  document.getElementById('amsEditAftercareMode').style.display = 'none';
+  document.getElementById('amsEditCostInfo').style.display = 'none';
+  document.querySelector('.ams-edit-setting-bar').style.display = 'none';
+
+  // 시술 후 관리 모드 표시
+  document.getElementById('amsEditAftercareMode').style.display = '';
+
+  // 발송 대상 고객 (재방문 유도만 표시)
+  var isRevisitNew = (amsCurrentSub === 'revisit');
+  document.getElementById('amsAcTargetLabel').style.display = isRevisitNew ? '' : 'none';
+  document.querySelectorAll('.ams-ac-target-item').forEach(function(el) { el.style.display = isRevisitNew ? '' : 'none'; });
+  if (isRevisitNew) {
+    document.querySelector('input[name="amsAcTarget"][value="all"]').checked = true;
+  }
+
+  // 초기화
+  var acTa = document.getElementById('amsAcMsgText');
+  if (acTa) acTa.value = '';
+  document.getElementById('amsAcMsgType').value = 'sms';
+  amsAcUpdateBytes();
+
+  // 전환문자
+  var convVars = [
+    { field: { ko: '고객명', en: 'Client Name' }, v: '((성명))' },
+    { field: { ko: '담당자명(별칭)', en: 'Staff Name (Alias)' }, v: '((담당자명))' }
+  ];
+  var convHtml = '';
+  convVars.forEach(function(cv) {
+    convHtml += '<tr><td>' + (isEn ? cv.field.en : cv.field.ko) + '</td><td class="cst-var-link"><span onclick="amsEditInsertConv(\'' + cv.v + '\')">' + cv.v + '</span></td></tr>';
+  });
+  document.getElementById('amsAcConvBody').innerHTML = convHtml;
+
+  // 등록 기준 라디오 + 멀티셀렉트 초기화
+  document.querySelector('input[name="amsAcBasis"][value="all"]').checked = true;
+  document.getElementById('amsAcCategoryWrap').classList.add('disabled');
+  document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]').forEach(function(c) { c.checked = false; });
+  amsAcMultiUpdateLabel();
+  document.getElementById('amsAcMultiDropdown').classList.remove('show');
+
+  // 발송일/시각 초기화
+  document.getElementById('amsAcSendDay').value = '1';
+  document.getElementById('amsAcSendHour').value = '10';
+  document.getElementById('amsAcSendMin').value = '00';
+
+  // 샘플
+  amsAcPage = 1;
+  amsAcRenderSamples();
+
+  // 모달 열기
+  document.getElementById('amsEditOverlay').classList.add('show');
+  document.getElementById('amsEditModal').classList.add('show');
+}
+
+function amsCloseNewAlert() {
+  document.getElementById('amsNewAlertOverlay').classList.remove('show');
+}
+
+function amsSaveNewAlert() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var type = document.getElementById('amsNewType').value;
+  var days = document.getElementById('amsNewDays').value;
+  var time = document.getElementById('amsNewTime').value;
+  var msg = document.getElementById('amsNewMessage').value;
+
+  if (!msg.trim()) {
+    alert(isEn ? 'Please enter message content.' : '메세지 내용을 입력하세요.');
+    return;
+  }
+
+  var newCard = {
+    id: 'new_' + Date.now(),
+    type: type,
+    active: false,
+    timing: { ko: '방문 ' + days + '일 후 · ' + time + ' 발송', en: days + ' day(s) after visit · ' + time },
+    preview: msg
+  };
+
+  var selectedCats = amsGetSelectedCategories();
+  if (amsCurrentSub === 'aftercare') {
+    if (selectedCats.length === 0) { alert(isEn ? 'Please select a category.' : '발송 대상 분류를 선택하세요.'); return; }
+    newCard.title = { ko: '시술 후 관리 문자', en: 'Post-treatment Care' };
+    newCard.category = { ko: selectedCats.join(', '), en: selectedCats.join(', ') };
+  } else {
+    var basis = document.querySelector('input[name="amsNewBasis"]:checked').value;
+    if (basis === 'by_category') {
+      if (selectedCats.length === 0) { alert(isEn ? 'Please select a category.' : '발송 대상 분류를 선택하세요.'); return; }
+      newCard.category = { ko: selectedCats.join(', '), en: selectedCats.join(', ') };
+    } else {
+      newCard.category = { ko: '전체', en: 'All' };
+    }
+    newCard.title = { ko: '재방문 유도 문자', en: 'Revisit Promotion' };
+  }
+
+  if (!amsCards[amsCurrentSub]) amsCards[amsCurrentSub] = [];
+  amsCards[amsCurrentSub].push(newCard);
+  amsCloseNewAlert();
+  amsRender();
+}
+
+// ── 문자발송 등록 기준 라디오 토글 ──
+function amsToggleBasisCategory() {
+  var basis = document.querySelector('input[name="amsNewBasis"]:checked').value;
+  document.getElementById('amsFormCategory').style.display = basis === 'by_category' ? '' : 'none';
+}
+
+// ── 멀티셀렉트 ──
+function amsToggleMultiDrop() {
+  document.getElementById('amsMultiDropdown').classList.toggle('show');
+}
+function amsMultiToggleAll(el) {
+  var checks = document.querySelectorAll('#amsMultiDropdown input[type="checkbox"]:not([value="전체"])');
+  checks.forEach(function(c) { c.checked = el.checked; });
+  amsMultiUpdateLabel();
+}
+function amsMultiUpdateLabel() {
+  var checks = document.querySelectorAll('#amsMultiDropdown input[type="checkbox"]:checked:not([value="전체"])');
+  var placeholder = document.getElementById('amsMultiPlaceholder');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (checks.length === 0) {
+    placeholder.textContent = isEn ? 'Select' : '선택하세요';
+    placeholder.classList.remove('has-value');
+  } else {
+    var names = [];
+    checks.forEach(function(c) { names.push(c.value); });
+    placeholder.textContent = names.join(', ');
+    placeholder.classList.add('has-value');
+  }
+}
+function amsGetSelectedCategories() {
+  var checks = document.querySelectorAll('#amsMultiDropdown input[type="checkbox"]:checked:not([value="전체"])');
+  var arr = [];
+  checks.forEach(function(c) { arr.push(c.value); });
+  return arr;
+}
+// 개별 체크 시 라벨 업데이트
+document.addEventListener('change', function(e) {
+  if (e.target.closest('#amsMultiDropdown') && e.target.type === 'checkbox' && e.target.value !== '전체') {
+    amsMultiUpdateLabel();
+  }
+});
+// 외부 클릭 시 멀티셀렉트 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#amsFormCategory')) {
+    var dd = document.getElementById('amsMultiDropdown');
+    if (dd) dd.classList.remove('show');
+  }
+});
+
+// 바이트 카운터
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'amsNewMessage') {
+    var bytes = 0;
+    for (var i = 0; i < e.target.value.length; i++) bytes += e.target.value.charCodeAt(i) > 127 ? 2 : 1;
+    document.getElementById('amsNewBytes').textContent = bytes;
+  }
+});
+
+// ── 내용 및 설정 수정 모달 ──
+var amsEditCardData = null; // 현재 편집 중인 카드 데이터 참조
+
+var amsEditConfigs = {
+  ba1: { notice:{ko:'예약일 기준 선택된 일자 이전에 알림 문자가 자동으로 발송하도록 설정합니다',en:'Set up automatic alert messages before the selected date based on booking date'}, sendDateType:'select_days' },
+  ba2: { notice:{ko:'예약 전날에 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages the day before booking'}, sendDateType:'day_before' },
+  ba3: { notice:{ko:'예약 당일에 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages on the day of booking'}, sendDateType:'same_day' },
+  ba4: { notice:{ko:'예약 시간에 임박했을 때 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages before booking time'}, sendDateType:'hours_before' },
+  ba5: { notice:{ko:'예약이 등록됐을 때 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages when a booking is registered'}, sendDateType:'immediate_select' },
+  ba6: { notice:{ko:'예약이 취소됐을 때 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages when a booking is cancelled'}, sendDateType:'immediate' },
+  pp1: { notice:{ko:'고객방문후 적립포인트를 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when points are earned'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'이번포인트',en:'Earned Points'},v:'((적립))'},{field:{ko:'누적포인트',en:'Total Points'},v:'((누적))'}] },
+  pp2: { notice:{ko:'고객방문후 사용포인트를 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when points are used'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'사용포인트',en:'Used Points'},v:'((사용))'},{field:{ko:'누적포인트',en:'Total Points'},v:'((누적))'}] },
+  pp3: { notice:{ko:'고객방문후 정액권 잔액을 알려주는 문자가 자동으로 발송되도록 설정합니다 (할인전용 정액권은 발송되지 않습니다)',en:'Automatic alert when prepaid card is sold'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 적립',en:'Prepaid Credit'},v:'((선적))'},{field:{ko:'정액권 잔액',en:'Prepaid Balance'},v:'((선잔))'},{field:{ko:'정액권 총잔액',en:'Total Balance'},v:'((총잔))'}] },
+  pp4: { notice:{ko:'고객방문후 정액권 잔액을 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when prepaid card is deducted'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 차감',en:'Deduction'},v:'((선차))'},{field:{ko:'정액권 잔액',en:'Balance'},v:'((선잔))'},{field:{ko:'정액권 총잔액',en:'Total Balance'},v:'((총잔))'}] },
+  pp5: { notice:{ko:'고객의 정액권이 만료되기 전 자동으로 안내문자가 발송되도록 설정합니다 (할인전용 정액권은 발송되지 않습니다)',en:'Automatic alert before prepaid card expiry'}, sendDateType:'expiry_days',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 잔액',en:'Balance'},v:'((선잔))'},{field:{ko:'만료일',en:'Expiry Date'},v:'((만료일))'}] },
+  pp6: { notice:{ko:'고객방문후 구매한 티켓을 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when ticket is sold'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'티켓',en:'Ticket'},v:'((티켓명))'},{field:{ko:'잔여횟수',en:'Remaining'},v:'((잔회))'},{field:{ko:'적립횟수',en:'Earned'},v:'((적회))'}] },
+  pp7: { notice:{ko:'고객방문후 티켓잔여횟수를 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when ticket is used'}, sendDateType:'immediate_select',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'티켓명',en:'Ticket'},v:'((티켓명))'},{field:{ko:'서비스명',en:'Service'},v:'((서비스명))'},{field:{ko:'잔여횟수',en:'Remaining'},v:'((잔회))'}] },
+  pp8: { notice:{ko:'고객의 티켓이 만료되기 전 자동으로 안내문자가 발송되도록 설정합니다',en:'Automatic alert before ticket expiry'}, sendDateType:'expiry_days',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'티켓명',en:'Ticket'},v:'((티켓명))'},{field:{ko:'잔여횟수',en:'Remaining'},v:'((잔회))'},{field:{ko:'만료일',en:'Expiry Date'},v:'((만료일))'}] },
+  da1: { notice:{ko:'예약금 안내 문자를 설정합니다',en:'Set up deposit info messages'}, sendDateType:'immediate', mode:'deposit',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'예약일',en:'Date'},v:'((예약일))'},{field:{ko:'예약월일',en:'Month/Day'},v:'((예약월일))'},{field:{ko:'예약시각',en:'Time'},v:'((예약시각))'},{field:{ko:'예약금',en:'Deposit'},v:'((예약금))'},{field:{ko:'예약금 입금기한 (00월 00일 00시 00분)',en:'Deadline'},v:'((예약금입금기한))'},{field:{ko:'예약금 입금시한 (00시 00분)',en:'Time Limit'},v:'((예약금입금시한))'}] },
+  da2: { notice:{ko:'예약금 결제 확인 문자를 설정합니다',en:'Set up deposit confirmation messages'}, sendDateType:'immediate', mode:'deposit',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'예약일',en:'Date'},v:'((예약일))'},{field:{ko:'예약월일',en:'Month/Day'},v:'((예약월일))'},{field:{ko:'예약시각',en:'Time'},v:'((예약시각))'},{field:{ko:'예약금 입금액',en:'Paid Amount'},v:'((입금액))'}] },
+  vt1: { notice:{ko:'고객 방문 시 감사 문자가 자동 발송되도록 설정합니다.',en:'Set up automatic thank-you messages for first-time clients.'}, sendDateType:'visit_thanks', targetLabel:{ko:'첫방문 고객',en:'First Visit Client'},
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] },
+  vt2: { notice:{ko:'고객 방문 시 감사 문자가 자동 발송되도록 설정합니다.',en:'Set up automatic thank-you messages for returning clients.'}, sendDateType:'visit_thanks', targetLabel:{ko:'재방문 고객',en:'Returning Client'},
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] },
+  bd1: { notice:{ko:'고객의 생일이 되면 자동으로 축하문자가 발송되도록 설정합니다.',en:'Set up automatic birthday greeting messages.'}, sendDateType:'birthday_mode',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'}] },
+  ac1: { notice:{ko:'시술 후 관리 문자가 자동으로 발송되도록 설정합니다',en:'Automatic post-treatment care messages'}, sendDateType:'aftercare',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] },
+  rv1: { notice:{ko:'재방문 유도 문자가 자동으로 발송되도록 설정합니다',en:'Automatic revisit promotion messages'}, sendDateType:'aftercare',
+    convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] }
+};
+
+// 전환문자 매핑 (서브탭 기준)
+var amsConversionVars = {
+  booking_alert: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'예약일',en:'Booking Date'}, v:'((예약일))'},
+    {field:{ko:'예약월일',en:'Booking Month/Day'}, v:'((예약월일))'},
+    {field:{ko:'예약시각',en:'Booking Time'}, v:'((예약시각))'}
+  ],
+  point_prepaid: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'포인트',en:'Points'}, v:'((포인트))'},
+    {field:{ko:'잔액',en:'Balance'}, v:'((잔액))'}
+  ],
+  deposit_alert: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'예약금',en:'Deposit'}, v:'((예약금))'},
+    {field:{ko:'계좌',en:'Account'}, v:'((계좌))'}
+  ],
+  visit_thanks: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'}, v:'((담당자명))'}
+  ],
+  aftercare: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'}, v:'((담당자명))'}
+  ],
+  revisit: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'},
+    {field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'}, v:'((담당자명))'}
+  ],
+  birthday: [
+    {field:{ko:'고객명',en:'Client Name'}, v:'((성명))'}
+  ]
+};
+
+var amsEditCurrentPage = 1;
+var amsEditCurrentType = 'sms';
+
+function amsOpenEdit(cardId) {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  // 카드 데이터 찾기
+  var card = null;
+  var subKey = null;
+  for (var key in amsCards) {
+    amsCards[key].forEach(function(c) {
+      if (c.id === cardId) { card = c; subKey = key; }
+    });
+  }
+  if (!card) return;
+  amsEditCardData = card;
+
+  // 타이틀
+  document.getElementById('amsEditTitle').textContent = isEn ? card.title.en : card.title.ko;
+
+  // 안내문
+  // 새로 추가된 카드(new_*)는 서브탭 기준으로 config 생성
+  var config = amsEditConfigs[cardId];
+  if (!config) {
+    if (subKey === 'aftercare') {
+      config = { notice:{ko:'시술 후 관리 문자가 자동으로 발송되도록 설정합니다',en:'Automatic post-treatment care messages'}, sendDateType:'aftercare',
+        convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] };
+    } else if (subKey === 'revisit') {
+      config = { notice:{ko:'재방문 유도 문자가 자동으로 발송되도록 설정합니다',en:'Automatic revisit promotion messages'}, sendDateType:'aftercare',
+        convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'담당자명(별칭)',en:'Staff Name (Alias)'},v:'((담당자명))'}] };
+    } else {
+      config = { notice:{ko:'자동 발송 설정',en:'Automatic messaging settings'}, sendDateType:'immediate' };
+    }
+  }
+  document.getElementById('amsEditNotice').textContent = isEn ? config.notice.en : config.notice.ko;
+
+  // 전송일 렌더링
+  amsEditRenderSendDate(config.sendDateType, isEn);
+
+  // 메시지
+  var ta = document.getElementById('amsEditMsgText');
+  ta.value = card.preview;
+  // 문자유형
+  amsEditCurrentType = card.type.toLowerCase() === 'lms' ? 'lms' : 'sms';
+  document.getElementById('amsEditMsgType').value = amsEditCurrentType;
+  amsEditTypeChange(amsEditCurrentType);
+  amsEditUpdateBytes();
+
+  // 전환문자 테이블 (카드별 우선, 없으면 서브탭 기준)
+  var convVars = (config && config.convVars) ? config.convVars : (amsConversionVars[subKey] || [{field:{ko:'고객명',en:'Client Name'}, v:'((성명))'}]);
+  var convHtml = '';
+  convVars.forEach(function(cv) {
+    convHtml += '<tr><td>' + (isEn ? cv.field.en : cv.field.ko) + '</td><td class="cst-var-link"><span onclick="amsEditInsertConv(\'' + cv.v + '\')">' + cv.v + '</span></td></tr>';
+  });
+  document.getElementById('amsEditConvBody').innerHTML = convHtml;
+  document.getElementById('amsEditConvBody2').innerHTML = convHtml;
+
+  // 알림톡 타이틀 자동 설정 (카드 소제목 기반)
+  var alimTitle = document.getElementById('amsEditAlimTitle');
+  if (alimTitle) alimTitle.textContent = isEn ? 'AlimTalk Received' : '알림톡 도착';
+  // 알림톡 본문도 카드 메시지로 동기화
+  var alimBody = document.getElementById('amsEditAlimBody');
+  if (alimBody) alimBody.textContent = card.preview;
+
+  var isExpiry = (cardId === 'pp5' || cardId === 'pp8');
+  var isDeposit = (config && config.mode === 'deposit');
+  var isVisitThanks = (cardId === 'vt1' || cardId === 'vt2');
+  var isAftercare = (config && config.sendDateType === 'aftercare');
+  var isBirthday = (config && config.sendDateType === 'birthday_mode');
+
+  // 모든 모드 숨기기
+  document.getElementById('amsEditAlimtalkMode').style.display = 'none';
+  document.getElementById('amsEditSmsMode').style.display = 'none';
+  document.getElementById('amsEditExpiryMode').style.display = 'none';
+  document.getElementById('amsEditDepositMode').style.display = 'none';
+  document.getElementById('amsEditVisitThanksMode').style.display = 'none';
+  document.getElementById('amsEditAftercareMode').style.display = 'none';
+  document.getElementById('amsEditBirthdayMode').style.display = 'none';
+  document.getElementById('amsEditCostInfo').style.display = 'none';
+  document.querySelector('.ams-edit-setting-bar').style.display = 'none';
+
+  if (isBirthday) {
+    // 생일 축하 모드
+    document.getElementById('amsEditBirthdayMode').style.display = '';
+    var bdTa = document.getElementById('amsBdMsgText');
+    if (bdTa) bdTa.value = card.preview;
+    var bdType = document.getElementById('amsBdMsgType');
+    if (bdType) bdType.value = card.type.toLowerCase() === 'lms' ? 'lms' : 'sms';
+    amsBdUpdateBytes();
+    document.getElementById('amsBdConvBody').innerHTML = convHtml;
+    // 전송일/시각 초기화
+    document.getElementById('amsBdSendDay').value = '0';
+    document.getElementById('amsBdSendHour').value = '10';
+    document.getElementById('amsBdSendMin').value = '00';
+    // 모든 고객 등급 토글 초기화
+    var bdGradeToggle = document.getElementById('amsBdGradeToggle');
+    bdGradeToggle.classList.add('on');
+    document.getElementById('amsBdGradeLabel').textContent = isEn ? 'Yes' : '예';
+    document.getElementById('amsBdGradeChecks').style.display = 'none';
+    // 샘플
+    amsBdPage = 1;
+    amsBdRenderSamples();
+  } else if (isAftercare) {
+    // 시술 후 관리 / 재방문 유도 모드
+    document.getElementById('amsEditAftercareMode').style.display = '';
+    // 발송 대상 고객 (재방문 유도만 표시)
+    var isRevisitSub = (subKey === 'revisit');
+    document.getElementById('amsAcTargetLabel').style.display = isRevisitSub ? '' : 'none';
+    document.querySelectorAll('.ams-ac-target-item').forEach(function(el) { el.style.display = isRevisitSub ? '' : 'none'; });
+    if (isRevisitSub) {
+      document.querySelector('input[name="amsAcTarget"][value="all"]').checked = true;
+    }
+    // 메시지
+    var acTa = document.getElementById('amsAcMsgText');
+    if (acTa) acTa.value = card.preview;
+    var acType = document.getElementById('amsAcMsgType');
+    if (acType) acType.value = card.type.toLowerCase() === 'lms' ? 'lms' : 'sms';
+    amsAcUpdateBytes();
+    // 전환문자
+    document.getElementById('amsAcConvBody').innerHTML = convHtml;
+    // 등록 기준 라디오 + 발송 대상 분류 초기화
+    var catLabel = card.category ? (isEn ? card.category.en : card.category.ko) : '';
+    var hasCat = catLabel && catLabel !== '전체' && catLabel !== 'All' && catLabel !== '';
+    document.querySelector('input[name="amsAcBasis"][value="' + (hasCat ? 'by_category' : 'all') + '"]').checked = true;
+    document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]').forEach(function(c) { c.checked = false; });
+    if (hasCat) {
+      catLabel.split(', ').forEach(function(cat) {
+        var cb = document.querySelector('#amsAcMultiDropdown input[value="' + cat.trim() + '"]');
+        if (cb) cb.checked = true;
+      });
+      document.getElementById('amsAcCategoryWrap').classList.remove('disabled');
+    } else {
+      document.getElementById('amsAcCategoryWrap').classList.add('disabled');
+    }
+    amsAcMultiUpdateLabel();
+    document.getElementById('amsAcMultiDropdown').classList.remove('show');
+    // 발송일/시각
+    document.getElementById('amsAcSendDay').value = '1';
+    document.getElementById('amsAcSendHour').value = '10';
+    document.getElementById('amsAcSendMin').value = '00';
+    // 샘플
+    amsAcPage = 1;
+    amsAcRenderSamples();
+  } else if (isVisitThanks) {
+    // 방문 감사 모드
+    document.getElementById('amsEditVisitThanksMode').style.display = '';
+    // 발송 대상 고객
+    document.getElementById('amsVtTargetValue').textContent = isEn ? config.targetLabel.en : config.targetLabel.ko;
+    // 메시지
+    var vtTa = document.getElementById('amsVtMsgText');
+    if (vtTa) vtTa.value = card.preview;
+    var vtType = document.getElementById('amsVtMsgType');
+    if (vtType) vtType.value = card.type.toLowerCase() === 'lms' ? 'lms' : 'sms';
+    amsVtUpdateBytes();
+    // 전환문자
+    document.getElementById('amsVtConvBody').innerHTML = convHtml;
+    // 발송일/시각 초기화
+    document.getElementById('amsVtSendDate').value = '0';
+    document.getElementById('amsVtSendTime').value = '30';
+    // 샘플 렌더
+    amsVtPage = 1;
+    amsVtRenderSamples();
+  } else if (isDeposit) {
+    // 예약금 모드
+    document.getElementById('amsEditDepositMode').style.display = '';
+    var depTa = document.getElementById('amsDepositMsgText');
+    if (depTa) { depTa.value = card.preview; }
+    var depType = document.getElementById('amsDepositMsgType');
+    if (depType) depType.value = card.type.toLowerCase() === 'lms' ? 'lms' : 'sms';
+    amsDepositUpdateBytes();
+    document.getElementById('amsDepositConvBody').innerHTML = convHtml;
+    amsDepositPage = 1;
+    amsDepositRenderSamples();
+  } else if (isExpiry) {
+    // 만료일 모드
+    document.getElementById('amsEditExpiryMode').style.display = '';
+    amsExpiryRenderCards(cardId);
+    document.getElementById('amsExpiryConvBody').innerHTML = convHtml;
+    amsExpiryPage = 1;
+    amsExpiryRenderSamples();
+  } else {
+    // 일반 모드 (알림톡/문자)
+    document.getElementById('amsEditCostInfo').style.display = '';
+    document.querySelector('.ams-edit-setting-bar').style.display = '';
+    document.querySelector('input[name="amsEditSendType"][value="alimtalk"]').checked = true;
+    document.getElementById('amsEditAlimtalkMode').style.display = '';
+    amsEditCurrentMode = 'alimtalk';
+    var fallbackTa = document.getElementById('amsEditFallbackText');
+    if (fallbackTa) { fallbackTa.value = card.preview; amsEditFallbackUpdateBytes(); }
+  }
+
+  // 모달 열기
+  document.getElementById('amsEditOverlay').classList.add('show');
+  document.getElementById('amsEditModal').classList.add('show');
+}
+
+function amsEditRenderSendDate(type, isEn) {
+  var wrap = document.getElementById('amsEditSendDateWrap');
+  var html = '';
+  switch (type) {
+    case 'select_days':
+      html = '<span>' + (isEn ? 'Day before booking' : '예약일 전날') + '</span> '
+        + '<select id="amsEditDaysBefore">';
+      for (var i = 1; i <= 30; i++) html += '<option value="' + i + '"' + (i === 7 ? ' selected' : '') + '>' + i + (isEn ? ' days' : '일전') + '</option>';
+      html += '</select> '
+        + '<select id="amsEditHour">';
+      for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 17 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+    case 'day_before':
+      html = '<span>' + (isEn ? 'Day before booking' : '예약일 전날') + '</span> '
+        + '<select id="amsEditHour">';
+      for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 17 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+    case 'same_day':
+      html = '<span>' + (isEn ? 'Day of booking' : '예약일 당일') + '</span> '
+        + '<select id="amsEditHour">';
+      for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+    case 'hours_before':
+      html = '<span>' + (isEn ? 'Before booking time' : '예약 시간 전') + '</span> '
+        + '<select id="amsEditHoursBefore">';
+      for (var h = 1; h <= 12; h++) html += '<option value="' + h + '"' + (h === 2 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'hour(s)' : '시간') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+    case 'immediate_select':
+      html = '<select id="amsEditImmediateType">'
+        + '<option value="immediate" selected>' + (isEn ? 'Immediately' : '즉시발송') + '</option>'
+        + '<option value="10">' + (isEn ? '10 min later' : '10분 후') + '</option>'
+        + '<option value="20">' + (isEn ? '20 min later' : '20분 후') + '</option>'
+        + '<option value="30">' + (isEn ? '30 min later' : '30분 후') + '</option>'
+        + '<option value="60">' + (isEn ? '60 min later' : '60분 후') + '</option>'
+        + '</select>';
+      break;
+    case 'immediate':
+      html = '<span>' + (isEn ? 'Immediately' : '즉시발송') + '</span>';
+      break;
+    case 'expiry_days':
+      html = '<span>' + (isEn ? 'Before expiry' : '만료') + '</span> '
+        + '<select id="amsEditExpiryDays">';
+      [3,5,7,14,30].forEach(function(d) { html += '<option value="' + d + '"' + (d === 7 ? ' selected' : '') + '>' + d + (isEn ? ' days' : '일') + '</option>'; });
+      html += '</select> <span>' + (isEn ? 'before' : '전') + '</span>';
+      break;
+    case 'visit_days':
+      html = '<span>' + (isEn ? 'After visit' : '방문') + '</span> '
+        + '<select id="amsEditVisitDays">';
+      for (var d = 1; d <= 30; d++) html += '<option value="' + d + '"' + (d === 1 ? ' selected' : '') + '>' + d + '</option>';
+      html += '</select> <span>' + (isEn ? 'day(s) after' : '일 후') + '</span> '
+        + '<select id="amsEditHour">';
+      for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+    case 'birthday':
+      html = '<span>' + (isEn ? 'Birthday morning' : '생일 당일 오전') + '</span> '
+        + '<select id="amsEditHour">';
+      for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
+      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      break;
+  }
+  wrap.innerHTML = html;
+}
+
+function amsCloseEdit() {
+  // 닫을 때 자동 저장
+  if (amsEditCardData) {
+    var bdMode = document.getElementById('amsEditBirthdayMode');
+    var acMode = document.getElementById('amsEditAftercareMode');
+    var vtMode = document.getElementById('amsEditVisitThanksMode');
+    var depMode = document.getElementById('amsEditDepositMode');
+    var expiryMode = document.getElementById('amsEditExpiryMode');
+    if (bdMode && bdMode.style.display !== 'none') {
+      // 생일 축하 모드
+      amsEditCardData.type = document.getElementById('amsBdMsgType').value.toUpperCase();
+      var bdTa = document.getElementById('amsBdMsgText');
+      if (bdTa) amsEditCardData.preview = bdTa.value;
+      var bdDay = document.getElementById('amsBdSendDay').value;
+      var bdHr = document.getElementById('amsBdSendHour').value;
+      var bdMn = document.getElementById('amsBdSendMin').value;
+      var dayLabel = bdDay === '0' ? '당일' : bdDay + '일전';
+      amsEditCardData.timing = { ko: '생일 ' + dayLabel + ' · ' + bdHr + ':' + (bdMn === '0' ? '00' : bdMn) + ' 발송', en: 'Birthday ' + (bdDay === '0' ? 'day' : bdDay + ' day(s) before') + ' · ' + bdHr + ':' + bdMn };
+    } else if (acMode && acMode.style.display !== 'none') {
+      // 시술 후 관리 / 재방문 유도 모드
+      amsEditCardData.type = document.getElementById('amsAcMsgType').value.toUpperCase();
+      var acTa = document.getElementById('amsAcMsgText');
+      if (acTa) amsEditCardData.preview = acTa.value;
+      // 분류 저장
+      var acBasis = document.querySelector('input[name="amsAcBasis"]:checked');
+      if (acBasis && acBasis.value === 'by_category') {
+        var selCats = amsAcGetSelectedCategories();
+        if (selCats.length > 0) {
+          amsEditCardData.category = { ko: selCats.join(', '), en: selCats.join(', ') };
+        }
+      } else {
+        amsEditCardData.category = { ko: '전체', en: 'All' };
+      }
+      // 타이밍 저장
+      var day = document.getElementById('amsAcSendDay').value;
+      var hr = document.getElementById('amsAcSendHour').value;
+      var mn = document.getElementById('amsAcSendMin').value;
+      amsEditCardData.timing = { ko: '방문 ' + day + '일 후 · ' + hr + ':' + (mn === '0' ? '00' : mn) + ' 발송', en: day + ' day(s) after · ' + hr + ':' + (mn === '0' ? '00' : mn) };
+    } else if (vtMode && vtMode.style.display !== 'none') {
+      // 방문 감사 모드
+      amsEditCardData.type = document.getElementById('amsVtMsgType').value.toUpperCase();
+      var vtTa = document.getElementById('amsVtMsgText');
+      if (vtTa) amsEditCardData.preview = vtTa.value;
+    } else if (depMode && depMode.style.display !== 'none') {
+      var depType = document.getElementById('amsDepositMsgType').value.toUpperCase();
+      var depTa = document.getElementById('amsDepositMsgText');
+      amsEditCardData.type = depType;
+      if (depTa) amsEditCardData.preview = depTa.value;
+    } else if (expiryMode && expiryMode.style.display !== 'none') {
+      // 만료일 모드는 별도 저장 로직
+    } else if (amsEditCurrentMode === 'alimtalk') {
+      var fbType = document.getElementById('amsEditFallbackType').value.toUpperCase();
+      var fbText = document.getElementById('amsEditFallbackText');
+      amsEditCardData.type = fbType;
+      if (fbText) amsEditCardData.preview = fbText.value;
+    } else {
+      var type = document.getElementById('amsEditMsgType').value.toUpperCase();
+      var ta = document.getElementById('amsEditMsgText');
+      amsEditCardData.type = type;
+      if (ta) amsEditCardData.preview = ta.value;
+    }
+    // 새 등록 모드에서 내용 없으면 카드 제거
+    if (amsNewAlertCardId && amsEditCardData && !amsEditCardData.preview.trim()) {
+      for (var rmKey in amsCards) {
+        amsCards[rmKey] = amsCards[rmKey].filter(function(c) { return c.id !== amsNewAlertCardId; });
+      }
+    }
+    amsNewAlertCardId = null;
+    amsRender();
+  }
+  document.getElementById('amsEditOverlay').classList.remove('show');
+  document.getElementById('amsEditModal').classList.remove('show');
+  amsEditCardData = null;
+}
+
+function amsEditUpdateBytes() {
+  var ta = document.getElementById('amsEditMsgText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  document.getElementById('amsEditBytes').textContent = bytes;
+}
+
+function amsEditTypeChange(type) {
+  if (!type) type = document.getElementById('amsEditMsgType').value;
+  amsEditCurrentType = type;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  document.getElementById('amsEditByteLimit').textContent = info.maxBytes;
+  amsEditUpdateBytes();
+}
+
+// 발송타입 전환 (알림톡 ↔ 문자)
+var amsEditCurrentMode = 'alimtalk';
+function amsEditSwitchSendType(mode) {
+  if (mode === amsEditCurrentMode) return;
+  var smsEl = document.getElementById('amsEditSmsMode');
+  var alimEl = document.getElementById('amsEditAlimtalkMode');
+  var outEl = mode === 'sms' ? alimEl : smsEl;
+  var inEl = mode === 'sms' ? smsEl : alimEl;
+  var outDir = mode === 'sms' ? 'ams-slide-out-left' : 'ams-slide-out-right';
+  var inDir = mode === 'sms' ? 'ams-slide-in-right' : 'ams-slide-in-left';
+
+  outEl.classList.add(outDir);
+  outEl.addEventListener('animationend', function handler() {
+    outEl.removeEventListener('animationend', handler);
+    outEl.style.display = 'none';
+    outEl.classList.remove(outDir);
+    inEl.style.display = '';
+    inEl.classList.add(inDir);
+    inEl.addEventListener('animationend', function h2() {
+      inEl.removeEventListener('animationend', h2);
+      inEl.classList.remove(inDir);
+    });
+  });
+  amsEditCurrentMode = mode;
+}
+
+// 알림톡 fallback 바이트 카운터
+function amsEditFallbackUpdateBytes() {
+  var ta = document.getElementById('amsEditFallbackText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  document.getElementById('amsEditFallbackBytes').textContent = bytes;
+}
+
+function amsEditFallbackTypeChange(type) {
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  document.getElementById('amsEditFallbackByteLimit').textContent = info.maxBytes;
+  amsEditFallbackUpdateBytes();
+}
+
+// fallback 토글 라벨
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'amsEditFallbackToggle' || e.target.closest('#amsEditFallbackToggle')) {
+    var t = document.getElementById('amsEditFallbackToggle');
+    var s = document.getElementById('amsEditFallbackStatus');
+    if (s) s.textContent = t.classList.contains('on') ? 'On' : 'Off';
+  }
+});
+
+function amsEditInsertConv(v) {
+  var ta = document.getElementById('amsEditMsgText');
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  ta.value = ta.value.substring(0, start) + v + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + v.length;
+  ta.focus();
+  amsEditUpdateBytes();
+}
+
+function amsEditPreview() {
+  var msg = document.getElementById('amsEditMsgText').value;
+  alert(msg || '미리보기할 내용이 없습니다.');
+}
+
+function amsEditOtherMsg() {
+  alert('다른 문구 선택');
+}
+
+function amsEditSave() {
+  amsCloseEdit();
+}
+
+// ── 예약금 모드 (da1, da2) ──
+function amsDepositUpdateBytes() {
+  var ta = document.getElementById('amsDepositMsgText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var type = document.getElementById('amsDepositMsgType').value;
+  var limit = type === 'sms' ? 85 : 2000;
+  document.getElementById('amsDepositBytes').textContent = bytes;
+  document.getElementById('amsDepositByteLimit').textContent = limit;
+}
+var amsDepositPage = 1;
+function amsDepositRenderSamples() {
+  if (typeof cmSmsSamples === 'undefined') return;
+  var info = cmSmsTypeInfo.lms;
+  var samples = cmSmsSamples.lms;
+  var grid = document.getElementById('amsDepositSmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var start = (amsDepositPage - 1) * info.perPage;
+  samples.slice(start, start + info.perPage).forEach(function(text) {
+    var bytes = cmCalcBytes(text);
+    var card = document.createElement('div');
+    card.className = 'cm-sms-preview-card';
+    card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div><div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+    grid.appendChild(card);
+  });
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
+  document.getElementById('amsDepositPageCur').textContent = amsDepositPage;
+  document.getElementById('amsDepositPageTotal').textContent = totalPages;
+}
+function amsDepositPageGo(dir) {
+  var samples = cmSmsSamples.lms; var info = cmSmsTypeInfo.lms;
+  var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
+  if (dir === 'first') amsDepositPage = 1;
+  else if (dir === 'prev') amsDepositPage = Math.max(1, amsDepositPage - 1);
+  else if (dir === 'next') amsDepositPage = Math.min(totalPages, amsDepositPage + 1);
+  else if (dir === 'last') amsDepositPage = totalPages;
+  amsDepositRenderSamples();
+}
+function amsDepositSelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var ta = document.getElementById('amsDepositMsgText');
+  if (ta) { ta.value = body.textContent; amsDepositUpdateBytes(); }
+}
+
+// ── 만료일 모드 (pp5, pp8) ──
+var amsExpiryDefaults = {
+  pp5: [
+    { title:'첫번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원 남아 있으세요.\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minBalance:100000 },
+    { title:'두번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minBalance:1 },
+    { title:'세번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minBalance:1 }
+  ],
+  pp8: [
+    { title:'첫번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minCount:4 },
+    { title:'두번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minCount:1 },
+    { title:'세번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minCount:1 }
+  ]
+};
+
+function amsExpiryRenderCards(cardId) {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var defaults = amsExpiryDefaults[cardId] || amsExpiryDefaults.pp5;
+  var isPrepaid = cardId === 'pp5';
+  var html = '';
+  defaults.forEach(function(d, i) {
+    html += '<div class="ams-expiry-card">'
+      + '<div class="ams-expiry-card-header"><span class="ams-expiry-card-title">' + d.title + '</span>'
+      + '<div class="ams-toggle' + (d.active ? ' on' : '') + '" id="amsExpToggle' + i + '" onclick="this.classList.toggle(\'on\')"></div></div>'
+      + '<div class="cst-sms-type-row"><span class="cst-sms-type-label">문자유형</span>'
+      + '<select class="cst-sms-type-select" id="amsExpType' + i + '"><option value="sms">SMS</option><option value="lms"' + (d.type === 'lms' ? ' selected' : '') + '>LMS</option></select>'
+      + '<div class="cst-sms-help-wrap"><button class="sv-help-btn">?</button>'
+      + '<div class="cst-sms-help-tooltip"><table class="cst-sms-help-table"><thead><tr><th>구분</th><th>요금</th><th>한글 글자수 (byte)</th><th>이미지 첨부</th></tr></thead><tbody><tr><td>단문 SMS</td><td>22원</td><td>42자 (85byte)</td><td>X</td></tr><tr><td>장문 LMS</td><td>49원</td><td>1,000자 (2,000byte)</td><td>X</td></tr><tr><td>그림문자 MMS</td><td>198원</td><td>1,000자 (2,000byte)</td><td>O</td></tr></tbody></table><div class="cst-sms-help-notes">MMS 이미지 첨부 가능 파일형식 : jpg, jpeg, png, bmp, gif<br>(광고) 표시시 한글 3자(6byte)가 소요됩니다<br>수신거부 삽입 시 한글 13자(25byte)가 소요됩니다</div></div>'
+      + '</div></div>'
+      + '<div class="ams-expiry-cond-row">'
+      + '<span>' + (isEn ? 'Expiry' : '만료') + '</span><input type="number" value="' + d.expDays + '" id="amsExpDays' + i + '"><span>' + (isEn ? 'days before' : '일 전') + '</span>'
+      + '<span>' + (isPrepaid ? (isEn ? 'Balance' : '잔액') : (isEn ? 'Remaining' : '잔여횟수')) + '</span><input type="number" value="' + (isPrepaid ? d.minBalance : d.minCount) + '" id="amsExpMin' + i + '"><span>' + (isPrepaid ? (isEn ? 'won+' : '원 이상') : (isEn ? '+' : '이상')) + '</span>'
+      + '</div>'
+      + '<div class="cst-sms-textarea-wrap"><textarea class="cst-sms-textarea" id="amsExpMsg' + i + '">' + d.msg + '</textarea>'
+      + '<div class="cst-sms-byte-count" id="amsExpBytes' + i + '">0 / 2000 Bytes</div></div>'
+      + '<button class="ams-expiry-preview-btn">' + (isEn ? 'Preview' : '미리보기') + '</button>'
+      + '</div>';
+  });
+  document.getElementById('amsExpiryCards').innerHTML = html;
+  // 바이트 카운터 초기화
+  defaults.forEach(function(d, i) {
+    var ta = document.getElementById('amsExpMsg' + i);
+    if (ta) {
+      var bytes = 0;
+      for (var j = 0; j < ta.value.length; j++) bytes += ta.value.charCodeAt(j) > 127 ? 2 : 1;
+      var limit = document.getElementById('amsExpType' + i).value === 'sms' ? 85 : 2000;
+      document.getElementById('amsExpBytes' + i).textContent = bytes + ' / ' + limit + ' Bytes';
+    }
+  });
+  // 발송시각 select 초기화
+  var hourSel = document.getElementById('amsExpiryHour');
+  hourSel.innerHTML = '';
+  for (var h = 0; h < 24; h++) {
+    var opt = document.createElement('option');
+    opt.value = h; opt.textContent = h < 10 ? '0' + h : h;
+    if (h === 10) opt.selected = true;
+    hourSel.appendChild(opt);
+  }
+}
+
+var amsExpiryPage = 1;
+function amsExpiryRenderSamples() {
+  if (typeof cmSmsSamples === 'undefined') return;
+  var info = cmSmsTypeInfo.lms;
+  var samples = cmSmsSamples.lms;
+  var grid = document.getElementById('amsExpirySmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var start = (amsExpiryPage - 1) * info.perPage;
+  var items = samples.slice(start, start + info.perPage);
+  items.forEach(function(text) {
+    var bytes = cmCalcBytes(text);
+    var card = document.createElement('div');
+    card.className = 'cm-sms-preview-card';
+    card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div><div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+    grid.appendChild(card);
+  });
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
+  var cur = document.getElementById('amsExpiryPageCur');
+  var tot = document.getElementById('amsExpiryPageTotal');
+  if (cur) cur.textContent = amsExpiryPage;
+  if (tot) tot.textContent = totalPages;
+}
+function amsExpiryPageGo(dir) {
+  var samples = cmSmsSamples.lms;
+  var info = cmSmsTypeInfo.lms;
+  var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
+  if (dir === 'first') amsExpiryPage = 1;
+  else if (dir === 'prev') amsExpiryPage = Math.max(1, amsExpiryPage - 1);
+  else if (dir === 'next') amsExpiryPage = Math.min(totalPages, amsExpiryPage + 1);
+  else if (dir === 'last') amsExpiryPage = totalPages;
+  amsExpiryRenderSamples();
+}
+function amsExpirySelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  // 첫번째 카드에 삽입
+  var ta = document.getElementById('amsExpMsg0');
+  if (ta) ta.value = body.textContent;
+}
+
+// ── 방문 감사 모드 (vt1, vt2) ──
+var vtSamples = [
+  '고객님! 000샵 입니다♥\n시술은 어떠셨나요? 만족스러우셨다면\n정말 기쁠 것 같아요! 이후 스타일 유지나 관리에 어려운 부분이 있으시면 언제든 편하게 문의해 주세요. 고객님께 딱 맞는 관리 팁을 알려 드릴게요.\n\n앞으로도 다양한 서비스로 최고의 경험을 선사하겠습니다. 마음 편히 재방문 하셔서, 저희와 함께 멋진 시간을 나누시면 좋겠습니다^^',
+  '((성명))님♡,\n관리 받으시느라 고생 많으셨습니다. 혹시 부족한 부분이 있었다면 언제든 편하게 연락 주세요!\n\n늘 감사하는 마음으로 그날까지 최선을 다하겠습니다. 오늘도 찾아주셔서 감사합니다. 변함없는 000샵이 될게요!\n♡행복한 하루 보내세요♡',
+  '안녕하세요, ((성명))고객님!\n\n오늘 저희 000샵을 방문해 주셔서 정말 감사 드려요!\n\n저희 샵에서 경험하는 시간이 편안하고 즐거우셨기를 진심으로 바라며, 언제든 다시 들러 주시면 더욱 특별한 서비스를 많이할 수 있도록 준비하고 있겠습니다.\n\n고객님의 다음 방문을 기대하며, 매일매일 행복하시길 바랍니다!',
+  '안녕하세요, ((성명)) 고객님!\n오늘 방문 어떠셨나요?\n저희가 제공한 서비스가 고객님의 하루에 특별함을 더했으면 좋겠습니다.\n\n000샵은 고객님의 만족을 위해 더욱 섬세한 서비스를 제공할 수 있도록 최선을 다하겠습니다. 언제든지 편하게 방문해주세요.\n감사합니다!',
+  '((성명))님 안녕하세요!\n\n오늘 저희 000샵에 방문해 주셔서 진심으로 감사드립니다.\n시술 결과가 마음에 드셨으면 좋겠어요!\n\n관리에 관한 궁금한 점이 있으시면 언제든 편하게 연락 주세요.\n다음에도 더 좋은 서비스로 보답하겠습니다.\n\n좋은 하루 되세요 ♡',
+  '((성명))고객님, 안녕하세요!\n\n오늘 방문해 주셔서 감사합니다.\n저희 000샵의 서비스가 고객님께 만족스러운 경험이 되었기를 바랍니다.\n\n다음 방문 시에도 최선을 다해 모시겠습니다.\n편안한 하루 보내세요!'
+];
+var amsVtPage = 1;
+
+function amsVtUpdateBytes() {
+  var ta = document.getElementById('amsVtMsgText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var type = document.getElementById('amsVtMsgType').value;
+  var limit = type === 'sms' ? 85 : 2000;
+  document.getElementById('amsVtBytes').textContent = bytes;
+  document.getElementById('amsVtByteLimit').textContent = limit;
+}
+
+function amsVtPreview() {
+  var msg = document.getElementById('amsVtMsgText').value;
+  alert(msg || '미리보기할 내용이 없습니다.');
+}
+
+function amsVtRenderSamples() {
+  var grid = document.getElementById('amsVtSmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var info = cmSmsTypeInfo.lms;
+  var start = (amsVtPage - 1) * info.perPage;
+  vtSamples.slice(start, start + info.perPage).forEach(function(text) {
+    var bytes = cmCalcBytes(text);
+    var card = document.createElement('div');
+    card.className = 'cm-sms-preview-card';
+    card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div><div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+    grid.appendChild(card);
+  });
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  var totalPages = Math.max(1, Math.ceil(vtSamples.length / info.perPage));
+  document.getElementById('amsVtPageCur').textContent = amsVtPage;
+  document.getElementById('amsVtPageTotal').textContent = totalPages;
+}
+
+function amsVtPageGo(dir) {
+  var info = cmSmsTypeInfo.lms;
+  var totalPages = Math.max(1, Math.ceil(vtSamples.length / info.perPage));
+  if (dir === 'first') amsVtPage = 1;
+  else if (dir === 'prev') amsVtPage = Math.max(1, amsVtPage - 1);
+  else if (dir === 'next') amsVtPage = Math.min(totalPages, amsVtPage + 1);
+  else if (dir === 'last') amsVtPage = totalPages;
+  amsVtRenderSamples();
+}
+
+function amsVtSelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var ta = document.getElementById('amsVtMsgText');
+  if (ta) { ta.value = body.textContent; amsVtUpdateBytes(); }
+}
+
+// ── 시술 후 관리 / 재방문 유도 모드 ──
+var acSamples = [
+  '((성명))님의 아름다움을 약속 드립니다. 관리주기를 놓치지 마세요~^^\n- 000샵',
+  '((성명))님 어느새 관리 받으신지 00주가 지났어요. 편한 시간으로 예약 주세요♥\n-000샵',
+  '((성명)) 고객님! 재방문 기간이에요. 예약이 필요하시면 언제든 연락주세요.\n- 000샵',
+  '((성명))님~ 재방문 주기가 되었습니다. 시기 놓치지 마시고 예약해 주세요^^\n- 000샵',
+  '((성명))님, 시술 후 관리가 필요한 시기입니다. 편하신 시간에 방문해 주세요!\n- 000샵',
+  '((성명))님 안녕하세요! 지난 시술 후 관리는 잘 되고 계신가요? 궁금한 점 있으시면 편하게 연락 주세요.\n- 000샵',
+  '((성명))고객님, 시술 받으신 지 꽤 되셨네요. 관리 받으러 오시면 더 좋은 컨디션 유지할 수 있어요!\n- 000샵',
+  '((성명))님, 정기 관리 시기가 다가왔습니다. 미리 예약하시면 원하시는 시간에 편하게 받으실 수 있어요.\n- 000샵'
+];
+var amsAcPage = 1;
+
+function amsAcUpdateBytes() {
+  var ta = document.getElementById('amsAcMsgText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var type = document.getElementById('amsAcMsgType').value;
+  var limit = type === 'sms' ? 85 : 2000;
+  document.getElementById('amsAcBytes').textContent = bytes;
+  document.getElementById('amsAcByteLimit').textContent = limit;
+}
+
+function amsAcPreview() {
+  var msg = document.getElementById('amsAcMsgText').value;
+  alert(msg || '미리보기할 내용이 없습니다.');
+}
+
+// 등록 기준 라디오 토글
+function amsAcToggleBasis() {
+  var basis = document.querySelector('input[name="amsAcBasis"]:checked').value;
+  var wrap = document.getElementById('amsAcCategoryWrap');
+  if (basis === 'by_category') {
+    wrap.classList.remove('disabled');
+  } else {
+    wrap.classList.add('disabled');
+    // 선택 초기화
+    document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]').forEach(function(c) { c.checked = false; });
+    amsAcMultiUpdateLabel();
+    document.getElementById('amsAcMultiDropdown').classList.remove('show');
+  }
+}
+
+// 멀티셀렉트
+function amsAcToggleMultiDrop() {
+  if (document.getElementById('amsAcCategoryWrap').classList.contains('disabled')) return;
+  document.getElementById('amsAcMultiDropdown').classList.toggle('show');
+}
+function amsAcMultiToggleAll(el) {
+  var checks = document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]:not([value="전체"])');
+  checks.forEach(function(c) { c.checked = el.checked; });
+  amsAcMultiUpdateLabel();
+}
+function amsAcMultiUpdateLabel() {
+  var checks = document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]:checked:not([value="전체"])');
+  var ph = document.getElementById('amsAcMultiPlaceholder');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (checks.length === 0) {
+    ph.textContent = isEn ? 'Select' : '선택하세요';
+    ph.classList.remove('has-value');
+  } else {
+    var names = [];
+    checks.forEach(function(c) { names.push(c.value); });
+    ph.textContent = names.join(', ');
+    ph.classList.add('has-value');
+  }
+}
+function amsAcGetSelectedCategories() {
+  var checks = document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]:checked:not([value="전체"])');
+  var arr = [];
+  checks.forEach(function(c) { arr.push(c.value); });
+  return arr;
+}
+document.addEventListener('change', function(e) {
+  if (e.target.closest('#amsAcMultiDropdown') && e.target.type === 'checkbox' && e.target.value !== '전체') {
+    amsAcMultiUpdateLabel();
+  }
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#amsAcCategoryWrap')) {
+    var dd = document.getElementById('amsAcMultiDropdown');
+    if (dd) dd.classList.remove('show');
+  }
+});
+
+// 샘플
+function amsAcRenderSamples() {
+  var grid = document.getElementById('amsAcSmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var type = document.getElementById('amsAcMsgType').value;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  var start = (amsAcPage - 1) * info.perPage;
+  acSamples.slice(start, start + info.perPage).forEach(function(text) {
+    var bytes = cmCalcBytes(text);
+    var card = document.createElement('div');
+    card.className = 'cm-sms-preview-card';
+    card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div><div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+    grid.appendChild(card);
+  });
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  var totalPages = Math.max(1, Math.ceil(acSamples.length / info.perPage));
+  document.getElementById('amsAcPageCur').textContent = amsAcPage;
+  document.getElementById('amsAcPageTotal').textContent = totalPages;
+}
+function amsAcPageGo(dir) {
+  var type = document.getElementById('amsAcMsgType').value;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  var totalPages = Math.max(1, Math.ceil(acSamples.length / info.perPage));
+  if (dir === 'first') amsAcPage = 1;
+  else if (dir === 'prev') amsAcPage = Math.max(1, amsAcPage - 1);
+  else if (dir === 'next') amsAcPage = Math.min(totalPages, amsAcPage + 1);
+  else if (dir === 'last') amsAcPage = totalPages;
+  amsAcRenderSamples();
+}
+function amsAcSelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var ta = document.getElementById('amsAcMsgText');
+  if (ta) { ta.value = body.textContent; amsAcUpdateBytes(); }
+}
+
+// ── 생일 축하 모드 (bd1) ──
+var bdSamples = [
+  '사랑하는 ((성명))님의 생일을 축하드립니다! 행복한 하루 되세요\n-000샵',
+  '뜻깊은 오늘, 그 어느때보다도 아름다운날 되기를 바랍니다. 생일축하해요~\n-000샵',
+  '오늘 ((성명))님의 생일을 축하합니다! 가장 행복한 하루 보내세요\n-000샵',
+  '세상에서 가장 기쁜날! 바로 ((성명))님의 생일날!\n생일 축하해요^^\n-000샵',
+  '((성명))님, 생일 축하드려요! 오늘 하루 특별한 선물 같은 시간 보내세요♥\n-000샵',
+  '((성명))고객님 생일을 진심으로 축하합니다! 늘 건강하시고 행복하세요.\n-000샵',
+  '((성명))님~ 생일 축하드립니다! 소중한 날, 저희 샵에서 특별한 혜택을 준비했어요!\n-000샵',
+  '((성명))님의 특별한 날을 축하합니다! 좋은 일만 가득하시길 바랍니다.\n-000샵'
+];
+var amsBdPage = 1;
+
+function amsBdUpdateBytes() {
+  var ta = document.getElementById('amsBdMsgText');
+  if (!ta) return;
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var type = document.getElementById('amsBdMsgType').value;
+  var limit = type === 'sms' ? 85 : 2000;
+  document.getElementById('amsBdBytes').textContent = bytes;
+  document.getElementById('amsBdByteLimit').textContent = limit;
+}
+
+function amsBdPreview() {
+  var msg = document.getElementById('amsBdMsgText').value;
+  alert(msg || '미리보기할 내용이 없습니다.');
+}
+
+function amsBdGradeToggle(el) {
+  el.classList.toggle('on');
+  var isOn = el.classList.contains('on');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  document.getElementById('amsBdGradeLabel').textContent = isOn ? (isEn ? 'Yes' : '예') : (isEn ? 'No' : '아니오');
+  document.getElementById('amsBdGradeChecks').style.display = isOn ? 'none' : '';
+}
+
+function amsBdRenderSamples() {
+  var grid = document.getElementById('amsBdSmsPreview');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var type = document.getElementById('amsBdMsgType').value;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  var start = (amsBdPage - 1) * info.perPage;
+  bdSamples.slice(start, start + info.perPage).forEach(function(text) {
+    var bytes = cmCalcBytes(text);
+    var card = document.createElement('div');
+    card.className = 'cm-sms-preview-card';
+    card.innerHTML = '<div class="cm-sms-preview-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div><div class="cm-sms-preview-bytes">' + bytes + ' / ' + info.maxBytes + ' Bytes</div>';
+    grid.appendChild(card);
+  });
+  grid.style.gridTemplateColumns = 'repeat(' + info.cols + ',1fr)';
+  var totalPages = Math.max(1, Math.ceil(bdSamples.length / info.perPage));
+  document.getElementById('amsBdPageCur').textContent = amsBdPage;
+  document.getElementById('amsBdPageTotal').textContent = totalPages;
+}
+function amsBdPageGo(dir) {
+  var type = document.getElementById('amsBdMsgType').value;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.sms;
+  var totalPages = Math.max(1, Math.ceil(bdSamples.length / info.perPage));
+  if (dir === 'first') amsBdPage = 1;
+  else if (dir === 'prev') amsBdPage = Math.max(1, amsBdPage - 1);
+  else if (dir === 'next') amsBdPage = Math.min(totalPages, amsBdPage + 1);
+  else if (dir === 'last') amsBdPage = totalPages;
+  amsBdRenderSamples();
+}
+function amsBdSelectSample(e) {
+  var card = e.target.closest('.cm-sms-preview-card');
+  if (!card) return;
+  var body = card.querySelector('.cm-sms-preview-body');
+  if (!body) return;
+  var ta = document.getElementById('amsBdMsgText');
+  if (ta) { ta.value = body.textContent; amsBdUpdateBytes(); }
+}
+
+// ══ [FEAT-AUTO-MSG] END ══
