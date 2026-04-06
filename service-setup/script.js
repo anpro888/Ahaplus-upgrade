@@ -5070,13 +5070,13 @@ function openAhaCallHistory() {
 
 // ══ [FEAT-AHACALL-HISTORY] 아하콜 수신 내역 ══
 var _achSampleData = [
-  { device:'phone', date:'2026-03-30 11:25', phone:'070-7737-4738', clientNo:'', clientName:'', checked:false },
-  { device:'phone', date:'2026-03-28 16:42', phone:'053-525-7175', clientNo:'', clientName:'', checked:false },
-  { device:'phone', date:'2026-03-26 11:08', phone:'053-961-2995', clientNo:'', clientName:'', checked:false },
-  { device:'phone', date:'2026-03-25 12:02', phone:'010-6431-9779', clientNo:'', clientName:'', checked:false, hasSms:true },
-  { device:'phone', date:'2026-03-25 11:56', phone:'010-6431-9779', clientNo:'', clientName:'', checked:false, hasSms:true },
-  { device:'phone', date:'2026-03-24 12:06', phone:'070-8997-4938', clientNo:'', clientName:'', checked:false },
-  { device:'phone', date:'2026-03-24 10:59', phone:'070-4768-8513', clientNo:'', clientName:'', checked:false }
+  { device:'phone', date:'2026-04-06 11:25', phone:'070-7737-4738', clientNo:'', clientName:'', checked:false },
+  { device:'phone', date:'2026-04-05 16:42', phone:'053-525-7175', clientNo:'', clientName:'', checked:false },
+  { device:'phone', date:'2026-04-04 11:08', phone:'053-961-2995', clientNo:'', clientName:'', checked:false },
+  { device:'phone', date:'2026-04-03 12:02', phone:'010-6431-9779', clientNo:'', clientName:'', checked:false, hasSms:true },
+  { device:'phone', date:'2026-04-03 11:56', phone:'010-6431-9779', clientNo:'', clientName:'', checked:false, hasSms:true },
+  { device:'phone', date:'2026-04-02 12:06', phone:'070-8997-4938', clientNo:'', clientName:'', checked:false },
+  { device:'phone', date:'2026-04-01 10:59', phone:'070-4768-8513', clientNo:'', clientName:'', checked:false }
 ];
 
 var _achDeleteTarget = null;
@@ -5274,7 +5274,7 @@ function hideAllViews() {
     'productSetupView','productCatSetupView','otherCodeSetupView',
     'pointSetupView','consentSetupView','detailReceiptSetupView',
     'envSetupView','ahaCallSetupView','ahaCallHistoryView','noticeListView',
-    'msgHistoryView','smsRejectView','autoMsgSetupView'
+    'msgHistoryView','smsRejectView','autoMsgSetupView','senderNumberView'
   ];
   viewIds.forEach(function(id) {
     var el = document.getElementById(id);
@@ -6588,13 +6588,17 @@ function cmToggleSpecialChars() {
     el.style.display = '';
     if (!cmSpecialCharsInit) {
       cmSpecialCharsInit = true;
-      var chars = '#&*@§※☆★○●◎◇◆◈□■△▲▽▼→←↑↓↔═▷◁▶◀▣▤▥▦▧▨▩㉿㈜♩♪♬™℡℗®ℓ㏂㏘TELa.m.p.m.!\',./:;^_—¨°··…‥//＼∼´∧∨∽˘ˇ¸˛±×÷≠≤≥∞∴♂♀∠⊥⌒∂∇≡≒«»√∝∵∫∪∩'.split('');
+      var chars = ['※','☆','★','♡','♥','○','●','◎','◇','◆','◈','□','■','♦','▣',
+        '♣','♧','△','▲','▽','▼','◁','▷','▶','◀','TEL','☎','☏','⊙','●',
+        '⇒','⇐','←','→','↑','↓','①','②','③','④','⑤','⑥','⑦','⑧','⑨',
+        '—','|','└','┘','┌','┐','·','^0^','*^^*','^_^','(^▽^)b'];
       var grid = document.getElementById('cmSpecialGrid');
       chars.forEach(function(c) {
         var btn = document.createElement('button');
         btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
         btn.textContent = c;
-        btn.onclick = function() { cmInsertConvert(c); };
+        btn.onclick = function() { cmInsertConvert(c); document.getElementById('cmSpecialChars').style.display = 'none'; };
         grid.appendChild(btn);
       });
     }
@@ -6844,6 +6848,7 @@ function cmCloseAdGuide() {
 
 function cmGoSenderSetup() {
   cmCloseSmsModal();
+  openSenderNumberSetup();
 }
 
 function cmSmsSampleTabSwitch(el, mode) {
@@ -6949,6 +6954,7 @@ function cmEditCard(btn) {
 
 function cmGoAutoSmsSetup() {
   cmCloseSmsModal();
+  openAutoMsgSetup();
 }
 
 function cmSendSms() {
@@ -7205,7 +7211,13 @@ function mhToggleAll(master) {
 }
 
 // ── 수신거부 타입 전환 ──
+var _mhRejectType = 'sms';
+var _mhRejectPage = 1;
+var _mhRejectPerPage = 10;
+
 function mhSwitchRejectType(type) {
+  _mhRejectType = type;
+  _mhRejectPage = 1;
   var smsTable = document.getElementById('mhRejectTableSms');
   var t080Table = document.getElementById('mhRejectTable080');
   if (type === 'sms') {
@@ -7215,6 +7227,48 @@ function mhSwitchRejectType(type) {
     smsTable.style.display = 'none';
     t080Table.style.display = '';
   }
+  mhRejectPaginate();
+}
+
+function mhRejectPaginate() {
+  var table = document.getElementById(_mhRejectType === 'sms' ? 'mhRejectTableSms' : 'mhRejectTable080');
+  var rows = table.querySelectorAll('tbody tr');
+  var total = rows.length;
+  var totalPages = Math.ceil(total / _mhRejectPerPage);
+  if (totalPages < 1) totalPages = 1;
+  if (_mhRejectPage > totalPages) _mhRejectPage = totalPages;
+  var start = (_mhRejectPage - 1) * _mhRejectPerPage;
+  var end = start + _mhRejectPerPage;
+  rows.forEach(function(row, i) {
+    row.style.display = (i >= start && i < end) ? '' : 'none';
+  });
+  document.getElementById('mhRejectCountNum').textContent = total;
+  var paging = document.getElementById('mhRejectPaging');
+  if (totalPages <= 1) { paging.innerHTML = ''; return; }
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var html = '<span class="cm-paging-info">' + (isEn ? 'Page' : '페이지') + ' <b>' + totalPages + '</b> ' + (isEn ? 'of' : '의') + ' <b>' + _mhRejectPage + '</b></span>';
+  html += '<button class="cm-paging-btn" onclick="mhRejectGoPage(1)" ' + (_mhRejectPage <= 1 ? 'disabled' : '') + '>«</button>';
+  html += '<button class="cm-paging-btn" onclick="mhRejectGoPage(' + (_mhRejectPage - 1) + ')" ' + (_mhRejectPage <= 1 ? 'disabled' : '') + '>‹</button>';
+  html += '<button class="cm-paging-btn" onclick="mhRejectGoPage(' + (_mhRejectPage + 1) + ')" ' + (_mhRejectPage >= totalPages ? 'disabled' : '') + '>›</button>';
+  html += '<button class="cm-paging-btn" onclick="mhRejectGoPage(' + totalPages + ')" ' + (_mhRejectPage >= totalPages ? 'disabled' : '') + '>»</button>';
+  html += '<button class="cm-paging-btn" onclick="mhRejectGoPage(\'goto\')">' + (isEn ? 'Goto' : '이동') + '</button>';
+  paging.innerHTML = html;
+}
+
+function mhRejectGoPage(p) {
+  if (p === 'goto') {
+    var input = prompt('페이지 번호 입력');
+    if (!input) return;
+    p = parseInt(input);
+  }
+  p = parseInt(p);
+  var table = document.getElementById(_mhRejectType === 'sms' ? 'mhRejectTableSms' : 'mhRejectTable080');
+  var total = table.querySelectorAll('tbody tr').length;
+  var totalPages = Math.ceil(total / _mhRejectPerPage);
+  if (isNaN(p) || p < 1) p = 1;
+  if (p > totalPages) p = totalPages;
+  _mhRejectPage = p;
+  mhRejectPaginate();
 }
 
 // ══ 문자발송내역 전용 문자 발송 모달 ══
@@ -7288,17 +7342,63 @@ function mhSms2InsertOptout() {
 }
 function mhSms2ToggleAdOptout() {
   var adLine = document.getElementById('mhAdLine');
-  var bottom = adLine.nextElementSibling;
-  // find cm-phone-fixed-bottom inside same phone-screen
   var screen = adLine.parentElement;
   var fixedBottom = screen.querySelector('.cm-phone-fixed-bottom');
-  if (adLine.style.display === 'none') {
-    adLine.style.display = '';
-    if (fixedBottom) fixedBottom.style.display = '';
+  var btn = document.getElementById('mhOptoutToggleBtn');
+  if (!adLine || !fixedBottom || !btn) return;
+  var isVisible = !adLine.classList.contains('cm-hidden');
+  if (isVisible) {
+    adLine.classList.add('cm-hidden');
+    fixedBottom.classList.add('cm-hidden');
+    btn.textContent = '광고/수신거부 삽입';
+    btn.setAttribute('data-ko', '광고/수신거부 삽입');
+    btn.setAttribute('data-en', 'Add Ad/Opt-out');
   } else {
-    adLine.style.display = 'none';
-    if (fixedBottom) fixedBottom.style.display = 'none';
+    adLine.classList.remove('cm-hidden');
+    fixedBottom.classList.remove('cm-hidden');
+    btn.textContent = '광고/수신거부 삭제';
+    btn.setAttribute('data-ko', '광고/수신거부 삭제');
+    btn.setAttribute('data-en', 'Remove Ad/Opt-out');
   }
+  mhSms2UpdateBytes();
+}
+
+// 특수문자 팝업 (문자발송내역 전용)
+var mhSpecialCharsInit = false;
+function mhSms2ToggleSpecialChars() {
+  var el = document.getElementById('mhSpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    if (!mhSpecialCharsInit) {
+      mhSpecialCharsInit = true;
+      var chars = ['※','☆','★','♡','♥','○','●','◎','◇','◆','◈','□','■','♦','▣',
+        '♣','♧','△','▲','▽','▼','◁','▷','▶','◀','TEL','☎','☏','⊙','●',
+        '⇒','⇐','←','→','↑','↓','①','②','③','④','⑤','⑥','⑦','⑧','⑨',
+        '—','|','└','┘','┌','┐','·','^0^','*^^*','^_^','(^▽^)b'];
+      var grid = document.getElementById('mhSpecialGrid');
+      chars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
+        btn.textContent = c;
+        btn.onclick = function() { mhInsertSpecialChar(c); };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+function mhInsertSpecialChar(c) {
+  var ta = document.getElementById('mhSmsContent2');
+  if (!ta) return;
+  var start = ta.selectionStart, end = ta.selectionEnd;
+  ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + c.length;
+  ta.focus();
+  mhSms2UpdateBytes();
+  document.getElementById('mhSpecialChars').style.display = 'none';
 }
 
 // ── 문자발송내역 추천문자 샘플 (고객관리와 동일 데이터 공유) ──
@@ -7394,6 +7494,63 @@ function mhRecvUpdateCount() {
   if (costEl) costEl.innerHTML = (lines.length * info.cost) + '<span>원</span>';
 }
 
+// ══ 내 메세지 편집 카드 (문자발송내역용) ══
+function mhToggleMymsgEditor() {
+  var grid = document.getElementById('mhMymsgGrid');
+  if (!grid) return;
+  if (grid.querySelector('.cm-mymsg-card.editing')) return;
+  var card = document.createElement('div');
+  card.className = 'cm-mymsg-card editing';
+  card.innerHTML = '<textarea placeholder="메세지 내용을 입력하세요" oninput="mhUpdateCardBytes(this)"></textarea>'
+    + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)">저장</button>'
+    + '</div>';
+  grid.appendChild(card);
+  card.querySelector('textarea').focus();
+}
+function mhUpdateCardBytes(ta) {
+  var bytes = 0;
+  for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+  var bytesEl = ta.closest('.cm-mymsg-card').querySelector('.cm-mymsg-card-bytes');
+  if (bytesEl) bytesEl.textContent = bytes + ' / 2000 Bytes';
+}
+function mhSaveCard(btn) {
+  var card = btn.closest('.cm-mymsg-card');
+  var ta = card.querySelector('textarea');
+  if (!ta || !ta.value.trim()) return;
+  var text = ta.value.trim();
+  var bytes = 0;
+  for (var i = 0; i < text.length; i++) bytes += text.charCodeAt(i) > 127 ? 2 : 1;
+  card.classList.remove('editing');
+  card.setAttribute('data-fulltext', text);
+  card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
+    + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhEditCard(this)">수정</button>'
+    + '</div>';
+  card.querySelector('.cm-mymsg-card-body').onclick = function() {
+    var ta2 = document.getElementById('mhSmsContent2');
+    if (ta2) { ta2.value = text; mhSms2UpdateBytes(); }
+  };
+}
+function mhEditCard(btn) {
+  var card = btn.closest('.cm-mymsg-card');
+  var text = card.getAttribute('data-fulltext') || '';
+  card.classList.add('editing');
+  card.innerHTML = '<textarea oninput="mhUpdateCardBytes(this)">' + text + '</textarea>'
+    + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
+    + '<div class="cm-mymsg-card-btns">'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)">저장</button>'
+    + '</div>';
+  var ta = card.querySelector('textarea');
+  mhUpdateCardBytes(ta);
+  ta.focus();
+}
+
 // ══ 나의 메세지 등록 (메세지내용 저장용) ══
 function openMhMyMsgReg() {
   document.getElementById('mhMyMsgRegOverlay').classList.add('show');
@@ -7429,7 +7586,7 @@ function openMhMsgDetail(idx) {
     '<td>zero_shop</td>' +
     '<td>111</td>' +
     '<td>' + d.date + '</td>' +
-    '<td class="mh-detail-msg-cell"><span class="mh-detail-msg-text">' + d.content.substring(0, 40) + '…</span><div class="mh-detail-msg-tooltip">' + d.content + '</div></td>' +
+    '<td class="mh-detail-msg-cell"><span class="mh-detail-msg-text">' + d.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span><div class="mh-detail-msg-tooltip">' + d.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div></td>' +
     '<td></td>' +
     '<td>' + d.scheduled + '</td>' +
     '<td>' + d.success + '</td>' +
@@ -7606,21 +7763,21 @@ var amsTabs = {
 // conditional: true = 조건부 발송 탭 (재방문/시술후 관리) - 마스터 설정 + 추가 버튼 표시
 var amsCards = {
   booking_alert: [
-    { id:'ba1', title:{ko:'선택일 알림 (2~30일전)',en:'Selected Date Alert (2-30 days before)'}, type:'SMS', active:false, timing:{ko:'예약 2~30일 전 발송',en:'Sent 2-30 days before booking'}, preview:'((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba2', title:{ko:'전날 알림 (1일전)',en:'Day Before Alert'}, type:'SMS', active:false, timing:{ko:'예약 전날 발송',en:'Sent day before booking'}, preview:'((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba3', title:{ko:'예약일 당일',en:'Day of Booking'}, type:'SMS', active:false, timing:{ko:'예약 당일 오전 발송',en:'Sent on the morning of booking'}, preview:'((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba4', title:{ko:'예약 시간 전',en:'Before Booking Time'}, type:'SMS', active:false, timing:{ko:'예약 시간 1~2시간 전 발송',en:'Sent 1-2 hours before booking time'}, preview:'((성명))님, 곧 ((예약시간)) 예약 시간입니다. 아하 네일 스튜디오' },
-    { id:'ba5', title:{ko:'예약등록 확인',en:'Booking Confirmation'}, type:'SMS', active:false, timing:{ko:'예약 등록 즉시 발송',en:'Sent immediately after booking'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 등록되었습니다.' },
-    { id:'ba6', title:{ko:'예약취소 확인',en:'Booking Cancellation'}, type:'SMS', active:false, timing:{ko:'예약 취소 즉시 발송',en:'Sent immediately after cancellation'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 취소되었습니다.' }
+    { id:'ba1', title:{ko:'선택일 알림 (2~30일전)',en:'Selected Date Alert (2-30 days before)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 2~30일 전 발송',en:'Sent 2-30 days before booking'}, preview:'((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba2', title:{ko:'전날 알림 (1일전)',en:'Day Before Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 전날 발송',en:'Sent day before booking'}, preview:'((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba3', title:{ko:'예약일 당일',en:'Day of Booking'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 당일 오전 발송',en:'Sent on the morning of booking'}, preview:'((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba4', title:{ko:'예약 시간 전',en:'Before Booking Time'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 시간 1~2시간 전 발송',en:'Sent 1-2 hours before booking time'}, preview:'((성명))님, 곧 ((예약시간)) 예약 시간입니다. 아하 네일 스튜디오' },
+    { id:'ba5', title:{ko:'예약등록 확인',en:'Booking Confirmation'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 등록 즉시 발송',en:'Sent immediately after booking'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 등록되었습니다.' },
+    { id:'ba6', title:{ko:'예약취소 확인',en:'Booking Cancellation'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 취소 즉시 발송',en:'Sent immediately after cancellation'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 취소되었습니다.' }
   ],
   point_prepaid: [
-    { id:'pp1', title:{ko:'포인트(적립시) 알림',en:'Points Earned Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*적립:((적립))P\n*누적:((누적))P\n방문 감사합니다!\n-아하 네일 스튜디오' },
-    { id:'pp2', title:{ko:'포인트(사용시) 알림',en:'Points Used Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*차감:((사용))점\n*잔여:((누적))점\n이용 감사합니다!\n-아하 네일 스튜디오' },
-    { id:'pp3', title:{ko:'정액권 잔액(판매시) 알림',en:'Prepaid Balance (Purchase) Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'((성명))님 회원권 구입안내\n((정액권명)) / ((선적))원 적립되었습니다\n-아하 네일 스튜디오' },
-    { id:'pp4', title:{ko:'정액권 잔액(차감시) 알림',en:'Prepaid Balance (Deduction) Alert'}, type:'LMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'☆ 아하 네일 스튜디오 정액권 사용 안내 ☆\n\n고객님의 정액권 사용내역 입니다.\n\n◇ 정액권명 : ((정액권명))\n◇ 사용금액 : ((선차))원\n◇ 잔액 : ((선잔))원\n\n현재 사용가능한 정액권의 전체잔액은\n((총잔))원 입니다\n\n방문해 주셔서 감사합니다.' },
+    { id:'pp1', title:{ko:'포인트(적립시) 알림',en:'Points Earned Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*적립:((적립))P\n*누적:((누적))P\n방문 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp2', title:{ko:'포인트(사용시) 알림',en:'Points Used Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*차감:((사용))점\n*잔여:((누적))점\n이용 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp3', title:{ko:'정액권 잔액(판매시) 알림',en:'Prepaid Balance (Purchase) Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'((성명))님 회원권 구입안내\n((정액권명)) / ((선적))원 적립되었습니다\n-아하 네일 스튜디오' },
+    { id:'pp4', title:{ko:'정액권 잔액(차감시) 알림',en:'Prepaid Balance (Deduction) Alert'}, type:'LMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'☆ 아하 네일 스튜디오 정액권 사용 안내 ☆\n\n고객님의 정액권 사용내역 입니다.\n\n◇ 정액권명 : ((정액권명))\n◇ 사용금액 : ((선차))원\n◇ 잔액 : ((선잔))원\n\n현재 사용가능한 정액권의 전체잔액은\n((총잔))원 입니다\n\n방문해 주셔서 감사합니다.' },
     { id:'pp5', title:{ko:'정액권 만료일 알림',en:'Prepaid Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오' },
-    { id:'pp6', title:{ko:'티켓잔여횟수(판매시)',en:'Ticket Count (Purchase)'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'회원권 구매를 감사드립니다.\n*회원권명: ((티켓명))\n*적립횟수: ((적회))회\n-아하 네일 스튜디오' },
-    { id:'pp7', title:{ko:'티켓 잔여횟수(차감시) 알림',en:'Ticket Count (Deduction) Alert'}, type:'SMS', active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'*회원권알림\n((성명))님의 ((서비스명)) 회원권이 ((잔회))회 남았습니다\n-아하 네일 스튜디오' },
+    { id:'pp6', title:{ko:'티켓잔여횟수(판매시)',en:'Ticket Count (Purchase)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'회원권 구매를 감사드립니다.\n*회원권명: ((티켓명))\n*적립횟수: ((적회))회\n-아하 네일 스튜디오' },
+    { id:'pp7', title:{ko:'티켓 잔여횟수(차감시) 알림',en:'Ticket Count (Deduction) Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'*회원권알림\n((성명))님의 ((서비스명)) 회원권이 ((잔회))회 남았습니다\n-아하 네일 스튜디오' },
     { id:'pp8', title:{ko:'티켓 만료일 알림',en:'Ticket Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오' }
   ],
   deposit_alert: [
@@ -7690,7 +7847,7 @@ function amsRender() {
       var categoryBadge = c.category ? '<span class="ams-card-badge">' + (isEn ? c.category.en : c.category.ko) + '</span>' : '';
       html += '<div class="ams-card">' +
         '<div class="ams-card-header">' +
-          '<div class="ams-card-header-left"><span class="ams-card-title">' + titleText + '</span> <span class="ams-card-type">' + c.type + '</span></div>' +
+          '<div class="ams-card-header-left"><span class="ams-card-title">' + titleText + '</span> <span class="ams-card-type">' + c.type + '</span>' + (c.alimtalk ? '<span class="ams-card-alimtalk">' + (isEn ? 'KakaoTalk' : '알림톡 가능') + '</span>' : '') + '</div>' +
           '<div class="ams-toggle' + (c.active ? ' on' : '') + '" onclick="amsToggle(\'' + c.id + '\',this)"></div>' +
         '</div>' +
         (categoryBadge ? '<div class="ams-card-category-row">' + categoryBadge + '</div>' : '') +
@@ -7788,8 +7945,19 @@ function amsOpenNewAlert() {
   // 시술 후 관리 모드 표시
   document.getElementById('amsEditAftercareMode').style.display = '';
 
-  // 발송 대상 고객 (재방문 유도만 표시)
+  // 등록 기준 라디오 (재방문 유도만 표시)
   var isRevisitNew = (amsCurrentSub === 'revisit');
+  document.querySelectorAll('.ams-ac-basis-item').forEach(function(el) { el.style.display = isRevisitNew ? '' : 'none'; });
+  // 시술후 관리: 분류 항상 활성화 / 재방문 유도: 라디오에 따라 제어
+  if (!isRevisitNew) {
+    document.getElementById('amsAcCategoryWrap').classList.remove('disabled');
+  }
+
+  // 재방문 유도: 발송일 줄바꿈
+  var revisitBreak = document.querySelector('.ams-ac-revisit-break');
+  if (revisitBreak) revisitBreak.style.display = isRevisitNew ? '' : 'none';
+
+  // 발송 대상 고객 (재방문 유도만 표시)
   document.getElementById('amsAcTargetLabel').style.display = isRevisitNew ? '' : 'none';
   document.querySelectorAll('.ams-ac-target-item').forEach(function(el) { el.style.display = isRevisitNew ? '' : 'none'; });
   if (isRevisitNew) {
@@ -7815,7 +7983,11 @@ function amsOpenNewAlert() {
 
   // 등록 기준 라디오 + 멀티셀렉트 초기화
   document.querySelector('input[name="amsAcBasis"][value="all"]').checked = true;
-  document.getElementById('amsAcCategoryWrap').classList.add('disabled');
+  if (isRevisitNew) {
+    document.getElementById('amsAcCategoryWrap').classList.add('disabled');
+  } else {
+    document.getElementById('amsAcCategoryWrap').classList.remove('disabled');
+  }
   document.querySelectorAll('#amsAcMultiDropdown input[type="checkbox"]').forEach(function(c) { c.checked = false; });
   amsAcMultiUpdateLabel();
   document.getElementById('amsAcMultiDropdown').classList.remove('show');
@@ -8119,8 +8291,13 @@ function amsOpenEdit(cardId) {
   } else if (isAftercare) {
     // 시술 후 관리 / 재방문 유도 모드
     document.getElementById('amsEditAftercareMode').style.display = '';
-    // 발송 대상 고객 (재방문 유도만 표시)
+    // 등록 기준 라디오 (재방문 유도만 표시)
     var isRevisitSub = (subKey === 'revisit');
+    document.querySelectorAll('.ams-ac-basis-item').forEach(function(el) { el.style.display = isRevisitSub ? '' : 'none'; });
+    // 재방문 유도: 발송일 줄바꿈
+    var revisitBreakEdit = document.querySelector('.ams-ac-revisit-break');
+    if (revisitBreakEdit) revisitBreakEdit.style.display = isRevisitSub ? '' : 'none';
+    // 발송 대상 고객 (재방문 유도만 표시)
     document.getElementById('amsAcTargetLabel').style.display = isRevisitSub ? '' : 'none';
     document.querySelectorAll('.ams-ac-target-item').forEach(function(el) { el.style.display = isRevisitSub ? '' : 'none'; });
     if (isRevisitSub) {
@@ -8145,8 +8322,11 @@ function amsOpenEdit(cardId) {
         if (cb) cb.checked = true;
       });
       document.getElementById('amsAcCategoryWrap').classList.remove('disabled');
-    } else {
+    } else if (isRevisitSub) {
       document.getElementById('amsAcCategoryWrap').classList.add('disabled');
+    } else {
+      // 시술후 관리: 분류 항상 활성화
+      document.getElementById('amsAcCategoryWrap').classList.remove('disabled');
     }
     amsAcMultiUpdateLabel();
     document.getElementById('amsAcMultiDropdown').classList.remove('show');
@@ -8309,7 +8489,8 @@ function amsCloseEdit() {
       if (acTa) amsEditCardData.preview = acTa.value;
       // 분류 저장
       var acBasis = document.querySelector('input[name="amsAcBasis"]:checked');
-      if (acBasis && acBasis.value === 'by_category') {
+      var isRevisitSave = (amsCurrentSub === 'revisit');
+      if (!isRevisitSave || (acBasis && acBasis.value === 'by_category')) {
         var selCats = amsAcGetSelectedCategories();
         if (selCats.length > 0) {
           amsEditCardData.category = { ko: selCats.join(', '), en: selCats.join(', ') };
@@ -8357,6 +8538,10 @@ function amsCloseEdit() {
   document.getElementById('amsEditOverlay').classList.remove('show');
   document.getElementById('amsEditModal').classList.remove('show');
   amsEditCardData = null;
+  // 특수문자 팝업 닫기
+  ['amsEditSmsSpecialChars','amsFallbackSpecialChars','amsExpirySpecialChars',
+   'amsDepositSpecialChars','amsVtSpecialChars','amsAcSpecialChars',
+   'amsBdSpecialChars','amsNewSpecialChars'].forEach(amsCloseSpecialPopup);
 }
 
 function amsEditUpdateBytes() {
@@ -8435,13 +8620,257 @@ function amsEditInsertConv(v) {
   amsEditUpdateBytes();
 }
 
-function amsEditPreview() {
-  var msg = document.getElementById('amsEditMsgText').value;
-  alert(msg || '미리보기할 내용이 없습니다.');
+// ── 미리보기 / 다른 문구 선택 팝업 ──
+
+// SMS 미리보기 (공통)
+function amsOpenSmsPreview(textareaId) {
+  var ta = document.getElementById(textareaId);
+  var dst = document.getElementById('amsSmsPreviewText');
+  if (ta && dst) dst.textContent = ta.value || '';
+  cstOpenModal('amsSmsPreviewModal');
 }
 
+// 문자 모드 - 미리보기
+function amsEditPreview() {
+  amsOpenSmsPreview('amsEditMsgText');
+}
+
+// 문자 모드 - 다른 문구 선택
+var _amsSmsMsgTarget = 'amsEditMsgText';
 function amsEditOtherMsg() {
-  alert('다른 문구 선택');
+  _amsSmsMsgTarget = 'amsEditMsgText';
+  amsRenderSmsAltCards();
+  cstOpenModal('amsSmsAltModal');
+}
+
+// 알림톡 미리보기 패널
+function amsEditAlimPreview() {
+  var title = document.getElementById('amsEditAlimTitle');
+  var body = document.getElementById('amsEditAlimBody');
+  var dstTitle = document.getElementById('amsAlimPreviewTitle');
+  var dstBody = document.getElementById('amsAlimPreviewBody');
+  if (title && dstTitle) dstTitle.textContent = title.textContent;
+  if (body && dstBody) dstBody.textContent = body.textContent;
+  cstOpenModal('amsAlimPreviewModal');
+}
+
+// 알림톡 다른 문구 선택
+function amsEditAlimOtherMsg() {
+  amsRenderAlimAltCards();
+  cstOpenModal('amsAlimAltModal');
+}
+
+// 특수문자 공통 chars
+var _amsSpecialChars = ['※','☆','★','♡','♥','○','●','◎','◇','◆','◈','□','■','♦','▣',
+  '♣','♧','△','▲','▽','▼','◁','▷','▶','◀','TEL','☎','☏','⊙','●',
+  '⇒','⇐','←','→','↑','↓','①','②','③','④','⑤','⑥','⑦','⑧','⑨',
+  '—','|','└','┘','┌','┐','·','^0^','*^^*','^_^','(^▽^)b'];
+
+// 특수문자 팝업 위치 지정 (fixed)
+function amsPositionSpecialPopup(popupId, btnEl) {
+  var el = document.getElementById(popupId);
+  if (!el || !btnEl) return;
+  var rect = btnEl.getBoundingClientRect();
+  // 화면 아래 공간이 부족하면 위로 표시
+  var popupH = 220;
+  var spaceBelow = window.innerHeight - rect.bottom;
+  if (spaceBelow < popupH) {
+    el.style.top = (rect.top - popupH - 4) + 'px';
+  } else {
+    el.style.top = (rect.bottom + 4) + 'px';
+  }
+  el.style.left = rect.left + 'px';
+}
+
+function amsCloseSpecialPopup(popupId) {
+  var el = document.getElementById(popupId);
+  if (el) el.style.display = 'none';
+}
+
+// 특수문자 팝업 생성 팩토리
+function amsCreateSpecialCharsToggle(popupId, gridId, textareaId, updateBytesFn) {
+  var inited = false;
+  return function(btnEl) {
+    var el = document.getElementById(popupId);
+    if (!el) return;
+    if (el.style.display === 'none') {
+      el.style.display = '';
+      amsPositionSpecialPopup(popupId, btnEl);
+      if (!inited) {
+        inited = true;
+        var grid = document.getElementById(gridId);
+        _amsSpecialChars.forEach(function(c) {
+          var btn = document.createElement('button');
+          btn.className = 'cm-special-char-btn';
+          if (c.length > 2) btn.style.fontSize = '10px';
+          btn.textContent = c;
+          btn.onclick = function() {
+            var ta = document.getElementById(textareaId);
+            if (ta) {
+              var start = ta.selectionStart, end = ta.selectionEnd;
+              ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+              ta.selectionStart = ta.selectionEnd = start + c.length;
+              ta.focus();
+              if (updateBytesFn) updateBytesFn();
+            }
+            amsCloseSpecialPopup(popupId);
+          };
+          grid.appendChild(btn);
+        });
+      }
+    } else {
+      el.style.display = 'none';
+    }
+  };
+}
+
+var amsVtToggleSpecialChars = amsCreateSpecialCharsToggle('amsVtSpecialChars', 'amsVtSpecialGrid', 'amsVtMsgText', function(){ amsVtUpdateBytes(); });
+var amsAcToggleSpecialChars = amsCreateSpecialCharsToggle('amsAcSpecialChars', 'amsAcSpecialGrid', 'amsAcMsgText', function(){ amsAcUpdateBytes(); });
+var amsBdToggleSpecialChars = amsCreateSpecialCharsToggle('amsBdSpecialChars', 'amsBdSpecialGrid', 'amsBdMsgText', function(){ amsBdUpdateBytes(); });
+var amsNewToggleSpecialChars = amsCreateSpecialCharsToggle('amsNewSpecialChars', 'amsNewSpecialGrid', 'amsNewMessage', null);
+
+// 문자 모드 - 특수문자
+var amsEditSmsSpecialInit = false;
+function amsEditSmsToggleSpecialChars(btnEl) {
+  var el = document.getElementById('amsEditSmsSpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    amsPositionSpecialPopup('amsEditSmsSpecialChars', btnEl);
+    if (!amsEditSmsSpecialInit) {
+      amsEditSmsSpecialInit = true;
+      var grid = document.getElementById('amsEditSmsSpecialGrid');
+      _amsSpecialChars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
+        btn.textContent = c;
+        btn.onclick = function() {
+          var ta = document.getElementById('amsEditMsgText');
+          if (ta) {
+            var start = ta.selectionStart, end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+            ta.selectionStart = ta.selectionEnd = start + c.length;
+            ta.focus();
+            amsEditUpdateBytes();
+          }
+          amsCloseSpecialPopup('amsEditSmsSpecialChars');
+        };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// 알림톡 발송 실패시 문자 - 특수문자
+var amsFallbackSpecialInit = false;
+function amsFallbackToggleSpecialChars(btnEl) {
+  var el = document.getElementById('amsFallbackSpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    amsPositionSpecialPopup('amsFallbackSpecialChars', btnEl);
+    if (!amsFallbackSpecialInit) {
+      amsFallbackSpecialInit = true;
+      var grid = document.getElementById('amsFallbackSpecialGrid');
+      _amsSpecialChars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
+        btn.textContent = c;
+        btn.onclick = function() {
+          var ta = document.getElementById('amsEditFallbackText');
+          if (ta) {
+            var start = ta.selectionStart, end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+            ta.selectionStart = ta.selectionEnd = start + c.length;
+            ta.focus();
+            amsEditFallbackUpdateBytes();
+          }
+          amsCloseSpecialPopup('amsFallbackSpecialChars');
+        };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// 알림톡 발송 실패시 문자 - 미리보기
+function amsEditFallbackPreview() {
+  amsOpenSmsPreview('amsEditFallbackText');
+}
+
+// 알림톡 발송 실패시 문자 - 다른 문구 선택
+function amsEditFallbackOtherMsg() {
+  _amsSmsMsgTarget = 'amsEditFallbackText';
+  amsRenderSmsAltCards();
+  cstOpenModal('amsSmsAltModal');
+}
+
+// 예약금 미리보기
+function amsDepositPreview() {
+  amsOpenSmsPreview('amsDepositMsgText');
+}
+
+// ── 알림톡 샘플 데이터 ──
+var _amsAlimTemplates = [
+  { title: '■ 예약 알림 안내 ■', body: '((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+  { title: '■ 예약 알림 안내 ■', body: '안녕하세요, ((성명))님!\n((예약일)) ((예약시간)) 예약이 확인되었습니다.\n방문을 기다리겠습니다.\n\n아하 네일 스튜디오' }
+];
+
+function amsRenderAlimAltCards() {
+  var wrap = document.getElementById('amsAlimAltCards');
+  if (!wrap) return;
+  var html = '';
+  _amsAlimTemplates.forEach(function(t, i) {
+    html += '<div class="cst-alt-card" onclick="amsSelectAlimTemplate(' + i + ')">'
+      + '<div class="cst-kakao-preview"><span class="cst-kakao-badge">kakao</span><div class="cst-kakao-bubble">'
+      + '<span class="cst-kakao-msg-title">' + t.title + '</span>'
+      + '<div class="cst-kakao-msg-body" style="pointer-events:none;font-size:12px;white-space:pre-wrap;">' + t.body + '</div>'
+      + '</div></div></div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function amsSelectAlimTemplate(idx) {
+  var t = _amsAlimTemplates[idx];
+  if (!t) return;
+  var title = document.getElementById('amsEditAlimTitle');
+  var body = document.getElementById('amsEditAlimBody');
+  if (title) title.textContent = t.title;
+  if (body) body.textContent = t.body;
+  cstCloseModal('amsAlimAltModal');
+}
+
+// ── SMS 샘플 데이터 ──
+var _amsSmsTemplates = [
+  '((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오',
+  '((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오',
+  '((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오'
+];
+
+function amsRenderSmsAltCards() {
+  var wrap = document.getElementById('amsSmsAltCards');
+  if (!wrap) return;
+  var html = '';
+  _amsSmsTemplates.forEach(function(t, i) {
+    html += '<div class="cst-alt-card cst-alt-sms-card" onclick="amsSelectSmsTemplate(' + i + ')">'
+      + '<textarea class="cst-sms-textarea cst-alt-textarea" readonly>' + t + '</textarea>'
+      + '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function amsSelectSmsTemplate(idx) {
+  var t = _amsSmsTemplates[idx];
+  if (!t) return;
+  var ta = document.getElementById(_amsSmsMsgTarget);
+  if (ta) { ta.value = t; ta.dispatchEvent(new Event('input')); }
+  cstCloseModal('amsSmsAltModal');
 }
 
 function amsEditSave() {
@@ -8449,21 +8878,69 @@ function amsEditSave() {
 }
 
 // ── 예약금 모드 (da1, da2) ──
+function amsDepositGetType() {
+  var sel = document.getElementById('amsDepositMsgType');
+  return (sel && sel.value) || 'lms';
+}
+
+function amsDepositTypeChange() {
+  amsDepositUpdateBytes();
+  amsDepositPage = 1;
+  amsDepositRenderSamples();
+}
+
 function amsDepositUpdateBytes() {
   var ta = document.getElementById('amsDepositMsgText');
   if (!ta) return;
   var bytes = 0;
   for (var i = 0; i < ta.value.length; i++) bytes += ta.value.charCodeAt(i) > 127 ? 2 : 1;
-  var type = document.getElementById('amsDepositMsgType').value;
+  var type = amsDepositGetType();
   var limit = type === 'sms' ? 85 : 2000;
   document.getElementById('amsDepositBytes').textContent = bytes;
   document.getElementById('amsDepositByteLimit').textContent = limit;
 }
+
+// 예약금 - 특수문자
+var amsDepositSpecialInit = false;
+function amsDepositToggleSpecialChars(btnEl) {
+  var el = document.getElementById('amsDepositSpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    amsPositionSpecialPopup('amsDepositSpecialChars', btnEl);
+    if (!amsDepositSpecialInit) {
+      amsDepositSpecialInit = true;
+      var grid = document.getElementById('amsDepositSpecialGrid');
+      _amsSpecialChars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
+        btn.textContent = c;
+        btn.onclick = function() {
+          var ta = document.getElementById('amsDepositMsgText');
+          if (ta) {
+            var start = ta.selectionStart, end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+            ta.selectionStart = ta.selectionEnd = start + c.length;
+            ta.focus();
+            amsDepositUpdateBytes();
+          }
+          amsCloseSpecialPopup('amsDepositSpecialChars');
+        };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+
 var amsDepositPage = 1;
 function amsDepositRenderSamples() {
   if (typeof cmSmsSamples === 'undefined') return;
-  var info = cmSmsTypeInfo.lms;
-  var samples = cmSmsSamples.lms;
+  var type = amsDepositGetType();
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
+  var samples = cmSmsSamples[type] || cmSmsSamples.lms;
   var grid = document.getElementById('amsDepositSmsPreview');
   if (!grid) return;
   grid.innerHTML = '';
@@ -8479,9 +8956,14 @@ function amsDepositRenderSamples() {
   var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
   document.getElementById('amsDepositPageCur').textContent = amsDepositPage;
   document.getElementById('amsDepositPageTotal').textContent = totalPages;
+  // 라벨 업데이트
+  var label = document.getElementById('amsDepositSampleLabel');
+  if (label) label.textContent = info.label;
 }
 function amsDepositPageGo(dir) {
-  var samples = cmSmsSamples.lms; var info = cmSmsTypeInfo.lms;
+  var type = amsDepositGetType();
+  var samples = cmSmsSamples[type] || cmSmsSamples.lms;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
   var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
   if (dir === 'first') amsDepositPage = 1;
   else if (dir === 'prev') amsDepositPage = Math.max(1, amsDepositPage - 1);
@@ -8522,7 +9004,7 @@ function amsExpiryRenderCards(cardId) {
       + '<div class="ams-expiry-card-header"><span class="ams-expiry-card-title">' + d.title + '</span>'
       + '<div class="ams-toggle' + (d.active ? ' on' : '') + '" id="amsExpToggle' + i + '" onclick="this.classList.toggle(\'on\')"></div></div>'
       + '<div class="cst-sms-type-row"><span class="cst-sms-type-label">문자유형</span>'
-      + '<select class="cst-sms-type-select" id="amsExpType' + i + '"><option value="sms">SMS</option><option value="lms"' + (d.type === 'lms' ? ' selected' : '') + '>LMS</option></select>'
+      + '<select class="cst-sms-type-select" id="amsExpType' + i + '" onchange="amsExpiryTypeChange(' + i + ')"><option value="sms">SMS</option><option value="lms"' + (d.type === 'lms' ? ' selected' : '') + '>LMS</option></select>'
       + '<div class="cst-sms-help-wrap"><button class="sv-help-btn">?</button>'
       + '<div class="cst-sms-help-tooltip"><table class="cst-sms-help-table"><thead><tr><th>구분</th><th>요금</th><th>한글 글자수 (byte)</th><th>이미지 첨부</th></tr></thead><tbody><tr><td>단문 SMS</td><td>22원</td><td>42자 (85byte)</td><td>X</td></tr><tr><td>장문 LMS</td><td>49원</td><td>1,000자 (2,000byte)</td><td>X</td></tr><tr><td>그림문자 MMS</td><td>198원</td><td>1,000자 (2,000byte)</td><td>O</td></tr></tbody></table><div class="cst-sms-help-notes">MMS 이미지 첨부 가능 파일형식 : jpg, jpeg, png, bmp, gif<br>(광고) 표시시 한글 3자(6byte)가 소요됩니다<br>수신거부 삽입 시 한글 13자(25byte)가 소요됩니다</div></div>'
       + '</div></div>'
@@ -8532,7 +9014,10 @@ function amsExpiryRenderCards(cardId) {
       + '</div>'
       + '<div class="cst-sms-textarea-wrap"><textarea class="cst-sms-textarea" id="amsExpMsg' + i + '">' + d.msg + '</textarea>'
       + '<div class="cst-sms-byte-count" id="amsExpBytes' + i + '">0 / 2000 Bytes</div></div>'
-      + '<button class="ams-expiry-preview-btn">' + (isEn ? 'Preview' : '미리보기') + '</button>'
+      + '<div class="ams-expiry-btn-row">'
+      + '<button class="ams-expiry-preview-btn" onclick="amsExpiryToggleSpecialChars(' + i + ',this)">' + (isEn ? 'Special' : '특수문자') + '</button>'
+      + '<button class="ams-expiry-preview-btn" onclick="amsOpenSmsPreview(\'amsExpMsg' + i + '\')">' + (isEn ? 'Preview' : '미리보기') + '</button>'
+      + '</div>'
       + '</div>';
   });
   document.getElementById('amsExpiryCards').innerHTML = html;
@@ -8557,11 +9042,81 @@ function amsExpiryRenderCards(cardId) {
   }
 }
 
+// 만료일 모드 - 특수문자
+var amsExpirySpecialInit = false;
+var amsExpirySpecialTarget = 0;
+function amsExpiryToggleSpecialChars(cardIdx, btnEl) {
+  var el = document.getElementById('amsExpirySpecialChars');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    amsExpirySpecialTarget = cardIdx;
+    el.style.display = '';
+    amsPositionSpecialPopup('amsExpirySpecialChars', btnEl);
+    if (!amsExpirySpecialInit) {
+      amsExpirySpecialInit = true;
+      var grid = document.getElementById('amsExpirySpecialGrid');
+      _amsSpecialChars.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.className = 'cm-special-char-btn';
+        if (c.length > 2) btn.style.fontSize = '10px';
+        btn.textContent = c;
+        btn.onclick = function() {
+          var ta = document.getElementById('amsExpMsg' + amsExpirySpecialTarget);
+          if (ta) {
+            var start = ta.selectionStart, end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + c + ta.value.substring(end);
+            ta.selectionStart = ta.selectionEnd = start + c.length;
+            ta.focus();
+            // 바이트 업데이트
+            var bytes = 0;
+            for (var j = 0; j < ta.value.length; j++) bytes += ta.value.charCodeAt(j) > 127 ? 2 : 1;
+            var type = document.getElementById('amsExpType' + amsExpirySpecialTarget);
+            var limit = (type && type.value === 'sms') ? 85 : 2000;
+            var bytesEl = document.getElementById('amsExpBytes' + amsExpirySpecialTarget);
+            if (bytesEl) bytesEl.textContent = bytes + ' / ' + limit + ' Bytes';
+          }
+          amsCloseSpecialPopup('amsExpirySpecialChars');
+        };
+        grid.appendChild(btn);
+      });
+    }
+  } else {
+    el.style.display = 'none';
+  }
+}
+
 var amsExpiryPage = 1;
+var amsExpiryActiveCard = 0;
+
+function amsExpiryGetType() {
+  var sel = document.getElementById('amsExpType' + amsExpiryActiveCard);
+  return (sel && sel.value) || 'lms';
+}
+
+function amsExpiryTypeChange(cardIdx) {
+  amsExpiryActiveCard = cardIdx;
+  var sel = document.getElementById('amsExpType' + cardIdx);
+  if (!sel) return;
+  var type = sel.value;
+  // 바이트 카운트 업데이트
+  var ta = document.getElementById('amsExpMsg' + cardIdx);
+  var bytesEl = document.getElementById('amsExpBytes' + cardIdx);
+  if (ta && bytesEl) {
+    var bytes = 0;
+    for (var j = 0; j < ta.value.length; j++) bytes += ta.value.charCodeAt(j) > 127 ? 2 : 1;
+    var limit = type === 'sms' ? 85 : 2000;
+    bytesEl.textContent = bytes + ' / ' + limit + ' Bytes';
+  }
+  // 샘플 섹션 업데이트
+  amsExpiryPage = 1;
+  amsExpiryRenderSamples();
+}
+
 function amsExpiryRenderSamples() {
   if (typeof cmSmsSamples === 'undefined') return;
-  var info = cmSmsTypeInfo.lms;
-  var samples = cmSmsSamples.lms;
+  var type = amsExpiryGetType();
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
+  var samples = cmSmsSamples[type] || cmSmsSamples.lms;
   var grid = document.getElementById('amsExpirySmsPreview');
   if (!grid) return;
   grid.innerHTML = '';
@@ -8580,10 +9135,14 @@ function amsExpiryRenderSamples() {
   var tot = document.getElementById('amsExpiryPageTotal');
   if (cur) cur.textContent = amsExpiryPage;
   if (tot) tot.textContent = totalPages;
+  // 라벨 업데이트
+  var label = document.getElementById('amsExpirySampleLabel');
+  if (label) label.textContent = info.label;
 }
 function amsExpiryPageGo(dir) {
-  var samples = cmSmsSamples.lms;
-  var info = cmSmsTypeInfo.lms;
+  var type = amsExpiryGetType();
+  var samples = cmSmsSamples[type] || cmSmsSamples.lms;
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
   var totalPages = Math.max(1, Math.ceil(samples.length / info.perPage));
   if (dir === 'first') amsExpiryPage = 1;
   else if (dir === 'prev') amsExpiryPage = Math.max(1, amsExpiryPage - 1);
@@ -8596,9 +9155,18 @@ function amsExpirySelectSample(e) {
   if (!card) return;
   var body = card.querySelector('.cm-sms-preview-body');
   if (!body) return;
-  // 첫번째 카드에 삽입
-  var ta = document.getElementById('amsExpMsg0');
-  if (ta) ta.value = body.textContent;
+  // 마지막으로 타입 변경한 카드에 삽입
+  var ta = document.getElementById('amsExpMsg' + amsExpiryActiveCard);
+  if (ta) {
+    ta.value = body.textContent;
+    // 바이트 카운트 업데이트
+    var type = amsExpiryGetType();
+    var limit = type === 'sms' ? 85 : 2000;
+    var bytes = 0;
+    for (var j = 0; j < ta.value.length; j++) bytes += ta.value.charCodeAt(j) > 127 ? 2 : 1;
+    var bytesEl = document.getElementById('amsExpBytes' + amsExpiryActiveCard);
+    if (bytesEl) bytesEl.textContent = bytes + ' / ' + limit + ' Bytes';
+  }
 }
 
 // ── 방문 감사 모드 (vt1, vt2) ──
@@ -8628,11 +9196,15 @@ function amsVtPreview() {
   alert(msg || '미리보기할 내용이 없습니다.');
 }
 
+function amsVtGetType() { var s = document.getElementById('amsVtMsgType'); return (s && s.value) || 'lms'; }
+function amsVtTypeChange() { amsVtUpdateBytes(); amsVtPage = 1; amsVtRenderSamples(); }
+
 function amsVtRenderSamples() {
   var grid = document.getElementById('amsVtSmsPreview');
   if (!grid) return;
   grid.innerHTML = '';
-  var info = cmSmsTypeInfo.lms;
+  var type = amsVtGetType();
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
   var start = (amsVtPage - 1) * info.perPage;
   vtSamples.slice(start, start + info.perPage).forEach(function(text) {
     var bytes = cmCalcBytes(text);
@@ -8645,10 +9217,13 @@ function amsVtRenderSamples() {
   var totalPages = Math.max(1, Math.ceil(vtSamples.length / info.perPage));
   document.getElementById('amsVtPageCur').textContent = amsVtPage;
   document.getElementById('amsVtPageTotal').textContent = totalPages;
+  var label = document.getElementById('amsVtSampleLabel');
+  if (label) label.textContent = info.label;
 }
 
 function amsVtPageGo(dir) {
-  var info = cmSmsTypeInfo.lms;
+  var type = amsVtGetType();
+  var info = cmSmsTypeInfo[type] || cmSmsTypeInfo.lms;
   var totalPages = Math.max(1, Math.ceil(vtSamples.length / info.perPage));
   if (dir === 'first') amsVtPage = 1;
   else if (dir === 'prev') amsVtPage = Math.max(1, amsVtPage - 1);
@@ -8753,6 +9328,8 @@ document.addEventListener('click', function(e) {
 });
 
 // 샘플
+function amsAcTypeChange() { amsAcUpdateBytes(); amsAcPage = 1; amsAcRenderSamples(); }
+
 function amsAcRenderSamples() {
   var grid = document.getElementById('amsAcSmsPreview');
   if (!grid) return;
@@ -8771,6 +9348,8 @@ function amsAcRenderSamples() {
   var totalPages = Math.max(1, Math.ceil(acSamples.length / info.perPage));
   document.getElementById('amsAcPageCur').textContent = amsAcPage;
   document.getElementById('amsAcPageTotal').textContent = totalPages;
+  var label = document.getElementById('amsAcSampleLabel');
+  if (label) label.textContent = info.label;
 }
 function amsAcPageGo(dir) {
   var type = document.getElementById('amsAcMsgType').value;
@@ -8828,6 +9407,8 @@ function amsBdGradeToggle(el) {
   document.getElementById('amsBdGradeChecks').style.display = isOn ? 'none' : '';
 }
 
+function amsBdTypeChange() { amsBdUpdateBytes(); amsBdPage = 1; amsBdRenderSamples(); }
+
 function amsBdRenderSamples() {
   var grid = document.getElementById('amsBdSmsPreview');
   if (!grid) return;
@@ -8846,6 +9427,8 @@ function amsBdRenderSamples() {
   var totalPages = Math.max(1, Math.ceil(bdSamples.length / info.perPage));
   document.getElementById('amsBdPageCur').textContent = amsBdPage;
   document.getElementById('amsBdPageTotal').textContent = totalPages;
+  var label = document.getElementById('amsBdSampleLabel');
+  if (label) label.textContent = info.label;
 }
 function amsBdPageGo(dir) {
   var type = document.getElementById('amsBdMsgType').value;
@@ -8867,3 +9450,253 @@ function amsBdSelectSample(e) {
 }
 
 // ══ [FEAT-AUTO-MSG] END ══
+
+// ══════════════════════════════════════════════════════════════════
+// [FEAT-SENDER-NUMBER] 문자 발신번호 설정
+// ══════════════════════════════════════════════════════════════════
+
+function openSenderNumberSetup() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('senderNumberView').classList.add('show');
+  // 메인 뷰로 리셋
+  document.getElementById('snMainView').style.display = '';
+  document.getElementById('snGuideView').style.display = 'none';
+  snShopNameInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function snShowGuide() {
+  document.getElementById('snMainView').style.display = 'none';
+  document.getElementById('snGuideView').style.display = '';
+}
+
+function snBackToMain() {
+  document.getElementById('snGuideView').style.display = 'none';
+  document.getElementById('snMainView').style.display = '';
+}
+
+// 툴팁 외부 클릭 닫기
+document.addEventListener('click', function(e) {
+  var wrap = document.querySelector('.sn-avail-tooltip-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    wrap.classList.remove('show');
+  }
+  var carrierWrap = document.querySelector('.sn-carrier-tooltip-wrap.show');
+  if (carrierWrap && !carrierWrap.contains(e.target)) {
+    carrierWrap.classList.remove('show');
+  }
+});
+
+function snVerifyNumber() {
+  var input = document.getElementById('snNumberInput');
+  var val = input.value.trim();
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!val) {
+    alert(isEn ? 'Please enter a sender number.' : '발신번호를 입력하세요.');
+    input.focus();
+    return;
+  }
+  // 유효성 검사: 등록 가능한 번호 패턴
+  var patterns = [
+    /^01[016789]\d{7,8}$/,           // 휴대폰
+    /^0[2-6]\d{7,8}$/,               // 유선전화 (지역번호 포함)
+    /^(15|16|18)\d{6}$/,             // 전국대표번호 8자리
+    /^0[3-7]0\d{7,8}$/               // 0N0 번호 (030, 050, 070 등)
+  ];
+  var isValid = patterns.some(function(p) { return p.test(val); });
+  if (!isValid) {
+    alert(isEn
+      ? 'Invalid number format. Please check the available number types.'
+      : '등록 가능한 번호 형식이 아닙니다.\n\n- 휴대폰\n- 유선전화 (앞에 지역번호 필요)\n- 전국대표번호 (15YY,16YY,18YY) 8자리\n- 0N0 번호 (030, 050, 070 등)');
+    input.focus();
+    return;
+  }
+  // 인증 방법 영역 표시
+  document.getElementById('snAuthSection').style.display = '';
+  snAuthMethodChange();
+}
+
+function snAuthMethodChange() {
+  var selected = document.querySelector('input[name="snAuthMethod"]:checked');
+  var phoneRow = document.getElementById('snPhoneVerifyRow');
+  var docSection = document.getElementById('snDocVerifySection');
+  if (selected && selected.value === 'phone') {
+    phoneRow.style.display = '';
+    docSection.style.display = 'none';
+  } else {
+    phoneRow.style.display = 'none';
+    docSection.style.display = '';
+  }
+}
+
+function snDocMethodChange() {
+  var method = document.querySelector('input[name="snDocMethod"]:checked');
+  var val = method ? method.value : 'file';
+  document.getElementById('snDocFileSection').style.display = val === 'file' ? '' : 'none';
+  document.getElementById('snDocFaxSection').style.display = val === 'fax' ? '' : 'none';
+  document.getElementById('snDocEmailSection').style.display = val === 'email' ? '' : 'none';
+}
+
+function snDocFileSelected(input) {
+  var nameEl = document.getElementById('snDocFileName');
+  if (input.files && input.files.length > 0) {
+    var file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+      alert(isEn ? 'File must be under 5MB.' : '5MB 이하의 파일만 등록 가능합니다.');
+      input.value = '';
+      nameEl.style.display = 'none';
+      return;
+    }
+    nameEl.textContent = file.name;
+    nameEl.style.display = '';
+  } else {
+    nameEl.style.display = 'none';
+  }
+}
+
+function snDocSubmit() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var method = document.querySelector('input[name="snDocMethod"]:checked');
+  if (method && method.value === 'file') {
+    var fileInput = document.getElementById('snDocFileInput');
+    if (!fileInput.files || fileInput.files.length === 0) {
+      alert(isEn ? 'Please attach a file.' : '파일을 첨부해주세요.');
+      return;
+    }
+  }
+  alert(isEn ? 'Document verification request has been submitted.' : '서류인증 신청이 완료되었습니다.');
+}
+
+function snDocCancel() {
+  document.getElementById('snDocVerifySection').style.display = 'none';
+  document.querySelector('input[name="snAuthMethod"][value="phone"]').checked = true;
+  document.getElementById('snPhoneVerifyRow').style.display = '';
+}
+
+function snSubmitPhoneVerify() {
+  var name = document.getElementById('snPhoneVerifyCode').value.trim();
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!name) {
+    alert(isEn ? 'Please enter your name.' : '이름을 입력해주세요.');
+    document.getElementById('snPhoneVerifyCode').focus();
+    return;
+  }
+  // PASS 본인인증 팝업 표시
+  document.getElementById('snPassPopup').style.display = '';
+  // 초기화
+  document.getElementById('snPassAgreeAll').checked = false;
+  document.querySelectorAll('.sn-pass-agree-check').forEach(function(c) { c.checked = false; });
+  document.getElementById('snPassSubmitBtn').disabled = true;
+  document.querySelectorAll('.sn-pass-carrier').forEach(function(b) { b.classList.remove('selected'); });
+}
+
+function snClosePassPopup() {
+  document.getElementById('snPassPopup').style.display = 'none';
+}
+
+function snSelectCarrier(carrier) {
+  document.querySelectorAll('.sn-pass-carrier').forEach(function(b) { b.classList.remove('selected'); });
+  event.currentTarget.classList.add('selected');
+}
+
+function snPassToggleAll() {
+  var allChecked = document.getElementById('snPassAgreeAll').checked;
+  document.querySelectorAll('.sn-pass-agree-check').forEach(function(c) { c.checked = allChecked; });
+  snPassUpdateSubmit();
+}
+
+function snPassCheckAgree() {
+  var checks = document.querySelectorAll('.sn-pass-agree-check');
+  var allChecked = Array.from(checks).every(function(c) { return c.checked; });
+  document.getElementById('snPassAgreeAll').checked = allChecked;
+  snPassUpdateSubmit();
+}
+
+function snPassUpdateSubmit() {
+  var checks = document.querySelectorAll('.sn-pass-agree-check');
+  var allChecked = Array.from(checks).every(function(c) { return c.checked; });
+  document.getElementById('snPassSubmitBtn').disabled = !allChecked;
+}
+
+function snPassSubmit() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var selected = document.querySelector('.sn-pass-carrier.selected');
+  if (!selected) {
+    alert(isEn ? 'Please select a carrier.' : '통신사를 선택해주세요.');
+    return;
+  }
+  snClosePassPopup();
+  alert(isEn ? 'PASS verification completed.' : 'PASS 인증이 완료되었습니다.');
+}
+
+function snShowCertPopup(carrier) {
+  var img = document.getElementById('snCertImage');
+  img.src = 'images/' + carrier + '.png';
+  document.getElementById('snCertPopup').style.display = '';
+}
+
+function snCloseCertPopup() {
+  document.getElementById('snCertPopup').style.display = 'none';
+}
+
+// 매장명 수정/저장/취소
+var snShopNameBackup = '';
+function snShopNameInit() {
+  var shopNameEl = document.querySelector('.nav-shop-name');
+  var input = document.getElementById('snKakaoShopName');
+  if (shopNameEl && input) {
+    var name = shopNameEl.textContent.trim();
+    input.value = name;
+    var titleName = document.getElementById('snAlimTitleName');
+    var storeName = document.getElementById('snAlimStoreName');
+    if (titleName) titleName.textContent = name;
+    if (storeName) storeName.textContent = name;
+  }
+}
+function snShopNameEdit() {
+  var input = document.getElementById('snKakaoShopName');
+  snShopNameBackup = input.value;
+  input.disabled = false;
+  input.focus();
+  document.getElementById('snShopEditBtn').style.display = 'none';
+  document.getElementById('snShopSaveBtn').style.display = '';
+  document.getElementById('snShopCancelBtn').style.display = '';
+}
+function snShopNameSave() {
+  var input = document.getElementById('snKakaoShopName');
+  var val = input.value.trim();
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!val) {
+    alert(isEn ? 'Please enter a store name.' : '매장명을 입력해주세요.');
+    input.focus();
+    return;
+  }
+  input.disabled = true;
+  document.getElementById('snShopEditBtn').style.display = '';
+  document.getElementById('snShopSaveBtn').style.display = 'none';
+  document.getElementById('snShopCancelBtn').style.display = 'none';
+  // 미리보기 업데이트
+  var titleName = document.getElementById('snAlimTitleName');
+  var storeName = document.getElementById('snAlimStoreName');
+  if (titleName) titleName.textContent = val;
+  if (storeName) storeName.textContent = val;
+  alert(isEn ? 'Store name has been saved.' : '매장명이 저장되었습니다.');
+}
+function snShopNameCancel() {
+  var input = document.getElementById('snKakaoShopName');
+  input.value = snShopNameBackup;
+  input.disabled = true;
+  document.getElementById('snShopEditBtn').style.display = '';
+  document.getElementById('snShopSaveBtn').style.display = 'none';
+  document.getElementById('snShopCancelBtn').style.display = 'none';
+}
+
+function snShowAlimPreview() {
+  // 데모: 알림톡 미리보기
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  alert(isEn ? 'KakaoTalk notification preview.' : '알림톡 발송 예시 미리보기');
+}
+
+// ══ [FEAT-SENDER-NUMBER] END ══

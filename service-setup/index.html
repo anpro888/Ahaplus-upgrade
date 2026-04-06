@@ -172,8 +172,7 @@
         <div class="mega-col-title" data-i18n="gnb.clients.msg_cat" data-ko="문자 설정" data-en="MESSAGES">문자 설정</div>
         <div class="mega-col-item" onclick="openMsgHistory()"><span class="mci" style="background:#E0F7FA;"><svg viewBox="0 0 20 20" fill="none" stroke="#00ACC1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M7 8h6M7 11h4"/></svg></span><span data-i18n="gnb.clients.msg_history" data-ko="문자 발송 내역" data-en="Messages History">문자 발송 내역</span></div>
         <div class="mega-col-item" onclick="openAutoMsgSetup()"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><circle cx="10" cy="9" r="2"/><path d="M10 7v-1M10 12v-1"/></svg></span><span data-i18n="gnb.clients.msg_auto" data-ko="문자 자동 발송 설정" data-en="Setup Automatic Messaging">문자 자동 발송 설정</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 7h4M8 10h4M8 13h2"/></svg></span><span data-i18n="gnb.clients.msg_sender" data-ko="문자 발신번호 설정" data-en="Sender Number Setup">문자 발신번호 설정</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M8 8l2 2 3-3"/></svg></span><span data-i18n="gnb.clients.kakao" data-ko="카카오톡(알림톡) 설정" data-en="Setup KakaoTalk">카카오톡(알림톡) 설정</span></div>
+        <div class="mega-col-item" onclick="openSenderNumberSetup()"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M8 8l2 2 3-3"/></svg></span><span data-i18n="gnb.clients.sender_setup" data-ko="발신 정보 설정" data-en="Sender Info Settings">발신 정보 설정</span></div>
       </div>
     </div>
   </div>
@@ -4637,6 +4636,7 @@
     <div class="cst-modal-body">
       <div class="cst-modal-preview">
         <div class="cst-kakao-preview">
+          <span class="cst-kakao-badge">kakao</span>
           <div class="cst-kakao-bubble">
             <span class="cst-kakao-msg-title" data-i18n="sv.consent_kakao_title" data-ko="■ 동의서 작성 안내 ■" data-en="Consent Form Notice">■ 동의서 작성 안내 ■</span>
             <div class="cst-kakao-msg-body" id="cstKakaoPreviewText" style="pointer-events:none;"></div>
@@ -4663,6 +4663,7 @@
       <div class="cst-alt-cards">
         <div class="cst-alt-card" onclick="cstSelectKakaoTemplate(0)">
           <div class="cst-kakao-preview">
+            <span class="cst-kakao-badge">kakao</span>
             <div class="cst-kakao-bubble">
               <span class="cst-kakao-msg-title">■ 동의서 작성 안내 ■</span>
               <div class="cst-kakao-msg-body" style="pointer-events:none;font-size:12px;">안녕하세요. ((매장명)) 입니다.
@@ -4675,6 +4676,7 @@
         </div>
         <div class="cst-alt-card" onclick="cstSelectKakaoTemplate(1)">
           <div class="cst-kakao-preview">
+            <span class="cst-kakao-badge">kakao</span>
             <div class="cst-kakao-bubble">
               <span class="cst-kakao-msg-title">■ 동의서 작성 안내 ■</span>
               <div class="cst-kakao-msg-body" style="pointer-events:none;font-size:12px;">안녕하세요. ((성명)) 고객님, ((매장명)) 입니다.
@@ -4688,7 +4690,7 @@
       </div>
     </div>
     <div class="cst-modal-footer">
-      <button class="cst-modal-btn-outline" onclick="cstCloseModal('cstKakaoAltModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('cstKakaoAltModal')" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
     </div>
   </div>
 </div>
@@ -4696,7 +4698,7 @@
 <div class="cst-modal-overlay" id="cstSmsPreviewModal" onclick="if(event.target===this)cstCloseModal('cstSmsPreviewModal')">
   <div class="cst-modal">
     <div class="cst-modal-header">
-      <h3 class="cst-modal-title" data-i18n="sv.consent_sms_preview" data-ko="SMS 미리보기" data-en="SMS Preview">SMS 미리보기</h3>
+      <h3 class="cst-modal-title" data-i18n="sv.consent_sms_preview" data-ko="문자 미리보기" data-en="Message Preview">문자 미리보기</h3>
       <button class="cst-modal-close" onclick="cstCloseModal('cstSmsPreviewModal')">✕</button>
     </div>
     <div class="cst-modal-body">
@@ -4744,7 +4746,7 @@
       </div>
     </div>
     <div class="cst-modal-footer">
-      <button class="cst-modal-btn-outline" onclick="cstCloseModal('cstSmsAltModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('cstSmsAltModal')" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
     </div>
   </div>
 </div>
@@ -4809,8 +4811,7 @@
                 <span id="drsShopPhoneDisplay"></span>
               </div>
               <div class="drs-shop-links">
-                <a class="drs-shop-link" data-i18n="sv.drs_change_name" data-ko="매장명 수정/ 변경 >" data-en="Shop name Add / Edit >">매장명 수정/ 변경 ></a>
-                <a class="drs-shop-link" data-i18n="sv.drs_change_phone" data-ko="매장 연락처 등록/ 변경 >" data-en="Phone number Add / Edit >">매장 연락처 등록/ 변경 ></a>
+                <a class="drs-shop-link" href="javascript:void(0)" onclick="openSenderNumberSetup()" data-i18n="sv.drs_change_sender" data-ko="매장명·매장 연락처 등록/변경 >" data-en="Shop Name & Phone Register / Edit >">매장명·매장 연락처 등록/변경 ></a>
               </div>
               <div class="drs-notes">
                 <span class="drs-note" data-i18n="sv.drs_note_name" data-ko="• 매장명은 알림톡 설정에 등록된 매장명이 사용됩니다." data-en="* Shop name uses the store name registered in Setup KakaoTalk.">• 매장명은 알림톡 설정에 등록된 매장명이 사용됩니다.</span>
@@ -5440,7 +5441,6 @@
         </select>
       </div>
       <button class="ach-search-btn" onclick="achSearch()">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
         <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
       </button>
     </div>
@@ -6398,8 +6398,10 @@
 
 <!-- ══ [FEAT-AUTO-MSG] 문자 자동 발송 설정 페이지 START ══ -->
 <div id="autoMsgSetupView">
-  <div class="mh-header">
-    <h3 data-i18n="ams.title" data-ko="문자 자동 발송 설정" data-en="Setup Automatic Messaging">문자 자동 발송 설정</h3>
+  <div class="mh-header-bar">
+    <div class="mh-header">
+      <h3 data-i18n="ams.title" data-ko="문자 자동 발송 설정" data-en="Setup Automatic Messaging">문자 자동 발송 설정</h3>
+    </div>
   </div>
   <div class="mh-body">
     <!-- 안내 -->
@@ -6410,7 +6412,7 @@
     <div class="ams-sender-row">
       <span class="ams-sender-label" data-i18n="ams.sender" data-ko="발신번호" data-en="Sender Number">발신번호</span>
       <b>010-1234-5678</b>
-      <button class="ams-sender-btn" onclick="alert('발신번호 설정')" data-i18n="ams.btn_setting" data-ko="설정" data-en="Settings">설정</button>
+      <button class="ams-sender-btn" onclick="openSenderNumberSetup()" data-i18n="ams.btn_setting" data-ko="설정" data-en="Settings">설정</button>
     </div>
     <!-- 1 Depth 탭 -->
     <div class="ams-tabs" id="amsTabs">
@@ -6487,6 +6489,7 @@
         <label class="ams-form-label" data-ko="메세지 내용" data-en="Message Content">메세지 내용</label>
         <textarea class="ams-form-textarea" id="amsNewMessage" placeholder="메세지 내용을 입력하세요" data-i18n-ph-ko="메세지 내용을 입력하세요" data-i18n-ph-en="Enter message content"></textarea>
         <div class="ams-form-byte"><span id="amsNewBytes">0</span> / 2000 Bytes</div>
+        <button class="cst-preview-btn" style="margin-top:6px;width:100%;height:30px;" onclick="amsNewToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
       </div>
     </div>
     <div class="cst-modal-footer">
@@ -6551,6 +6554,7 @@
                 <div class="cst-sms-byte-count"><span id="amsEditBytes">0</span> / <span id="amsEditByteLimit">85</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
+                <button class="cst-preview-btn" onclick="amsEditSmsToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
                 <button class="cst-preview-btn" onclick="amsEditPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
                 <button class="cst-alt-phrase-btn" onclick="amsEditOtherMsg()" data-ko="다른 문구 선택" data-en="Other Message">다른 문구 선택</button>
               </div>
@@ -6582,8 +6586,8 @@
             </div>
           </div>
           <div class="cst-kakao-btns">
-            <button class="cst-preview-btn" data-ko="미리보기" data-en="Preview">미리보기</button>
-            <button class="cst-alt-phrase-btn" data-ko="다른 문구 선택" data-en="Samples">다른 문구 선택</button>
+            <button class="cst-preview-btn" onclick="amsEditAlimPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
+            <button class="cst-alt-phrase-btn" onclick="amsEditAlimOtherMsg()" data-ko="다른 문구 선택" data-en="Samples">다른 문구 선택</button>
           </div>
         </div>
         <!-- 중+우: 알림톡 발송 실패시 문자 발송 + 전환문자 (통합 패널) -->
@@ -6624,8 +6628,9 @@
                 <div class="cst-sms-byte-count"><span id="amsEditFallbackBytes">0</span> / <span id="amsEditFallbackByteLimit">2000</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
-                <button class="cst-preview-btn" data-ko="미리보기" data-en="Preview">미리보기</button>
-                <button class="cst-alt-phrase-btn" data-ko="다른 문구 선택" data-en="Samples">다른 문구 선택</button>
+                <button class="cst-preview-btn" onclick="amsFallbackToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
+                <button class="cst-preview-btn" onclick="amsEditFallbackPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
+                <button class="cst-alt-phrase-btn" onclick="amsEditFallbackOtherMsg()" data-ko="다른 문구 선택" data-en="Samples">다른 문구 선택</button>
               </div>
             </div>
           </div>
@@ -6650,7 +6655,7 @@
             <div class="cst-sms-body">
               <div class="cst-sms-type-row">
                 <span class="cst-sms-type-label" data-ko="문자유형" data-en="Type">문자유형</span>
-                <select class="cst-sms-type-select" id="amsDepositMsgType">
+                <select class="cst-sms-type-select" id="amsDepositMsgType" onchange="amsDepositTypeChange()">
                   <option value="sms">SMS</option>
                   <option value="lms" selected>LMS</option>
                 </select>
@@ -6674,7 +6679,8 @@
                 <div class="cst-sms-byte-count"><span id="amsDepositBytes">0</span> / <span id="amsDepositByteLimit">2000</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
-                <button class="cst-preview-btn" data-ko="미리보기" data-en="Preview">미리보기</button>
+                <button class="cst-preview-btn" onclick="amsDepositToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
+                <button class="cst-preview-btn" onclick="amsDepositPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
               </div>
             </div>
           </div>
@@ -6696,7 +6702,7 @@
         <div class="cm-sms-panel">
           <div class="cm-sms-bottom">
             <div class="cm-sms-bottom-right" style="width:100%;">
-              <div class="cm-sms-section-title"><span style="color:#6161FF;">LMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
+              <div class="cm-sms-section-title"><span id="amsDepositSampleLabel" style="color:#6161FF;">LMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
               <div class="cm-sms-preview-grid" id="amsDepositSmsPreview" onclick="amsDepositSelectSample(event)"></div>
               <div class="cm-sms-preview-paging">
                 <span data-ko="페이지" data-en="Page">페이지</span> <b id="amsDepositPageTotal">1</b> <span data-ko="의" data-en="of">의</span> <b id="amsDepositPageCur">1</b>
@@ -6740,7 +6746,7 @@
             <div class="cst-sms-body">
               <div class="cst-sms-type-row">
                 <span class="cst-sms-type-label" data-ko="문자유형" data-en="Type">문자유형</span>
-                <select class="cst-sms-type-select" id="amsVtMsgType" onchange="amsVtUpdateBytes()">
+                <select class="cst-sms-type-select" id="amsVtMsgType" onchange="amsVtTypeChange()">
                   <option value="sms">SMS</option>
                   <option value="lms" selected>LMS</option>
                 </select>
@@ -6764,6 +6770,7 @@
                 <div class="cst-sms-byte-count"><span id="amsVtBytes">0</span> / <span id="amsVtByteLimit">2000</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
+                <button class="cst-preview-btn" onclick="amsVtToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
                 <button class="cst-preview-btn" onclick="amsVtPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
               </div>
             </div>
@@ -6786,7 +6793,7 @@
         <div class="cm-sms-panel">
           <div class="cm-sms-bottom">
             <div class="cm-sms-bottom-right" style="width:100%;">
-              <div class="cm-sms-section-title"><span style="color:#6161FF;">LMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
+              <div class="cm-sms-section-title"><span id="amsVtSampleLabel" style="color:#6161FF;">LMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
               <div class="cm-sms-preview-grid" id="amsVtSmsPreview" onclick="amsVtSelectSample(event)"></div>
               <div class="cm-sms-preview-paging">
                 <span data-ko="페이지" data-en="Page">페이지</span> <b id="amsVtPageTotal">1</b> <span data-ko="의" data-en="of">의</span> <b id="amsVtPageCur">1</b>
@@ -6804,10 +6811,10 @@
     <!-- ═══ 시술 후 관리 / 재방문 유도 모드 ═══ -->
     <div class="ams-edit-deposit-mode" id="amsEditAftercareMode" style="display:none;">
       <!-- 설정 바: 등록 기준 라디오 + 발송 대상 분류, 발송일, 발송 시각 -->
-      <div class="ams-edit-setting-bar" style="flex-wrap:wrap;">
-        <label class="ams-form-radio"><input type="radio" name="amsAcBasis" value="all" checked onchange="amsAcToggleBasis()"><span data-ko="모든 판매에 동일 적용" data-en="Apply to all sales">모든 판매에 동일 적용</span></label>
-        <label class="ams-form-radio"><input type="radio" name="amsAcBasis" value="by_category" onchange="amsAcToggleBasis()"><span data-ko="서비스 분류에 따라 다르게 적용" data-en="Apply differently by category">서비스 분류에 따라 다르게 적용</span></label>
-        <span class="ams-edit-setting-label" data-ko="발송 대상 분류" data-en="Target Category" style="margin-left:16px;">발송 대상 분류</span>
+      <div class="ams-edit-setting-bar">
+        <label class="ams-form-radio ams-ac-basis-item" style="display:none;"><input type="radio" name="amsAcBasis" value="all" checked onchange="amsAcToggleBasis()"><span data-ko="모든 판매에 동일 적용" data-en="Apply to all sales">모든 판매에 동일 적용</span></label>
+        <label class="ams-form-radio ams-ac-basis-item" style="display:none;"><input type="radio" name="amsAcBasis" value="by_category" onchange="amsAcToggleBasis()"><span data-ko="서비스 분류에 따라 다르게 적용" data-en="Apply differently by category">서비스 분류에 따라 다르게 적용</span></label>
+        <span class="ams-edit-setting-label" data-ko="발송 대상 분류" data-en="Target Category">발송 대상 분류</span>
         <div class="ams-ac-category-wrap" id="amsAcCategoryWrap">
           <div class="ams-multi-select" onclick="amsAcToggleMultiDrop()">
             <span class="ams-multi-placeholder" id="amsAcMultiPlaceholder" data-ko="선택하세요" data-en="Select">선택하세요</span>
@@ -6828,8 +6835,8 @@
         <label class="ams-form-radio ams-ac-target-item" style="display:none;"><input type="radio" name="amsAcTarget" value="all" checked><span data-ko="전체 고객" data-en="All Clients">전체 고객</span></label>
         <label class="ams-form-radio ams-ac-target-item" style="display:none;"><input type="radio" name="amsAcTarget" value="first"><span data-ko="첫방문 고객" data-en="First Visit">첫방문 고객</span></label>
         <label class="ams-form-radio ams-ac-target-item" style="display:none;"><input type="radio" name="amsAcTarget" value="return"><span data-ko="재방문 고객" data-en="Returning">재방문 고객</span></label>
-        <!-- 발송일 / 발송 시각 (같은 박스, 줄바꿈) -->
-        <div class="ams-ac-row-break"></div>
+        <!-- 발송일 / 발송 시각 -->
+        <div class="ams-ac-row-break ams-ac-revisit-break" style="display:none;"></div>
         <span class="ams-edit-setting-label" data-ko="발송일" data-en="Send Date">발송일</span>
         <span data-ko="방문" data-en="Visit" style="font-size:13px;color:#616161;">방문</span>
         <select class="ams-vt-select" id="amsAcSendDay">
@@ -6848,7 +6855,7 @@
           <option value="330">330 일 후</option><option value="360">360 일 후</option><option value="390">390 일 후</option><option value="420">420 일 후</option>
           <option value="450">450 일 후</option><option value="480">480 일 후</option><option value="510">510 일 후</option><option value="540">540 일 후</option>
         </select>
-        <span class="ams-edit-setting-label" data-ko="발송 시각" data-en="Send Time" style="margin-left:24px;">발송 시각</span>
+        <span class="ams-edit-setting-label" data-ko="발송 시각" data-en="Send Time" style="margin-left:16px;">발송 시각</span>
         <select class="ams-vt-select" id="amsAcSendHour">
           <option value="08">08</option><option value="09">09</option><option value="10" selected>10</option><option value="11">11</option><option value="12">12</option>
           <option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option>
@@ -6867,7 +6874,7 @@
             <div class="cst-sms-body">
               <div class="cst-sms-type-row">
                 <span class="cst-sms-type-label" data-ko="문자유형" data-en="Type">문자유형</span>
-                <select class="cst-sms-type-select" id="amsAcMsgType" onchange="amsAcUpdateBytes()">
+                <select class="cst-sms-type-select" id="amsAcMsgType" onchange="amsAcTypeChange()">
                   <option value="sms" selected>SMS</option>
                   <option value="lms">LMS</option>
                 </select>
@@ -6891,6 +6898,7 @@
                 <div class="cst-sms-byte-count"><span id="amsAcBytes">0</span> / <span id="amsAcByteLimit">85</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
+                <button class="cst-preview-btn" onclick="amsAcToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
                 <button class="cst-preview-btn" onclick="amsAcPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
               </div>
             </div>
@@ -6913,7 +6921,7 @@
         <div class="cm-sms-panel">
           <div class="cm-sms-bottom">
             <div class="cm-sms-bottom-right" style="width:100%;">
-              <div class="cm-sms-section-title"><span style="color:#6161FF;">SMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
+              <div class="cm-sms-section-title"><span id="amsAcSampleLabel" style="color:#6161FF;">SMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
               <div class="cm-sms-preview-grid" id="amsAcSmsPreview" onclick="amsAcSelectSample(event)"></div>
               <div class="cm-sms-preview-paging">
                 <span data-ko="페이지" data-en="Page">페이지</span> <b id="amsAcPageTotal">1</b> <span data-ko="의" data-en="of">의</span> <b id="amsAcPageCur">1</b>
@@ -6971,7 +6979,7 @@
             <div class="cst-sms-body">
               <div class="cst-sms-type-row">
                 <span class="cst-sms-type-label" data-ko="문자유형" data-en="Type">문자유형</span>
-                <select class="cst-sms-type-select" id="amsBdMsgType" onchange="amsBdUpdateBytes()">
+                <select class="cst-sms-type-select" id="amsBdMsgType" onchange="amsBdTypeChange()">
                   <option value="sms" selected>SMS</option>
                   <option value="lms">LMS</option>
                 </select>
@@ -6994,6 +7002,7 @@
                 <div class="cst-sms-byte-count"><span id="amsBdBytes">0</span> / <span id="amsBdByteLimit">85</span> Bytes</div>
               </div>
               <div class="cst-kakao-btns" style="margin-top:8px;">
+                <button class="cst-preview-btn" onclick="amsBdToggleSpecialChars(this)" data-ko="특수문자" data-en="Special">특수문자</button>
                 <button class="cst-preview-btn" onclick="amsBdPreview()" data-ko="미리보기" data-en="Preview">미리보기</button>
               </div>
             </div>
@@ -7016,7 +7025,7 @@
         <div class="cm-sms-panel">
           <div class="cm-sms-bottom">
             <div class="cm-sms-bottom-right" style="width:100%;">
-              <div class="cm-sms-section-title"><span style="color:#6161FF;">SMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
+              <div class="cm-sms-section-title"><span id="amsBdSampleLabel" style="color:#6161FF;">SMS</span> <span data-ko="추천 문자 샘플" data-en="Recommended SMS Samples">추천 문자 샘플</span></div>
               <div class="cm-sms-preview-grid" id="amsBdSmsPreview" onclick="amsBdSelectSample(event)"></div>
               <div class="cm-sms-preview-paging">
                 <span data-ko="페이지" data-en="Page">페이지</span> <b id="amsBdPageTotal">1</b> <span data-ko="의" data-en="of">의</span> <b id="amsBdPageCur">1</b>
@@ -7089,11 +7098,13 @@
 
 <!-- ══ [FEAT-MSG-HISTORY] 문자 발송 내역 페이지 START ══ -->
 <div id="msgHistoryView">
-  <div class="mh-header">
-    <h3 data-i18n="mh.title" data-ko="문자 발송내역" data-en="Text Messages History">문자 발송내역</h3>
-    <div class="mh-header-actions">
-      <button class="mh-action-btn primary" onclick="openMhSmsSendModal()" data-i18n="mh.btn_send" data-ko="문자 발송" data-en="Send New Message">문자 발송</button>
-      <button class="mh-action-btn outline" onclick="openSmsRejectView()" data-i18n="mh.btn_reject" data-ko="수신거부 내역" data-en="Text Unsubscribes History">수신거부 내역</button>
+  <div class="mh-header-bar">
+    <div class="mh-header">
+      <h3 data-i18n="mh.title" data-ko="문자 발송내역" data-en="Text Messages History">문자 발송내역</h3>
+      <div class="mh-header-actions">
+        <button class="mh-action-btn primary" onclick="openMhSmsSendModal()" data-i18n="mh.btn_send" data-ko="문자 발송" data-en="Send New Message">문자 발송</button>
+        <button class="mh-action-btn outline" onclick="openSmsRejectView()" data-i18n="mh.btn_reject" data-ko="수신거부 내역" data-en="Text Unsubscribes History">수신거부 내역</button>
+      </div>
     </div>
   </div>
   <div class="mh-body">
@@ -7112,7 +7123,7 @@
           <option value="KAO">KAO</option>
         </select>
       </div>
-      <button class="mh-btn-search" onclick="mhSearch()" data-i18n="common.search" data-ko="검색" data-en="Search"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg> 검색</button>
+      <button class="mh-btn-search" onclick="mhSearch()" data-i18n="common.search" data-ko="검색" data-en="Search">검색</button>
     </div>
     <div class="mh-table-wrap">
       <table class="mh-table">
@@ -7154,18 +7165,22 @@
 
 <!-- ══ [FEAT-SMS-REJECT] 수신거부 내역 페이지 START ══ -->
 <div id="smsRejectView">
-  <div class="mh-header">
-    <h3 data-i18n="mh.reject_title" data-ko="수신거부 내역" data-en="Text Unsubscribes History">수신거부 내역</h3>
-    <div class="mh-header-actions">
-      <button class="mh-action-btn outline" onclick="backToMsgHistory()" data-i18n="mh.btn_back_history" data-ko="문자 발송내역" data-en="Text Messages History">문자 발송내역</button>
+  <div class="mh-header-bar">
+    <div class="mh-header">
+      <h3 data-i18n="mh.reject_title" data-ko="수신거부 내역" data-en="Text Unsubscribes History">수신거부 내역</h3>
+      <div class="mh-header-actions">
+        <button class="mh-action-btn outline" onclick="backToMsgHistory()" data-i18n="mh.btn_back_history" data-ko="문자 발송내역" data-en="Text Messages History">문자 발송내역</button>
+      </div>
     </div>
   </div>
   <div class="mh-body">
-    <div class="mh-reject-radio-group">
-      <label class="mh-radio-label"><input type="radio" name="mhRejectType" value="sms" checked onchange="mhSwitchRejectType('sms')"><span data-i18n="mh.reject_sms" data-ko="문자수신거부 고객" data-en="Text Unsubscribe Clients">문자수신거부 고객</span></label>
-      <label class="mh-radio-label"><input type="radio" name="mhRejectType" value="080" onchange="mhSwitchRejectType('080')"><span data-i18n="mh.reject_080" data-ko="080수신거부고객" data-en="080 Text Unsubscribe Clients">080수신거부고객</span></label>
+    <div class="mh-filter">
+      <div class="mh-filter-group">
+        <label class="mh-radio-label"><input type="radio" name="mhRejectType" value="sms" checked onchange="mhSwitchRejectType('sms')"><span data-i18n="mh.reject_sms" data-ko="문자수신거부 고객" data-en="Text Unsubscribe Clients">문자수신거부 고객</span></label>
+        <label class="mh-radio-label"><input type="radio" name="mhRejectType" value="080" onchange="mhSwitchRejectType('080')"><span data-i18n="mh.reject_080" data-ko="080수신거부고객" data-en="080 Text Unsubscribe Clients">080수신거부고객</span></label>
+      </div>
     </div>
-    <div class="mh-reject-count"><span data-i18n="common.total" data-ko="총" data-en="Total">총</span> <b id="mhRejectCountNum">0</b><span data-i18n="common.count_suffix" data-ko="건" data-en="items">건</span></div>
+    <div class="mh-reject-count"><span data-i18n="common.total" data-ko="총" data-en="Total">총</span> <b id="mhRejectCountNum">12</b><span data-i18n="common.count_suffix" data-ko="건" data-en="items">건</span></div>
     <div class="mh-table-wrap">
       <table class="mh-table" id="mhRejectTableSms">
         <thead>
@@ -7176,7 +7191,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="3" class="mh-empty" data-i18n="common.no_data" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+          <tr><td>010-3456-7890</td><td>43</td><td>이수진</td></tr>
+          <tr><td>010-2222-3333</td><td>42</td><td>최윤서</td></tr>
+          <tr><td>010-8765-4321</td><td>41</td><td>이지은</td></tr>
+          <tr><td>010-1111-9999</td><td>40</td><td>정민지</td></tr>
+          <tr><td>019-8000-9000</td><td>39</td><td>김세나</td></tr>
+          <tr><td>010-4444-5555</td><td>38</td><td>한소희</td></tr>
+          <tr><td>010-6666-7777</td><td>37</td><td>오서준</td></tr>
+          <tr><td>010-2233-4455</td><td>36</td><td>윤채원</td></tr>
+          <tr><td>010-7890-1234</td><td>35</td><td>박하준</td></tr>
+          <tr><td>010-5678-9012</td><td>34</td><td>김도윤</td></tr>
+          <tr><td>010-3344-5566</td><td>33</td><td>송예린</td></tr>
+          <tr><td>010-9988-7766</td><td>32</td><td>장서아</td></tr>
         </tbody>
       </table>
       <table class="mh-table" id="mhRejectTable080" style="display:none;">
@@ -7189,10 +7215,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="4" class="mh-empty" data-i18n="common.no_data" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          <tr><td>010-1234-5678</td><td>2026-03-28</td><td>45</td><td>김하늘</td></tr>
+          <tr><td>010-5555-1234</td><td>2026-03-15</td><td>44</td><td>박서연</td></tr>
+          <tr><td>010-3456-7890</td><td>2026-03-10</td><td>43</td><td>이수진</td></tr>
+          <tr><td>010-8765-4321</td><td>2026-02-28</td><td>41</td><td>이지은</td></tr>
+          <tr><td>010-1111-9999</td><td>2026-02-20</td><td>40</td><td>정민지</td></tr>
+          <tr><td>010-4444-5555</td><td>2026-02-14</td><td>38</td><td>한소희</td></tr>
+          <tr><td>010-6666-7777</td><td>2026-01-30</td><td>37</td><td>오서준</td></tr>
+          <tr><td>010-2233-4455</td><td>2026-01-22</td><td>36</td><td>윤채원</td></tr>
+          <tr><td>010-7890-1234</td><td>2026-01-15</td><td>35</td><td>박하준</td></tr>
+          <tr><td>010-5678-9012</td><td>2026-01-08</td><td>34</td><td>김도윤</td></tr>
+          <tr><td>010-3344-5566</td><td>2025-12-20</td><td>33</td><td>송예린</td></tr>
         </tbody>
       </table>
     </div>
+    <div class="cm-paging" id="mhRejectPaging"></div>
   </div>
 </div>
 <!-- ══ [FEAT-SMS-REJECT] 수신거부 내역 페이지 END ══ -->
@@ -7238,9 +7275,16 @@
           </div>
           <!-- 특수문자/수신거부/저장 버튼 (고객관리와 동일) -->
           <div class="cm-sms-btn-row">
-            <button class="cm-sms-btn-outline" onclick="cmToggleSpecialChars()" data-ko="특수문자" data-en="Special">특수문자</button>
-            <button class="cm-sms-btn-outline" onclick="mhSms2ToggleAdOptout()" data-ko="광고/수신거부 삭제" data-en="Remove Ad/Opt-out">광고/수신거부 삭제</button>
+            <button class="cm-sms-btn-outline" onclick="mhSms2ToggleSpecialChars()" data-ko="특수문자" data-en="Special">특수문자</button>
+            <button class="cm-sms-btn-outline" id="mhOptoutToggleBtn" onclick="mhSms2ToggleAdOptout()" data-ko="광고/수신거부 삭제" data-en="Remove Ad/Opt-out">광고/수신거부 삭제</button>
             <span class="cm-sms-btn-icon-wrap"><button class="cm-sms-btn-icon" onclick="openMhMyMsgReg()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><span class="cm-sms-btn-tooltip" data-ko="문자 저장" data-en="Save Message">문자 저장</span></span>
+          </div>
+          <!-- 특수문자 팝업 -->
+          <div class="cm-sms-editor" style="border:none;padding:0 14px;position:relative;">
+            <div class="cm-special-chars" id="mhSpecialChars" style="display:none;">
+              <button class="cm-special-chars-close" onclick="document.getElementById('mhSpecialChars').style.display='none'">✕</button>
+              <div class="cm-special-chars-grid" id="mhSpecialGrid"></div>
+            </div>
           </div>
           <!-- 테스트발송 / 문자발송 버튼 (고객관리와 동일) -->
           <div class="cm-phone-btn-area">
@@ -7256,7 +7300,7 @@
             <div class="cm-sms-setting-row">
               <span class="cm-sms-setting-lbl" data-ko="발송번호" data-en="Sender">발송번호</span>
               <span class="cm-sms-setting-val"><select id="mhSmsSender2"><option>010-1234-5678</option></select></span>
-              <button class="cm-sms-setting-btn" onclick="alert('발송번호 설정')" data-ko="설정" data-en="Settings">설정</button>
+              <button class="cm-sms-setting-btn" onclick="cmGoSenderSetup()" data-ko="설정" data-en="Settings">설정</button>
             </div>
             <div class="cm-sms-setting-row">
               <span class="cm-sms-setting-lbl" data-ko="발송일시" data-en="Send Date">발송일시</span>
@@ -7348,10 +7392,19 @@
           </select>
           <button class="cm-mymsg-add-btn" onclick="alert('분류 추가')">+</button>
         </div>
-        <button class="cm-mymsg-register-btn" onclick="openMhMyMsgReg()" data-ko="메세지등록" data-en="Register Message">메세지등록</button>
+        <button class="cm-mymsg-register-btn" onclick="mhToggleMymsgEditor()" data-ko="메세지등록" data-en="Register Message">메세지등록</button>
       </div>
       <div class="cm-mymsg-divider"></div>
-      <div class="cm-mymsg-grid" id="mhMymsgGrid"></div>
+      <div class="cm-mymsg-grid" id="mhMymsgGrid">
+        <div class="cm-mymsg-card editing">
+          <textarea placeholder="메세지 내용을 입력하세요" oninput="mhUpdateCardBytes(this)"></textarea>
+          <div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>
+          <div class="cm-mymsg-card-btns">
+            <button class="cm-mymsg-card-btn sv-del" onclick="this.closest('.cm-mymsg-card').remove()">삭제</button>
+            <button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)">저장</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -7410,9 +7463,8 @@
       <div class="mh-modal-title-wrap">
         <span class="mh-modal-bar"></span>
         <span class="mh-modal-title" data-i18n="mh.detail_title" data-ko="메세지 세부내용" data-en="Message Details">메세지 세부내용</span>
-
       </div>
-      <button class="mh-modal-close" onclick="closeMhMsgDetail()">&times;</button>
+      <button class="mh-modal-x" onclick="closeMhMsgDetail()">✕</button>
     </div>
     <div class="mh-modal-body" style="padding:20px;">
       <div class="mh-detail-top">
@@ -7430,36 +7482,22 @@
         <table class="mh-table">
           <thead>
             <tr>
-              <th data-i18n="mh.detail_th_no" data-ko="No" data-en="No">No</th>
-              <th data-i18n="mh.detail_th_name" data-ko="이름" data-en="Name">이름</th>
-              <th data-i18n="mh.detail_th_phone" data-ko="휴대폰 번호" data-en="Mobile Number">휴대폰 번호</th>
-              <th data-i18n="mh.detail_th_date" data-ko="날짜" data-en="Date">날짜</th>
-              <th data-i18n="mh.detail_th_content" data-ko="메세지내용" data-en="Contents">메세지내용</th>
-              <th data-i18n="mh.detail_th_image" data-ko="이미지" data-en="Image">이미지</th>
+              <th rowspan="2" data-i18n="mh.detail_th_no" data-ko="No" data-en="No">No</th>
+              <th rowspan="2" data-i18n="mh.detail_th_name" data-ko="이름" data-en="Name">이름</th>
+              <th rowspan="2" data-i18n="mh.detail_th_phone" data-ko="휴대폰 번호" data-en="Mobile Number">휴대폰 번호</th>
+              <th rowspan="2" data-i18n="mh.detail_th_date" data-ko="날짜" data-en="Date">날짜</th>
+              <th rowspan="2" data-i18n="mh.detail_th_content" data-ko="메세지내용" data-en="Contents">메세지내용</th>
+              <th rowspan="2" data-i18n="mh.detail_th_image" data-ko="이미지" data-en="Image">이미지</th>
               <th colspan="4" data-i18n="mh.th_result" data-ko="전송결과" data-en="Send Result">전송결과</th>
             </tr>
             <tr>
-              <th colspan="6"></th>
               <th data-i18n="mh.th_holding" data-ko="전송예정" data-en="Holding">전송예정</th>
               <th data-i18n="mh.th_success" data-ko="성공" data-en="Success">성공</th>
               <th style="white-space:nowrap;"><span data-i18n="mh.th_fail_code" data-ko="실패 코드" data-en="Fail Code">실패 코드</span> <button class="st-help-icon" onclick="openMhFailCode()" title="실패 코드">?</button></th>
               <th data-i18n="mh.th_waiting" data-ko="결과 대기중" data-en="Waiting">결과 대기중</th>
             </tr>
           </thead>
-          <tbody id="mhDetailTbody">
-            <tr>
-              <td>11694142</td>
-              <td>zero_shop</td>
-              <td>111</td>
-              <td>2026-04-03 09:40</td>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">아하소프트가 로그인 되었습니다. 2026-04-03 09:40:2…</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>30125</td>
-              <td></td>
-            </tr>
-          </tbody>
+          <tbody id="mhDetailTbody"></tbody>
         </table>
       </div>
     </div>
@@ -7477,7 +7515,7 @@
         <span class="mh-modal-bar"></span>
         <span class="mh-modal-title" data-i18n="mh.failcode_title" data-ko="실패 코드" data-en="Fail Code">실패 코드</span>
       </div>
-      <button class="mh-modal-close" onclick="closeMhFailCode()">&times;</button>
+      <button class="mh-modal-x" onclick="closeMhFailCode()">✕</button>
     </div>
     <div class="mh-modal-body" style="padding:20px;">
       <div class="mh-table-wrap">
@@ -7487,7 +7525,7 @@
       </div>
       <div class="cm-paging" id="mhFailCodePaging"></div>
     </div>
-    <div class="mh-modal-footer">
+    <div class="mh-modal-footer" style="justify-content:flex-end;">
       <button class="mh-btn-modal primary" onclick="closeMhFailCode()" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
     </div>
   </div>
@@ -7561,6 +7599,503 @@
       <div style="border-top:1px solid #E0E0E0;padding-top:16px;display:flex;justify-content:center;">
         <button class="mh-btn-modal primary" style="min-width:140px;" onclick="closeMhSpamInfoPopup()" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     문자 발신번호 설정 VIEW
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="senderNumberView">
+  <div class="sn-page">
+    <!-- 메인 뷰 -->
+    <div id="snMainView">
+      <div class="sn-header-bar">
+        <div class="sn-page-header">
+          <h2 class="sn-page-title" data-i18n="cl.sn_title" data-ko="발신 정보 설정" data-en="Sender Info Settings">발신 정보 설정</h2>
+        </div>
+      </div>
+      <div class="sn-body">
+
+      <!-- ── 섹션 1: 문자 발신번호 ── -->
+      <div class="sn-section">
+        <div class="sn-section-top-row">
+          <div>
+            <h3 class="sn-section-heading" data-i18n="cl.sn_reg_title" data-ko="발신번호 등록" data-en="Register Sender Number">발신번호 등록</h3>
+            <p class="sn-section-desc" data-i18n="cl.sn_reg_desc2" data-ko="고객에게 문자를 보낼 때 표시되는 번호입니다. 사전에 등록된 번호만 사용할 수 있습니다." data-en="This number is displayed when sending messages to clients. Only pre-registered numbers can be used.">고객에게 문자를 보낼 때 표시되는 번호입니다. 사전에 등록된 번호만 사용할 수 있습니다.</p>
+          </div>
+          <button class="sn-guide-btn" onclick="snShowGuide()" data-i18n="cl.sn_guide_btn" data-ko="발신번호 사전등록 안내" data-en="Sender Number Pre-registration Guide">발신번호 사전등록 안내</button>
+        </div>
+
+        <!-- 법률 안내 배너 -->
+        <div class="sn-law-banner">
+          ⚠️ <strong style="color:#D97706;" data-i18n="cl.sn_law" data-ko="전기통신사업법 제84조의2에 따라 사전에 등록된 번호만 발신번호로 이용이 가능합니다." data-en="According to the Telecommunications Business Act, only pre-registered numbers can be used as sender numbers.">전기통신사업법 제84조의2에 따라 사전에 등록된 번호만 발신번호로 이용이 가능합니다.</strong>
+        </div>
+
+        <!-- 번호 입력 -->
+        <table class="sn-reg-table">
+          <tbody>
+            <tr>
+              <td class="sn-reg-label" data-i18n="cl.sn_input_label" data-ko="번호 입력" data-en="Enter Number">번호 입력</td>
+              <td class="sn-reg-input-cell">
+                <div class="sn-input-row">
+                  <input type="text" class="sn-input" id="snNumberInput" placeholder="숫자만 입력해 주세요" data-i18n-ph-ko="숫자만 입력해 주세요" data-i18n-ph-en="Enter numbers only" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter'){event.preventDefault();snVerifyNumber();}">
+                  <button class="sn-verify-btn" onclick="snVerifyNumber()" data-i18n="cl.sn_verify" data-ko="확인" data-en="Verify">확인</button>
+                  <div class="sn-avail-tooltip-wrap">
+                    <button type="button" class="sn-avail-tooltip-btn" onclick="this.parentElement.classList.toggle('show')" data-i18n="cl.sn_avail_btn" data-ko="등록 가능한 번호 안내" data-en="Available Numbers Guide">등록 가능한 번호 안내</button>
+                    <div class="sn-avail-tooltip">
+                      <p><strong data-i18n="cl.sn_avail_title" data-ko="등록가능한 번호" data-en="Registerable Numbers">등록가능한 번호</strong></p>
+                      <p data-i18n="cl.sn_avail_mobile" data-ko="- 휴대폰" data-en="- Mobile">- 휴대폰</p>
+                      <p data-i18n="cl.sn_avail_landline" data-ko="- 유선전화: 앞에 지역번호 필요(예: 0211113333)" data-en="- Landline: Area code required (e.g., 0211113333)">- 유선전화: 앞에 지역번호 필요(예: 0211113333)</p>
+                      <p data-i18n="cl.sn_avail_national" data-ko="- 전국대표번호(15YY,16YY,18YY): 총 8자리 숫자만 가능(예: 15440001)" data-en="- National representative number (15YY,16YY,18YY): 8 digits only (e.g., 15440001)">- 전국대표번호(15YY,16YY,18YY): 총 8자리 숫자만 가능(예: 15440001)</p>
+                      <p data-i18n="cl.sn_avail_0n0" data-ko="- 0N0 번호: 030, 050, 070 등" data-en="- 0N0 numbers: 030, 050, 070, etc.">- 0N0 번호: 030, 050, 070 등</p>
+                      <p class="sn-info-warn" data-i18n="cl.sn_avail_warn2" data-ko="내선번호는 전화 인증이 불가능하며, 서류 인증으로만 가능합니다." data-en="Extension numbers cannot be verified by phone — only by document.">내선번호는 전화 인증이 불가능하며, 서류 인증으로만 가능합니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="snAuthSection" class="sn-auth-section" style="display:none;">
+                  <div class="sn-auth-radios">
+                    <label class="sn-radio-label"><input type="radio" name="snAuthMethod" value="phone" checked onchange="snAuthMethodChange()"><span data-i18n="cl.sn_auth_phone" data-ko="휴대폰 본인 인증" data-en="Mobile Phone Verification">휴대폰 본인 인증</span></label>
+                    <label class="sn-radio-label"><input type="radio" name="snAuthMethod" value="doc" onchange="snAuthMethodChange()"><span data-i18n="cl.sn_auth_doc" data-ko="서류 인증 (통신사 이용증명원)" data-en="Document Verification (Telecom Certificate)">서류 인증 (통신사 이용증명원)</span></label>
+                  </div>
+                  <p class="sn-auth-note" data-i18n="cl.sn_auth_note" data-ko="서류 인증 선택 시 파일 첨부 후 영업일 기준 1~3일 내 처리됩니다. 휴대폰 인증에 문제가 있으면 고객센터로 문의하세요. 문의: ☎ 1544-4634" data-en="Document verification takes 1-3 business days after file submission. Contact support for phone verification issues. ☎ 1544-4634">서류 인증 선택 시 파일 첨부 후 영업일 기준 1~3일 내 처리됩니다. 휴대폰 인증에 문제가 있으면 고객센터로 문의하세요. 문의: ☎ 1544-4634</p>
+                  <div id="snPhoneVerifyRow" class="sn-phone-verify-row">
+                    <span class="sn-phone-verify-label" data-i18n="cl.sn_verify_name_label" data-ko="이용자 성명" data-en="User Name">이용자 성명</span>
+                    <input type="text" class="sn-input" id="snPhoneVerifyCode" placeholder="이름을 입력해주세요" data-i18n-ph-ko="이름을 입력해주세요" data-i18n-ph-en="Enter your name">
+                    <button class="sn-verify-btn" onclick="snSubmitPhoneVerify()" data-i18n="cl.sn_verify_submit" data-ko="인증하기" data-en="Verify">인증하기</button>
+                  </div>
+                  <!-- 서류 인증 영역 -->
+                  <div id="snDocVerifySection" class="sn-doc-section" style="display:none;">
+                    <div class="sn-doc-desc">
+                      <p data-i18n="cl.sn_doc_desc1" data-ko="통신사에서 발급한 통신서비스 이용 증명원을 제출해 주세요." data-en="Please submit the telecom service certificate issued by your carrier.">통신사에서 발급한 <a href="javascript:void(0)" onclick="snShowGuide()" style="color:#6161FF;font-weight:600;text-decoration:underline;" data-i18n="cl.sn_doc_cert_link" data-ko="통신서비스 이용 증명원" data-en="telecom service certificate">통신서비스 이용 증명원</a>을 제출해 주세요.</p>
+                      <p style="color:#757575;" data-i18n="cl.sn_doc_desc1_sub" data-ko="(자세한 사항은 상단의 [발신번호 사전등록 안내] 버튼을 클릭하여 확인해주세요.)" data-en="(For details, click the [Sender Number Pre-registration Guide] button above.)">(자세한 사항은 상단의 [발신번호 사전등록 안내] 버튼을 클릭하여 확인해주세요.)</p>
+                    </div>
+                    <ul class="sn-doc-info-list">
+                      <li data-i18n="cl.sn_doc_info1" data-ko="이용증명원은 해당 통신사 고객센터를 통해 발급 가능합니다." data-en="Certificates can be issued through your carrier's customer center.">이용증명원은 해당 통신사 고객센터를 통해 발급 가능합니다. <span class="sn-carrier-tooltip-wrap"><a href="javascript:void(0)" onclick="this.parentElement.classList.toggle('show')" style="color:#6161FF;font-weight:600;text-decoration:underline;" data-i18n="cl.sn_doc_carrier_link" data-ko="[통신사별 고객센터 번호 안내]" data-en="[Carrier Contact Info]">[통신사별 고객센터 번호 안내]</a><div class="sn-carrier-tooltip"><div class="sn-carrier-tooltip-header"><strong data-i18n="cl.sn_carrier_title" data-ko="통신사별 고객센터 번호" data-en="Carrier Contact Numbers">통신사별 고객센터 번호</strong><button class="sn-carrier-tooltip-close" onclick="event.stopPropagation();this.closest('.sn-carrier-tooltip-wrap').classList.remove('show')">✕</button></div><ul class="sn-carrier-tooltip-list"><li>SK텔레콤 : 080-011-6000, 080-916-2000</li><li>LG U+ : 101, 1544-0010</li><li>SK브로드밴드 : 080-8282-106</li><li>SK텔링크 : 080-899-0999</li><li>세종텔레콤 : 1688-1000</li><li>olleh KT : 100</li></ul></div></span></li>
+                      <li data-i18n="cl.sn_doc_info2" data-ko="서류 심사는 영업일 기준 1~3일 내로 완료됩니다." data-en="Document review is completed within 1-3 business days.">서류 심사는 영업일 기준 1~3일 내로 완료됩니다.</li>
+                    </ul>
+                    <div class="sn-doc-submit-method">
+                      <span class="sn-doc-method-label" data-i18n="cl.sn_doc_method" data-ko="접수 방법" data-en="Submission Method">접수 방법</span>
+                      <div class="sn-auth-radios" style="margin-bottom:0;">
+                        <label class="sn-radio-label"><input type="radio" name="snDocMethod" value="file" checked onchange="snDocMethodChange()"><span data-i18n="cl.sn_doc_file" data-ko="파일첨부" data-en="File Upload">파일첨부</span></label>
+                        <label class="sn-radio-label"><input type="radio" name="snDocMethod" value="fax" onchange="snDocMethodChange()"><span data-i18n="cl.sn_doc_fax" data-ko="팩스접수" data-en="Fax">팩스접수</span></label>
+                        <label class="sn-radio-label"><input type="radio" name="snDocMethod" value="email" onchange="snDocMethodChange()"><span data-i18n="cl.sn_doc_email" data-ko="이메일접수" data-en="Email">이메일접수</span></label>
+                      </div>
+                    </div>
+                    <!-- 파일첨부 -->
+                    <div id="snDocFileSection" class="sn-doc-method-content">
+                      <div class="sn-doc-file-section">
+                        <div class="sn-doc-file-row">
+                          <span class="sn-doc-file-label" data-i18n="cl.sn_doc_file_label" data-ko="통신서비스 이용증명원 파일 첨부" data-en="Attach Telecom Certificate">통신서비스 이용증명원 파일 첨부</span>
+                          <label class="sn-doc-file-btn">
+                            <input type="file" id="snDocFileInput" accept=".pdf,.png,.jpg,.jpeg" style="display:none;" onchange="snDocFileSelected(this)">
+                            <span data-i18n="cl.sn_doc_file_browse" data-ko="파일찾기" data-en="Browse">파일찾기</span>
+                          </label>
+                          <span class="sn-doc-file-hint" data-i18n="cl.sn_doc_file_hint" data-ko="5MB 이하 pdf, png, jpg, jpeg 파일만 등록 가능" data-en="Only pdf, png, jpg, jpeg files under 5MB">5MB 이하 pdf, png, jpg, jpeg 파일만 등록 가능</span>
+                        </div>
+                        <p id="snDocFileName" class="sn-doc-file-name" style="display:none;"></p>
+                      </div>
+                      <p class="sn-doc-contact" data-i18n="cl.sn_doc_contact_file" data-ko="파일 첨부에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)" data-en="If you have issues with file attachment, please contact support. (☎ 1544-4634)">파일 첨부에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)</p>
+                      <div class="sn-doc-warn-box">
+                        <p data-i18n="cl.sn_doc_warn1" data-ko="이용 증명원 파일은 번호와 소유주 정보가 마스킹 처리되어 있지 않으며 3개월 이내 발급받은 서류이어야 합니다." data-en="The certificate must not have masked number/owner info and must be issued within 3 months.">이용 증명원 파일은 번호와 소유주 정보가 마스킹 처리되어 있지 않으며 3개월 이내 발급받은 서류이어야 합니다.</p>
+                        <p data-i18n="cl.sn_doc_warn2" data-ko="파일 첨부 후 [서류인증 신청] 버튼을 클릭하여야 신청이 완료됩니다." data-en="You must click [Submit Document Verification] after attaching the file to complete the application.">파일 첨부 후 [서류인증 신청] 버튼을 클릭하여야 신청이 완료됩니다.</p>
+                      </div>
+                    </div>
+                    <!-- 팩스접수 -->
+                    <div id="snDocFaxSection" class="sn-doc-method-content" style="display:none;">
+                      <p class="sn-doc-contact" data-i18n="cl.sn_doc_contact_fax" data-ko="팩스 접수에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)" data-en="If you have issues with fax submission, please contact support. (☎ 1544-4634)">팩스 접수에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)</p>
+                      <div class="sn-doc-warn-box">
+                        <p data-i18n="cl.sn_doc_fax_info" data-ko="FAX : (02) 6280-2285 으로 이용증명원 서류를 보내주시고," data-en="FAX: (02) 6280-2285 — Send the certificate document,"><strong style="color:#6161FF;">FAX : (02) 6280-2285</strong> 으로 이용증명원 서류를 보내주시고,</p>
+                        <p data-i18n="cl.sn_doc_fax_info2" data-ko="[서류인증 신청] 버튼을 클릭하여 신청을 완료해 주십시오." data-en="then click [Submit Document Verification] to complete the application."><strong style="color:#E24B4A;">[서류인증 신청] 버튼을 클릭</strong>하여 신청을 완료해 주십시오.</p>
+                      </div>
+                    </div>
+                    <!-- 이메일접수 -->
+                    <div id="snDocEmailSection" class="sn-doc-method-content" style="display:none;">
+                      <p class="sn-doc-contact" data-i18n="cl.sn_doc_contact_email" data-ko="이메일 접수에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)" data-en="If you have issues with email submission, please contact support. (☎ 1544-4634)">이메일 접수에 문제가 있으신 경우 고객센터로 연락 바랍니다. (☎ 1544-4634)</p>
+                      <div class="sn-doc-warn-box">
+                        <p data-i18n="cl.sn_doc_email_info" data-ko="E-mail : ahasoft@ahasoft.co.kr 으로 이용증명원 서류를 보내주시고," data-en="E-mail: ahasoft@ahasoft.co.kr — Send the certificate document,"><strong style="color:#6161FF;">E-mail : ahasoft@ahasoft.co.kr</strong> 으로 이용증명원 서류를 보내주시고,</p>
+                        <p data-i18n="cl.sn_doc_email_info2" data-ko="[서류인증 신청] 버튼을 클릭하여 신청을 완료해 주십시오." data-en="then click [Submit Document Verification] to complete the application."><strong style="color:#E24B4A;">[서류인증 신청] 버튼을 클릭</strong>하여 신청을 완료해 주십시오.</p>
+                      </div>
+                    </div>
+                    <div class="sn-doc-btn-row">
+                      <button class="sn-verify-btn" onclick="snDocSubmit()" data-i18n="cl.sn_doc_submit" data-ko="서류인증 신청" data-en="Submit Document Verification">서류인증 신청</button>
+                      <button class="sn-doc-cancel-btn" onclick="snDocCancel()" data-i18n="cl.sn_doc_cancel" data-ko="취소" data-en="Cancel">취소</button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 등록된 발신번호 목록 -->
+        <div class="sn-list-wrap">
+          <h4 class="sn-list-heading" data-i18n="cl.sn_list_title" data-ko="등록된 발신번호 목록" data-en="Registered Sender Numbers">등록된 발신번호 목록</h4>
+          <table class="sn-list-table">
+            <thead>
+              <tr>
+                <th data-i18n="cl.sn_th_number" data-ko="발신번호" data-en="Sender Number">발신번호</th>
+                <th data-i18n="cl.sn_th_memo" data-ko="메모" data-en="Memo">메모</th>
+                <th data-i18n="cl.sn_th_status" data-ko="상태" data-en="Status">상태</th>
+                <th data-i18n="cl.sn_th_manage" data-ko="관리" data-en="Manage">관리</th>
+              </tr>
+            </thead>
+            <tbody id="snListBody">
+              <tr>
+                <td><span class="sn-star">★</span> 010-1234-5678</td>
+                <td data-i18n="cl.sn_auto_memo" data-ko="자동발신번호" data-en="Default Sender">자동발신번호</td>
+                <td><span class="sn-status-badge" data-i18n="cl.sn_verified" data-ko="인증완료" data-en="Verified">인증완료</span></td>
+                <td><button class="sn-edit-btn" data-i18n="cl.sn_edit" data-ko="수정" data-en="Edit">수정</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 섹션 2: 카카오 알림톡 ── -->
+      <div class="sn-section">
+        <h3 class="sn-section-heading" data-i18n="cl.sn_kakao_title" data-ko="발신 매장명 설정" data-en="Sender Shop Name Settings">발신 매장명 설정</h3>
+        <p class="sn-section-desc" data-i18n="cl.sn_kakao_desc" data-ko="메시지 발신(알림톡 포함)에 표시되는 매장 이름을 설정합니다. 고객이 알아보기 쉬운 이름으로 설정하세요." data-en="Set the store name displayed in outgoing messages (including KakaoTalk). Use a name that clients can easily recognize.">메시지 발신(알림톡 포함)에 표시되는 매장 이름을 설정합니다. 고객이 알아보기 쉬운 이름으로 설정하세요.</p>
+
+        <!-- 매장명 설정 -->
+        <div class="sn-kakao-name-row" style="margin-bottom:20px;">
+          <span class="sn-kakao-name-label" data-i18n="cl.sn_kakao_name_label" data-ko="매장명" data-en="Store Name">매장명</span>
+          <input type="text" class="sn-input" id="snKakaoShopName" value="" style="width:200px;" disabled>
+          <button class="sn-shop-edit-btn" id="snShopEditBtn" onclick="snShopNameEdit()" data-i18n="cl.sn_kakao_edit" data-ko="수정" data-en="Edit">수정</button>
+          <button class="sn-verify-btn" id="snShopSaveBtn" onclick="snShopNameSave()" style="display:none;" data-i18n="cl.sn_kakao_save" data-ko="저장" data-en="Save">저장</button>
+          <button class="sn-doc-cancel-btn" id="snShopCancelBtn" onclick="snShopNameCancel()" style="display:none;" data-i18n="cl.sn_kakao_cancel" data-ko="취소" data-en="Cancel">취소</button>
+        </div>
+
+        <div class="sn-guide-divider" style="margin:20px 0;"></div>
+
+        <!-- 알림톡 미리보기 -->
+        <div class="cst-panel-title" data-i18n="cl.sn_alim_preview_title" data-ko="알림톡 미리보기" data-en="KakaoTalk Preview">알림톡 미리보기</div>
+        <p class="sn-shop-alim-desc" data-i18n="cl.sn_alim_desc" data-ko="알림톡 발송은 아하소프트 채널인 '아하알림' 채널로 발송됩니다." data-en="KakaoTalk notifications are sent through the Ahasoft 'AhaNotify' channel.">알림톡 발송은 아하소프트 채널인 '아하알림' 채널로 발송됩니다.</p>
+        <div class="cst-kakao-preview" style="max-width:360px;">
+          <span class="cst-kakao-badge">kakao</span>
+          <div class="cst-kakao-bubble">
+            <span class="cst-kakao-msg-title">■ <span id="snAlimTitleName">아하 네일 스튜디오</span> 예약 알림 ■</span>
+            <div class="cst-kakao-msg-body" id="snAlimPreviewBody" style="min-height:180px;">오늘은 고객님의 방문일입니다.
+
+◇ 예약매장 : <span id="snAlimStoreName">아하 네일 스튜디오</span>
+◇ 예약일 : 02월 21일(수)
+◇ 예약시간 : 12시 00분
+
+이따 뵙겠습니다. 감사합니다.
+
+☎ 070-1111-2222</div>
+          </div>
+        </div>
+
+        <!-- 주의사항 -->
+        <div class="sn-alim-notice" style="margin-top:20px;">
+          <p class="sn-alim-notice-title" data-i18n="cl.sn_alim_notice_title" data-ko="알림톡 발송 시 주의사항" data-en="KakaoTalk Notification Guidelines">알림톡 발송 시 주의사항</p>
+          <p data-i18n="cl.sn_alim_notice1" data-ko="알림톡은 아하알림 채널로 전송됩니다. 매장을 방문해주시는 고객님들의 소중한 개인정보를 활용하여 아하소프트를 통해 발송하는 것이기 때문에 고객님들에게 개인정보 위탁 사항에 대한 안내가 필요합니다." data-en="Notifications are sent via the AhaNotify channel. Since customer personal information is used, customers must be informed about data processing delegation.">알림톡은 아하알림 채널로 전송됩니다. 매장을 방문해주시는 고객님들의 소중한 개인정보를 활용하여 아하소프트를 통해 발송하는 것이기 때문에 고객님들에게 개인정보 위탁 사항에 대한 안내가 필요합니다.</p>
+          <p data-i18n="cl.sn_alim_notice2" data-ko="알림톡의 요금은 19원/건(VAT포함) 입니다." data-en="KakaoTalk notification costs 19 won/message (VAT included).">알림톡의 요금은 19원/건(VAT포함) 입니다.</p>
+          <p data-i18n="cl.sn_alim_notice3" data-ko="알림톡 메세지 내용은 제공된 샘플 내에서 선택 발송이 가능합니다." data-en="Notification messages can be selected from provided samples.">알림톡 메세지 내용은 제공된 샘플 내에서 선택 발송이 가능합니다.</p>
+        </div>
+      </div>
+
+    </div>
+    </div><!-- /#snMainView -->
+
+    <!-- 발신번호 사전등록 안내 뷰 -->
+    <div id="snGuideView" style="display:none;">
+      <div class="sn-header-bar">
+        <div class="sn-page-header">
+          <h2 class="sn-page-title" data-i18n="cl.sn_guide_title" data-ko="발신번호 사전등록 안내" data-en="Sender Number Pre-registration Guide">발신번호 사전등록 안내</h2>
+          <button class="sn-back-btn" onclick="snBackToMain()" data-i18n="cl.sn_back" data-ko="발신 정보 설정" data-en="Sender Info Settings">발신 정보 설정</button>
+        </div>
+      </div>
+      <div class="sn-body">
+
+      <div class="sn-guide-content">
+        <!-- FAQ 1 -->
+        <div class="sn-guide-section">
+          <p class="sn-guide-q" data-i18n="cl.sn_faq1_q" data-ko="발신번호 사전등록은 왜 하는 건가요?" data-en="Why should I pre-register a sender number?">발신번호 사전등록은 왜 하는 건가요?</p>
+          <p class="sn-guide-a" data-i18n="cl.sn_faq1_a" data-ko="- 전기통신사업법 제84조 2에 의거 거짓으로 표시된 전화번호로 인한 이용자 피해 예방을 위해 이용고객이 사전등록된 발신번호로만 문자발송이 가능하도록 하는 제도입니다. 이로 인해 사전에 등록하지 않은 발신번호는 SMS 발송이 제한됩니다." data-en="- According to Article 84-2 of the Telecommunications Business Act, to prevent user damage from falsely displayed phone numbers, only pre-registered sender numbers can be used for SMS sending. Unregistered sender numbers are restricted from sending SMS.">- 전기통신사업법 제84조 2에 의거 거짓으로 표시된 전화번호로 인한 이용자 피해 예방을 위해 이용고객이 사전등록된 발신번호로만 문자발송이 가능하도록 하는 제도입니다. 이로 인해 사전에 등록하지 않은 발신번호는 SMS 발송이 제한됩니다.</p>
+        </div>
+
+        <div class="sn-guide-divider"></div>
+
+        <!-- FAQ 2 -->
+        <div class="sn-guide-section">
+          <p class="sn-guide-q" data-i18n="cl.sn_faq2_q" data-ko="통신서비스 이용 증명원은 무엇인가요?" data-en="What is a Telecom Service Usage Certificate?">통신서비스 이용 증명원은 무엇인가요?</p>
+          <p class="sn-guide-a" data-i18n="cl.sn_faq2_a" data-ko="- 등록하는 유선번호가 가입되었다는 증명서를 말하며, 가입된 통신사로부터 확인할 수 있습니다." data-en="- A certificate proving that the landline number is registered, which can be obtained from the subscribed telecom carrier.">- 등록하는 유선번호가 가입되었다는 증명서를 말하며, 가입된 통신사로부터 확인할 수 있습니다.</p>
+          <p class="sn-guide-a" data-i18n="cl.sn_faq2_a2" data-ko="- 통신 서비스 이용 증명원에는 아래의 각호의 정보가 포함되어 있어야 합니다." data-en="- The telecom service usage certificate must include the following information.">- 통신 서비스 이용 증명원에는 아래의 각호의 정보가 포함되어 있어야 합니다.</p>
+          <div class="sn-guide-box">
+            <p>1) <span data-i18n="cl.sn_faq2_r1" data-ko="가입자의 통신사 명" data-en="Subscriber's telecom carrier name">가입자의 통신사 명</span></p>
+            <p>2) <span data-i18n="cl.sn_faq2_r2" data-ko="가입자 성명, 주소, 생년월일" data-en="Subscriber's name, address, date of birth">가입자 성명, 주소, 생년월일</span></p>
+            <p>3) <span data-i18n="cl.sn_faq2_r3" data-ko="가입자 통신 서비스 종류(유선, 무선, 인터넷 전화 등)" data-en="Type of telecom service (landline, wireless, internet phone, etc.)">가입자 통신 서비스 종류(유선, 무선, 인터넷 전화 등)</span></p>
+            <p>4) <span data-i18n="cl.sn_faq2_r4" data-ko="가입자의 전화번호" data-en="Subscriber's phone number">가입자의 전화번호</span></p>
+          </div>
+          <p class="sn-guide-a" style="margin-top:8px;" data-i18n="cl.sn_faq2_note" data-ko="- 통신사별로 증명원, 증명서, 확인서 등 명칭이 상이하오니 아래 내용을 참고해 주세요." data-en="- The names of certificates vary by carrier. Please refer to the information below.">- 통신사별로 증명원, 증명서, 확인서 등 명칭이 상이하오니 아래 내용을 참고해 주세요.</p>
+          <div class="sn-guide-box">
+            <p>[KT(Olleh)] <span data-i18n="cl.sn_carrier_kt" data-ko="원부증명서(통신서비스 가입증명원) / 인터넷전화 가입사실 확인 증명서" data-en="Original certificate (Telecom Service Enrollment Certificate) / Internet Phone Enrollment Certificate">원부증명서(통신서비스 가입증명원) / 인터넷전화 가입사실 확인 증명서</span></p>
+            <p>[SK<span data-i18n="cl.sn_carrier_skt" data-ko="텔레콤] 통신서비스 이용 증명원" data-en="Telecom] Telecom Service Usage Certificate">텔레콤] 통신서비스 이용 증명원</span></p>
+            <p>[SK <span data-i18n="cl.sn_carrier_skb" data-ko="브로드밴드] SK브로드밴드 가입사실 증명원" data-en="Broadband] SK Broadband Enrollment Certificate">브로드밴드] SK브로드밴드 가입사실 증명원</span></p>
+            <p>[LG U+] <span data-i18n="cl.sn_carrier_lg" data-ko="가입사실 확인서 / LG U+ 서비스 가입 확인서" data-en="Enrollment Confirmation / LG U+ Service Enrollment Confirmation">가입사실 확인서 / LG U+ 서비스 가입 확인서</span></p>
+            <p>[<span data-i18n="cl.sn_carrier_sj" data-ko="세종텔레콤] 통신서비스 이용증명원" data-en="Sejong Telecom] Telecom Service Usage Certificate">세종텔레콤] 통신서비스 이용증명원</span></p>
+          </div>
+        </div>
+
+        <div class="sn-guide-divider"></div>
+
+        <!-- FAQ 3 -->
+        <div class="sn-guide-section">
+          <p class="sn-guide-q" data-i18n="cl.sn_faq3_q" data-ko="통신서비스 이용 증명원은 어떻게 발급받나요?" data-en="How to obtain a Telecom Service Usage Certificate?">통신서비스 이용 증명원은 어떻게 발급받나요?</p>
+          <p class="sn-guide-a" data-i18n="cl.sn_faq3_a" data-ko="- 이용 증명원 서류는 대리점 방문 또는 홈페이지를 이용하여 발급받으실 수 있습니다. 발급 후 발신번호 서류 인증을 받으시려면 통신사를 통해 가입 증명서를 발급받아 첨부해 주시기 바랍니다. (통신사마다 '가입 확인서, 가입 증명원, 이용계약 등록사항 증명서'등 명칭이 다를 수 있습니다.)" data-en="- You can obtain the certificate by visiting a branch or using the carrier's website. To authenticate your sender number, please obtain and attach the enrollment certificate from your carrier.">- 이용 증명원 서류는 대리점 방문 또는 홈페이지를 이용하여 발급받으실 수 있습니다. 발급 후 발신번호 서류 인증을 받으시려면 통신사를 통해 가입 증명서를 발급받아 첨부해 주시기 바랍니다. (통신사마다 '가입 확인서, 가입 증명원, 이용계약 등록사항 증명서'등 명칭이 다를 수 있습니다.)</p>
+
+          <!-- 통신사 목록 -->
+          <div id="snGuideCarrierSection" class="sn-carrier-grid">
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/tworld.png" alt="T world" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.tworld.co.kr/web/home" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p data-i18n="cl.sn_tw_info" data-ko="- 모바일서비스 고객센터 : 114, 080-011-6000, 1599-0011" data-en="- Mobile Service Center: 114, 080-011-6000, 1599-0011">- 모바일서비스 고객센터 : 114, 080-011-6000, 1599-0011</p>
+              <p data-i18n="cl.sn_tw_info2" data-ko="- 유선서비스 고객센터 : 080-816-2000, 1600-2000" data-en="- Landline Service Center: 080-816-2000, 1600-2000">- 유선서비스 고객센터 : 080-816-2000, 1600-2000</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/sktelink.png" alt="SK telink" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.sktelink.com/main" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p>- 114</p>
+              <p>- 1599-9999</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/skbroadband.png" alt="SK broadband" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.bworld.co.kr/main.do" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p>- 080-8282-106</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/hellomobile.png" alt="hello mobile" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://mobile.lghellovision.net/mv_Client/main/index.asp" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p>- 1855-1144</p>
+              <p>- 1855-2114</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/kt-logo.png" alt="kt" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.kt.com/" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p data-i18n="cl.sn_kt_info" data-ko="- 모바일서비스 고객센터 : 114, 1588-0010" data-en="- Mobile Service Center: 114, 1588-0010">- 모바일서비스 고객센터 : 114, 1588-0010</p>
+              <p data-i18n="cl.sn_kt_info2" data-ko="- 유선서비스 고객센터 : 100" data-en="- Landline Service Center: 100">- 유선서비스 고객센터 : 100</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/sejong.png" alt="SEJONG TELECOM" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.sejongtelecom.net/" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p>- 1688-1000</p>
+              <p>- 080-889-1000</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/uplus.png" alt="LG U+" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.lguplus.com/" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p data-i18n="cl.sn_lg_info" data-ko="- 모바일서비스 고객센터 : 114, 1544-0010" data-en="- Mobile Service Center: 114, 1544-0010">- 모바일서비스 고객센터 : 114, 1544-0010</p>
+              <p data-i18n="cl.sn_lg_info2" data-ko="- 모바일서비스 고객센터 : 101" data-en="- Mobile Service Center: 101">- 모바일서비스 고객센터 : 101</p>
+            </div>
+            <div class="sn-carrier-item">
+              <div class="sn-carrier-logo">
+                <img src="images/kct.png" alt="kct" class="sn-carrier-img">
+                <a class="sn-carrier-link" href="https://www.kcttel.com/customer/certificate.do" target="_blank" data-i18n="cl.sn_homepage" data-ko="홈페이지 바로가기" data-en="Visit Website">홈페이지 바로가기</a>
+              </div>
+              <p>- 070-8188-0114</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-guide-divider"></div>
+
+        <!-- 통신사 가입증명원 예시 -->
+        <div class="sn-guide-section">
+          <p class="sn-guide-q" data-i18n="cl.sn_sample_title" data-ko="통신사 가입증명원 예시" data-en="Telecom Enrollment Certificate Examples">통신사 가입증명원 예시</p>
+          <div class="sn-sample-grid">
+            <div class="sn-sample-item" onclick="snShowCertPopup('kt')">
+              <div class="sn-sample-logo">
+                <img src="images/kt-logo.png" alt="kt" class="sn-sample-carrier-img">
+              </div>
+              <p data-i18n="cl.sn_cert_kt" data-ko="원부증명서" data-en="Original Certificate">원부증명서</p>
+              <p data-i18n="cl.sn_cert_kt2" data-ko="(통신서비스 가입증명원)" data-en="(Telecom Service Enrollment)">(통신서비스 가입증명원)</p>
+            </div>
+            <div class="sn-sample-item" onclick="snShowCertPopup('sk')">
+              <div class="sn-sample-logo">
+                <img src="images/tworld.png" alt="T world" class="sn-sample-carrier-img">
+              </div>
+              <p data-i18n="cl.sn_cert_sk" data-ko="통신서비스 이용 증명원" data-en="Telecom Service Usage Certificate">통신서비스 이용 증명원</p>
+            </div>
+            <div class="sn-sample-item" onclick="snShowCertPopup('lg')">
+              <div class="sn-sample-logo">
+                <img src="images/uplus.png" alt="LG U+" class="sn-sample-carrier-img">
+              </div>
+              <p data-i18n="cl.sn_cert_lg" data-ko="가입사실 확인서" data-en="Enrollment Confirmation">가입사실 확인서</p>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.sn-guide-content -->
+      </div><!-- /.sn-body -->
+    </div><!-- /#snGuideView -->
+  </div><!-- /.sn-page -->
+</div><!-- /#senderNumberView -->
+
+<!-- 통신사 가입증명원 예시 팝업 -->
+<!-- PASS 본인인증 팝업 -->
+<div id="snPassPopup" class="sn-popup-overlay" onclick="if(event.target===this)snClosePassPopup()" style="display:none;">
+  <div class="sn-pass-popup">
+    <div class="sn-pass-header">
+      <span class="sn-pass-logo" data-i18n="cl.sn_pass_title" data-ko="PASS" data-en="PASS">PASS</span>
+      <button class="sn-pass-close" onclick="snClosePassPopup()">✕</button>
+    </div>
+    <p class="sn-pass-desc" data-i18n="cl.sn_pass_desc" data-ko="이용중이신 통신사를 선택해주세요." data-en="Please select your carrier.">이용중이신 통신사를 선택해주세요.</p>
+    <div class="sn-pass-carrier-grid">
+      <button class="sn-pass-carrier" onclick="snSelectCarrier('skt')"><span style="color:#E6003F;font-weight:700;" data-i18n="cl.sn_pass_skt" data-ko="SK telecom" data-en="SK telecom">SK telecom</span></button>
+      <button class="sn-pass-carrier" onclick="snSelectCarrier('kt')"><span style="color:#212121;font-weight:700;" data-i18n="cl.sn_pass_kt" data-ko="kt" data-en="kt">kt</span></button>
+      <button class="sn-pass-carrier" onclick="snSelectCarrier('lgu')"><span style="color:#E6003F;font-weight:700;" data-i18n="cl.sn_pass_lgu" data-ko="LG U+" data-en="LG U+">LG U+</span></button>
+      <button class="sn-pass-carrier" onclick="snSelectCarrier('mvno')"><span style="color:#6161FF;font-weight:700;" data-i18n="cl.sn_pass_mvno" data-ko="알뜰폰" data-en="MVNO">알뜰폰</span></button>
+    </div>
+    <div class="sn-pass-agree-section">
+      <label class="sn-pass-agree-all"><input type="checkbox" id="snPassAgreeAll" onchange="snPassToggleAll()"> <strong data-i18n="cl.sn_pass_agree_all" data-ko="전체 동의" data-en="Agree to All">전체 동의</strong></label>
+      <div class="sn-pass-agree-grid">
+        <label class="sn-pass-agree-item"><input type="checkbox" class="sn-pass-agree-check" onchange="snPassCheckAgree()"> <span data-i18n="cl.sn_pass_agree1" data-ko="개인정보이용동의" data-en="Personal Info Agreement">개인정보이용동의</span></label>
+        <label class="sn-pass-agree-item"><input type="checkbox" class="sn-pass-agree-check" onchange="snPassCheckAgree()"> <span data-i18n="cl.sn_pass_agree2" data-ko="고유식별정보처리동의" data-en="Unique ID Processing Agreement">고유식별정보처리동의</span></label>
+        <label class="sn-pass-agree-item"><input type="checkbox" class="sn-pass-agree-check" onchange="snPassCheckAgree()"> <span data-i18n="cl.sn_pass_agree3" data-ko="서비스이용약관동의" data-en="Terms of Service Agreement">서비스이용약관동의</span></label>
+        <label class="sn-pass-agree-item"><input type="checkbox" class="sn-pass-agree-check" onchange="snPassCheckAgree()"> <span data-i18n="cl.sn_pass_agree4" data-ko="통신사이용약관동의" data-en="Telecom Terms Agreement">통신사이용약관동의</span></label>
+      </div>
+    </div>
+    <button class="sn-pass-submit" id="snPassSubmitBtn" disabled onclick="snPassSubmit()" data-i18n="cl.sn_pass_submit" data-ko="PASS로 인증하기" data-en="Verify with PASS">PASS로 인증하기</button>
+    <div class="sn-pass-footer">
+      <a href="javascript:void(0)" data-i18n="cl.sn_pass_terms" data-ko="이용약관" data-en="Terms">이용약관</a>
+      <span class="sn-pass-footer-divider">|</span>
+      <a href="javascript:void(0)" data-i18n="cl.sn_pass_privacy" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a>
+      <span class="sn-pass-footer-danal">Danal</span>
+    </div>
+  </div>
+</div>
+
+<div id="snCertPopup" class="sn-popup-overlay" onclick="if(event.target===this)snCloseCertPopup()" style="display:none;">
+  <div class="sn-popup">
+    <div class="sn-popup-header">
+      <span data-i18n="cl.sn_cert_popup_title" data-ko="통신사 가입증명원 예시" data-en="Telecom Enrollment Certificate Example">통신사 가입증명원 예시</span>
+      <button class="sn-popup-close" onclick="snCloseCertPopup()">✕</button>
+    </div>
+    <div class="sn-popup-body">
+      <img id="snCertImage" src="" alt="증명원 예시" style="max-width:100%;border-radius:8px;">
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 자동발송 알림톡 미리보기 모달 ═══ -->
+<div class="cst-modal-overlay" id="amsAlimPreviewModal" onclick="if(event.target===this)cstCloseModal('amsAlimPreviewModal')">
+  <div class="cst-modal">
+    <div class="cst-modal-header">
+      <h3 class="cst-modal-title" data-ko="알림톡 미리보기" data-en="AlimTalk Preview">알림톡 미리보기</h3>
+      <button class="cst-modal-close" onclick="cstCloseModal('amsAlimPreviewModal')">✕</button>
+    </div>
+    <div class="cst-modal-body">
+      <div class="cst-modal-preview">
+        <div class="cst-kakao-preview">
+          <span class="cst-kakao-badge">kakao</span>
+          <div class="cst-kakao-bubble">
+            <span class="cst-kakao-msg-title" id="amsAlimPreviewTitle">■ 예약 알림 안내 ■</span>
+            <div class="cst-kakao-msg-body" id="amsAlimPreviewBody" style="pointer-events:none;white-space:pre-wrap;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cst-modal-footer">
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('amsAlimPreviewModal')" data-ko="닫기" data-en="Close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 자동발송 알림톡 다른 문구 선택 모달 ═══ -->
+<div class="cst-modal-overlay" id="amsAlimAltModal" onclick="if(event.target===this)cstCloseModal('amsAlimAltModal')">
+  <div class="cst-modal cst-modal-wide">
+    <div class="cst-modal-header">
+      <h3 class="cst-modal-title" data-ko="다른 문구 선택" data-en="Select Template">다른 문구 선택</h3>
+      <button class="cst-modal-close" onclick="cstCloseModal('amsAlimAltModal')">✕</button>
+    </div>
+    <div class="cst-modal-body">
+      <div class="cst-alt-cards" id="amsAlimAltCards"></div>
+    </div>
+    <div class="cst-modal-footer">
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('amsAlimAltModal')" data-ko="닫기" data-en="Close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 자동발송 특수문자 팝업 (fixed, body 레벨) ═══ -->
+<div class="cm-special-chars sv-special-chars-above" id="amsEditSmsSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsEditSmsSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsEditSmsSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsFallbackSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsFallbackSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsFallbackSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsExpirySpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsExpirySpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsExpirySpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsDepositSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsDepositSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsDepositSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsVtSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsVtSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsVtSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsAcSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsAcSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsAcSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsBdSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsBdSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsBdSpecialGrid"></div>
+</div>
+<div class="cm-special-chars sv-special-chars-above" id="amsNewSpecialChars" style="display:none;">
+  <button class="cm-special-chars-close" onclick="amsCloseSpecialPopup('amsNewSpecialChars')">✕</button>
+  <div class="cm-special-chars-grid" id="amsNewSpecialGrid"></div>
+</div>
+
+<!-- ═══ 자동발송 SMS 미리보기 모달 ═══ -->
+<div class="cst-modal-overlay" id="amsSmsPreviewModal" onclick="if(event.target===this)cstCloseModal('amsSmsPreviewModal')">
+  <div class="cst-modal">
+    <div class="cst-modal-header">
+      <h3 class="cst-modal-title" data-ko="문자 미리보기" data-en="Message Preview">문자 미리보기</h3>
+      <button class="cst-modal-close" onclick="cstCloseModal('amsSmsPreviewModal')">✕</button>
+    </div>
+    <div class="cst-modal-body">
+      <div class="cst-sms-phone-preview">
+        <div class="cst-sms-phone-bubble" id="amsSmsPreviewText"></div>
+      </div>
+    </div>
+    <div class="cst-modal-footer">
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('amsSmsPreviewModal')" data-ko="닫기" data-en="Close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 자동발송 SMS 다른 문구 선택 모달 ═══ -->
+<div class="cst-modal-overlay" id="amsSmsAltModal" onclick="if(event.target===this)cstCloseModal('amsSmsAltModal')">
+  <div class="cst-modal cst-modal-wide">
+    <div class="cst-modal-header">
+      <h3 class="cst-modal-title" data-ko="다른 문구 선택" data-en="Select Template">다른 문구 선택</h3>
+      <button class="cst-modal-close" onclick="cstCloseModal('amsSmsAltModal')">✕</button>
+    </div>
+    <div class="cst-modal-body">
+      <div class="cst-alt-cards" id="amsSmsAltCards"></div>
+    </div>
+    <div class="cst-modal-footer">
+      <button class="cst-modal-btn-outline" onclick="cstCloseModal('amsSmsAltModal')" data-ko="닫기" data-en="Close">닫기</button>
     </div>
   </div>
 </div>
