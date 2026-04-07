@@ -6145,9 +6145,10 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .ams-card-list { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
 .ams-card { background:#fff; border:1px solid #E0E0E0; border-radius:12px; padding:16px; display:flex; flex-direction:column; transition:border-color .15s; }
 .ams-card:hover { border-color:#BDBDBD; }
-.ams-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.ams-card-header-left { display:flex; align-items:center; gap:6px; min-width:0; }
-.ams-card-title { font-size:13px; font-weight:700; color:#212121; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ams-card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.ams-card-header-left { display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+.ams-card-title { font-size:13px; font-weight:700; color:#212121; line-height:1.4; }
+.ams-card-badges { display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
 .ams-card-type { display:inline-block; font-size:10px; font-weight:600; color:#6161FF; background:#EEF0FF; padding:2px 6px; border-radius:4px; flex-shrink:0; }
 .ams-card-alimtalk { display:inline-block; font-size:10px; font-weight:600; color:#212121; background:#FFF3E0; padding:2px 6px; border-radius:4px; flex-shrink:0; }
 .ams-card-timing { font-size:11px; color:#757575; margin-bottom:8px; }
@@ -6385,7 +6386,7 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .sn-doc-file-hint { font-size:11px; color:#9E9E9E; }
 .sn-doc-file-name { font-size:12px; color:#6161FF; margin:8px 0 0; font-weight:500; }
 .sn-doc-contact { font-size:12px; color:#757575; margin:0 0 12px; }
-.sn-doc-warn-box { background:#FFF8E1; border:1px solid #FCD34D; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:12px; color:#E24B4A; font-weight:500; line-height:1.7; }
+.sn-doc-warn-box { background:#FFF8E1; border:1px solid #FCD34D; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:12px; color:#D97706; font-weight:500; line-height:1.7; }
 .sn-doc-warn-box p { margin:0; }
 .sn-doc-btn-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; }
 .sn-doc-cancel-btn { height:36px; padding:0 24px; border:1px solid #E0E0E0; border-radius:6px; background:#fff; color:#616161; font-size:13px; font-weight:500; cursor:pointer; font-family:'Pretendard',sans-serif; transition:all .15s; }
@@ -6543,3 +6544,13 @@ details[open] > .ac-info-summary::before { content:'▼'; }
 .sn-popup-close:hover { background:#F5F5F5; }
 .sn-popup-body { padding:24px; overflow-y:auto; display:flex; align-items:center; justify-content:center; }
 .sn-popup-body img { max-height:70vh; object-fit:contain; border:1px solid #E0E0E0; border-radius:8px; }
+
+/* ═══ 영문 모드 레이아웃 보정 ═══ */
+.lang-en .cm-sms-left { width:340px; }
+.lang-en .cm-sms-sch-btn { font-size:11px; padding:6px 8px; }
+.lang-en .cm-sms-btn-outline { font-size:11px; padding:0 10px; }
+.lang-en .cm-phone-btn-test,
+.lang-en .cm-phone-btn-send { font-size:12px; white-space:nowrap; }
+.lang-en .cm-phone-btn-area { gap:6px; }
+.lang-en .cm-sms-setting-lbl { min-width:auto; }
+.lang-en .cm-sms-setting-btn { font-size:11px; padding:4px 8px; }

@@ -2638,6 +2638,13 @@ function toggleLang() {
   applyLang();
 }
 function applyLang() {
+  // body lang 클래스 토글
+  if (currentLang === 'en') { document.body.classList.add('lang-en'); } else { document.body.classList.remove('lang-en'); }
+  // 동적 뷰 리렌더 (번역 루프 전에 실행해야 새 요소에도 적용됨)
+  var amsView = document.getElementById('autoMsgSetupView');
+  if (amsView && amsView.classList.contains('show') && typeof amsRender === 'function') { amsRender(); }
+  var mhView = document.getElementById('msgHistoryView');
+  if (mhView && mhView.classList.contains('show') && typeof mhRenderTable === 'function') { mhRenderTable(); }
   // data-ko / data-en 속성이 있는 모든 요소
   document.querySelectorAll('[data-ko][data-en]').forEach(function(el) {
     var text = currentLang === 'ko' ? el.dataset.ko : el.dataset.en;
@@ -6633,8 +6640,8 @@ function cmAddSavedMsg(text) {
   card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)" data-ko="수정" data-en="Edit">수정</button>'
     + '</div>';
   card.querySelector('.cm-mymsg-card-body').onclick = function() {
     var smsTA = document.getElementById('cmSmsContent');
@@ -6848,6 +6855,7 @@ function cmCloseAdGuide() {
 
 function cmGoSenderSetup() {
   cmCloseSmsModal();
+  closeMhSmsSendModal();
   openSenderNumberSetup();
 }
 
@@ -6899,8 +6907,8 @@ function cmToggleMymsgEditor() {
   card.innerHTML = '<textarea placeholder="메세지 내용을 입력하세요" oninput="cmUpdateCardBytes(this)"></textarea>'
     + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)" data-ko="저장" data-en="Save">저장</button>'
     + '</div>';
   grid.appendChild(card);
   card.querySelector('textarea').focus();
@@ -6926,8 +6934,8 @@ function cmSaveCard(btn) {
   card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)">수정</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmEditCard(this)" data-ko="수정" data-en="Edit">수정</button>'
     + '</div>';
   card.setAttribute('data-fulltext', text);
   // 클릭 시 문자 입력창에 삽입
@@ -6946,14 +6954,15 @@ function cmEditCard(btn) {
   card.innerHTML = '<textarea oninput="cmUpdateCardBytes(this)">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="cmSaveCard(this)" data-ko="저장" data-en="Save">저장</button>'
     + '</div>';
   card.querySelector('textarea').focus();
 }
 
 function cmGoAutoSmsSetup() {
   cmCloseSmsModal();
+  closeMhSmsSendModal();
   openAutoMsgSetup();
 }
 
@@ -7110,6 +7119,8 @@ var mhPageCurrent = 1;
 var mhFilteredData = mhAllData.slice();
 
 function mhRenderTable() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var viewLabel = isEn ? 'View' : '보기';
   var totalPages = Math.max(1, Math.ceil(mhFilteredData.length / mhPageSize));
   if (mhPageCurrent > totalPages) mhPageCurrent = totalPages;
   var start = (mhPageCurrent - 1) * mhPageSize;
@@ -7128,13 +7139,14 @@ function mhRenderTable() {
       '<td>' + d.success + '</td>' +
       '<td>' + d.fail + '</td>' +
       '<td>' + d.waiting + '</td>' +
-      '<td><button class="mh-tbl-btn" onclick="openMhMsgContent(\'' + d.content.replace(/'/g,"\\'") + '\')" data-ko="보기" data-en="View">보기</button></td>' +
-      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">보기</button></td>' +
-      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">보기</button></td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgContent(\'' + d.content.replace(/'/g,"\\'") + '\')" data-ko="보기" data-en="View">' + viewLabel + '</button></td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">' + viewLabel + '</button></td>' +
+      '<td><button class="mh-tbl-btn" onclick="openMhMsgDetail(' + i + ')" data-ko="보기" data-en="View">' + viewLabel + '</button></td>' +
       '</tr>';
   }
   if (!mhFilteredData.length) {
-    html = '<tr><td colspan="12" class="mh-empty">내역이 없습니다</td></tr>';
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    html = '<tr><td colspan="12" class="mh-empty">' + (isEn ? 'No data for table' : '내역이 없습니다') + '</td></tr>';
   }
   tbody.innerHTML = html;
   var checkAll = document.getElementById('mhCheckAll');
@@ -7504,8 +7516,8 @@ function mhToggleMymsgEditor() {
   card.innerHTML = '<textarea placeholder="메세지 내용을 입력하세요" oninput="mhUpdateCardBytes(this)"></textarea>'
     + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)" data-ko="저장" data-en="Save">저장</button>'
     + '</div>';
   grid.appendChild(card);
   card.querySelector('textarea').focus();
@@ -7528,8 +7540,8 @@ function mhSaveCard(btn) {
   card.innerHTML = '<div class="cm-mymsg-card-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>'
     + '<div class="cm-mymsg-card-bytes">' + bytes + ' / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhEditCard(this)">수정</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhEditCard(this)" data-ko="수정" data-en="Edit">수정</button>'
     + '</div>';
   card.querySelector('.cm-mymsg-card-body').onclick = function() {
     var ta2 = document.getElementById('mhSmsContent2');
@@ -7543,8 +7555,8 @@ function mhEditCard(btn) {
   card.innerHTML = '<textarea oninput="mhUpdateCardBytes(this)">' + text + '</textarea>'
     + '<div class="cm-mymsg-card-bytes">0 / 2000 Bytes</div>'
     + '<div class="cm-mymsg-card-btns">'
-    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()">삭제</button>'
-    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)">저장</button>'
+    + '<button class="cm-mymsg-card-btn sv-del" onclick="this.closest(\'.cm-mymsg-card\').remove()" data-ko="삭제" data-en="Delete">삭제</button>'
+    + '<button class="cm-mymsg-card-btn sv-save" onclick="mhSaveCard(this)" data-ko="저장" data-en="Save">저장</button>'
     + '</div>';
   var ta = card.querySelector('textarea');
   mhUpdateCardBytes(ta);
@@ -7740,21 +7752,21 @@ var amsCurrentSub = null;
 var amsTabs = {
   booking: {
     subs: [
-      { key:'booking_alert', ko:'예약 알림', en:'Booking Alert' },
-      { key:'point_prepaid', ko:'포인트 / 정액권 / 티켓', en:'Points / Prepaid / Ticket' },
-      { key:'deposit_alert', ko:'예약금 알림', en:'Deposit Alert' }
+      { key:'booking_alert', ko:'예약 알림', en:'Booking Reminder' },
+      { key:'point_prepaid', ko:'포인트 / 정액권 / 티켓', en:'Points / Prepaid Card / Prepaid Service' },
+      { key:'deposit_alert', ko:'예약금 알림', en:'Booking Deposit Notification' }
     ]
   },
   care: {
     subs: [
-      { key:'visit_thanks', ko:'방문 감사', en:'Visit Thanks' },
-      { key:'aftercare', ko:'시술 후 관리', en:'Post-treatment Care' }
+      { key:'visit_thanks', ko:'방문 감사', en:'Visit Thank You' },
+      { key:'aftercare', ko:'시술 후 관리', en:'Post-Service Care' }
     ]
   },
   marketing: {
     subs: [
-      { key:'revisit', ko:'재방문 유도', en:'Revisit Promotion' },
-      { key:'birthday', ko:'생일 축하', en:'Birthday' }
+      { key:'revisit', ko:'재방문 유도', en:'Revisit Encouragement' },
+      { key:'birthday', ko:'생일 축하', en:'Birthday Greetings' }
     ]
   }
 };
@@ -7763,39 +7775,39 @@ var amsTabs = {
 // conditional: true = 조건부 발송 탭 (재방문/시술후 관리) - 마스터 설정 + 추가 버튼 표시
 var amsCards = {
   booking_alert: [
-    { id:'ba1', title:{ko:'선택일 알림 (2~30일전)',en:'Selected Date Alert (2-30 days before)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 2~30일 전 발송',en:'Sent 2-30 days before booking'}, preview:'((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba2', title:{ko:'전날 알림 (1일전)',en:'Day Before Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 전날 발송',en:'Sent day before booking'}, preview:'((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba3', title:{ko:'예약일 당일',en:'Day of Booking'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 당일 오전 발송',en:'Sent on the morning of booking'}, preview:'((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
-    { id:'ba4', title:{ko:'예약 시간 전',en:'Before Booking Time'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 시간 1~2시간 전 발송',en:'Sent 1-2 hours before booking time'}, preview:'((성명))님, 곧 ((예약시간)) 예약 시간입니다. 아하 네일 스튜디오' },
-    { id:'ba5', title:{ko:'예약등록 확인',en:'Booking Confirmation'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 등록 즉시 발송',en:'Sent immediately after booking'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 등록되었습니다.' },
-    { id:'ba6', title:{ko:'예약취소 확인',en:'Booking Cancellation'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 취소 즉시 발송',en:'Sent immediately after cancellation'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 취소되었습니다.' }
+    { id:'ba1', title:{ko:'선택일 알림 (2~30일전)',en:'Selection date notification (2 to 30 days ago)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 2~30일 전 발송',en:'Sent 2-30 days before booking'}, preview:'((성명))님, ((예약일)) ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba2', title:{ko:'전날 알림 (1일전)',en:'Notification from the day before (1 day before)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 전날 발송',en:'Sent day before booking'}, preview:'((성명))님, 내일 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba3', title:{ko:'예약일 당일',en:'On the day'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 당일 오전 발송',en:'Sent on the morning of booking'}, preview:'((성명))님, 오늘 ((예약시간))에 예약이 있습니다. 아하 네일 스튜디오' },
+    { id:'ba4', title:{ko:'예약 시간 전',en:'Hours before'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 시간 1~2시간 전 발송',en:'Sent 1-2 hours before booking time'}, preview:'((성명))님, 곧 ((예약시간)) 예약 시간입니다. 아하 네일 스튜디오' },
+    { id:'ba5', title:{ko:'예약등록 확인',en:'Booking registrations notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 등록 즉시 발송',en:'Sent immediately after booking'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 등록되었습니다.' },
+    { id:'ba6', title:{ko:'예약취소 확인',en:'Booking cancel confirm'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'예약 취소 즉시 발송',en:'Sent immediately after cancellation'}, preview:'((성명))님, ((예약일)) ((예약시간)) 예약이 취소되었습니다.' }
   ],
   point_prepaid: [
-    { id:'pp1', title:{ko:'포인트(적립시) 알림',en:'Points Earned Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*적립:((적립))P\n*누적:((누적))P\n방문 감사합니다!\n-아하 네일 스튜디오' },
-    { id:'pp2', title:{ko:'포인트(사용시) 알림',en:'Points Used Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*차감:((사용))점\n*잔여:((누적))점\n이용 감사합니다!\n-아하 네일 스튜디오' },
-    { id:'pp3', title:{ko:'정액권 잔액(판매시) 알림',en:'Prepaid Balance (Purchase) Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'((성명))님 회원권 구입안내\n((정액권명)) / ((선적))원 적립되었습니다\n-아하 네일 스튜디오' },
-    { id:'pp4', title:{ko:'정액권 잔액(차감시) 알림',en:'Prepaid Balance (Deduction) Alert'}, type:'LMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'☆ 아하 네일 스튜디오 정액권 사용 안내 ☆\n\n고객님의 정액권 사용내역 입니다.\n\n◇ 정액권명 : ((정액권명))\n◇ 사용금액 : ((선차))원\n◇ 잔액 : ((선잔))원\n\n현재 사용가능한 정액권의 전체잔액은\n((총잔))원 입니다\n\n방문해 주셔서 감사합니다.' },
-    { id:'pp5', title:{ko:'정액권 만료일 알림',en:'Prepaid Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오' },
-    { id:'pp6', title:{ko:'티켓잔여횟수(판매시)',en:'Ticket Count (Purchase)'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'회원권 구매를 감사드립니다.\n*회원권명: ((티켓명))\n*적립횟수: ((적회))회\n-아하 네일 스튜디오' },
-    { id:'pp7', title:{ko:'티켓 잔여횟수(차감시) 알림',en:'Ticket Count (Deduction) Alert'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'*회원권알림\n((성명))님의 ((서비스명)) 회원권이 ((잔회))회 남았습니다\n-아하 네일 스튜디오' },
-    { id:'pp8', title:{ko:'티켓 만료일 알림',en:'Ticket Expiry Alert'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오' }
+    { id:'pp1', title:{ko:'포인트(적립시) 알림',en:'Points add notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*적립:((적립))P\n*누적:((누적))P\n방문 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp2', title:{ko:'포인트(사용시) 알림',en:'Points deduction notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'< 포인트 안내 >\n*차감:((사용))점\n*잔여:((누적))점\n이용 감사합니다!\n-아하 네일 스튜디오' },
+    { id:'pp3', title:{ko:'정액권 잔액(판매시) 알림',en:'Balance add notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'((성명))님 회원권 구입안내\n((정액권명)) / ((선적))원 적립되었습니다\n-아하 네일 스튜디오' },
+    { id:'pp4', title:{ko:'정액권 잔액(차감시) 알림',en:'Balance deduction notification'}, type:'LMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'☆ 아하 네일 스튜디오 정액권 사용 안내 ☆\n\n고객님의 정액권 사용내역 입니다.\n\n◇ 정액권명 : ((정액권명))\n◇ 사용금액 : ((선차))원\n◇ 잔액 : ((선잔))원\n\n현재 사용가능한 정액권의 전체잔액은\n((총잔))원 입니다\n\n방문해 주셔서 감사합니다.' },
+    { id:'pp5', title:{ko:'정액권 만료일 알림',en:'Prepaid card expiry date reminder'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오' },
+    { id:'pp6', title:{ko:'티켓잔여횟수(판매시)',en:'Prepaid service quantity add notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'회원권 구매를 감사드립니다.\n*회원권명: ((티켓명))\n*적립횟수: ((적회))회\n-아하 네일 스튜디오' },
+    { id:'pp7', title:{ko:'티켓 잔여횟수(차감시) 알림',en:'Prepaid service quantity deduction notification'}, type:'SMS', alimtalk:true, active:false, timing:{ko:'즉시 발송',en:'Sent immediately'}, preview:'*회원권알림\n((성명))님의 ((서비스명)) 회원권이 ((잔회))회 남았습니다\n-아하 네일 스튜디오' },
+    { id:'pp8', title:{ko:'티켓 만료일 알림',en:'Prepaid service expiry date reminder'}, type:'LMS', active:false, timing:{ko:'만료 전 발송',en:'Sent before expiry'}, preview:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오' }
   ],
   deposit_alert: [
-    { id:'da1', title:{ko:'예약금 안내',en:'Deposit Info'}, type:'LMS', active:true, timing:{ko:'예약 등록 시 발송',en:'Sent when booking is made'}, preview:'*예약금 입금 안내*\n제로샵입니다\n예약확정을 위해 예약금 입금 부탁드립니다.\n\n1. 예약내용\n-예약일: ((예약월일)) ((예약시각))\n-예약자: ((성명))\n\n2. 예약금 입금정보\n-예약금: ((예약금))원\n-국민은행 000-00000-000\n-예금주 : 000' },
-    { id:'da2', title:{ko:'예약금 입금 확인',en:'Deposit Confirmation'}, type:'LMS', active:true, timing:{ko:'입금 확인 시 발송',en:'Sent when deposit is confirmed'}, preview:'* 제로샵 입니다.예약금 입금확인 되어 아래와 같이 고객님의 예약이 확정 되었습니다\n\n* 예약정보\n예약일시 : ((예약월일)) ((예약시각))\n\n* 예약금 환불규정\n예약일 2일전까지 예약취소시 예약금은 전액환불되며, 전일/당일예약 취소시 예약금은 위약금으로 처리됩니다' }
+    { id:'da1', title:{ko:'예약금 안내',en:'Booking deposit guide'}, type:'LMS', active:true, timing:{ko:'예약 등록 시 발송',en:'Sent when booking is made'}, preview:'*예약금 입금 안내*\n제로샵입니다\n예약확정을 위해 예약금 입금 부탁드립니다.\n\n1. 예약내용\n-예약일: ((예약월일)) ((예약시각))\n-예약자: ((성명))\n\n2. 예약금 입금정보\n-예약금: ((예약금))원\n-국민은행 000-00000-000\n-예금주 : 000' },
+    { id:'da2', title:{ko:'예약금 입금 확인',en:'Booking deposit payment confirmation'}, type:'LMS', active:true, timing:{ko:'입금 확인 시 발송',en:'Sent when deposit is confirmed'}, preview:'* 제로샵 입니다.예약금 입금확인 되어 아래와 같이 고객님의 예약이 확정 되었습니다\n\n* 예약정보\n예약일시 : ((예약월일)) ((예약시각))\n\n* 예약금 환불규정\n예약일 2일전까지 예약취소시 예약금은 전액환불되며, 전일/당일예약 취소시 예약금은 위약금으로 처리됩니다' }
   ],
   visit_thanks: [
-    { id:'vt1', title:{ko:'첫방문 고객',en:'First Visit Client'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 첫 방문 감사합니다! 다음 방문도 기대하겠습니다. 아하 네일 스튜디오' },
-    { id:'vt2', title:{ko:'재방문 고객',en:'Returning Client'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 오늘도 방문해 주셔서 감사합니다! 아하 네일 스튜디오' }
+    { id:'vt1', title:{ko:'첫방문 고객',en:'First Visit Clients'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 첫 방문 감사합니다! 다음 방문도 기대하겠습니다. 아하 네일 스튜디오' },
+    { id:'vt2', title:{ko:'재방문 고객',en:'Revisit Clients'}, type:'SMS', active:false, timing:{ko:'판매 등록 시 자동 발송',en:'Sent on sales registration'}, preview:'((성명))님, 오늘도 방문해 주셔서 감사합니다! 아하 네일 스튜디오' }
   ],
   aftercare: [
-    { id:'ac1', title:{ko:'시술 후 관리 문자',en:'Post-treatment Care'}, type:'SMS', active:true, category:{ko:'커트, 드라이',en:'Cut, Blow Dry'}, timing:{ko:'방문 1일 후 · 10:00 발송',en:'1 day after visit · 10:00'}, preview:'커트 드라이 시술한지 오래되셨네요. 재방문하셔서 관리해주세요' }
+    { id:'ac1', title:{ko:'시술 후 관리 문자',en:'Post-Service Care Message'}, type:'SMS', active:true, category:{ko:'커트, 드라이',en:'Cut, Blow Dry'}, timing:{ko:'방문 1일 후 · 10:00 발송',en:'1 day after visit · 10:00'}, preview:'커트 드라이 시술한지 오래되셨네요. 재방문하셔서 관리해주세요' }
   ],
   revisit: [
-    { id:'rv1', title:{ko:'재방문 유도 문자',en:'Revisit Promotion'}, type:'SMS', active:true, category:{ko:'전체',en:'All'}, timing:{ko:'방문 5일 후 · 10:00 발송',en:'5 days after visit · 10:00'}, preview:'전체분류에서 재방문해주세요.' }
+    { id:'rv1', title:{ko:'재방문 유도 문자',en:'Revisit Encouragement Message'}, type:'SMS', active:true, category:{ko:'전체',en:'All'}, timing:{ko:'방문 5일 후 · 10:00 발송',en:'5 days after visit · 10:00'}, preview:'전체분류에서 재방문해주세요.' }
   ],
   birthday: [
-    { id:'bd1', title:{ko:'생일 축하',en:'Birthday'}, type:'SMS', active:false, timing:{ko:'생일 당일 오전 발송',en:'Sent on birthday morning'}, preview:'((성명))님, 생일 축하드립니다! 특별한 혜택을 준비했습니다. 아하 네일 스튜디오' }
+    { id:'bd1', title:{ko:'생일 축하',en:'Birthday Greetings'}, type:'SMS', active:false, timing:{ko:'생일 당일 오전 발송',en:'Sent on birthday morning'}, preview:'((성명))님, 생일 축하드립니다! 특별한 혜택을 준비했습니다. 아하 네일 스튜디오' }
   ]
 };
 
@@ -7824,20 +7836,20 @@ function amsRender() {
   // 조건부 탭: 마스터 설정 + 새 알림 추가 버튼
   if (isConditional) {
     var masterLabel = amsCurrentSub === 'revisit'
-      ? {ko:'고객이 일정 기간 미 방문할 경우 재방문 유도 문자가 자동 발송되도록 설정합니다.', en:'Set up automatic revisit promotion messages when clients haven\'t visited for a period.'}
-      : {ko:'시술 후 주의 사항, 관리 주기 안내 등의 문자가 자동 발송 되도록 설정합니다.', en:'Set up automatic post-treatment care messages.'};
+      ? {ko:'고객이 일정 기간 미 방문할 경우 재방문 유도 문자가 자동 발송되도록 설정합니다.', en:'Set to automatically send a Revisit Encouragement Message if the client does not visit for a certain period.'}
+      : {ko:'시술 후 주의 사항, 관리 주기 안내 등의 문자가 자동 발송 되도록 설정합니다.', en:'Set to automatically send messages such as post-service precautions and service cycle guidance.'};
     html += '<div class="ams-master-row">';
     html += '<span class="ams-master-desc">' + (isEn ? masterLabel.en : masterLabel.ko) + '</span>';
-    html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span data-ko="문자 발송 등록" data-en="Register Message">' + (isEn ? 'Register Message' : '문자 발송 등록') + '</span></button>';
+    html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span data-ko="문자 발송 등록" data-en="Add Message">' + (isEn ? 'Add Message' : '문자 발송 등록') + '</span></button>';
     html += '</div>';
   }
 
   // 카드
   if (cards.length === 0) {
     html += '<div class="ams-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#BDBDBD" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="13" y2="13"/></svg>';
-    html += '<p data-ko="등록된 알림이 없습니다." data-en="No alerts registered.">' + (isEn ? 'No alerts registered.' : '등록된 알림이 없습니다.') + '</p>';
+    html += '<p data-ko="등록된 알림이 없습니다." data-en="There is no setup automatic messaging.">' + (isEn ? 'There is no setup automatic messaging.' : '등록된 알림이 없습니다.') + '</p>';
     if (isConditional) {
-      html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span>' + (isEn ? 'Register Message' : '문자 발송 등록') + '</span></button>';
+      html += '<button class="ams-add-btn" onclick="amsOpenNewAlert()"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg> <span>' + (isEn ? 'Add Message' : '문자 발송 등록') + '</span></button>';
     }
     html += '</div>';
   } else {
@@ -7847,7 +7859,7 @@ function amsRender() {
       var categoryBadge = c.category ? '<span class="ams-card-badge">' + (isEn ? c.category.en : c.category.ko) + '</span>' : '';
       html += '<div class="ams-card">' +
         '<div class="ams-card-header">' +
-          '<div class="ams-card-header-left"><span class="ams-card-title">' + titleText + '</span> <span class="ams-card-type">' + c.type + '</span>' + (c.alimtalk ? '<span class="ams-card-alimtalk">' + (isEn ? 'KakaoTalk' : '알림톡 가능') + '</span>' : '') + '</div>' +
+          '<div class="ams-card-header-left"><span class="ams-card-title">' + titleText + '</span><div class="ams-card-badges"><span class="ams-card-type">' + c.type + '</span>' + (c.alimtalk ? '<span class="ams-card-alimtalk">' + (isEn ? 'kakao' : '알림톡 가능') + '</span>' : '') + '</div></div>' +
           '<div class="ams-toggle' + (c.active ? ' on' : '') + '" onclick="amsToggle(\'' + c.id + '\',this)"></div>' +
         '</div>' +
         (categoryBadge ? '<div class="ams-card-category-row">' + categoryBadge + '</div>' : '') +
@@ -7859,7 +7871,7 @@ function amsRender() {
           '</button>' : '') +
           '<button class="ams-card-edit-btn" onclick="amsOpenEdit(\'' + c.id + '\')">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> ' +
-            (isEn ? 'Edit Settings' : '내용 및 설정 수정') +
+            (isEn ? 'Edit' : '내용 및 설정 수정') +
           '</button>' +
         '</div>' +
       '</div>';
@@ -7912,8 +7924,8 @@ function amsOpenNewAlert() {
     timing: { ko: '방문 1일 후 · 10:00 발송', en: '1 day(s) after · 10:00' },
     preview: '',
     title: amsCurrentSub === 'aftercare'
-      ? { ko: '시술 후 관리 문자', en: 'Post-treatment Care' }
-      : { ko: '재방문 유도 문자', en: 'Revisit Promotion' },
+      ? { ko: '시술 후 관리 문자', en: 'Post-Service Care Message' }
+      : { ko: '재방문 유도 문자', en: 'Revisit Encouragement Message' },
     category: { ko: '', en: '' }
   };
 
@@ -8114,7 +8126,7 @@ document.addEventListener('input', function(e) {
 var amsEditCardData = null; // 현재 편집 중인 카드 데이터 참조
 
 var amsEditConfigs = {
-  ba1: { notice:{ko:'예약일 기준 선택된 일자 이전에 알림 문자가 자동으로 발송하도록 설정합니다',en:'Set up automatic alert messages before the selected date based on booking date'}, sendDateType:'select_days' },
+  ba1: { notice:{ko:'예약일 기준 선택된 일자 이전에 알림 문자가 자동으로 발송하도록 설정합니다',en:'Set notification text to be sent automatically before the selected date based on the reservation date'}, sendDateType:'select_days' },
   ba2: { notice:{ko:'예약 전날에 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages the day before booking'}, sendDateType:'day_before' },
   ba3: { notice:{ko:'예약 당일에 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages on the day of booking'}, sendDateType:'same_day' },
   ba4: { notice:{ko:'예약 시간에 임박했을 때 고객에게 알림문자가 자동으로 발송되도록 설정합니다',en:'Set up automatic alert messages before booking time'}, sendDateType:'hours_before' },
@@ -8128,7 +8140,7 @@ var amsEditConfigs = {
     convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 적립',en:'Prepaid Credit'},v:'((선적))'},{field:{ko:'정액권 잔액',en:'Prepaid Balance'},v:'((선잔))'},{field:{ko:'정액권 총잔액',en:'Total Balance'},v:'((총잔))'}] },
   pp4: { notice:{ko:'고객방문후 정액권 잔액을 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when prepaid card is deducted'}, sendDateType:'immediate_select',
     convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 차감',en:'Deduction'},v:'((선차))'},{field:{ko:'정액권 잔액',en:'Balance'},v:'((선잔))'},{field:{ko:'정액권 총잔액',en:'Total Balance'},v:'((총잔))'}] },
-  pp5: { notice:{ko:'고객의 정액권이 만료되기 전 자동으로 안내문자가 발송되도록 설정합니다 (할인전용 정액권은 발송되지 않습니다)',en:'Automatic alert before prepaid card expiry'}, sendDateType:'expiry_days',
+  pp5: { notice:{ko:'고객의 정액권이 만료되기 전 자동으로 안내문자가 발송되도록 설정합니다 (할인전용 정액권은 발송되지 않습니다)',en:'Set to automatically send a notification text message before the client\'s prepaid balance expires (Not send for Discount type of prepaid card)'}, sendDateType:'expiry_days',
     convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'정액권명',en:'Prepaid Name'},v:'((정액권명))'},{field:{ko:'정액권 잔액',en:'Balance'},v:'((선잔))'},{field:{ko:'만료일',en:'Expiry Date'},v:'((만료일))'}] },
   pp6: { notice:{ko:'고객방문후 구매한 티켓을 알려주는 문자가 자동으로 발송되도록 설정합니다',en:'Automatic alert when ticket is sold'}, sendDateType:'immediate_select',
     convVars:[{field:{ko:'고객명',en:'Client Name'},v:'((성명))'},{field:{ko:'티켓',en:'Ticket'},v:'((티켓명))'},{field:{ko:'잔여횟수',en:'Remaining'},v:'((잔회))'},{field:{ko:'적립횟수',en:'Earned'},v:'((적회))'}] },
@@ -8395,35 +8407,35 @@ function amsEditRenderSendDate(type, isEn) {
   var html = '';
   switch (type) {
     case 'select_days':
-      html = '<span>' + (isEn ? 'Day before booking' : '예약일 전날') + '</span> '
+      html = '<span>' + (isEn ? 'Reservation date' : '예약일 전날') + '</span> '
         + '<select id="amsEditDaysBefore">';
-      for (var i = 1; i <= 30; i++) html += '<option value="' + i + '"' + (i === 7 ? ' selected' : '') + '>' + i + (isEn ? ' days' : '일전') + '</option>';
+      for (var i = 1; i <= 30; i++) html += '<option value="' + i + '"' + (i === 7 ? ' selected' : '') + '>' + i + (isEn ? 'Day ago' : '일전') + '</option>';
       html += '</select> '
         + '<select id="amsEditHour">';
       for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 17 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
     case 'day_before':
-      html = '<span>' + (isEn ? 'Day before booking' : '예약일 전날') + '</span> '
+      html = '<span>' + (isEn ? 'Reservation date' : '예약일 전날') + '</span> '
         + '<select id="amsEditHour">';
       for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 17 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
     case 'same_day':
       html = '<span>' + (isEn ? 'Day of booking' : '예약일 당일') + '</span> '
         + '<select id="amsEditHour">';
       for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
     case 'hours_before':
       html = '<span>' + (isEn ? 'Before booking time' : '예약 시간 전') + '</span> '
         + '<select id="amsEditHoursBefore">';
       for (var h = 1; h <= 12; h++) html += '<option value="' + h + '"' + (h === 2 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'hour(s)' : '시간') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시간') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
     case 'immediate_select':
       html = '<select id="amsEditImmediateType">'
@@ -8450,15 +8462,15 @@ function amsEditRenderSendDate(type, isEn) {
       html += '</select> <span>' + (isEn ? 'day(s) after' : '일 후') + '</span> '
         + '<select id="amsEditHour">';
       for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
     case 'birthday':
       html = '<span>' + (isEn ? 'Birthday morning' : '생일 당일 오전') + '</span> '
         + '<select id="amsEditHour">';
       for (var h = 0; h < 24; h++) html += '<option value="' + h + '"' + (h === 10 ? ' selected' : '') + '>' + (h < 10 ? '0' + h : h) + '</option>';
-      html += '</select> <span>' + (isEn ? 'h' : '시') + '</span> '
-        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'min' : '분') + '</span>';
+      html += '</select> <span>' + (isEn ? 'O\'clock' : '시') + '</span> '
+        + '<select id="amsEditMin"><option value="0" selected>00</option><option value="30">30</option></select> <span>' + (isEn ? 'Minutes' : '분') + '</span>';
       break;
   }
   wrap.innerHTML = html;
@@ -8983,14 +8995,14 @@ function amsDepositSelectSample(e) {
 // ── 만료일 모드 (pp5, pp8) ──
 var amsExpiryDefaults = {
   pp5: [
-    { title:'첫번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원 남아 있으세요.\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minBalance:100000 },
-    { title:'두번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minBalance:1 },
-    { title:'세번째 발송', msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minBalance:1 }
+    { title:{ko:'첫번째 발송',en:'1st Send'}, msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원 남아 있으세요.\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n금액이 많이 남아 있으시니 기간 내에 오셔서 관리 받으시고 행복한 하루 되세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minBalance:100000 },
+    { title:{ko:'두번째 발송',en:'2nd Send'}, msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minBalance:1 },
+    { title:{ko:'세번째 발송',en:'3rd Send'}, msg:'((성명))고객님의 회원권\n((정액권명)) / 잔액((선잔))원\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minBalance:1 }
   ],
   pp8: [
-    { title:'첫번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minCount:4 },
-    { title:'두번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minCount:1 },
-    { title:'세번째 발송', msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minCount:1 }
+    { title:{ko:'첫번째 발송',en:'1st Send'}, msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간은 ((만료일)) 까지 사용가능 합니다.\n회원권 잔여횟수 많이 남아 있으시니 기간 내에 오셔서 관리해주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:90, minCount:4 },
+    { title:{ko:'두번째 발송',en:'2nd Send'}, msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용 가능 합니다.\n회원권 유효기간 이후에는 회원권 잔액 사용이 어려우세요.\n\n바로 전화 주시면 예약 잡아 드릴께요. ^^', type:'lms', active:false, expDays:30, minCount:1 },
+    { title:{ko:'세번째 발송',en:'3rd Send'}, msg:'((성명))고객님의\n((티켓명)) / 잔여횟수 ((잔회))회\n\n유효기간 ((만료일)) 까지 사용가능 합니다.\n남은 기간이 얼마 않으시니 꼭 오셔서 사용 해주시고 부득이한 경우 샵으로 전화 주세요.\n\n-아하 네일 스튜디오', type:'lms', active:false, expDays:7, minCount:1 }
   ]
 };
 
@@ -9000,22 +9012,23 @@ function amsExpiryRenderCards(cardId) {
   var isPrepaid = cardId === 'pp5';
   var html = '';
   defaults.forEach(function(d, i) {
+    var cardTitle = (typeof d.title === 'object') ? (isEn ? d.title.en : d.title.ko) : d.title;
     html += '<div class="ams-expiry-card">'
-      + '<div class="ams-expiry-card-header"><span class="ams-expiry-card-title">' + d.title + '</span>'
+      + '<div class="ams-expiry-card-header"><span class="ams-expiry-card-title">' + cardTitle + '</span>'
       + '<div class="ams-toggle' + (d.active ? ' on' : '') + '" id="amsExpToggle' + i + '" onclick="this.classList.toggle(\'on\')"></div></div>'
-      + '<div class="cst-sms-type-row"><span class="cst-sms-type-label">문자유형</span>'
+      + '<div class="cst-sms-type-row"><span class="cst-sms-type-label">' + (isEn ? 'Message type' : '문자유형') + '</span>'
       + '<select class="cst-sms-type-select" id="amsExpType' + i + '" onchange="amsExpiryTypeChange(' + i + ')"><option value="sms">SMS</option><option value="lms"' + (d.type === 'lms' ? ' selected' : '') + '>LMS</option></select>'
       + '<div class="cst-sms-help-wrap"><button class="sv-help-btn">?</button>'
       + '<div class="cst-sms-help-tooltip"><table class="cst-sms-help-table"><thead><tr><th>구분</th><th>요금</th><th>한글 글자수 (byte)</th><th>이미지 첨부</th></tr></thead><tbody><tr><td>단문 SMS</td><td>22원</td><td>42자 (85byte)</td><td>X</td></tr><tr><td>장문 LMS</td><td>49원</td><td>1,000자 (2,000byte)</td><td>X</td></tr><tr><td>그림문자 MMS</td><td>198원</td><td>1,000자 (2,000byte)</td><td>O</td></tr></tbody></table><div class="cst-sms-help-notes">MMS 이미지 첨부 가능 파일형식 : jpg, jpeg, png, bmp, gif<br>(광고) 표시시 한글 3자(6byte)가 소요됩니다<br>수신거부 삽입 시 한글 13자(25byte)가 소요됩니다</div></div>'
       + '</div></div>'
       + '<div class="ams-expiry-cond-row">'
-      + '<span>' + (isEn ? 'Expiry' : '만료') + '</span><input type="number" value="' + d.expDays + '" id="amsExpDays' + i + '"><span>' + (isEn ? 'days before' : '일 전') + '</span>'
-      + '<span>' + (isPrepaid ? (isEn ? 'Balance' : '잔액') : (isEn ? 'Remaining' : '잔여횟수')) + '</span><input type="number" value="' + (isPrepaid ? d.minBalance : d.minCount) + '" id="amsExpMin' + i + '"><span>' + (isPrepaid ? (isEn ? 'won+' : '원 이상') : (isEn ? '+' : '이상')) + '</span>'
+      + '<span>' + (isEn ? 'Send Before' : '만료') + '</span><input type="number" value="' + d.expDays + '" id="amsExpDays' + i + '"><span>' + (isEn ? 'days' : '일 전') + '</span>'
+      + '<span>' + (isPrepaid ? (isEn ? 'Only if balance is Over' : '잔액') : (isEn ? 'Remaining' : '잔여횟수')) + '</span><input type="number" value="' + (isPrepaid ? d.minBalance : d.minCount) + '" id="amsExpMin' + i + '"><span>' + (isPrepaid ? (isEn ? 'won+' : '원 이상') : (isEn ? '+' : '이상')) + '</span>'
       + '</div>'
       + '<div class="cst-sms-textarea-wrap"><textarea class="cst-sms-textarea" id="amsExpMsg' + i + '">' + d.msg + '</textarea>'
       + '<div class="cst-sms-byte-count" id="amsExpBytes' + i + '">0 / 2000 Bytes</div></div>'
       + '<div class="ams-expiry-btn-row">'
-      + '<button class="ams-expiry-preview-btn" onclick="amsExpiryToggleSpecialChars(' + i + ',this)">' + (isEn ? 'Special' : '특수문자') + '</button>'
+      + '<button class="ams-expiry-preview-btn" onclick="amsExpiryToggleSpecialChars(' + i + ',this)">' + (isEn ? 'Special character' : '특수문자') + '</button>'
       + '<button class="ams-expiry-preview-btn" onclick="amsOpenSmsPreview(\'amsExpMsg' + i + '\')">' + (isEn ? 'Preview' : '미리보기') + '</button>'
       + '</div>'
       + '</div>';
@@ -9567,6 +9580,21 @@ function snDocSubmit() {
     }
   }
   alert(isEn ? 'Document verification request has been submitted.' : '서류인증 신청이 완료되었습니다.');
+  // 서류인증 영역 닫기 및 초기화
+  document.getElementById('snDocVerifySection').style.display = 'none';
+  document.getElementById('snAuthSection').style.display = 'none';
+  document.querySelector('input[name="snAuthMethod"][value="phone"]').checked = true;
+  document.getElementById('snPhoneVerifyRow').style.display = '';
+  // 접수 방법 초기화
+  document.querySelector('input[name="snDocMethod"][value="file"]').checked = true;
+  snDocMethodChange();
+  // 파일 입력 초기화
+  var fi = document.getElementById('snDocFileInput');
+  if (fi) fi.value = '';
+  var fn = document.getElementById('snDocFileName');
+  if (fn) fn.style.display = 'none';
+  // 번호 입력 초기화
+  document.getElementById('snNumberInput').value = '';
 }
 
 function snDocCancel() {
@@ -9653,6 +9681,18 @@ function snShopNameInit() {
     var storeName = document.getElementById('snAlimStoreName');
     if (titleName) titleName.textContent = name;
     if (storeName) storeName.textContent = name;
+  }
+  // 등록된 발신번호(★ 기본번호)를 알림톡 미리보기에 반영
+  var phoneLine = document.getElementById('snAlimPhoneLine');
+  if (phoneLine) {
+    var starRow = document.querySelector('#snListBody .sn-star');
+    if (starRow) {
+      var numText = starRow.parentElement.textContent.replace('★', '').trim();
+      phoneLine.textContent = '☎ ' + numText;
+      phoneLine.style.display = '';
+    } else {
+      phoneLine.style.display = 'none';
+    }
   }
 }
 function snShopNameEdit() {
