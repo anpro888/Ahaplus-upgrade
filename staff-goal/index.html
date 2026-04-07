@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 직원별 목표 관리</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- ===================== 목표 관리 화면 ===================== -->
+<div class="sg-page" id="goalManageView">
+
+  <!-- 헤더 -->
+  <div class="sg-page-header">
+    <h2 class="sg-page-title" data-i18n="sg.goalManage" data-ko="직원별 목표 관리" data-en="Staff Goal Management">직원별 목표 관리</h2>
+    <button class="sg-btn sg-btn-outline" onclick="showGoalSettingView()" data-i18n="sg.goalSetting" data-ko="목표 설정" data-en="Goal Setting">목표 설정</button>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="sg-filter-panel">
+    <!-- 1행: 기간/직원/검색 -->
+    <div class="sg-filter-row">
+      <div class="sg-filter-group">
+        <label class="sg-radio-label">
+          <input type="radio" name="periodType" value="monthly" checked onchange="togglePeriodType()">
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.monthly" data-ko="월별" data-en="Monthly">월별</span>
+        </label>
+        <label class="sg-radio-label">
+          <input type="radio" name="periodType" value="range" onchange="togglePeriodType()">
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.range" data-ko="기간" data-en="Range">기간</span>
+        </label>
+        <input type="month" class="sg-input sg-input-date" id="goalMonth" value="2026-04" />
+        <div class="sg-range-inputs" id="rangeInputs" style="display:none;">
+          <input type="date" class="sg-input sg-input-date" id="goalStartDate" />
+          <span class="sg-range-sep">~</span>
+          <input type="date" class="sg-input sg-input-date" id="goalEndDate" />
+        </div>
+      </div>
+      <div class="sg-filter-group">
+        <span class="sg-filter-label" data-i18n="sg.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="sg-select" id="goalStaffSelect">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+        </select>
+      </div>
+      <div class="sg-filter-right">
+        <button class="sg-btn sg-btn-primary sg-btn-search" onclick="searchGoal()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2행: 집계 기준 -->
+    <div class="sg-filter-row">
+      <div class="sg-filter-group">
+        <span class="sg-filter-label" data-i18n="sg.aggBasis" data-ko="집계 기준" data-en="Agg. Basis">집계 기준</span>
+        <button class="sg-help-btn" id="aggHelpBtn" onclick="toggleAggTooltip(event)">?</button>
+        <div class="sg-tooltip" id="aggTooltip">
+          <span data-i18n="sg.aggTooltip" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership (prepaid card, ticket) revenue.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</span><br/>
+          <span data-i18n="sg.aggTooltipSale" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales basis: Service/Product/Membership sales (excl. deduction)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</span><br/>
+          <span data-i18n="sg.aggTooltipRev" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue basis: Service/Product sales & membership deduction (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</span>
+        </div>
+        <label class="sg-radio-label">
+          <input type="radio" name="aggBasis" value="sale" checked>
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.saleBasis" data-ko="판매 (회원권 판매 기준)" data-en="Sales (Membership Sales)">판매 (회원권 판매 기준)</span>
+        </label>
+        <label class="sg-radio-label">
+          <input type="radio" name="aggBasis" value="revenue">
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.revBasis" data-ko="매출 (회원권 차감 기준)" data-en="Revenue (Membership Deduction)">매출 (회원권 차감 기준)</span>
+        </label>
+        <label class="sg-checkbox-label">
+          <input type="checkbox" id="chkPointDeduction" checked>
+          <span class="sg-checkbox-box"></span>
+          <span data-i18n="sg.includePoint" data-ko="포인트 차감 포함" data-en="Include Point Deduction">포인트 차감 포함</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 3행: 목표 계산 / 구분 -->
+    <div class="sg-filter-row">
+      <div class="sg-filter-group">
+        <span class="sg-filter-label" data-i18n="sg.goalCalc" data-ko="목표 계산" data-en="Goal Calc.">목표 계산</span>
+        <label class="sg-radio-label">
+          <input type="radio" name="goalCalc" value="daily" checked>
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.prorated" data-ko="일할" data-en="Prorated">일할</span>
+        </label>
+        <label class="sg-radio-label">
+          <input type="radio" name="goalCalc" value="monthly">
+          <span class="sg-radio-dot"></span>
+          <span data-i18n="sg.monthlyCalc" data-ko="월간" data-en="Monthly">월간</span>
+        </label>
+        <span class="sg-filter-label" style="margin-left:16px;" data-i18n="sg.category" data-ko="구분" data-en="Category">구분</span>
+        <div class="sg-dropdown-wrap" id="categoryDropdown">
+          <button class="sg-select sg-dropdown-trigger" onclick="toggleCategoryDropdown(event)">
+            <span id="categoryLabel" data-i18n="common.all" data-ko="전체" data-en="All">전체</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="sg-dropdown-menu" id="categoryMenu">
+            <div class="sg-dropdown-title" data-i18n="sg.selectItems" data-ko="아이템 선택" data-en="Select Items">아이템 선택</div>
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" class="sg-cat-chk" value="service" checked onchange="updateCategoryLabel()">
+              <span class="sg-checkbox-box"></span>
+              <span data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</span>
+            </label>
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" class="sg-cat-chk" value="product" checked onchange="updateCategoryLabel()">
+              <span class="sg-checkbox-box"></span>
+              <span data-i18n="sg.product" data-ko="제품" data-en="Product">제품</span>
+            </label>
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" class="sg-cat-chk" value="prepaid" checked onchange="updateCategoryLabel()">
+              <span class="sg-checkbox-box"></span>
+              <span data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</span>
+            </label>
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" class="sg-cat-chk" value="ticket" checked onchange="updateCategoryLabel()">
+              <span class="sg-checkbox-box"></span>
+              <span data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 차트 영역 -->
+  <div class="sg-chart-panel" id="chartPanel">
+    <div class="sg-chart-legend" id="chartLegend" style="display:none;">
+      <span class="sg-legend-item"><span class="sg-legend-color" style="background:#43A047;"></span><span data-i18n="sg.achieved" data-ko="달성" data-en="Achieved">달성</span></span>
+      <span class="sg-legend-item"><span class="sg-legend-color" style="background:#E0E0E0;"></span><span data-i18n="sg.remaining" data-ko="잔여목표" data-en="Remaining">잔여목표</span></span>
+    </div>
+    <div class="sg-chart-empty" id="chartEmpty">
+      <span data-i18n="sg.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+    </div>
+    <canvas id="goalChart" style="display:none;"></canvas>
+  </div>
+
+  <!-- 데이터 테이블 -->
+  <div class="sg-table-panel">
+    <table class="sg-table">
+      <thead>
+        <tr>
+          <th rowspan="2" data-i18n="sg.staffCol" data-ko="담당자" data-en="Staff">담당자</th>
+          <th colspan="2" data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</th>
+          <th colspan="2" data-i18n="sg.product" data-ko="제품" data-en="Product">제품</th>
+          <th colspan="2" data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+          <th colspan="2" data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+          <th colspan="2" data-i18n="sg.total" data-ko="합계" data-en="Total">합계</th>
+        </tr>
+        <tr>
+          <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th>
+          <th>%</th>
+          <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th>
+          <th>%</th>
+          <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th>
+          <th>%</th>
+          <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th>
+          <th>%</th>
+          <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody id="goalTableBody">
+        <tr class="sg-empty-row">
+          <td colspan="11" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 목표 설정 화면 ===================== -->
+<div class="sg-page" id="goalSettingView" style="display:none;">
+
+  <!-- 헤더 -->
+  <div class="sg-page-header">
+    <h2 class="sg-page-title" data-i18n="sg.goalSettingTitle" data-ko="직원 목표 설정" data-en="Staff Goal Setting">직원 목표 설정</h2>
+    <button class="sg-btn sg-btn-outline" onclick="showGoalManageView()" data-i18n="sg.goalManageBtn" data-ko="목표 관리" data-en="Goal Management">목표 관리</button>
+  </div>
+
+  <!-- 기간 선택 -->
+  <div class="sg-setting-filter">
+    <div class="sg-filter-group">
+      <select class="sg-select sg-select-sm" id="settingYear">
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026" selected>2026</option>
+        <option value="2027">2027</option>
+      </select>
+      <span class="sg-filter-unit" data-i18n="sg.year" data-ko="년" data-en="Y">년</span>
+      <select class="sg-select sg-select-sm" id="settingMonth">
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <option value="03">03</option>
+        <option value="04" selected>04</option>
+        <option value="05">05</option>
+        <option value="06">06</option>
+        <option value="07">07</option>
+        <option value="08">08</option>
+        <option value="09">09</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+      <span class="sg-filter-unit" data-i18n="sg.month" data-ko="월" data-en="M">월</span>
+      <button class="sg-btn sg-btn-accent" onclick="copyPrevMonth()" data-i18n="sg.copyPrevMonth" data-ko="전월 목표 복사" data-en="Copy Previous Month">전월 목표 복사</button>
+    </div>
+    <div class="sg-filter-right">
+      <button class="sg-btn sg-btn-primary sg-btn-search" onclick="searchSetting()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+        <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 목표 설정 테이블 -->
+  <div class="sg-setting-panel">
+    <div class="sg-setting-panel-header">
+      <span class="sg-setting-period" id="settingPeriodLabel">2026년 4월</span>
+      <div class="sg-setting-add-area">
+        <span class="sg-filter-label" data-i18n="sg.addStaff" data-ko="직원 추가" data-en="Add Staff">직원 추가</span>
+        <div class="sg-staff-dropdown-wrap" id="staffAddDropdown">
+          <button class="sg-select sg-dropdown-trigger" onclick="toggleStaffDropdown(event)" id="staffAddBtn">
+            <span id="staffAddLabel" data-i18n="sg.selectStaff" data-ko="직원 선택" data-en="Select Staff">직원 선택</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="sg-dropdown-menu sg-staff-menu" id="staffMenu">
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" id="staffSelectAll" onchange="toggleStaffSelectAll()">
+              <span class="sg-checkbox-box"></span>
+              <span data-i18n="sg.selectAll" data-ko="전체 선택" data-en="Select All">전체 선택</span>
+            </label>
+            <label class="sg-checkbox-label sg-dropdown-item">
+              <input type="checkbox" class="sg-staff-chk" value="원장님">
+              <span class="sg-checkbox-box"></span>
+              <span>원장님</span>
+            </label>
+          </div>
+        </div>
+        <button class="sg-btn sg-btn-primary sg-btn-sm" onclick="addStaffToList()" data-i18n="sg.addToList" data-ko="목록에 추가" data-en="Add to List">목록에 추가</button>
+      </div>
+    </div>
+
+    <table class="sg-table sg-setting-table">
+      <thead>
+        <tr>
+          <th data-i18n="sg.staffCol" data-ko="담당자" data-en="Staff">담당자</th>
+          <th data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</th>
+          <th data-i18n="sg.product" data-ko="제품" data-en="Product">제품</th>
+          <th data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+          <th data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+          <th data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</th>
+        </tr>
+      </thead>
+      <tbody id="settingTableBody">
+        <tr class="sg-empty-row">
+          <td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sg-setting-save-area">
+      <button class="sg-btn sg-btn-primary sg-btn-save" id="saveGoalBtn" onclick="saveGoals()" data-i18n="sg.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+
+    <ul class="sg-setting-notes">
+      <li data-i18n="sg.note1" data-ko="직원별로 추가, 삭제한 후에는 저장해야 반영됩니다." data-en="After adding or deleting staff, you must save to apply changes.">직원별로 추가, 삭제한 후에는 저장해야 반영됩니다.</li>
+      <li data-i18n="sg.note2" data-ko="목표가 모두 공백인 경우는 제외됩니다." data-en="Entries with all blank goals will be excluded.">목표가 모두 공백인 경우는 제외됩니다.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== 삭제 확인 모달 ===================== -->
+<div class="sg-modal-overlay" id="deleteModal" style="display:none;">
+  <div class="sg-modal">
+    <div class="sg-modal-header">
+      <div class="sg-modal-bar"></div>
+      <span class="sg-modal-title" data-i18n="sg.confirm" data-ko="확인" data-en="Confirm">확인</span>
+      <button class="sg-modal-close" onclick="closeDeleteModal()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="sg-modal-body">
+      <p data-i18n="sg.confirmDelete" data-ko="정말 삭제 하시겠습니까?" data-en="Are you sure you want to delete?">정말 삭제 하시겠습니까?</p>
+    </div>
+    <div class="sg-modal-footer">
+      <button class="sg-btn sg-btn-outline" onclick="closeDeleteModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="sg-btn sg-btn-danger" id="confirmDeleteBtn" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

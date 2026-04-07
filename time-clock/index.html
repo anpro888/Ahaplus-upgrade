@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 출퇴근 관리</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===================== 1. 출퇴근 관리 (Time Clock) ===================== -->
+<div class="tc-page" id="timeClockView">
+
+  <!-- 헤더 -->
+  <div class="tc-page-header">
+    <h2 class="tc-page-title" data-i18n="tc.timeClock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</h2>
+    <div class="tc-header-actions">
+      <button class="tc-btn tc-btn-primary" onclick="openClockInModal()" data-i18n="tc.addClockIn" data-ko="출근 등록" data-en="Add Clock-In">출근 등록</button>
+      <button class="tc-btn tc-btn-primary" onclick="openClockOutModal()" data-i18n="tc.addClockOut" data-ko="퇴근 등록" data-en="Add Clock-Out">퇴근 등록</button>
+      <button class="tc-btn tc-btn-primary" onclick="openAbsentModal()" data-i18n="tc.addAbsentee" data-ko="결근 등록" data-en="Add Absentee">결근 등록</button>
+      <button class="tc-btn tc-btn-outline" onclick="showDaysWorkedView()" data-i18n="tc.daysWorked" data-ko="출퇴근 집계" data-en="Days Worked">출퇴근 집계</button>
+      <button class="tc-btn tc-btn-outline" onclick="printTimeClock()" data-i18n="tc.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      <button class="tc-btn tc-btn-outline" onclick="showWorkingHoursView()" data-i18n="tc.settings" data-ko="설정" data-en="Settings">설정</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="tc-filter-panel">
+    <div class="tc-filter-row">
+      <div class="tc-filter-group">
+        <label class="tc-radio-label">
+          <input type="radio" name="tcPeriodType" value="daily" checked onchange="toggleTcPeriod()">
+          <span class="tc-radio-dot"></span>
+          <span data-i18n="tc.daily" data-ko="일별" data-en="Date">일별</span>
+        </label>
+        <label class="tc-radio-label">
+          <input type="radio" name="tcPeriodType" value="monthly" onchange="toggleTcPeriod()">
+          <span class="tc-radio-dot"></span>
+          <span data-i18n="tc.monthly" data-ko="월별" data-en="Month">월별</span>
+        </label>
+        <label class="tc-radio-label">
+          <input type="radio" name="tcPeriodType" value="range" onchange="toggleTcPeriod()">
+          <span class="tc-radio-dot"></span>
+          <span data-i18n="tc.dateRange" data-ko="기간" data-en="Date Range">기간</span>
+        </label>
+        <input type="date" class="tc-input tc-input-date" id="tcDailyDate" value="2025-11-03" />
+        <input type="month" class="tc-input tc-input-date" id="tcMonthDate" value="2025-11" style="display:none;" />
+        <div class="tc-range-inputs" id="tcRangeInputs" style="display:none;">
+          <input type="date" class="tc-input tc-input-date" id="tcStartDate" />
+          <span class="tc-range-sep">~</span>
+          <input type="date" class="tc-input tc-input-date" id="tcEndDate" />
+        </div>
+      </div>
+      <div class="tc-filter-group">
+        <span class="tc-filter-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="tc-select" id="tcStaffFilter">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="jimmy">Jimmy</option>
+          <option value="suji">Suji</option>
+          <option value="alice">Alice</option>
+        </select>
+      </div>
+      <div class="tc-filter-group">
+        <span class="tc-filter-label" data-i18n="tc.status" data-ko="상태" data-en="Status">상태</span>
+        <select class="tc-select" id="tcStatusFilter">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="tardy" data-i18n="tc.tardy" data-ko="지각" data-en="Tardy">지각</option>
+          <option value="leaveEarly" data-i18n="tc.leaveEarly" data-ko="조퇴" data-en="Leave Early">조퇴</option>
+          <option value="absent" data-i18n="tc.absent" data-ko="결근" data-en="Absent">결근</option>
+        </select>
+      </div>
+      <div class="tc-filter-right">
+        <button class="tc-btn tc-btn-primary tc-btn-search" onclick="searchTimeClock()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 데이터 테이블 -->
+  <div class="tc-table-panel">
+    <table class="tc-table">
+      <thead>
+        <tr>
+          <th data-i18n="tc.date" data-ko="날짜" data-en="Date">날짜</th>
+          <th data-i18n="tc.staffName" data-ko="직원 이름" data-en="Staff Name">직원 이름</th>
+          <th data-i18n="tc.inTime" data-ko="출근 시각" data-en="In Time">출근 시각</th>
+          <th data-i18n="tc.outTime" data-ko="퇴근 시각" data-en="Out Time">퇴근 시각</th>
+          <th data-i18n="tc.hoursWorked" data-ko="근무 시간" data-en="Hours Worked">근무 시간</th>
+          <th data-i18n="tc.absent" data-ko="결근" data-en="Absent">결근</th>
+          <th data-i18n="tc.registeredIp" data-ko="등록 IP" data-en="Registered IP">등록 IP</th>
+          <th data-i18n="tc.notes" data-ko="메모" data-en="Notes">메모</th>
+          <th data-i18n="tc.edit" data-ko="수정" data-en="Edit">수정</th>
+        </tr>
+      </thead>
+      <tbody id="tcTableBody">
+        <tr>
+          <td>2025-11-03</td>
+          <td>Jimmy</td>
+          <td>19:03</td>
+          <td><button class="tc-btn-add" onclick="openClockOutModalForRow(0)" data-i18n="tc.add" data-ko="등록" data-en="Add">등록</button></td>
+          <td></td>
+          <td></td>
+          <td>89.147.101.199</td>
+          <td></td>
+          <td><button class="tc-btn-edit" onclick="openEditModal(0)" data-i18n="tc.editBtn" data-ko="수정" data-en="Edit">수정</button></td>
+        </tr>
+        <tr>
+          <td>2025-11-03</td>
+          <td>Suji</td>
+          <td>18:48</td>
+          <td>18:48</td>
+          <td data-i18n="tc.hoursMinutes" data-ko="0시간 0분" data-en="0 Hours 0 Minutes">0 Hours 0 Minutes</td>
+          <td></td>
+          <td>89.147.101.199/89.147.101.199</td>
+          <td></td>
+          <td><button class="tc-btn-edit" onclick="openEditModal(1)" data-i18n="tc.editBtn" data-ko="수정" data-en="Edit">수정</button></td>
+        </tr>
+        <tr>
+          <td>2025-11-03</td>
+          <td>Alice</td>
+          <td>18:41</td>
+          <td>18:47</td>
+          <td data-i18n="tc.hoursMinutes" data-ko="0시간 5분" data-en="0 Hours 5 Minutes">0 Hours 5 Minutes</td>
+          <td></td>
+          <td>89.147.101.199/89.147.101.199</td>
+          <td></td>
+          <td><button class="tc-btn-edit" onclick="openEditModal(2)" data-i18n="tc.editBtn" data-ko="수정" data-en="Edit">수정</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 2. 근무 시간 설정 (Working Hours Setup) ===================== -->
+<div class="tc-page" id="workingHoursView" style="display:none;">
+
+  <!-- 헤더 -->
+  <div class="tc-page-header">
+    <h2 class="tc-page-title" data-i18n="tc.workingHoursSetup" data-ko="근무 시간 설정" data-en="Working Hours Setup">근무 시간 설정</h2>
+    <button class="tc-btn tc-btn-outline" onclick="showTimeClockView()" data-i18n="tc.timeClock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</button>
+  </div>
+
+  <!-- 직원 근무 시간 테이블 -->
+  <div class="tc-table-panel">
+    <table class="tc-table">
+      <thead>
+        <tr>
+          <th data-i18n="tc.staffNumber" data-ko="직원 번호" data-en="Staff Number">직원 번호</th>
+          <th data-i18n="tc.staffName" data-ko="직원명" data-en="Staff Name">직원명</th>
+          <th data-i18n="tc.workingHours" data-ko="근무 시간" data-en="Working Hours">근무 시간</th>
+          <th data-i18n="tc.registerEdit" data-ko="등록/ 수정" data-en="Setup">등록/ 수정</th>
+        </tr>
+      </thead>
+      <tbody id="whTableBody">
+        <tr data-staff-id="1">
+          <td>1</td>
+          <td data-i18n="tc.sampleStaff1" data-ko="홍길동" data-en="Staff 1">홍길동</td>
+          <td class="tc-wh-info">09:00 ~ 18:30 <span data-i18n="tc.weekdaysSat" data-ko="월, 화, 수, 목, 금, 토" data-en="Mon, Tue, Wed, Thu, Fri, Sat">월, 화, 수, 목, 금, 토</span><br/>09:00 ~ 14:00 <span data-i18n="tc.sunday" data-ko="일" data-en="Sun">일</span></td>
+          <td><button class="tc-btn-edit" onclick="openWorkingHourSetupModal(1)" data-i18n="tc.editSetup" data-ko="수정" data-en="Edit">수정</button></td>
+        </tr>
+        <tr data-staff-id="2">
+          <td>2</td>
+          <td data-i18n="tc.sampleStaff2" data-ko="김철수" data-en="Staff 2">김철수</td>
+          <td class="tc-wh-info"></td>
+          <td><button class="tc-btn-add" onclick="openWorkingHourSetupModal(2)" data-i18n="tc.register" data-ko="등록" data-en="Setup">등록</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 안내 문구 -->
+  <ul class="tc-notes">
+    <li data-i18n="tc.whNote1" data-ko="직원 출근 및 퇴근 등록 시 지각 또는 조퇴 여부가 근무 시간을 기준으로 자동 결정됩니다." data-en="When registering staff clock-in and clock-out, tardy or leave early status is automatically determined based on working hours.">직원 출근 및 퇴근 등록 시 <strong>지각</strong> 또는 <strong>조퇴</strong> 여부가 근무 시간을 기준으로 <strong>자동 결정</strong>됩니다.</li>
+    <li data-i18n="tc.whNote2" data-ko="설정된 근무 시간은 직원 출퇴근 관리에만 적용됩니다." data-en="Configured working hours apply only to staff time clock management.">설정된 근무 시간은 직원 출퇴근 관리에만 적용됩니다.</li>
+  </ul>
+</div>
+
+<!-- ===================== 3. 출퇴근 집계 (Days Worked) ===================== -->
+<div class="tc-page" id="daysWorkedView" style="display:none;">
+
+  <!-- 헤더 -->
+  <div class="tc-page-header">
+    <h2 class="tc-page-title" data-i18n="tc.daysWorkedTitle" data-ko="출퇴근 집계" data-en="Days Worked">출퇴근 집계</h2>
+    <div class="tc-header-actions">
+      <button class="tc-btn tc-btn-outline" onclick="showTimeClockView()" data-i18n="tc.timeClock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</button>
+      <button class="tc-btn tc-btn-outline" onclick="printDaysWorked()" data-i18n="tc.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="tc-filter-panel">
+    <div class="tc-filter-row">
+      <div class="tc-filter-group">
+        <label class="tc-radio-label">
+          <input type="radio" name="dwPeriodType" value="monthly" checked onchange="toggleDwPeriod()">
+          <span class="tc-radio-dot"></span>
+          <span data-i18n="tc.monthly" data-ko="월별" data-en="Month">월별</span>
+        </label>
+        <label class="tc-radio-label">
+          <input type="radio" name="dwPeriodType" value="range" onchange="toggleDwPeriod()">
+          <span class="tc-radio-dot"></span>
+          <span data-i18n="tc.dateRange" data-ko="기간" data-en="Date Range">기간</span>
+        </label>
+        <input type="month" class="tc-input tc-input-date" id="dwMonthDate" value="2025-11" />
+        <div class="tc-range-inputs" id="dwRangeInputs" style="display:none;">
+          <input type="date" class="tc-input tc-input-date" id="dwStartDate" />
+          <span class="tc-range-sep">~</span>
+          <input type="date" class="tc-input tc-input-date" id="dwEndDate" />
+        </div>
+      </div>
+      <div class="tc-filter-group">
+        <span class="tc-filter-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="tc-select" id="dwStaffFilter">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="jimmy">Jimmy</option>
+          <option value="suji">Suji</option>
+          <option value="alice">Alice</option>
+        </select>
+      </div>
+      <div class="tc-filter-right">
+        <button class="tc-btn tc-btn-primary tc-btn-search" onclick="searchDaysWorked()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 집계 테이블 -->
+  <div class="tc-table-panel">
+    <table class="tc-table">
+      <thead>
+        <tr>
+          <th data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</th>
+          <th data-i18n="tc.daysWorkedCol" data-ko="출근 일수" data-en="Days Worked">출근 일수</th>
+          <th data-i18n="tc.totalHoursWorked" data-ko="총 근무 시간" data-en="Hours Worked">총 근무 시간</th>
+          <th data-i18n="tc.daysTardy" data-ko="지각 일수" data-en="Days Tardy">지각 일수</th>
+          <th data-i18n="tc.daysLeaveEarly" data-ko="조퇴 일수" data-en="Days Leave Early">조퇴 일수</th>
+          <th data-i18n="tc.daysAbsent" data-ko="결근 일수" data-en="Days Absent">결근 일수</th>
+          <th data-i18n="tc.detail" data-ko="상세" data-en="Detail">상세</th>
+        </tr>
+      </thead>
+      <tbody id="dwTableBody">
+        <tr>
+          <td data-i18n="tc.sampleStaff1" data-ko="홍길동" data-en="Staff 1">홍길동</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><button class="tc-btn-edit" onclick="viewDaysWorkedDetail('홍길동')" data-i18n="tc.view" data-ko="수정" data-en="View">수정</button></td>
+        </tr>
+        <tr>
+          <td data-i18n="tc.sampleStaff2" data-ko="김철수" data-en="Staff 2">김철수</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><button class="tc-btn-add" onclick="viewDaysWorkedDetail('김철수')" data-i18n="tc.register" data-ko="등록" data-en="View">등록</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 모달: 출근 등록 (Add Clock-In) ===================== -->
+<div class="tc-modal-overlay" id="clockInModal" style="display:none;">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.addClockIn" data-ko="출근 등록" data-en="Add Clock-In">출근 등록</span>
+      <button class="tc-modal-close" onclick="closeModal('clockInModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.currentTime" data-ko="현재 시각" data-en="Current Time">현재 시각</label>
+        <span class="tc-form-value" id="clockInTime"></span>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</label>
+        <select class="tc-select tc-form-select" id="clockInStaff">
+          <option value="" data-i18n="tc.selectStaff" data-ko="선택" data-en="Select">선택</option>
+          <option value="jimmy">Jimmy</option>
+          <option value="suji">Suji</option>
+          <option value="alice">Alice</option>
+        </select>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.notes" data-ko="메모" data-en="Notes">메모</label>
+        <input type="text" class="tc-input tc-form-input" id="clockInNotes" data-i18n-ph-ko="" data-i18n-ph-en="" />
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('clockInModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-primary" onclick="saveClockIn()" data-i18n="tc.confirm" data-ko="저장" data-en="Confirm">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 모달: 퇴근 등록 (Add Clock-Out) ===================== -->
+<div class="tc-modal-overlay" id="clockOutModal" style="display:none;">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.addClockOut" data-ko="퇴근 등록" data-en="Add Clock-Out">퇴근 등록</span>
+      <button class="tc-modal-close" onclick="closeModal('clockOutModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.currentTime" data-ko="현재 시각" data-en="Current Time">현재 시각</label>
+        <span class="tc-form-value" id="clockOutTime"></span>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</label>
+        <select class="tc-select tc-form-select" id="clockOutStaff">
+          <option value="" data-i18n="tc.selectStaff" data-ko="선택" data-en="Select">선택</option>
+          <option value="jimmy">Jimmy</option>
+          <option value="suji">Suji</option>
+          <option value="alice">Alice</option>
+        </select>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.notes" data-ko="메모" data-en="Notes">메모</label>
+        <input type="text" class="tc-input tc-form-input" id="clockOutNotes" data-i18n-ph-ko="" data-i18n-ph-en="" />
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('clockOutModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-primary" onclick="saveClockOut()" data-i18n="tc.confirm" data-ko="저장" data-en="Confirm">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 모달: 결근 등록 (Add Absentee) ===================== -->
+<div class="tc-modal-overlay" id="absentModal" style="display:none;">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.addAbsentee" data-ko="결근 등록" data-en="Add Absentee">결근 등록</span>
+      <button class="tc-modal-close" onclick="closeModal('absentModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.date" data-ko="날짜" data-en="Date">날짜</label>
+        <input type="date" class="tc-input tc-form-input" id="absentDate" />
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</label>
+        <select class="tc-select tc-form-select" id="absentStaff">
+          <option value="" data-i18n="tc.selectStaff" data-ko="선택" data-en="Select">선택</option>
+          <option value="jimmy">Jimmy</option>
+          <option value="suji">Suji</option>
+          <option value="alice">Alice</option>
+        </select>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.notes" data-ko="메모" data-en="Notes">메모</label>
+        <input type="text" class="tc-input tc-form-input" id="absentNotes" data-i18n-ph-ko="" data-i18n-ph-en="" />
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('absentModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-primary" onclick="saveAbsent()" data-i18n="tc.confirm" data-ko="저장" data-en="Confirm">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 모달: 출퇴근 수정 (Edit Time Clock) ===================== -->
+<div class="tc-modal-overlay" id="editModal" style="display:none;">
+  <div class="tc-modal tc-modal-wide">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.editTimeClock" data-ko="출퇴근 수정" data-en="Edit Time Clock">출퇴근 수정</span>
+      <button class="tc-modal-close" onclick="closeModal('editModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <!-- 상단: 날짜 + 지각/조퇴 체크 + 직원명 -->
+      <div class="tc-edit-top">
+        <div class="tc-edit-top-left">
+          <label class="tc-form-label" data-i18n="tc.date" data-ko="날짜" data-en="Date">날짜</label>
+          <input type="date" class="tc-input" id="editDate" />
+          <label class="tc-checkbox-label">
+            <input type="checkbox" id="editTardy">
+            <span class="tc-checkbox-box"></span>
+            <span data-i18n="tc.tardy" data-ko="지각" data-en="Tardy">지각</span>
+          </label>
+          <label class="tc-checkbox-label">
+            <input type="checkbox" id="editLeaveEarly">
+            <span class="tc-checkbox-box"></span>
+            <span data-i18n="tc.leaveEarly" data-ko="조퇴" data-en="Leave Early">조퇴</span>
+          </label>
+        </div>
+        <span class="tc-edit-staff-name" id="editStaffName">Jimmy</span>
+      </div>
+
+      <!-- 시간 테이블 -->
+      <table class="tc-edit-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="tc.time" data-ko="시간" data-en="Time">시간</th>
+            <th data-i18n="tc.referenceTime" data-ko="기준 시간" data-en="Reference Time">기준 시간</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tc-edit-label" data-i18n="tc.clockIn" data-ko="출근" data-en="Clock-In">출근</td>
+            <td class="tc-edit-time-cell">
+              <select class="tc-select tc-time-select" id="editInHour"></select>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <select class="tc-select tc-time-select" id="editInMin"></select>
+              <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
+            </td>
+            <td class="tc-edit-time-cell">
+              <select class="tc-select tc-time-select" id="editRefInHour" disabled></select>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <select class="tc-select tc-time-select" id="editRefInMin" disabled></select>
+              <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="tc-edit-label" data-i18n="tc.clockOut" data-ko="퇴근" data-en="Clock-Out">퇴근</td>
+            <td class="tc-edit-time-cell">
+              <select class="tc-select tc-time-select" id="editOutHour"></select>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <select class="tc-select tc-time-select" id="editOutMin"></select>
+              <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
+            </td>
+            <td class="tc-edit-time-cell">
+              <select class="tc-select tc-time-select" id="editRefOutHour" disabled></select>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <select class="tc-select tc-time-select" id="editRefOutMin" disabled></select>
+              <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('editModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-danger" onclick="deleteTimeClock()" data-i18n="tc.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="tc-btn tc-btn-primary" onclick="saveEditTimeClock()" data-i18n="tc.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 모달: 근무시간 등록 (Add Working Hours) ===================== -->
+<div class="tc-modal-overlay" id="addWhModal" style="display:none;">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.addWorkingHours" data-ko="근무시간 등록" data-en="Add Working Hours">근무시간 등록</span>
+      <button class="tc-modal-close" onclick="closeModal('addWhModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.startTime" data-ko="시작시간" data-en="Start">시작시간</label>
+        <select class="tc-select tc-form-select" id="whStartTime"></select>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.finishTime" data-ko="종료시간" data-en="Finish">종료시간</label>
+        <select class="tc-select tc-form-select" id="whFinishTime"></select>
+      </div>
+      <div class="tc-form-row">
+        <label class="tc-form-label" data-i18n="tc.dayOfWeek" data-ko="요일" data-en="Day of Week">요일</label>
+        <select class="tc-select tc-form-select" id="whDayOfWeek">
+          <option value="" data-i18n="tc.selectStaff" data-ko="선택" data-en="Select">선택</option>
+          <option value="mon" data-i18n="tc.mon" data-ko="월" data-en="Mon">월</option>
+          <option value="tue" data-i18n="tc.tue" data-ko="화" data-en="Tue">화</option>
+          <option value="wed" data-i18n="tc.wed" data-ko="수" data-en="Wed">수</option>
+          <option value="thu" data-i18n="tc.thu" data-ko="목" data-en="Thu">목</option>
+          <option value="fri" data-i18n="tc.fri" data-ko="금" data-en="Fri">금</option>
+          <option value="sat" data-i18n="tc.sat" data-ko="토" data-en="Sat">토</option>
+          <option value="sun" data-i18n="tc.sun" data-ko="일" data-en="Sun">일</option>
+        </select>
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('addWhModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-primary" onclick="saveWorkingHour()" data-i18n="tc.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 모달: 근무시간 설정 (Working Hour Setup) ===================== -->
+<div class="tc-modal-overlay" id="whSetupModal" style="display:none;">
+  <div class="tc-modal tc-modal-wide">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.workingHourSetup" data-ko="근무시간 설정" data-en="Working Hour Setup">근무시간 설정</span>
+      <button class="tc-modal-close" onclick="closeModal('whSetupModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <table class="tc-table tc-wh-setup-table">
+        <thead>
+          <tr>
+            <th data-i18n="tc.startTime" data-ko="시작시간" data-en="Start">시작시간</th>
+            <th data-i18n="tc.finishTime" data-ko="종료시간" data-en="Finish">종료시간</th>
+            <th data-i18n="tc.dayOfWeek" data-ko="요일" data-en="Day of Week">요일</th>
+            <th data-i18n="tc.editDelete" data-ko="수정 / 삭제" data-en="Edit / Delete">수정 / 삭제</th>
+          </tr>
+        </thead>
+        <tbody id="whSetupTableBody">
+          <tr class="tc-empty-row">
+            <td colspan="4" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('whSetupModal')" data-i18n="tc.close" data-ko="닫기" data-en="Close">닫기</button>
+      <button class="tc-btn tc-btn-primary" onclick="openAddWhModal()" data-i18n="tc.addBtn" data-ko="추가" data-en="Add">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 삭제 확인 모달 ===================== -->
+<div class="tc-modal-overlay" id="deleteConfirmModal" style="display:none;">
+  <div class="tc-modal tc-modal-sm">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.confirm" data-ko="확인" data-en="Confirm">확인</span>
+      <button class="tc-modal-close" onclick="closeModal('deleteConfirmModal')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="tc-modal-body">
+      <p data-i18n="tc.confirmDelete" data-ko="정말 삭제하시겠습니까?" data-en="Are you sure you want to delete?">정말 삭제하시겠습니까?</p>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-btn tc-btn-outline" onclick="closeModal('deleteConfirmModal')" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="tc-btn tc-btn-danger" id="confirmDeleteBtn" data-i18n="tc.delete" data-ko="삭제" data-en="Delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

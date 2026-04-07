@@ -34,7 +34,7 @@
 - hover: `background: #EEF0FF; border-radius: 4px 4px 0 0;`
 
 ### 테이블
-- thead: `background: #F7F7FF / font-size: 12px / font-weight: 600 / color: #616161`
+- thead: `background: #FAFAFA / font-size: 12px / font-weight: 600 / color: #616161`
 - tbody: `font-size: 12px / color: #212121`
 - 행 구분선: `1px solid #E0E0E0`
 

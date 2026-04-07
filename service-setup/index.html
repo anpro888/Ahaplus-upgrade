@@ -181,10 +181,10 @@
   <div class="gnb-item has-menu" data-i18n="gnb.staff" data-ko="직원" data-en="STAFF">직원
     <div class="mega-menu">
       <div class="mega-col">
-        <div class="mega-col-item"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg></span><span data-i18n="gnb.staff.timeclock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l4-4 3 3 5-6"/><path d="M12 9h4v4"/></svg></span><span data-i18n="gnb.staff.goal" data-ko="직원별 목표 관리" data-en="Staff Goal">직원별 목표 관리</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 7h4M8 10h4M8 13h2"/></svg></span><span data-i18n="gnb.staff.payslips" data-ko="급여 명세서" data-en="Payslips">급여 명세서</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-3.5 3-6 7-6s7 2.5 7 6"/><path d="M14 2l2 2-2 2"/></svg></span><span data-i18n="gnb.staff.manage" data-ko="직원 관리" data-en="Staffs">직원 관리</span></div>
+        <div class="mega-col-item" onclick="openTimeClock()"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg></span><span data-i18n="gnb.staff.timeclock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</span></div>
+        <div class="mega-col-item" onclick="openStaffGoal()"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l4-4 3 3 5-6"/><path d="M12 9h4v4"/></svg></span><span data-i18n="gnb.staff.goal" data-ko="직원별 목표 관리" data-en="Staff Goal">직원별 목표 관리</span></div>
+        <div class="mega-col-item" onclick="openPayrollView()"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 7h4M8 10h4M8 13h2"/></svg></span><span data-i18n="gnb.staff.payslips" data-ko="급여 명세서" data-en="Payslips">급여 명세서</span></div>
+        <div class="mega-col-item" onclick="openStaffMgmt()"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-3.5 3-6 7-6s7 2.5 7 6"/><path d="M14 2l2 2-2 2"/></svg></span><span data-i18n="gnb.staff.manage" data-ko="직원 관리" data-en="Staffs">직원 관리</span></div>
       </div>
     </div>
   </div>
@@ -6453,13 +6453,13 @@
           <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
         </div>
         <div class="ams-multi-dropdown" id="amsMultiDropdown">
-          <label class="ams-multi-item"><input type="checkbox" value="전체" onchange="amsMultiToggleAll(this)"><span data-ko="전체" data-en="All">전체</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="커트"><span data-ko="커트" data-en="Cut">커트</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="드라이"><span data-ko="드라이" data-en="Blow Dry">드라이</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="펌"><span data-ko="펌" data-en="Perm">펌</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="열펌"><span data-ko="열펌" data-en="Heat Perm">열펌</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="염색"><span data-ko="염색" data-en="Coloring">염색</span></label>
-          <label class="ams-multi-item"><input type="checkbox" value="클리닉"><span data-ko="클리닉" data-en="Clinic">클리닉</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="전체" onchange="amsMultiToggleAll(this)"><span class="ams-multi-checkmark">✓</span><span data-ko="전체" data-en="All">전체</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="커트"><span class="ams-multi-checkmark">✓</span><span data-ko="커트" data-en="Cut">커트</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="드라이"><span class="ams-multi-checkmark">✓</span><span data-ko="드라이" data-en="Blow Dry">드라이</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="펌"><span class="ams-multi-checkmark">✓</span><span data-ko="펌" data-en="Perm">펌</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="열펌"><span class="ams-multi-checkmark">✓</span><span data-ko="열펌" data-en="Heat Perm">열펌</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="염색"><span class="ams-multi-checkmark">✓</span><span data-ko="염색" data-en="Coloring">염색</span></label>
+          <label class="ams-multi-item"><input type="checkbox" value="클리닉"><span class="ams-multi-checkmark">✓</span><span data-ko="클리닉" data-en="Clinic">클리닉</span></label>
         </div>
       </div>
       <!-- 발송 타입 -->
@@ -6821,13 +6821,13 @@
             <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
           </div>
           <div class="ams-multi-dropdown" id="amsAcMultiDropdown">
-            <label class="ams-multi-item"><input type="checkbox" value="전체" onchange="amsAcMultiToggleAll(this)"><span data-ko="전체" data-en="All">전체</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="커트"><span>커트</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="드라이"><span>드라이</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="펌"><span>펌</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="열펌"><span>열펌</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="염색"><span>염색</span></label>
-            <label class="ams-multi-item"><input type="checkbox" value="클리닉"><span>클리닉</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="전체" onchange="amsAcMultiToggleAll(this)"><span class="ams-multi-checkmark">✓</span><span data-ko="전체" data-en="All">전체</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="커트"><span class="ams-multi-checkmark">✓</span><span>커트</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="드라이"><span class="ams-multi-checkmark">✓</span><span>드라이</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="펌"><span class="ams-multi-checkmark">✓</span><span>펌</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="열펌"><span class="ams-multi-checkmark">✓</span><span>열펌</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="염색"><span class="ams-multi-checkmark">✓</span><span>염색</span></label>
+            <label class="ams-multi-item"><input type="checkbox" value="클리닉"><span class="ams-multi-checkmark">✓</span><span>클리닉</span></label>
           </div>
         </div>
         <!-- 발송 대상 고객 (재방문 유도 전용) -->
@@ -8096,6 +8096,1825 @@
     </div>
     <div class="cst-modal-footer">
       <button class="cst-modal-btn-outline" onclick="cstCloseModal('amsSmsAltModal')" data-ko="닫기" data-en="Close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ═══ 직원관리 (Staff Management) 뷰 ═══ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="staffMgmtView">
+  <!-- 헤더 -->
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="sv.staff_title" data-ko="직원관리" data-en="Staff Management">직원관리</span></h3>
+      <button class="stf-reg-btn" onclick="stfOpenRegModal()" data-i18n="sv.staff_btn_add" data-ko="직원 등록" data-en="Add Staff">직원 등록</button>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="stf-body">
+    <!-- 검색 영역 -->
+    <div class="stf-search-area">
+      <div class="stf-search-left">
+        <label class="stf-radio-label"><input type="radio" name="stfSearchType" value="nickname" checked> <span data-i18n="sv.staff_search_nick" data-ko="별칭" data-en="Nickname">별칭</span></label>
+        <label class="stf-radio-label"><input type="radio" name="stfSearchType" value="realname"> <span data-i18n="sv.staff_search_name" data-ko="직원명(실명)" data-en="Real Name">직원명(실명)</span></label>
+        <input type="text" class="stf-search-input" id="stfSearchInput">
+        <label class="stf-chk-label"><input type="checkbox" id="stfShowInactive"><span class="stf-checkmark">✓</span><span class="stf-chk-text" data-i18n="sv.staff_chk_inactive" data-ko="미사용 직원 포함" data-en="Include Inactive">미사용 직원 포함</span></label>
+      </div>
+      <button class="stf-search-btn" onclick="stfDoSearch()" data-i18n="common.btn_search" data-ko="검색" data-en="Search">검색</button>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="stf-table-wrap">
+      <table class="stf-table">
+        <thead>
+          <tr>
+            <th style="width:80px;" data-i18n="sv.staff_th_no" data-ko="직원번호" data-en="No.">직원번호</th>
+            <th style="width:160px;" data-i18n="sv.staff_th_nick" data-ko="직원명(별칭)" data-en="Nickname">직원명(별칭)</th>
+            <th style="width:160px;" data-i18n="sv.staff_th_name" data-ko="직원명(실명)" data-en="Real Name">직원명(실명)</th>
+            <th style="width:140px;" data-i18n="sv.staff_th_phone" data-ko="휴대폰 번호" data-en="Mobile">휴대폰 번호</th>
+            <th style="width:120px;" data-i18n="sv.staff_th_hiredate" data-ko="입사일" data-en="Hire Date">입사일</th>
+            <th data-i18n="sv.staff_th_workhour" data-ko="근무시간" data-en="Work Hours">근무시간</th>
+            <th style="width:80px;" data-i18n="sv.staff_th_edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="stfTableBody">
+          <tr>
+            <td>1</td>
+            <td data-i18n="sv.staff_sample_nick" data-ko="원장님" data-en="Director">원장님</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><button class="stf-link-btn" onclick="stfOpenWorkHourModal(0)" data-i18n="sv.staff_btn_setup" data-ko="설정" data-en="Setup">설정</button></td>
+            <td><button class="stf-link-btn" onclick="stfOpenEditModal(0)" data-i18n="sv.staff_btn_edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 직원 등록 모달 ═══ -->
+<div class="stf-modal-overlay" id="stfRegModal" onclick="if(event.target===this)stfCloseRegModal()">
+  <div class="stf-modal">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" data-i18n="sv.staff_reg_title" data-ko="직원 등록" data-en="Add Staff">직원 등록</h3>
+      <button class="stf-modal-close" onclick="stfCloseRegModal()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label stf-required" data-i18n="sv.staff_f_no" data-ko="직원번호" data-en="Staff No.">직원번호</label>
+        <input type="text" class="stf-form-input" id="stfRegNo" value="2" readonly>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label stf-required" data-i18n="sv.staff_f_nick" data-ko="직원명(별칭)" data-en="Nickname">직원명(별칭)</label>
+        <div class="stf-form-field-col">
+          <input type="text" class="stf-form-input" id="stfRegNick">
+          <span class="stf-form-hint" data-i18n="sv.staff_f_nick_hint" data-ko="* 화면에 보이는 간략한 이름" data-en="* Short display name">* 화면에 보이는 간략한 이름</span>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_name" data-ko="직원명(실명)" data-en="Real Name">직원명(실명)</label>
+        <div class="stf-form-field-col">
+          <input type="text" class="stf-form-input" id="stfRegName">
+          <label class="stf-chk-label stf-inline-check"><input type="checkbox" id="stfRegSameNick"><span class="stf-checkmark">✓</span><span class="stf-chk-text" data-i18n="sv.staff_f_same" data-ko="별칭과 동일" data-en="Same as Nickname">별칭과 동일</span></label>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_mobile" data-ko="휴대폰 번호" data-en="Mobile">휴대폰 번호</label>
+        <input type="text" class="stf-form-input" id="stfRegMobile" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Numbers only (no dash)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_phone" data-ko="전화번호" data-en="Phone">전화번호</label>
+        <input type="text" class="stf-form-input" id="stfRegPhone" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Numbers only (no dash)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_email" data-ko="이메일" data-en="Email">이메일</label>
+        <input type="text" class="stf-form-input" id="stfRegEmail">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_birth" data-ko="생년월일" data-en="Birthday">생년월일</label>
+        <div class="stf-birth-group">
+          <input type="text" class="stf-form-input stf-birth-y" id="stfRegBirthY" maxlength="4">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_year" data-ko="년(선택)" data-en="Year">년(선택)</span>
+          <input type="text" class="stf-form-input stf-birth-m" id="stfRegBirthM" maxlength="2">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_month" data-ko="월" data-en="M">월</span>
+          <input type="text" class="stf-form-input stf-birth-d" id="stfRegBirthD" maxlength="2">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_day" data-ko="일" data-en="D">일</span>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_career" data-ko="경력" data-en="Career">경력</label>
+        <input type="text" class="stf-form-input" id="stfRegCareer">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_position" data-ko="직책" data-en="Position">직책</label>
+        <input type="text" class="stf-form-input" id="stfRegPosition">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_cert" data-ko="자격증" data-en="Certificate">자격증</label>
+        <input type="text" class="stf-form-input" id="stfRegCert">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_zip" data-ko="우편번호" data-en="Zip Code">우편번호</label>
+        <div class="stf-zip-group">
+          <input type="text" class="stf-form-input stf-zip-input" id="stfRegZip" readonly>
+          <button class="stf-zip-btn" data-tooltip="주소 검색" data-i18n-tooltip-ko="주소 검색" data-i18n-tooltip-en="Search address" onclick="stfSearchZip('reg')">🔍</button>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_addr1" data-ko="주소 1" data-en="Address 1">주소 1</label>
+        <input type="text" class="stf-form-input" id="stfRegAddr1" readonly>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_addr2" data-ko="주소 2" data-en="Address 2">주소 2</label>
+        <input type="text" class="stf-form-input" id="stfRegAddr2">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_hire" data-ko="입사일" data-en="Hire Date">입사일</label>
+        <input type="date" class="stf-form-input stf-date-input" id="stfRegHire" placeholder="YYYY-MM-DD">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_resign" data-ko="퇴사일" data-en="Resign Date">퇴사일</label>
+        <input type="date" class="stf-form-input stf-date-input" id="stfRegResign" placeholder="YYYY-MM-DD">
+      </div>
+      <div class="stf-form-row stf-form-row-top">
+        <label class="stf-form-label" data-i18n="sv.staff_f_memo" data-ko="메모" data-en="Memo">메모</label>
+        <textarea class="stf-form-textarea" id="stfRegMemo" rows="4"></textarea>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_status" data-ko="상태" data-en="Status">상태</label>
+        <div class="stf-toggle-group">
+          <label class="stf-toggle">
+            <input type="checkbox" id="stfRegActive" checked>
+            <span class="stf-toggle-slider"></span>
+          </label>
+          <span class="stf-toggle-text" data-i18n="sv.staff_f_active" data-ko="사용" data-en="Active">사용</span>
+        </div>
+      </div>
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseRegModal()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="stf-modal-btn-primary" onclick="stfSaveReg()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 직원 수정 모달 ═══ -->
+<div class="stf-modal-overlay" id="stfEditModal" onclick="if(event.target===this)stfCloseEditModal()">
+  <div class="stf-modal">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" data-i18n="sv.staff_edit_title" data-ko="직원 수정" data-en="Edit Staff">직원 수정</h3>
+      <button class="stf-modal-close" onclick="stfCloseEditModal()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label stf-required" data-i18n="sv.staff_f_no" data-ko="직원번호" data-en="Staff No.">직원번호</label>
+        <input type="text" class="stf-form-input" id="stfEditNo" value="1" readonly>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label stf-required" data-i18n="sv.staff_f_nick" data-ko="직원명(별칭)" data-en="Nickname">직원명(별칭)</label>
+        <div class="stf-form-field-row">
+          <input type="text" class="stf-form-input" id="stfEditNick" value="원장님" style="flex:1;" readonly>
+          <button class="stf-edit-nick-btn" onclick="stfShowNickAlert()" data-i18n="sv.staff_btn_change" data-ko="수정" data-en="Change">수정</button>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label stf-required" style="visibility:hidden;">hint</label>
+        <span class="stf-form-hint" data-i18n="sv.staff_f_nick_hint" data-ko="* 화면에 보이는 간략한 이름" data-en="* Short display name">* 화면에 보이는 간략한 이름</span>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_name" data-ko="직원명(실명)" data-en="Real Name">직원명(실명)</label>
+        <div class="stf-form-field-col">
+          <input type="text" class="stf-form-input" id="stfEditName">
+          <label class="stf-chk-label stf-inline-check"><input type="checkbox" id="stfEditSameNick"><span class="stf-checkmark">✓</span><span class="stf-chk-text" data-i18n="sv.staff_f_same" data-ko="별칭과 동일" data-en="Same as Nickname">별칭과 동일</span></label>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_mobile" data-ko="휴대폰 번호" data-en="Mobile">휴대폰 번호</label>
+        <input type="text" class="stf-form-input" id="stfEditMobile" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Numbers only (no dash)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_phone" data-ko="전화번호" data-en="Phone">전화번호</label>
+        <input type="text" class="stf-form-input" id="stfEditPhone" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Numbers only (no dash)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_email" data-ko="이메일" data-en="Email">이메일</label>
+        <input type="text" class="stf-form-input" id="stfEditEmail">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_birth" data-ko="생년월일" data-en="Birthday">생년월일</label>
+        <div class="stf-birth-group">
+          <input type="text" class="stf-form-input stf-birth-y" id="stfEditBirthY" maxlength="4">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_year" data-ko="년(선택)" data-en="Year">년(선택)</span>
+          <input type="text" class="stf-form-input stf-birth-m" id="stfEditBirthM" maxlength="2">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_month" data-ko="월" data-en="M">월</span>
+          <input type="text" class="stf-form-input stf-birth-d" id="stfEditBirthD" maxlength="2">
+          <span class="stf-birth-sep" data-i18n="sv.staff_f_day" data-ko="일" data-en="D">일</span>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_career" data-ko="경력" data-en="Career">경력</label>
+        <input type="text" class="stf-form-input" id="stfEditCareer">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_position" data-ko="직책" data-en="Position">직책</label>
+        <input type="text" class="stf-form-input" id="stfEditPosition">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_cert" data-ko="자격증" data-en="Certificate">자격증</label>
+        <input type="text" class="stf-form-input" id="stfEditCert">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_zip" data-ko="우편번호" data-en="Zip Code">우편번호</label>
+        <div class="stf-zip-group">
+          <input type="text" class="stf-form-input stf-zip-input" id="stfEditZip" readonly>
+          <button class="stf-zip-btn" data-tooltip="주소 검색" data-i18n-tooltip-ko="주소 검색" data-i18n-tooltip-en="Search address" onclick="stfSearchZip('edit')">🔍</button>
+        </div>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_addr1" data-ko="주소 1" data-en="Address 1">주소 1</label>
+        <input type="text" class="stf-form-input" id="stfEditAddr1" readonly>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_addr2" data-ko="주소 2" data-en="Address 2">주소 2</label>
+        <input type="text" class="stf-form-input" id="stfEditAddr2">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_hire" data-ko="입사일" data-en="Hire Date">입사일</label>
+        <input type="date" class="stf-form-input stf-date-input" id="stfEditHire" placeholder="YYYY-MM-DD">
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_resign" data-ko="퇴사일" data-en="Resign Date">퇴사일</label>
+        <input type="date" class="stf-form-input stf-date-input" id="stfEditResign" placeholder="YYYY-MM-DD">
+      </div>
+      <div class="stf-form-row stf-form-row-top">
+        <label class="stf-form-label" data-i18n="sv.staff_f_memo" data-ko="메모" data-en="Memo">메모</label>
+        <textarea class="stf-form-textarea" id="stfEditMemo" rows="4"></textarea>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_f_status" data-ko="상태" data-en="Status">상태</label>
+        <div class="stf-toggle-group">
+          <label class="stf-toggle">
+            <input type="checkbox" id="stfEditActive" checked>
+            <span class="stf-toggle-slider"></span>
+          </label>
+          <span class="stf-toggle-text" data-i18n="sv.staff_f_active" data-ko="사용" data-en="Active">사용</span>
+        </div>
+      </div>
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseEditModal()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="stf-modal-btn-primary" onclick="stfSaveEdit()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 근무시간 설정 모달 ═══ -->
+<div class="stf-modal-overlay" id="stfWorkHourModal" onclick="if(event.target===this)stfCloseWorkHourModal()">
+  <div class="stf-modal stf-modal-md">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" data-i18n="sv.staff_wh_title" data-ko="근무시간 설정" data-en="Work Hours Setup">근무시간 설정</h3>
+      <button class="stf-modal-close" onclick="stfCloseWorkHourModal()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <table class="stf-wh-table">
+        <thead>
+          <tr>
+            <th data-i18n="sv.staff_wh_start" data-ko="시작시간" data-en="Start">시작시간</th>
+            <th data-i18n="sv.staff_wh_end" data-ko="종료시간" data-en="End">종료시간</th>
+            <th data-i18n="sv.staff_wh_days" data-ko="요일" data-en="Days">요일</th>
+            <th style="width:100px;" data-i18n="sv.staff_wh_actions" data-ko="수정 / 삭제" data-en="Edit / Delete">수정 / 삭제</th>
+          </tr>
+        </thead>
+        <tbody id="stfWhTableBody">
+          <tr class="stf-wh-empty">
+            <td colspan="4" data-i18n="sv.staff_wh_empty" data-ko="내역이 없습니다" data-en="No records">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseWorkHourModal()" data-i18n="sv.staff_wh_btn_close" data-ko="닫기" data-en="Close">닫기</button>
+      <button class="stf-modal-btn-primary" onclick="stfOpenWhAddModal()" data-i18n="sv.staff_wh_btn_add" data-ko="추가" data-en="Add">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 근무시간 등록/수정 모달 ═══ -->
+<div class="stf-modal-overlay" id="stfWhAddModal" onclick="if(event.target===this)stfCloseWhAddModal()">
+  <div class="stf-modal stf-modal-sm">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" id="stfWhAddTitle" data-i18n="sv.staff_wh_add_title" data-ko="근무시간 등록" data-en="Add Work Hours">근무시간 등록</h3>
+      <button class="stf-modal-close" onclick="stfCloseWhAddModal()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_wh_start" data-ko="시작시간" data-en="Start">시작시간</label>
+        <select class="stf-form-select" id="stfWhStart"></select>
+      </div>
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="sv.staff_wh_end" data-ko="종료시간" data-en="End">종료시간</label>
+        <select class="stf-form-select" id="stfWhEnd"></select>
+      </div>
+      <div class="stf-form-row stf-form-row-top">
+        <label class="stf-form-label">&nbsp;</label>
+        <div class="stf-day-picker" id="stfWhDayPicker">
+          <div class="stf-day-picker-header" onclick="stfToggleDayPicker()">
+            <span class="stf-day-text" id="stfWhDayText" data-i18n="sv.staff_wh_day_ph" data-ko="요일 선택" data-en="Select Days">요일 선택</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="stf-day-picker-list" id="stfWhDayList" style="display:none;">
+            <div class="stf-day-picker-title" data-i18n="sv.staff_wh_day_select" data-ko="요일 선택" data-en="Select Days">요일 선택</div>
+            <label class="stf-day-option"><input type="checkbox" value="월"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_mon" data-ko="월요일" data-en="Monday">월요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="화"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_tue" data-ko="화요일" data-en="Tuesday">화요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="수"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_wed" data-ko="수요일" data-en="Wednesday">수요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="목"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_thu" data-ko="목요일" data-en="Thursday">목요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="금"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_fri" data-ko="금요일" data-en="Friday">금요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="토"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_sat" data-ko="토요일" data-en="Saturday">토요일</span></label>
+            <label class="stf-day-option"><input type="checkbox" value="일"><span class="stf-day-checkmark">✓</span> <span data-i18n="sv.staff_day_sun" data-ko="일요일" data-en="Sunday">일요일</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseWhAddModal()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="stf-modal-btn-primary" onclick="stfSaveWhAdd()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 별칭 수정 알림 팝업 ═══ -->
+<div class="stf-modal-overlay" id="stfNickAlertModal" onclick="if(event.target===this)stfCloseNickAlert()">
+  <div class="stf-modal" style="width:520px;">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" data-i18n="sv.staff_nick_alert_title" data-ko="알림" data-en="Notice">알림</h3>
+      <button class="stf-modal-close" onclick="stfCloseNickAlert()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <p class="stf-alert-heading" data-i18n="sv.staff_nick_alert_heading" data-ko="안내!" data-en="Notice!">안내!</p>
+      <ul class="stf-alert-list">
+        <li><strong data-i18n="sv.staff_nick_alert_1a" data-ko="동일 직원의 별칭이 변경된 경우에만" data-en="Only when the nickname of the same staff has changed">동일 직원의 별칭이 변경된 경우에만</strong> <span data-i18n="sv.staff_nick_alert_1b" data-ko="수정해 주세요." data-en="please edit.">수정해 주세요.</span></li>
+        <li data-i18n="sv.staff_nick_alert_2" data-ko="새 직원을 등록하시려면 수정 대신 [직원 등록]을 해 주세요." data-en="To add a new staff, use [Add Staff] instead.">새 직원을 등록하시려면 수정 대신 [직원 등록]을 해 주세요.</li>
+        <li data-i18n="sv.staff_nick_alert_3" data-ko="퇴사한 직원은 상태를 '미사용'으로 변경해 주세요." data-en="For resigned staff, change the status to 'Inactive'.">퇴사한 직원은 상태를 '미사용'으로 변경해 주세요.</li>
+        <li data-i18n="sv.staff_nick_alert_4" data-ko="별칭을 변경해도 매출집계 시 동일한 직원으로 집계됩니다." data-en="Even if you change the nickname, sales reports will still aggregate under the same staff.">별칭을 변경해도 매출집계 시 동일한 직원으로 집계됩니다.</li>
+      </ul>
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseNickAlert()" data-i18n="sv.staff_nick_alert_close" data-ko="닫기" data-en="Close">닫기</button>
+      <button class="stf-modal-btn-primary" onclick="stfConfirmNickAlert()" data-i18n="sv.staff_nick_alert_ok" data-ko="확인" data-en="Confirm">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 별칭 수정 입력 팝업 ═══ -->
+<div class="stf-modal-overlay" id="stfNickRenameModal" onclick="if(event.target===this)stfCloseNickRename()">
+  <div class="stf-modal" style="width:440px;">
+    <div class="stf-modal-header">
+      <h3 class="stf-modal-title" data-i18n="sv.staff_nick_rename_title" data-ko="직원명(별칭) 수정" data-en="Edit Nickname">직원명(별칭) 수정</h3>
+      <button class="stf-modal-close" onclick="stfCloseNickRename()">✕</button>
+    </div>
+    <div class="stf-modal-body">
+      <p class="stf-rename-label" data-i18n="sv.staff_nick_rename_label" data-ko="새 직원명(별칭)" data-en="New Nickname">새 직원명(별칭)</p>
+      <input type="text" class="stf-form-input" id="stfNickRenameInput" style="width:100%; flex:none;">
+    </div>
+    <div class="stf-modal-footer">
+      <button class="stf-modal-btn-outline" onclick="stfCloseNickRename()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="stf-modal-btn-primary" onclick="stfConfirmNickRename()" data-i18n="sv.staff_nick_rename_ok" data-ko="확인" data-en="Confirm">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ═══ 급여 명세서 (Payroll) 뷰 ═══ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="payrollView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3>
+        <span data-i18n="pay.title" data-ko="급여 명세서" data-en="Payslips">급여 명세서</span>
+        <a class="pay-help-btn" href="https://ahasoftplus.notion.site/f9f8766a3bc545ea9d52723e898ae688" target="_blank" data-tooltip="도움말" data-i18n-tooltip-ko="도움말" data-i18n-tooltip-en="Help">?</a>
+      </h3>
+      <div class="pay-header-btns">
+        <button class="pay-header-btn pay-btn-accent" onclick="payOpenIncentive()" data-i18n="pay.btn_incentive" data-ko="직원별 인센티브" data-en="Staff Incentive">직원별 인센티브</button>
+        <button class="pay-header-btn" onclick="payOpenCreate()" data-i18n="pay.btn_create" data-ko="급여 명세서 작성" data-en="Create Payslip">급여 명세서 작성</button>
+        <button class="pay-header-btn" onclick="payOpenSettings()" data-i18n="pay.btn_settings" data-ko="급여 설정" data-en="Payroll Setup">급여 설정</button>
+      </div>
+    </div>
+  </div>
+  <div class="pay-body">
+    <!-- 필터 -->
+    <div class="pay-filter-area">
+      <div class="pay-filter-left">
+        <span class="pay-filter-label" data-i18n="pay.filter_regdate" data-ko="등록일" data-en="Reg. Date">등록일</span>
+        <label class="pay-radio"><input type="radio" name="payDateType" value="month" checked onchange="payToggleDateType()"> <span data-i18n="pay.filter_month" data-ko="월" data-en="Month">월</span></label>
+        <label class="pay-radio"><input type="radio" name="payDateType" value="range" onchange="payToggleDateType()"> <span data-i18n="pay.filter_range" data-ko="기간" data-en="Range">기간</span></label>
+        <div class="pay-date-group" id="payDateMonth">
+          <input type="month" class="pay-date-input" id="payMonth" value="2026-04">
+        </div>
+        <div class="pay-date-group" id="payDateRange" style="display:none;">
+          <input type="date" class="pay-date-input" id="payRangeFrom">
+          <span class="pay-range-sep">~</span>
+          <input type="date" class="pay-date-input" id="payRangeTo">
+        </div>
+        <span class="pay-filter-label" style="margin-left:16px;" data-i18n="pay.filter_staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="pay-select" id="payStaffFilter">
+          <option data-i18n="common.opt_all" data-ko="전체" data-en="All">전체</option>
+          <option>원장님</option>
+        </select>
+      </div>
+      <button class="pay-search-btn" onclick="payDoSearch()" data-i18n="common.btn_search" data-ko="검색" data-en="Search">검색</button>
+    </div>
+    <!-- 결과 요약 -->
+    <div class="pay-summary" id="paySummary" data-i18n="pay.summary" data-ko="총 0 건, 총 급여" data-en="Total 0 records, Total salary">총 0 건, 총 급여</div>
+    <!-- 테이블 -->
+    <div class="pay-table-wrap">
+      <table class="pay-table">
+        <thead>
+          <tr>
+            <th data-i18n="pay.th_date" data-ko="등록 일시" data-en="Reg. Date">등록 일시</th>
+            <th data-i18n="pay.th_staff" data-ko="직원" data-en="Staff">직원</th>
+            <th data-i18n="pay.th_period" data-ko="근무 기간" data-en="Work Period">근무 기간</th>
+            <th data-i18n="pay.th_salary" data-ko="급여" data-en="Salary">급여</th>
+            <th data-i18n="pay.th_payslip" data-ko="급여 명세서" data-en="Payslip">급여 명세서</th>
+            <th data-i18n="pay.th_detail" data-ko="상세 내역" data-en="Detail">상세 내역</th>
+          </tr>
+        </thead>
+        <tbody id="payTableBody">
+          <tr><td colspan="6" class="pay-empty" data-i18n="pay.empty" data-ko="내역이 없습니다." data-en="No records.">내역이 없습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 안내 -->
+    <ul class="pay-note-list">
+      <li data-i18n="pay.note1" data-ko="급여 설정 또는 매출을 수정해도 이미 생성된 급여 명세서는 변경되지 않습니다." data-en="Changes to payroll settings or sales will not affect already generated payslips.">급여 설정 또는 매출을 수정해도 이미 생성된 급여 명세서는 변경되지 않습니다.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ 직원별 인센티브 페이지 뷰 ═══ -->
+<div id="incentiveView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="pay.inc_title" data-ko="직원별 인센티브" data-en="Staff Incentive">직원별 인센티브</span></h3>
+      <div class="pay-header-btns">
+        <button class="pay-btn-accent pay-header-btn" onclick="openPayrollView()" data-i18n="pay.btn_back_payroll" data-ko="급여 명세서" data-en="Payslips">급여 명세서</button>
+      </div>
+    </div>
+  </div>
+  <div class="pay-body">
+    <!-- 필터 -->
+    <div class="pay-filter-area">
+      <div class="pay-filter-left">
+        <label class="pay-radio"><input type="radio" name="payIncDateType" value="month" checked> <span data-i18n="pay.filter_month" data-ko="월" data-en="Month">월</span></label>
+        <label class="pay-radio"><input type="radio" name="payIncDateType" value="range"> <span data-i18n="pay.filter_range" data-ko="기간" data-en="Range">기간</span></label>
+        <input type="month" class="pay-date-input" value="2026-04">
+        <span class="pay-filter-label" style="margin-left:12px;" data-i18n="pay.filter_staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="pay-select"><option data-i18n="common.opt_all" data-ko="전체" data-en="All">전체</option><option>원장님</option></select>
+      </div>
+      <button class="pay-search-btn" data-i18n="common.btn_search" data-ko="검색" data-en="Search">검색</button>
+    </div>
+    <!-- 테이블 -->
+    <div class="pay-table-wrap">
+      <table class="pay-table">
+        <thead>
+          <tr>
+            <th rowspan="2" data-i18n="pay.th_staff" data-ko="직원" data-en="Staff">직원</th>
+            <th rowspan="2" data-i18n="pay.inc_th_base" data-ko="기본급" data-en="Base Pay">기본급</th>
+            <th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th>
+            <th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th>
+            <th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card">정액권 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_total" data-ko="합계" data-en="Total">합계</th>
+            <th rowspan="2" data-i18n="pay.inc_th_excel" data-ko="엑셀" data-en="Excel">엑셀</th>
+          </tr>
+          <tr>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+          </tr>
+        </thead>
+        <tbody id="payIncTbody"><tr><td colspan="10" class="pay-empty" data-i18n="pay.empty" data-ko="내역이 없습니다." data-en="No records.">내역이 없습니다.</td></tr></tbody>
+      </table>
+    </div>
+    <ul class="pay-note-list">
+      <li data-i18n="pay.inc_note" data-ko="급여 명세서 작성 후 판매 내역이나 급여 설정을 수정한 경우 여기서 조회한 성과급은 급여 명세서와 다를 수 있습니다." data-en="If you modified sales or settings after creating payslip, incentive data here may differ from the payslip.">급여 명세서 작성 후 판매 내역이나 급여 설정을 수정한 경우 여기서 조회한 성과급은 급여 명세서와 다를 수 있습니다.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ 급여 명세서 작성 모달 ═══ -->
+<div class="pay-modal-overlay" id="payCreateModal" onclick="if(event.target===this)payCloseCreate()">
+  <div class="pay-modal pay-modal-full">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" data-i18n="pay.create_title" data-ko="급여 명세서 작성" data-en="Create Payslip">급여 명세서 작성</h3><button class="pay-modal-close-white" onclick="payCloseCreate()">✕</button></div>
+    <div class="pay-create-toolbar">
+      <span class="pay-filter-label" data-i18n="pay.create_period" data-ko="근무 기간" data-en="Work Period">근무 기간</span>
+      <input type="date" class="pay-date-input" id="payCreateFrom" placeholder="YYYY-MM-DD">
+      <span class="pay-range-sep">~</span>
+      <input type="date" class="pay-date-input" id="payCreateTo" placeholder="YYYY-MM-DD">
+      <span class="pay-filter-label" style="margin-left:24px;" data-i18n="pay.filter_staff" data-ko="직원" data-en="Staff">직원</span>
+      <select class="pay-select" id="payCreateStaff"><option value="" data-i18n="common.opt_select" data-ko="선택" data-en="Select">선택</option><option>원장님</option></select>
+      <button class="pay-toolbar-btn" id="payBtnGenerate" onclick="payGenerate()" data-i18n="pay.btn_generate" data-ko="명세서 작성" data-en="Generate">명세서 작성</button>
+      <button class="pay-toolbar-btn" id="payBtnReselect" onclick="payReselect()" style="display:none;" data-i18n="pay.btn_reselect" data-ko="다시 선택" data-en="Reselect">다시 선택</button>
+    </div>
+    <div class="pay-create-divider"></div>
+    <div class="pay-modal-body" id="payCreateBody">
+      <div class="pay-create-placeholder" id="payCreatePlaceholder" data-i18n="pay.create_ph" data-ko="근무 기간 및 직원 선택 후 명세서 작성을 클릭해 주세요." data-en="Please select work period and staff, then click Generate.">근무 기간 및 직원 선택 후 명세서 작성을 클릭해 주세요.</div>
+      <!-- 명세서 작성 시 동적 생성 영역 -->
+      <div id="payCreateContent" style="display:none;">
+        <div class="pay-section-header">
+          <h4 data-i18n="pay.section_salary" data-ko="급여 및 공제 항목" data-en="Salary & Deductions">급여 및 공제 항목</h4>
+          <button class="pay-settings-btn" onclick="payOpenSettings()" data-tooltip="급여 항목 설정" data-i18n-tooltip-ko="급여 항목 설정" data-i18n-tooltip-en="Payroll Item Setup">⚙</button>
+          <div style="flex:1;"></div>
+          <span class="pay-filter-label" data-i18n="pay.income_type" data-ko="소득 구분" data-en="Income Type">소득 구분</span>
+          <select class="pay-select" id="payIncomeType" style="width:160px;">
+            <option data-i18n="pay.income_earned" data-ko="근로 소득" data-en="Earned Income">근로 소득</option>
+            <option data-i18n="pay.income_biz" data-ko="사업 소득" data-en="Business Income">사업 소득</option>
+            <option data-i18n="pay.income_other" data-ko="기타 소득" data-en="Other Income">기타 소득</option>
+          </select>
+        </div>
+        <table class="pay-salary-table">
+          <thead><tr><th data-i18n="pay.th_pay_item" data-ko="급여 항목" data-en="Pay Item">급여 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th><th data-i18n="pay.th_ded_item" data-ko="공제 항목" data-en="Deduction Item">공제 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="pay.item_base" data-ko="기본급" data-en="Base Pay">기본급</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_product" data-ko="제품 사용" data-en="Product Usage">제품 사용</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_incentive" data-ko="인센티브" data-en="Incentive">인센티브</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_late" data-ko="지각" data-en="Late">지각</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_meal" data-ko="식대" data-en="Meal">식대</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_early" data-ko="조퇴" data-en="Early Leave">조퇴</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_position" data-ko="직책 수당" data-en="Position">직책 수당</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_absent" data-ko="결근" data-en="Absent">결근</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_cert" data-ko="자격 수당" data-en="Certificate">자격 수당</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_income_tax" data-ko="근로 소득세" data-en="Income Tax">근로 소득세</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_overtime" data-ko="초과 근무 수당" data-en="Overtime">초과 근무 수당</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_resident" data-ko="주민세" data-en="Resident Tax">주민세</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_holiday" data-ko="휴일 근무 수당" data-en="Holiday">휴일 근무 수당</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_health" data-ko="건강보험" data-en="Health Ins.">건강보험</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_annual" data-ko="연차 수당" data-en="Annual Leave">연차 수당</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_pension" data-ko="국민연금" data-en="Pension">국민연금</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_etc1" data-ko="기타 수당1" data-en="Other 1">기타 수당1</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_employ" data-ko="고용보험" data-en="Employment Ins.">고용보험</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_etc2" data-ko="기타 수당2" data-en="Other 2">기타 수당2</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_industrial" data-ko="산재보험" data-en="Industrial Ins.">산재보험</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr><td data-i18n="pay.item_etc3" data-ko="기타 수당3" data-en="Other 3">기타 수당3</td><td><input type="text" class="pay-amt-input"></td><td data-i18n="pay.ded_other1" data-ko="기타 공제1" data-en="Other Ded. 1">기타 공제1</td><td><input type="text" class="pay-amt-input"></td></tr>
+            <tr class="pay-total-row"><td data-i18n="pay.total_pay" data-ko="급여 합계" data-en="Total Pay"><strong>급여 합계</strong></td><td id="payTotalPay"><strong>0</strong></td><td data-i18n="pay.total_ded" data-ko="공제 합계" data-en="Total Ded."><strong>공제 합계</strong></td><td id="payTotalDed"><strong>0</strong></td></tr>
+          </tbody>
+        </table>
+        <!-- 실지급액 -->
+        <table class="pay-summary-table">
+          <tr><td data-i18n="pay.net_pay" data-ko="실지급액 (급여 합계 - 공제 합계)" data-en="Net Pay (Total Pay - Total Ded.)">실지급액 (급여 합계 - 공제 합계)</td><td id="payNetPay">0</td></tr>
+          <tr><td data-i18n="pay.advance" data-ko="가지급금" data-en="Advance">가지급금</td><td><input type="text" class="pay-amt-input" id="payAdvance" style="width:100%;"></td></tr>
+          <tr><td data-i18n="pay.final_pay" data-ko="차감 지급 금액 (실지급액 - 가지급금)" data-en="Final Pay (Net Pay - Advance)">차감 지급 금액 (실지급액 - 가지급금)</td><td id="payFinalPay">0</td></tr>
+        </table>
+        <!-- 인센티브 내역 -->
+        <h4 class="pay-sub-title" data-i18n="pay.inc_detail_title" data-ko="인센티브 내역" data-en="Incentive Detail">인센티브 내역</h4>
+        <table class="pay-table pay-inc-table">
+          <thead>
+            <tr>
+              <th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th>
+              <th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th>
+              <th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card">정액권 판매</th>
+              <th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th>
+              <th rowspan="2" data-i18n="pay.inc_th_total" data-ko="합계" data-en="Total">합계</th>
+            </tr>
+            <tr>
+              <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+              <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+            </tr>
+          </thead>
+          <tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="payCloseCreate()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-disabled" id="payBtnSaveCont" onclick="paySaveContinue()" data-i18n="pay.btn_save_cont" data-ko="저장 후 계속" data-en="Save & Continue">저장 후 계속</button>
+      <button class="pay-footer-btn pay-btn-disabled" id="payBtnSave" onclick="paySaveCreate()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 급여 설정 페이지 뷰 ═══ -->
+<div id="paySettingsView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="pay.settings_title" data-ko="급여 설정" data-en="Payroll Setup">급여 설정</span></h3>
+      <div class="pay-header-btns">
+        <button class="pay-btn-accent pay-header-btn" onclick="openPayrollView()" data-i18n="pay.btn_back_payroll" data-ko="급여 명세서" data-en="Payslips">급여 명세서</button>
+      </div>
+    </div>
+  </div>
+  <div class="pay-body">
+    <!-- 인센티브 계산 방식 -->
+    <div class="pset-section">
+      <div class="pset-row">
+        <span class="pset-label" data-i18n="pay.set_calc_method" data-ko="인센티브 계산 방식" data-en="Incentive Calculation">인센티브 계산 방식</span>
+        <label class="pay-radio"><input type="radio" name="psetCalcMethod" value="sales" checked> <span data-i18n="pay.set_by_sales" data-ko="매출액 기준" data-en="By Sales Amount">매출액 기준</span></label>
+        <label class="pay-radio"><input type="radio" name="psetCalcMethod" value="item"> <span data-i18n="pay.set_by_item" data-ko="판매 항목별" data-en="By Sales Item">판매 항목별</span></label>
+      </div>
+    </div>
+    <!-- ═══ 판매 항목별 모드 ═══ -->
+    <div id="psetItemBasedView" style="display:none;">
+      <div class="pset-section">
+        <div class="pset-ded-row">
+          <span class="pset-ded-label" data-i18n="pay.item_point_include" data-ko="포인트 차감 금액 직원 매출에 포함" data-en="Include Point Deduction in Staff Sales">포인트 차감 금액 직원 매출에 포함</span>
+          <label class="pay-toggle"><input type="checkbox" id="psetItemPointToggle" checked><span class="pay-toggle-slider"></span></label>
+          <span class="pset-ded-status" data-i18n="pay.set_applied" data-ko="적용함" data-en="Applied">적용함</span>
+        </div>
+        <div class="pset-ded-row" style="margin-top:8px;">
+          <span class="pset-ded-label" data-i18n="pay.item_product_inc" data-ko="제품 판매 인센티브" data-en="Product Sales Incentive">제품 판매 인센티브</span>
+          <label class="pay-radio"><input type="radio" name="psetItemProductInc" value="pay" onchange="psetItemProductIncChange()"> <span data-i18n="pay.item_inc_pay" data-ko="인센티브 지급" data-en="Pay Incentive">인센티브 지급</span></label>
+          <label class="pay-radio"><input type="radio" name="psetItemProductInc" value="nopay" checked onchange="psetItemProductIncChange()"> <span data-i18n="pay.item_inc_nopay" data-ko="인센티브 미지급" data-en="No Incentive">인센티브 미지급</span></label>
+        </div>
+        <!-- 제품 매출 인센티브 지급률 테이블 (인센티브 지급 선택 시 표시) -->
+        <div id="psetItemProductTable" style="display:none;margin-top:16px;">
+          <table class="pay-table" style="border:1px solid #E0E0E0;">
+            <thead>
+              <tr>
+                <th></th>
+                <th data-i18n="pay.item_sale_pct" data-ko="판매(%)" data-en="Sales(%)">판매(%)</th>
+                <th data-i18n="pay.item_pp_ded_pct" data-ko="정액권 차감(%)" data-en="Prepaid Ded.(%)">정액권 차감(%)</th>
+                <th data-i18n="pay.spec_th_edit" data-ko="수정" data-en="Edit">수정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-i18n="pay.item_product_rate" data-ko="제품 매출 인센티브 지급률" data-en="Product Sales Incentive Rate">제품 매출 인센티브 지급률</td>
+                <td id="psetItemSaleRate"></td>
+                <td id="psetItemPpDedRate"></td>
+                <td><button class="pset-range-edit-btn" onclick="psetOpenItemRateModal()" data-i18n="pay.btn_edit" data-ko="수정" data-en="Edit">수정</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:16px;font-size:12px;color:#757575;">* <span data-i18n="pay.item_note" data-ko="'설정->서비스, 정액권' 페이지에서 개별 항목의 인센티브를 설정하세요." data-en="Set individual item incentives in Settings > Service, Prepaid Card.">'설정->서비스, 정액권' 페이지에서 개별 항목의 인센티브를 설정하세요.</span></p>
+        <!-- 기본급 설정할 직원 선택 -->
+        <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:24px;">
+          <span class="pset-label" data-i18n="pay.item_basepay_staff" data-ko="기본급 설정할 직원 선택" data-en="Select Staff for Base Pay">기본급 설정할 직원 선택</span>
+          <div class="pset-staff-multi" id="psetItemStaffMulti">
+            <div class="pset-staff-select" onclick="psetToggleItemStaffDrop()">
+              <span class="pset-staff-ph" id="psetItemStaffPh" data-i18n="pay.set_staff_ph" data-ko="직원 선택" data-en="Select Staff">직원 선택</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="pset-staff-dropdown" id="psetItemStaffDropdown">
+              <label class="pset-staff-option"><input type="checkbox" value="전체" onchange="psetItemStaffToggleAll(this)"><span class="stf-day-checkmark">✓</span> <span data-i18n="pay.set_all" data-ko="전체 선택" data-en="Select All">전체 선택</span></label>
+              <label class="pset-staff-option"><input type="checkbox" value="원장님"><span class="stf-day-checkmark">✓</span> <span>원장님</span></label>
+            </div>
+          </div>
+          <button class="pset-add-staff-btn" onclick="psetItemAddStaff()" data-i18n="pay.set_add_staff" data-ko="선택된 직원 추가" data-en="Add Selected Staff">선택된 직원 추가</button>
+        </div>
+        <h4 style="font-size:14px;font-weight:700;color:#212121;margin:20px 0 8px;" data-i18n="pay.item_base" data-ko="기본급" data-en="Base Pay">기본급</h4>
+        <div class="pset-staff-list" id="psetItemStaffList" style="margin-top:0;">
+          <div class="pset-staff-empty" id="psetItemStaffEmpty" data-i18n="pay.set_no_staff" data-ko="선택된 직원이 없습니다." data-en="No staff selected.">선택된 직원이 없습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 매출액 기준 모드 (탭) ═══ -->
+    <div id="psetSalesBasedView">
+    <!-- 탭 -->
+    <div class="pset-tabs">
+      <div class="pset-tab active" onclick="psetSwitchTab(0)" data-i18n="pay.set_tab_rate" data-ko="인센티브 지급률" data-en="Incentive Rate">인센티브 지급률</div>
+      <div class="pset-tab" onclick="psetSwitchTab(1)" data-i18n="pay.set_tab_ded" data-ko="인센티브 공제" data-en="Incentive Deduction">인센티브 공제</div>
+      <div class="pset-tab" onclick="psetSwitchTab(2)" data-i18n="pay.set_tab_specific" data-ko="특정 항목 인센티브" data-en="Specific Item Incentive">특정 항목 인센티브</div>
+    </div>
+
+    <!-- 탭0: 인센티브 지급률 -->
+    <div class="pset-panel" data-pset="0">
+      <div class="pset-toggle-row">
+        <span class="pset-toggle-label" data-i18n="pay.set_range_toggle" data-ko="매출 구간별 인센티브 지급률을 차등 적용" data-en="Apply differential incentive rates by sales range">매출 구간별 인센티브 지급률을 차등 적용</span>
+        <label class="pay-toggle"><input type="checkbox" id="psetRangeToggle" onchange="psetToggleRange()"><span class="pay-toggle-slider"></span></label>
+        <span class="pset-toggle-status" id="psetRangeStatus" data-i18n="pay.set_not_applied" data-ko="적용 안함" data-en="Not Applied">적용 안함</span>
+      </div>
+      <div class="pset-toggle-row">
+        <span class="pset-toggle-label" data-i18n="pay.set_move_toggle" data-ko="직원 매출에 매출 이동 포함" data-en="Include sales transfers in staff sales">직원 매출에 매출 이동 포함</span>
+        <label class="pay-toggle"><input type="checkbox" id="psetMoveToggle" checked><span class="pay-toggle-slider"></span></label>
+        <span class="pset-toggle-status" data-i18n="pay.set_applied" data-ko="적용함" data-en="Applied">적용함</span>
+      </div>
+      <!-- 매출 구간 계산 기준 (토글 ON 시 표시) -->
+      <div class="pset-range-criteria" id="psetRangeCriteria" style="display:none;">
+        <h4 data-i18n="pay.set_range_criteria" data-ko="매출 구간 계산 기준" data-en="Sales Range Criteria">매출 구간 계산 기준</h4>
+        <div class="pset-criteria-row">
+          <span class="pset-criteria-label" data-i18n="pay.set_membership_basis" data-ko="회원권 매출 기준" data-en="Membership Sales Basis">회원권 매출 기준</span>
+          <label class="pay-radio"><input type="radio" name="psetMemBasis" value="sales" checked> <span data-i18n="pay.set_sales_amt" data-ko="판매 금액" data-en="Sales Amount">판매 금액</span></label>
+          <label class="pay-radio"><input type="radio" name="psetMemBasis" value="deduct"> <span data-i18n="pay.set_deduct_amt" data-ko="차감 금액" data-en="Deduction Amount">차감 금액</span></label>
+        </div>
+        <div class="pset-criteria-row">
+          <span class="pset-criteria-label" data-i18n="pay.set_product_include" data-ko="제품 판매 포함 여부" data-en="Include Product Sales">제품 판매 포함 여부</span>
+          <label class="pay-radio"><input type="radio" name="psetProdInclude" value="yes"> <span data-i18n="pay.set_include" data-ko="포함" data-en="Include">포함</span></label>
+          <label class="pay-radio"><input type="radio" name="psetProdInclude" value="no" checked> <span data-i18n="pay.set_exclude" data-ko="포함 안함" data-en="Exclude">포함 안함</span></label>
+        </div>
+        <div class="pset-criteria-row">
+          <span class="pset-criteria-label" data-i18n="pay.set_incentive_apply" data-ko="인센티브 공제 적용" data-en="Incentive Deduction Apply">인센티브 공제 적용</span>
+          <label class="pay-radio"><input type="radio" name="psetDedApply" value="before" checked> <span data-i18n="pay.set_before_ded" data-ko="공제 전 금액" data-en="Before Deduction">공제 전 금액</span></label>
+          <label class="pay-radio"><input type="radio" name="psetDedApply" value="after"> <span data-i18n="pay.set_after_ded" data-ko="공제 후 금액" data-en="After Deduction">공제 후 금액</span></label>
+        </div>
+      </div>
+
+      <!-- 급여 설정할 직원 선택 (탭0 전용) -->
+      <div class="pset-staff-section" style="margin-top:20px;">
+        <div class="pset-staff-row">
+          <span class="pset-label" data-i18n="pay.set_staff_select" data-ko="급여 설정할 직원 선택" data-en="Select Staff for Payroll Setup">급여 설정할 직원 선택</span>
+          <div class="pset-staff-multi" id="psetStaffMulti">
+            <div class="pset-staff-select" onclick="psetToggleStaffDrop()">
+              <span class="pset-staff-ph" id="psetStaffPh" data-i18n="pay.set_staff_ph" data-ko="직원 선택" data-en="Select Staff">직원 선택</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="pset-staff-dropdown" id="psetStaffDropdown">
+              <label class="pset-staff-option"><input type="checkbox" value="전체" onchange="psetStaffToggleAll(this)"><span class="stf-day-checkmark">✓</span> <span data-i18n="pay.set_all" data-ko="전체 선택" data-en="Select All">전체 선택</span></label>
+              <label class="pset-staff-option"><input type="checkbox" value="원장님"><span class="stf-day-checkmark">✓</span> <span>원장님</span></label>
+            </div>
+          </div>
+          <button class="pset-add-staff-btn" onclick="psetAddStaff()" data-i18n="pay.set_add_staff" data-ko="선택된 직원 추가" data-en="Add Selected Staff">선택된 직원 추가</button>
+        </div>
+      </div>
+      <!-- 선택된 직원 영역 (탭0 전용) -->
+      <div class="pset-staff-list" id="psetStaffList">
+        <div class="pset-staff-empty" id="psetStaffEmpty" data-i18n="pay.set_no_staff" data-ko="선택된 직원이 없습니다." data-en="No staff selected.">선택된 직원이 없습니다.</div>
+      </div>
+    </div>
+
+    <!-- 탭1: 인센티브 공제 -->
+    <div class="pset-panel" data-pset="1" style="display:none;">
+      <!-- 기본 설정 -->
+      <div class="pset-ded-header">
+        <h4 class="pset-ded-title" data-i18n="pay.ded_basic_title" data-ko="기본 설정" data-en="Basic Settings">기본 설정</h4>
+        <span class="pset-ded-desc" data-i18n="pay.ded_basic_desc" data-ko="* 인센티브 계산에 적용 되는 직원 매출 기준을 설정합니다." data-en="* Set staff sales criteria applied to incentive calculation.">* 인센티브 계산에 적용 되는 직원 매출 기준을 설정합니다.</span>
+      </div>
+      <div class="pset-ded-box">
+        <!-- 제품 매출에서 입고가 공제 -->
+        <div class="pset-ded-row">
+          <span class="pset-ded-label" data-i18n="pay.ded_product_cost" data-ko="제품 매출에서 입고가 공제" data-en="Deduct Product Cost from Sales">제품 매출에서 입고가 공제</span>
+          <label class="pay-toggle"><input type="checkbox" id="psetDedProductToggle" onchange="psetDedToggle('product')"><span class="pay-toggle-slider"></span></label>
+          <span class="pset-ded-status" id="psetDedProductStatus" data-i18n="pay.set_not_applied" data-ko="적용 안함" data-en="Not Applied">적용 안함</span>
+        </div>
+        <!-- 부가세 공제 -->
+        <div class="pset-ded-row">
+          <span class="pset-ded-label" data-i18n="pay.ded_vat" data-ko="부가세 공제" data-en="VAT Deduction">부가세 공제</span>
+          <label class="pay-toggle"><input type="checkbox" id="psetDedVatToggle" onchange="psetDedToggle('vat')"><span class="pay-toggle-slider"></span></label>
+          <span class="pset-ded-status" id="psetDedVatStatus" data-i18n="pay.set_not_applied" data-ko="적용 안함" data-en="Not Applied">적용 안함</span>
+        </div>
+        <div class="pset-ded-sub" id="psetDedVatSub" style="display:none;">
+          <label class="pay-radio"><input type="radio" name="psetVatType" value="legal" checked> <span data-i18n="pay.ded_vat_legal" data-ko="법정 부가세 적용 (매출을 1.1로 나눔)" data-en="Legal VAT (divide sales by 1.1)">법정 부가세 적용 (매출을 1.1로 나눔)</span></label>
+          <label class="pay-radio"><input type="radio" name="psetVatType" value="custom"> <span data-i18n="pay.ded_vat_custom" data-ko="임의 적용(공제율" data-en="Custom Rate(Deduction Rate">임의 적용(공제율</span>
+            <span class="pset-base-pay-display" id="psetVatCustomRate" onclick="psetOpenVatRate()" style="width:60px;height:28px;font-size:12px;" data-value="0">0</span>
+            <span>%)</span>
+          </label>
+        </div>
+        <!-- 결제 방법별 공제 -->
+        <div class="pset-ded-row">
+          <span class="pset-ded-label" data-i18n="pay.ded_payment_method" data-ko="결제 방법별 공제" data-en="Deduction by Payment Method">결제 방법별 공제</span>
+          <label class="pay-toggle"><input type="checkbox" id="psetDedPayMethodToggle" onchange="psetDedToggle('paymethod')"><span class="pay-toggle-slider"></span></label>
+          <span class="pset-ded-status" id="psetDedPayMethodStatus" data-i18n="pay.set_not_applied" data-ko="적용 안함" data-en="Not Applied">적용 안함</span>
+        </div>
+        <div class="pset-ded-sub" id="psetDedPayMethodSub" style="display:none;">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+            <button class="pset-range-add-btn" onclick="psetEditPayMethodRates()" data-i18n="pay.ded_edit" data-ko="수정" data-en="Edit">수정</button>
+          </div>
+          <table class="pay-table pset-pay-method-table" id="psetPayMethodTable">
+            <thead>
+              <tr>
+                <th data-i18n="pay.ded_pay_method" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+                <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+                <th data-i18n="pay.ded_pay_method" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+                <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+                <th data-i18n="pay.ded_pay_method" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+                <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+                <th data-i18n="pay.ded_pay_method" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+                <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="pset-pm-highlight" data-i18n="pay.pm_point" data-ko="포인트 차감" data-en="Point Deduction">포인트 차감</td>
+                <td>100.0%</td>
+                <td class="pset-pm-highlight" data-i18n="pay.pm_prepaid" data-ko="정액권 차감" data-en="Prepaid Deduction">정액권 차감</td>
+                <td></td>
+                <td class="pset-pm-highlight" data-i18n="pay.pm_ticket" data-ko="티켓 차감" data-en="Ticket Deduction">티켓 차감</td>
+                <td></td>
+                <td data-i18n="pay.pm_outstanding" data-ko="미수금" data-en="Outstanding">미수금</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td data-i18n="pay.pm_cash" data-ko="현금" data-en="Cash">현금</td>
+                <td></td>
+                <td data-i18n="pay.pm_card" data-ko="카드" data-en="Card">카드</td>
+                <td></td>
+                <td data-i18n="pay.pm_transfer" data-ko="계좌이체" data-en="Bank Transfer">계좌이체</td>
+                <td></td>
+                <td data-i18n="pay.pm_local" data-ko="지역화폐" data-en="Local Currency">지역화폐</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td data-i18n="pay.pm_naver" data-ko="네이버 페이" data-en="Naver Pay">네이버 페이</td>
+                <td></td>
+                <td data-i18n="pay.pm_kakao" data-ko="카카오 페이" data-en="Kakao Pay">카카오 페이</td>
+                <td></td>
+                <td data-i18n="pay.pm_gift" data-ko="상품권" data-en="Gift Card">상품권</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 직원별 설정 -->
+      <div class="pset-ded-header" style="margin-top:24px;">
+        <h4 class="pset-ded-title" data-i18n="pay.ded_staff_title" data-ko="직원별 설정" data-en="Staff Settings">직원별 설정</h4>
+        <span class="pset-ded-desc" data-i18n="pay.ded_staff_desc" data-ko="* 기본 설정을 적용하지 않는 직원에 대해서만 설정합니다." data-en="* Configure only for staff who do not use the basic settings.">* 기본 설정을 적용하지 않는 직원에 대해서만 설정합니다.</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+          <div class="pset-staff-multi" id="psetDedStaffMulti">
+            <div class="pset-staff-select" onclick="psetToggleDedStaffDrop()">
+              <span class="pset-staff-ph" id="psetDedStaffPh" data-i18n="pay.set_staff_ph" data-ko="직원 선택" data-en="Select Staff">직원 선택</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="pset-staff-dropdown" id="psetDedStaffDropdown">
+              <label class="pset-staff-option"><input type="checkbox" value="전체" onchange="psetDedStaffToggleAll(this)"><span class="stf-day-checkmark">✓</span> <span data-i18n="pay.set_all" data-ko="전체 선택" data-en="Select All">전체 선택</span></label>
+              <label class="pset-staff-option"><input type="checkbox" value="원장님"><span class="stf-day-checkmark">✓</span> <span>원장님</span></label>
+            </div>
+          </div>
+          <button class="pset-add-staff-btn" onclick="psetDedAddStaff()" data-i18n="pay.set_add_staff" data-ko="선택된 직원 추가" data-en="Add Selected Staff">선택된 직원 추가</button>
+        </div>
+      </div>
+      <div class="pset-staff-list" id="psetDedStaffList">
+        <div class="pset-staff-empty" id="psetDedStaffEmpty" data-i18n="pay.set_no_staff" data-ko="선택된 직원이 없습니다." data-en="No staff selected.">선택된 직원이 없습니다.</div>
+      </div>
+    </div>
+
+    <!-- 탭2: 특정 항목 인센티브 -->
+    <div class="pset-panel" data-pset="2" style="display:none;">
+      <div class="pset-spec-header">
+        <span class="pset-spec-desc">* <span style="color:#6161FF;font-weight:700;" data-i18n="pay.spec_highlight" data-ko="특정 항목별 설정은" data-en="Specific item settings">특정 항목별 설정은</span> <span data-i18n="pay.spec_desc" data-ko="직원별 인센티브 설정 보다" data-en="take priority over staff incentive settings.">직원별 인센티브 설정 보다</span> <strong data-i18n="pay.spec_priority" data-ko="우선 적용" data-en="priority applied">우선 적용</strong><span data-i18n="pay.spec_suffix" data-ko="됩니다." data-en=".">됩니다.</span></span>
+        <div class="pset-spec-btns">
+          <button class="pset-spec-reg-btn pset-spec-svc" onclick="psetOpenSpecSvcModal()" data-i18n="pay.spec_btn_svc" data-ko="서비스 등록" data-en="Register Service">서비스 등록</button>
+          <button class="pset-spec-reg-btn pset-spec-tkt" onclick="psetOpenSpecTktModal()" data-i18n="pay.spec_btn_tkt" data-ko="티켓 등록" data-en="Register Ticket">티켓 등록</button>
+          <button class="pset-spec-reg-btn pset-spec-pp" onclick="psetOpenSpecPpModal()" data-i18n="pay.spec_btn_pp" data-ko="정액권 등록" data-en="Register Prepaid">정액권 등록</button>
+        </div>
+      </div>
+      <table class="pay-table pset-spec-table" id="psetSpecTable">
+        <thead>
+          <tr>
+            <th data-i18n="pay.spec_th_cat" data-ko="분류" data-en="Category">분류</th>
+            <th data-i18n="pay.spec_th_item" data-ko="항목" data-en="Item">항목</th>
+            <th data-i18n="pay.spec_th_price" data-ko="금액" data-en="Price">금액</th>
+            <th data-i18n="pay.spec_th_inc_sale" data-ko="인센티브(판매)" data-en="Incentive(Sales)">인센티브(판매)</th>
+            <th data-i18n="pay.spec_th_inc_ded" data-ko="인센티브(차감)" data-en="Incentive(Deduct)">인센티브(차감)</th>
+            <th data-i18n="pay.spec_th_edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="psetSpecTbody">
+          <tr><td colspan="6" class="pay-empty" data-i18n="pay.spec_empty" data-ko="내역이 없습니다" data-en="No records">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 안내 (공통 - 전 탭 하단에 표시) -->
+    </div><!-- /psetSalesBasedView -->
+    <div class="pset-help-box">
+      <ul class="pset-help-list">
+        <li data-i18n="pay.set_note1" data-ko="판매는 환불을 포함합니다." data-en="Sales include refunds.">판매는 환불을 포함합니다.</li>
+        <li data-i18n="pay.set_note2" data-ko="회원권 차감은 정액권 및 티켓 차감을 모두 포함합니다." data-en="Membership deductions include all prepaid and ticket deductions.">회원권 차감은 정액권 및 티켓 차감을 모두 포함합니다.</li>
+        <li data-i18n="pay.set_note3" data-ko="매출 구간별 인센티브 계산 시 최고 매출 구간의 인센티브 지급률이 일괄 적용됩니다. (예: 인센티브 지급률 : 1~9,999,999 : 40%, 10,000,000 ~ 무제한: 50% 이고 직원 매출: 1200만원인 경우 -> 1200만원 전체에 대해 인센티브 50% 적용)" data-en="When calculating by sales range, the highest range rate applies to the entire amount.">매출 구간별 인센티브 계산 시 최고 매출 구간의 인센티브 지급률이 일괄 적용됩니다. (예: 인센티브 지급률 : 1~9,999,999 : 40%, 10,000,000 ~ 무제한: 50% 이고 직원 매출: 1200만원인 경우 -> 1200만원 전체에 대해 인센티브 50% 적용)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 항목명 수정 팝업 ═══ -->
+<div class="pay-modal-overlay" id="payEditItemModal" onclick="if(event.target===this)payCloseEditItem()">
+  <div class="pay-modal" style="width:440px;">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" data-i18n="pay.edit_item_title" data-ko="항목 수정" data-en="Edit Item">항목 수정</h3><button class="pay-modal-close-white" onclick="payCloseEditItem()">✕</button></div>
+    <div class="pay-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="pay.edit_item_name" data-ko="항목명" data-en="Item Name">항목명</label>
+        <input type="text" class="stf-form-input" id="payEditItemInput">
+      </div>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="payCloseEditItem()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="paySaveEditItem()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 매출 구간 등록 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetRangeRegModal" onclick="if(event.target===this)psetCloseRangeReg()">
+  <div class="pay-modal pay-modal-lg">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.range_reg_title" data-ko="매출 구간 등록" data-en="Register Sales Range">매출 구간 등록</h3><button class="pay-modal-close" onclick="psetCloseRangeReg()">✕</button></div>
+    <div class="pay-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="pay.range_range" data-ko="매출 구간" data-en="Sales Range">매출 구간</label>
+        <input type="text" class="pay-amt-input" id="psetRangeFrom" style="width:140px;height:36px;" value="1">
+        <span class="pay-range-sep">~</span>
+        <input type="text" class="pay-amt-input" id="psetRangeTo" style="width:140px;height:36px;">
+        <label class="stf-chk-label" style="margin-left:12px;"><input type="checkbox" id="psetRangeUnlimited"><span class="stf-checkmark">✓</span><span class="stf-chk-text" data-i18n="pay.range_unlimited" data-ko="무제한" data-en="Unlimited">무제한</span></label>
+      </div>
+      <p class="pset-label" style="margin:12px 0 8px;" data-i18n="pay.range_inc_rate" data-ko="인센티브 지급률" data-en="Incentive Rate">인센티브 지급률</p>
+      <table class="pay-table" style="border:1px solid #E0E0E0;">
+        <thead>
+          <tr>
+            <th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th>
+            <th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th>
+            <th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card">정액권 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th>
+          </tr>
+          <tr>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="pay-amt-input"></td>
+            <td><input type="text" class="pay-amt-input"></td>
+            <td><input type="text" class="pay-amt-input"></td>
+            <td><input type="text" class="pay-amt-input"></td>
+            <td><input type="text" class="pay-amt-input"></td>
+            <td><input type="text" class="pay-amt-input"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseRangeReg()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveRangeReg()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 매출 구간 수정 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetRangeEditModal" onclick="if(event.target===this)psetCloseRangeEdit()">
+  <div class="pay-modal pay-modal-lg">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.range_edit_title" data-ko="매출 구간 수정" data-en="Edit Sales Range">매출 구간 수정</h3><button class="pay-modal-close" onclick="psetCloseRangeEdit()">✕</button></div>
+    <div class="pay-modal-body">
+      <div class="stf-form-row">
+        <label class="stf-form-label" data-i18n="pay.range_range" data-ko="매출 구간" data-en="Sales Range">매출 구간</label>
+        <input type="text" class="pay-amt-input" id="psetRangeEditFrom" style="width:140px;height:36px;">
+        <span class="pay-range-sep">~</span>
+        <input type="text" class="pay-amt-input" id="psetRangeEditTo" style="width:140px;height:36px;">
+        <label class="stf-chk-label" style="margin-left:12px;"><input type="checkbox" id="psetRangeEditUnlimited"><span class="stf-checkmark">✓</span><span class="stf-chk-text" data-i18n="pay.range_unlimited" data-ko="무제한" data-en="Unlimited">무제한</span></label>
+      </div>
+      <p class="pset-label" style="margin:12px 0 8px;" data-i18n="pay.range_inc_rate" data-ko="인센티브 지급률" data-en="Incentive Rate">인센티브 지급률</p>
+      <table class="pay-table" style="border:1px solid #E0E0E0;">
+        <thead>
+          <tr>
+            <th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th>
+            <th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th>
+            <th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card">정액권 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th>
+          </tr>
+          <tr>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th>
+            <th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate0"></td>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate1"></td>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate2"></td>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate3"></td>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate4"></td>
+            <td><input type="text" class="pay-amt-input" id="psetRangeEditRate5"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseRangeEdit()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-danger" onclick="psetDeleteRangeEdit()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveRangeEdit()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 제품 매출 인센티브 지급률 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetItemRateModal" onclick="if(event.target===this)psetCloseItemRate()">
+  <div class="pay-modal" style="width:520px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.item_rate_title" data-ko="제품 매출 인센티브 지급률" data-en="Product Sales Incentive Rate">제품 매출 인센티브 지급률</h3><button class="pay-modal-close" onclick="psetCloseItemRate()">✕</button></div>
+    <div class="pay-modal-body" style="padding:20px 24px;">
+      <table class="pay-table" style="border:1px solid #E0E0E0;">
+        <thead>
+          <tr>
+            <th data-i18n="pay.item_sale_pct" data-ko="판매(%)" data-en="Sales(%)">판매(%)</th>
+            <th data-i18n="pay.item_pp_ded_pct" data-ko="정액권 차감(%)" data-en="Prepaid Ded.(%)">정액권 차감(%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" class="pay-amt-input" id="psetItemRateSaleInput" style="width:100%;height:32px;text-align:center;"></td>
+            <td><input type="text" class="pay-amt-input" id="psetItemRatePpInput" style="width:100%;height:32px;text-align:center;"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseItemRate()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveItemRate()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 기본급 설정 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetBasePayModal" onclick="if(event.target===this)psetCloseBasePay()">
+  <div class="pay-modal" style="width:400px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.basepay_title" data-ko="기본급 설정" data-en="Base Pay Setup">기본급 설정</h3><button class="pay-modal-close" onclick="psetCloseBasePay()">✕</button></div>
+    <div class="pay-modal-body" style="padding:24px;">
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+        <span class="pset-label" data-i18n="pay.item_base" data-ko="기본급" data-en="Base Pay">기본급</span>
+        <input type="text" class="pay-amt-input" id="psetBasePayInput" style="width:200px;height:36px;text-align:right;font-size:14px;">
+      </div>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseBasePay()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveBasePay()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 부가세 공제율 설정 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetVatRateModal" onclick="if(event.target===this)psetCloseVatRate()">
+  <div class="pay-modal" style="width:400px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.vat_rate_title" data-ko="부가세 공제율" data-en="VAT Deduction Rate">부가세 공제율</h3><button class="pay-modal-close" onclick="psetCloseVatRate()">✕</button></div>
+    <div class="pay-modal-body" style="padding:24px;">
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+        <span class="pset-label" data-i18n="pay.vat_rate_label" data-ko="공제율" data-en="Deduction Rate">공제율</span>
+        <input type="text" class="pay-amt-input" id="psetVatRateInput" style="width:100px;height:36px;text-align:center;font-size:14px;">
+        <span style="font-size:14px;color:#212121;">%</span>
+      </div>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseVatRate()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveVatRate()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 수정 결제 방법별 공제 팝업 ═══ -->
+<div class="pay-modal-overlay" id="psetPayMethodModal" onclick="if(event.target===this)psetClosePayMethod()">
+  <div class="pay-modal pay-modal-xl">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" data-i18n="pay.pm_edit_title" data-ko="수정 결제 방법별 공제" data-en="Edit Payment Method Deductions">수정 결제 방법별 공제</h3><button class="pay-modal-close" onclick="psetClosePayMethod()">✕</button></div>
+    <div class="pay-modal-body" style="padding:20px 24px;">
+      <table class="pay-table pset-pay-method-table" id="psetPayMethodEditTable">
+        <thead>
+          <tr>
+            <th data-i18n="pay.ded_pay_method" data-ko="결제방법" data-en="Payment Method">결제방법</th>
+            <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+            <th data-i18n="pay.ded_pay_method" data-ko="결제방법" data-en="Payment Method">결제방법</th>
+            <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+            <th data-i18n="pay.ded_pay_method" data-ko="결제방법" data-en="Payment Method">결제방법</th>
+            <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+            <th data-i18n="pay.ded_pay_method" data-ko="결제방법" data-en="Payment Method">결제방법</th>
+            <th data-i18n="pay.ded_rate" data-ko="공제율" data-en="Deduction Rate">공제율</th>
+          </tr>
+        </thead>
+        <tbody id="psetPayMethodEditBody">
+          <tr>
+            <td class="pset-pm-highlight" data-i18n="pay.pm_point" data-ko="포인트 차감" data-en="Point Ded.">포인트 차감</td>
+            <td><input type="text" class="pay-amt-input" data-method="point" style="width:80px;height:28px;text-align:center;"></td>
+            <td class="pset-pm-highlight" data-i18n="pay.pm_prepaid" data-ko="정액권 차감" data-en="Prepaid Ded.">정액권 차감</td>
+            <td><input type="text" class="pay-amt-input" data-method="prepaid" style="width:80px;height:28px;text-align:center;"></td>
+            <td class="pset-pm-highlight" data-i18n="pay.pm_ticket" data-ko="티켓 차감" data-en="Ticket Ded.">티켓 차감</td>
+            <td><input type="text" class="pay-amt-input" data-method="ticket" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_outstanding" data-ko="미수금" data-en="Outstanding">미수금</td>
+            <td><input type="text" class="pay-amt-input" data-method="outstanding" style="width:80px;height:28px;text-align:center;"></td>
+          </tr>
+          <tr>
+            <td data-i18n="pay.pm_cash" data-ko="현금" data-en="Cash">현금</td>
+            <td><input type="text" class="pay-amt-input" data-method="cash" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_card" data-ko="카드" data-en="Card">카드</td>
+            <td><input type="text" class="pay-amt-input" data-method="card" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_transfer" data-ko="계좌이체" data-en="Bank Transfer">계좌이체</td>
+            <td><input type="text" class="pay-amt-input" data-method="transfer" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_local" data-ko="지역화폐" data-en="Local Currency">지역화폐</td>
+            <td><input type="text" class="pay-amt-input" data-method="local" style="width:80px;height:28px;text-align:center;"></td>
+          </tr>
+          <tr>
+            <td data-i18n="pay.pm_naver" data-ko="네이버 페이" data-en="Naver Pay">네이버 페이</td>
+            <td><input type="text" class="pay-amt-input" data-method="naver" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_kakao" data-ko="카카오 페이" data-en="Kakao Pay">카카오 페이</td>
+            <td><input type="text" class="pay-amt-input" data-method="kakao" style="width:80px;height:28px;text-align:center;"></td>
+            <td data-i18n="pay.pm_gift" data-ko="상품권" data-en="Gift Card">상품권</td>
+            <td><input type="text" class="pay-amt-input" data-method="gift" style="width:80px;height:28px;text-align:center;"></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pay-modal-footer" style="justify-content:center;">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetClosePayMethod()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSavePayMethod()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 서비스 급여 등록/수정 모달 ═══ -->
+<div class="pay-modal-overlay" id="psetSpecSvcModal" onclick="if(event.target===this)psetCloseSpecSvc()">
+  <div class="pay-modal" style="width:520px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" id="psetSpecSvcModalTitle" data-i18n="pay.spec_svc_title" data-ko="서비스 급여 등록" data-en="Register Service Incentive">서비스 급여 등록</h3><button class="pay-modal-close" onclick="psetCloseSpecSvc()">✕</button></div>
+    <div class="pay-modal-body" style="padding:20px 24px;">
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_cat" data-ko="분류" data-en="Category">분류</span> <span class="pset-req">*</span></label>
+        <select class="pay-select pset-modal-select" id="psetSpecSvcCat" onchange="psetSpecSvcCatChange()">
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_svc" data-ko="서비스" data-en="Service">서비스</span> <span class="pset-req">*</span></label>
+        <select class="pay-select pset-modal-select" id="psetSpecSvcItem" onchange="psetSpecSvcItemChange()">
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label" data-i18n="pay.spec_price" data-ko="금액" data-en="Price">금액</label>
+        <input type="text" class="pay-amt-input pset-modal-input" id="psetSpecSvcPrice" readonly style="background:#F5F5F5;">
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_inc_sale" data-ko="인센티브(판매)" data-en="Incentive(Sales)">인센티브(판매)</span> <span class="pset-req">*</span> <span class="pset-tooltip-icon">?<span class="pset-tooltip" data-i18n="pay.spec_tooltip" data-ko="'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다" data-en="When 'Amount' is selected, the set amount is calculated as salary regardless of staff sales.">'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다</span></span></label>
+        <input type="text" class="pay-amt-input pset-modal-input-sm" id="psetSpecSvcIncSale">
+        <label class="pay-radio" style="margin-left:8px;"><input type="radio" name="psetSpecSvcIncType" value="percent" checked onchange="psetSpecIncTypeChange('Svc')"> <span>%</span></label>
+        <label class="pay-radio"><input type="radio" name="psetSpecSvcIncType" value="amount" onchange="psetSpecIncTypeChange('Svc')"> <span data-i18n="pay.spec_amount" data-ko="금액" data-en="Amount">금액</span></label>
+      </div>
+      <div class="pset-modal-row" id="psetSpecSvcDedRow">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_inc_ded" data-ko="인센티브(차감)" data-en="Incentive(Deduct)">인센티브(차감)</span> <span class="pset-req">*</span></label>
+        <input type="text" class="pay-amt-input pset-modal-input-sm" id="psetSpecSvcIncDed">
+        <span style="font-size:13px;color:#616161;margin-left:4px;">%</span>
+      </div>
+    </div>
+    <div class="pay-modal-footer" id="psetSpecSvcFooter">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecSvc()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecSvc()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 티켓 급여 등록/수정 모달 ═══ -->
+<div class="pay-modal-overlay" id="psetSpecTktModal" onclick="if(event.target===this)psetCloseSpecTkt()">
+  <div class="pay-modal" style="width:520px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" id="psetSpecTktModalTitle" data-i18n="pay.spec_tkt_title" data-ko="티켓 급여 등록" data-en="Register Ticket Incentive">티켓 급여 등록</h3><button class="pay-modal-close" onclick="psetCloseSpecTkt()">✕</button></div>
+    <div class="pay-modal-body" style="padding:20px 24px;">
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_cat" data-ko="분류" data-en="Category">분류</span> <span class="pset-req">*</span></label>
+        <select class="pay-select pset-modal-select" id="psetSpecTktCat" onchange="psetSpecTktCatChange()">
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_tkt" data-ko="티켓" data-en="Ticket">티켓</span> <span class="pset-req">*</span></label>
+        <select class="pay-select pset-modal-select" id="psetSpecTktItem">
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label" data-i18n="pay.spec_price" data-ko="금액" data-en="Price">금액</label>
+        <input type="text" class="pay-amt-input pset-modal-input" id="psetSpecTktPrice" readonly style="background:#F5F5F5;">
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_inc_sale" data-ko="인센티브(판매)" data-en="Incentive(Sales)">인센티브(판매)</span> <span class="pset-req">*</span> <span class="pset-tooltip-icon">?<span class="pset-tooltip" data-i18n="pay.spec_tooltip" data-ko="'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다" data-en="When 'Amount' is selected, the set amount is calculated as salary regardless of staff sales.">'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다</span></span></label>
+        <input type="text" class="pay-amt-input pset-modal-input-sm" id="psetSpecTktIncSale">
+        <label class="pay-radio" style="margin-left:8px;"><input type="radio" name="psetSpecTktIncType" value="percent" checked onchange="psetSpecIncTypeChange('Tkt')"> <span>%</span></label>
+        <label class="pay-radio"><input type="radio" name="psetSpecTktIncType" value="amount" onchange="psetSpecIncTypeChange('Tkt')"> <span data-i18n="pay.spec_amount" data-ko="금액" data-en="Amount">금액</span></label>
+      </div>
+    </div>
+    <div class="pay-modal-footer" id="psetSpecTktFooter">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecTkt()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecTkt()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 정액권 급여 등록/수정 모달 ═══ -->
+<div class="pay-modal-overlay" id="psetSpecPpModal" onclick="if(event.target===this)psetCloseSpecPp()">
+  <div class="pay-modal" style="width:520px;">
+    <div class="pay-modal-header"><h3 class="pay-modal-title" id="psetSpecPpModalTitle" data-i18n="pay.spec_pp_title" data-ko="정액권 급여 등록" data-en="Register Prepaid Card Incentive">정액권 급여 등록</h3><button class="pay-modal-close" onclick="psetCloseSpecPp()">✕</button></div>
+    <div class="pay-modal-body" style="padding:20px 24px;">
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_pp" data-ko="정액권" data-en="Prepaid Card">정액권</span> <span class="pset-req">*</span></label>
+        <select class="pay-select pset-modal-select" id="psetSpecPpItem" onchange="psetSpecPpItemChange()">
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label" data-i18n="pay.spec_price" data-ko="금액" data-en="Price">금액</label>
+        <input type="text" class="pay-amt-input pset-modal-input" id="psetSpecPpPrice" readonly style="background:#F5F5F5;">
+      </div>
+      <div class="pset-modal-row">
+        <label class="pset-modal-label"><span data-i18n="pay.spec_inc_sale" data-ko="인센티브(판매)" data-en="Incentive(Sales)">인센티브(판매)</span> <span class="pset-req">*</span> <span class="pset-tooltip-icon">?<span class="pset-tooltip" data-i18n="pay.spec_tooltip" data-ko="'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다" data-en="When 'Amount' is selected, the set amount is calculated as salary regardless of staff sales.">'금액'을 선택한 경우에는 직원 매출에 관계 없이 설정된 금액이 급여로 계산됩니다</span></span></label>
+        <input type="text" class="pay-amt-input pset-modal-input-sm" id="psetSpecPpIncSale">
+        <label class="pay-radio" style="margin-left:8px;"><input type="radio" name="psetSpecPpIncType" value="percent" checked onchange="psetSpecIncTypeChange('Pp')"> <span>%</span></label>
+        <label class="pay-radio"><input type="radio" name="psetSpecPpIncType" value="amount" onchange="psetSpecIncTypeChange('Pp')"> <span data-i18n="pay.spec_amount" data-ko="금액" data-en="Amount">금액</span></label>
+      </div>
+    </div>
+    <div class="pay-modal-footer" id="psetSpecPpFooter">
+      <button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecPp()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecPp()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 급여 명세서 보기 모달 ═══ -->
+<div class="pay-modal-overlay" id="payViewModal" onclick="if(event.target===this)payCloseView()">
+  <div class="pay-modal pay-modal-full">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" id="payViewTitle" data-i18n="pay.view_title" data-ko="급여 명세서" data-en="Payslip">급여 명세서</h3><button class="pay-modal-close-white" onclick="payCloseView()">✕</button></div>
+    <div class="pay-view-toolbar">
+      <button class="pay-view-btn-action" onclick="payCloseView()" data-i18n="pay.btn_close" data-ko="닫기" data-en="Close">닫기</button>
+      <button class="pay-view-btn-danger" onclick="payDeletePayslip()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="pay-view-btn-primary" onclick="payEditFromView()" data-i18n="pay.btn_edit" data-ko="수정" data-en="Edit">수정</button>
+      <button class="pay-view-btn-action" onclick="payPrintView()" data-i18n="pay.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+    <div class="pay-modal-body">
+      <div class="pay-view-card">
+        <h3 class="pay-view-heading" id="payViewHeading" data-i18n="pay.view_heading" data-ko="급여 명세서 (원장님 님)" data-en="Payslip (Director)">급여 명세서 (원장님 님)</h3>
+        <div class="pay-section-header" style="border:none;padding:0;">
+          <h4 data-i18n="pay.section_salary" data-ko="급여 및 공제 항목" data-en="Salary & Deductions">급여 및 공제 항목</h4>
+          <div style="flex:1;"></div>
+          <span class="pay-view-period" id="payViewPeriod"></span>
+        </div>
+        <table class="pay-salary-table" id="payViewSalaryTable">
+          <thead><tr><th data-i18n="pay.th_pay_item" data-ko="급여 항목" data-en="Pay Item">급여 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th><th data-i18n="pay.th_ded_item" data-ko="공제 항목" data-en="Deduction Item">공제 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th></tr></thead>
+          <tbody id="payViewSalaryBody"></tbody>
+        </table>
+        <table class="pay-summary-table" id="payViewSummaryTable">
+          <tr><td data-i18n="pay.net_pay" data-ko="실지급액 (급여 합계 - 공제 합계)" data-en="Net Pay">실지급액 (급여 합계 - 공제 합계)</td><td id="payViewNetPay"></td></tr>
+          <tr><td data-i18n="pay.advance" data-ko="가지급금" data-en="Advance">가지급금</td><td id="payViewAdvance"></td></tr>
+          <tr><td data-i18n="pay.final_pay" data-ko="차감 지급 금액 (실지급액 - 가지급금)" data-en="Final Pay">차감 지급 금액 (실지급액 - 가지급금)</td><td id="payViewFinalPay"></td></tr>
+        </table>
+        <h4 class="pay-sub-title" data-i18n="pay.inc_detail_title" data-ko="인센티브 내역" data-en="Incentive Detail">인센티브 내역</h4>
+        <table class="pay-table pay-inc-table" id="payViewIncTable">
+          <thead><tr><th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th><th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th><th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid">정액권 판매</th><th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th><th rowspan="2" data-i18n="pay.inc_th_total" data-ko="합계" data-en="Total">합계</th></tr><tr><th>판매</th><th>차감</th><th>판매</th><th>차감</th></tr></thead>
+          <tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 인센티브 내역 모달 ═══ -->
+<div class="pay-modal-overlay" id="payIncDetailModal" onclick="if(event.target===this)payCloseIncDetail()">
+  <div class="pay-modal pay-modal-full">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" data-i18n="pay.inc_detail_modal" data-ko="인센티브 내역" data-en="Incentive Detail">인센티브 내역</h3><button class="pay-modal-close-white" onclick="payCloseIncDetail()">✕</button></div>
+    <div class="pay-modal-body">
+      <div class="pay-inc-info">
+        <span id="payIncStaffName"><strong>원장님</strong></span>
+        <span id="payIncPeriod" style="margin-left:24px;">2026-03-01 ~ 2026-03-31</span>
+        <div style="flex:1;"></div>
+        <button class="pay-header-btn" onclick="alert('엑셀 다운로드')" data-i18n="pay.btn_excel" data-ko="엑셀 다운로드" data-en="Excel Download">엑셀 다운로드</button>
+      </div>
+      <!-- 탭 -->
+      <div class="pay-inc-tabs">
+        <div class="pay-inc-tab active" onclick="payIncSwitchTab(0)" data-i18n="pay.inc_tab_svc" data-ko="서비스 판매/차감" data-en="Service Sales/Ded.">서비스 판매/차감</div>
+        <div class="pay-inc-tab" onclick="payIncSwitchTab(1)" data-i18n="pay.inc_tab_prod" data-ko="제품 판매/차감" data-en="Product Sales/Ded.">제품 판매/차감</div>
+        <div class="pay-inc-tab" onclick="payIncSwitchTab(2)" data-i18n="pay.inc_tab_prepaid" data-ko="회원권 판매" data-en="Membership Sales">회원권 판매</div>
+      </div>
+      <!-- 탭 패널 공통 테이블 -->
+      <div class="pay-inc-panel" data-panel="0">
+        <table class="pay-table">
+          <thead>
+            <tr>
+              <th data-i18n="pay.inc_d_date" data-ko="날짜" data-en="Date">날짜</th>
+              <th data-i18n="pay.inc_d_client" data-ko="고객명" data-en="Client">고객명</th>
+              <th data-i18n="pay.inc_d_svc" data-ko="서비스명" data-en="Service">서비스명</th>
+              <th data-i18n="pay.inc_d_price" data-ko="단가" data-en="Price">단가</th>
+              <th data-i18n="pay.inc_d_qty" data-ko="수량" data-en="Qty">수량</th>
+              <th data-i18n="pay.inc_d_disc" data-ko="금액(할인)" data-en="Amount(Disc)">금액(할인)</th>
+              <th data-i18n="pay.inc_d_method" data-ko="결제 방법" data-en="Payment">결제 방법</th>
+              <th data-i18n="pay.inc_d_paid" data-ko="결제금액" data-en="Paid">결제금액</th>
+              <th colspan="3" data-i18n="pay.inc_d_sale" data-ko="판매" data-en="Sales">판매</th>
+              <th colspan="3" data-i18n="pay.inc_d_mem_ded" data-ko="회원권 차감" data-en="Membership Ded.">회원권 차감</th>
+            </tr>
+            <tr>
+              <th colspan="8"></th>
+              <th data-i18n="pay.inc_d_after" data-ko="공제 후" data-en="After Ded.">공제 후</th>
+              <th data-i18n="pay.inc_d_rate" data-ko="지급률" data-en="Rate">지급률</th>
+              <th data-i18n="pay.item_incentive" data-ko="인센티브" data-en="Incentive">인센티브</th>
+              <th data-i18n="pay.inc_d_after" data-ko="공제 후" data-en="After Ded.">공제 후</th>
+              <th data-i18n="pay.inc_d_rate" data-ko="지급률" data-en="Rate">지급률</th>
+              <th data-i18n="pay.item_incentive" data-ko="인센티브" data-en="Incentive">인센티브</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="14" class="pay-empty" data-i18n="pay.empty" data-ko="내역이 없습니다." data-en="No records.">내역이 없습니다.</td></tr></tbody>
+        </table>
+        <ul class="pay-note-list">
+          <li data-i18n="pay.inc_note_click" data-ko="고객명을 클릭하면 고객 정보 창이 나타납니다." data-en="Click client name to view client info.">고객명을 클릭하면 고객 정보 창이 나타납니다.</li>
+          <li data-i18n="pay.inc_note_cell" data-ko="'공제 후' 셀을 클릭하면 해당 금액의 계산 내역이 나타납니다." data-en="Click 'After Ded.' cell to view calculation.">&#39;공제 후&#39; 셀을 클릭하면 해당 금액의 계산 내역이 나타납니다.</li>
+          <li data-i18n="pay.inc_note_refund" data-ko="환불은 마이너스 금액으로 표시 됩니다." data-en="Refunds are shown as negative amounts.">환불은 마이너스 금액으로 표시 됩니다.</li>
+        </ul>
+      </div>
+      <div class="pay-inc-panel" data-panel="1" style="display:none;">
+        <table class="pay-table"><thead><tr><th>날짜</th><th>고객명</th><th>서비스명</th><th>단가</th><th>수량</th><th>금액(할인)</th><th>결제 방법</th><th>결제금액</th><th colspan="3">판매</th><th colspan="3">회원권 차감</th></tr><tr><th colspan="8"></th><th>공제 후</th><th>지급률</th><th>인센티브</th><th>공제 후</th><th>지급률</th><th>인센티브</th></tr></thead><tbody><tr><td colspan="14" class="pay-empty">내역이 없습니다.</td></tr></tbody></table>
+      </div>
+      <div class="pay-inc-panel" data-panel="2" style="display:none;">
+        <table class="pay-table"><thead><tr><th>날짜</th><th>고객명</th><th>서비스명</th><th>단가</th><th>수량</th><th>금액(할인)</th><th>결제 방법</th><th>결제금액</th><th colspan="3">회원권 판매</th><th colspan="3">회원권 차감</th></tr><tr><th colspan="8"></th><th>공제 후</th><th>지급률</th><th>인센티브</th><th>공제 후</th><th>지급률</th><th>인센티브</th></tr></thead><tbody><tr><td colspan="14" class="pay-empty">내역이 없습니다.</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 급여 명세서 수정 모달 ═══ -->
+<div class="pay-modal-overlay" id="payEditModal" onclick="if(event.target===this)payCloseEdit()">
+  <div class="pay-modal pay-modal-full">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" data-i18n="pay.edit_title" data-ko="급여 명세서 수정" data-en="Edit Payslip">급여 명세서 수정</h3><button class="pay-modal-close-white" onclick="payCloseEdit()">✕</button></div>
+    <div class="pay-create-toolbar">
+      <span class="pay-filter-label" data-i18n="pay.create_period" data-ko="근무 기간" data-en="Work Period">근무 기간</span>
+      <input type="date" class="pay-date-input" id="payEditFrom">
+      <span class="pay-range-sep">~</span>
+      <input type="date" class="pay-date-input" id="payEditTo">
+      <div style="flex:1;"></div>
+      <span class="pay-filter-label" data-i18n="pay.filter_staff" data-ko="직원" data-en="Staff">직원</span>
+      <select class="pay-select" id="payEditStaff" disabled style="background:#F5F5F5;color:#9E9E9E;cursor:default;"><option value="" data-i18n="common.opt_select" data-ko="선택" data-en="Select">선택</option><option>원장님</option></select>
+    </div>
+    <div class="pay-create-divider"></div>
+    <div class="pay-modal-body">
+      <div class="pay-section-header">
+        <h4 data-i18n="pay.section_salary" data-ko="급여 및 공제 항목" data-en="Salary & Deductions">급여 및 공제 항목</h4>
+        <button class="pay-settings-btn" onclick="payOpenSettings()" data-tooltip="급여 항목 설정" data-i18n-tooltip-ko="급여 항목 설정" data-i18n-tooltip-en="Payroll Item Setup">⚙</button>
+        <div style="flex:1;"></div>
+        <span class="pay-filter-label" data-i18n="pay.income_type" data-ko="소득 구분" data-en="Income Type">소득 구분</span>
+        <select class="pay-select" id="payEditIncomeType" style="width:160px;" onchange="payEditIncomeTypeChange()">
+          <option value="biz" data-i18n="pay.income_biz" data-ko="사업 소득" data-en="Business Income">사업 소득</option>
+          <option value="earned" data-i18n="pay.income_earned" data-ko="근로 소득" data-en="Earned Income">근로 소득</option>
+          <option value="other" data-i18n="pay.income_other" data-ko="기타 소득" data-en="Other Income">기타 소득</option>
+        </select>
+      </div>
+      <table class="pay-salary-table" id="payEditSalaryTable">
+        <thead><tr><th data-i18n="pay.th_pay_item" data-ko="급여 항목" data-en="Pay Item">급여 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th><th data-i18n="pay.th_ded_item" data-ko="공제 항목" data-en="Deduction Item">공제 항목</th><th data-i18n="pay.th_amount" data-ko="금액" data-en="Amount">금액</th></tr></thead>
+        <tbody id="payEditSalaryBody">
+          <tr><td data-i18n="pay.item_base" data-ko="기본급" data-en="Base Pay">기본급</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="product" data-i18n="pay.ded_product" data-ko="제품 사용" data-en="Product Usage">제품 사용</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_incentive" data-ko="인센티브" data-en="Incentive">인센티브</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="late" data-i18n="pay.ded_late" data-ko="지각" data-en="Late">지각</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_meal" data-ko="식대" data-en="Meal">식대</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="early" data-i18n="pay.ded_early" data-ko="조퇴" data-en="Early Leave">조퇴</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_position" data-ko="직책 수당" data-en="Position">직책 수당</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="absent" data-i18n="pay.ded_absent" data-ko="결근" data-en="Absent">결근</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_cert" data-ko="자격 수당" data-en="Certificate">자격 수당</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="other1" data-i18n="pay.ded_other1" data-ko="기타 공제1" data-en="Other Ded. 1">기타 공제1</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_overtime" data-ko="초과 근무 수당" data-en="Overtime">초과 근무 수당</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="biz_tax" data-i18n="pay.ded_biz_tax" data-ko="사업 소득세 자동 계산" data-en="Auto Business Tax">사업 소득세 자동 계산</td><td><input type="text" class="pay-amt-input"></td></tr>
+          <tr><td data-i18n="pay.item_holiday" data-ko="휴일 근무 수당" data-en="Holiday">휴일 근무 수당</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="none"></td><td></td></tr>
+          <tr><td data-i18n="pay.item_annual" data-ko="연차 수당" data-en="Annual Leave">연차 수당</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="none"></td><td></td></tr>
+          <tr><td data-i18n="pay.item_etc1" data-ko="기타 수당1" data-en="Other 1">기타 수당1</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="none"></td><td></td></tr>
+          <tr><td data-i18n="pay.item_etc2" data-ko="기타 수당2" data-en="Other 2">기타 수당2</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="none"></td><td></td></tr>
+          <tr><td data-i18n="pay.item_etc3" data-ko="기타 수당3" data-en="Other 3">기타 수당3</td><td><input type="text" class="pay-amt-input"></td><td class="pay-edit-ded" data-ded="none"></td><td></td></tr>
+          <tr class="pay-total-row"><td data-i18n="pay.total_pay" data-ko="급여 합계" data-en="Total Pay"><strong>급여 합계</strong></td><td id="payEditTotalPay"><strong>0</strong></td><td data-i18n="pay.total_ded" data-ko="공제 합계" data-en="Total Ded."><strong>공제 합계</strong></td><td id="payEditTotalDed"><strong>0</strong></td></tr>
+        </tbody>
+      </table>
+      <table class="pay-summary-table">
+        <tr><td data-i18n="pay.net_pay" data-ko="실지급액 (급여 합계 - 공제 합계)" data-en="Net Pay">실지급액 (급여 합계 - 공제 합계)</td><td id="payEditNetPay">0</td></tr>
+        <tr><td data-i18n="pay.advance" data-ko="가지급금" data-en="Advance">가지급금</td><td><input type="text" class="pay-amt-input" id="payEditAdvance" style="width:100%;"></td></tr>
+        <tr><td data-i18n="pay.final_pay" data-ko="차감 지급 금액 (실지급액 - 가지급금)" data-en="Final Pay">차감 지급 금액 (실지급액 - 가지급금)</td><td id="payEditFinalPay">0</td></tr>
+      </table>
+      <h4 class="pay-sub-title" data-i18n="pay.inc_detail_title" data-ko="인센티브 내역" data-en="Incentive Detail">인센티브 내역</h4>
+      <table class="pay-table pay-inc-table">
+        <thead>
+          <tr>
+            <th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">서비스</th>
+            <th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">제품</th>
+            <th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card">정액권 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Ticket">티켓 판매</th>
+            <th rowspan="2" data-i18n="pay.inc_th_total" data-ko="합계" data-en="Total">합계</th>
+          </tr>
+          <tr>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+            <th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">판매</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduct">차감</th>
+          </tr>
+        </thead>
+        <tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pay-modal-footer" style="justify-content:center;">
+      <button class="pay-footer-btn pay-btn-primary" onclick="paySaveEdit()" data-i18n="common.btn_save" data-ko="저장" data-en="Save">저장</button>
+      <button class="pay-footer-btn pay-btn-outline" onclick="payCloseEdit()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 삭제 확인 팝업 ═══ -->
+<div class="pay-modal-overlay" id="payDeleteConfirm" onclick="if(event.target===this)payCloseDeleteConfirm()">
+  <div class="pay-modal" style="width:440px;">
+    <div class="pay-modal-header pay-modal-header-color"><h3 class="pay-modal-title-white" data-i18n="pay.alert_title" data-ko="알림" data-en="Notice">알림</h3><button class="pay-modal-close-white" onclick="payCloseDeleteConfirm()">✕</button></div>
+    <div class="pay-modal-body">
+      <div class="pay-confirm-msg" data-i18n="pay.delete_confirm" data-ko="정말 삭제 하시겠습니까?" data-en="Are you sure you want to delete?">정말 삭제 하시겠습니까?</div>
+    </div>
+    <div class="pay-modal-footer">
+      <button class="pay-footer-btn pay-btn-outline" onclick="payCloseDeleteConfirm()" data-i18n="common.btn_cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pay-footer-btn pay-btn-danger" onclick="payConfirmDelete()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ═══ 출퇴근 관리 (Time Clock) 뷰 ═══ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="timeClockView">
+  <!-- ── 출퇴근 관리 화면 ── -->
+  <div class="tc-subview" id="tcManageView">
+    <div class="sv-page-header-bg">
+      <div class="sv-page-header">
+        <h3><span data-i18n="tc.title" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</span></h3>
+        <div class="tc-header-btns">
+          <button class="tc-header-btn tc-btn-accent" onclick="tcOpenClockModal()" data-i18n="tc.btnClock" data-ko="출퇴근 등록" data-en="Clock In/Out">출퇴근 등록</button>
+          <button class="tc-header-btn tc-btn-accent" onclick="tcOpenAbsentModal()" data-i18n="tc.btnAbsent" data-ko="결근 등록" data-en="Register Absence">결근 등록</button>
+          <button class="tc-header-btn" onclick="tcShowSummary()" data-i18n="tc.btnSummary" data-ko="출퇴근 집계" data-en="Attendance Summary">출퇴근 집계</button>
+          <button class="tc-header-btn" onclick="tcPrint()" data-i18n="tc.btnPrint" data-ko="인쇄" data-en="Print">인쇄</button>
+        </div>
+      </div>
+    </div>
+    <div class="tc-body">
+      <!-- 필터 -->
+      <div class="tc-filter-row">
+        <div class="tc-filter-group">
+          <label class="sg-radio-label"><input type="radio" name="tcPeriodType" value="daily" checked onchange="tcTogglePeriod()"><span class="sg-radio-dot"></span><span data-i18n="tc.daily" data-ko="일별" data-en="Daily">일별</span></label>
+          <label class="sg-radio-label"><input type="radio" name="tcPeriodType" value="monthly" onchange="tcTogglePeriod()"><span class="sg-radio-dot"></span><span data-i18n="tc.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+          <label class="sg-radio-label"><input type="radio" name="tcPeriodType" value="range" onchange="tcTogglePeriod()"><span class="sg-radio-dot"></span><span data-i18n="tc.range" data-ko="기간" data-en="Range">기간</span></label>
+          <input type="date" class="tc-date-input" id="tcDailyDate" value="2026-04-07" />
+          <input type="month" class="tc-date-input" id="tcMonthDate" value="2026-04" style="display:none;" />
+          <div class="tc-range-wrap" id="tcRangeWrap" style="display:none;">
+            <input type="date" class="tc-date-input" id="tcStartDate" /><span class="tc-range-sep">~</span><input type="date" class="tc-date-input" id="tcEndDate" />
+          </div>
+        </div>
+        <div class="tc-filter-group">
+          <span class="tc-filter-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</span>
+          <select class="tc-select" id="tcStaffSelect">
+            <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+            <option>원장님</option>
+          </select>
+        </div>
+        <div class="tc-filter-right">
+          <button class="tc-search-btn" onclick="tcSearch()">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+            <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="tc-table-wrap">
+        <table class="tc-table">
+          <thead>
+            <tr>
+              <th data-i18n="tc.thDate" data-ko="날짜" data-en="Date">날짜</th>
+              <th data-i18n="tc.thStaff" data-ko="직원 이름" data-en="Staff">직원 이름</th>
+              <th data-i18n="tc.thClockIn" data-ko="출근 시각" data-en="Clock In">출근 시각</th>
+              <th data-i18n="tc.thClockOut" data-ko="퇴근 시각" data-en="Clock Out">퇴근 시각</th>
+              <th data-i18n="tc.thWorkHours" data-ko="근무 시간" data-en="Work Hours">근무 시간</th>
+              <th data-i18n="tc.thAbsent" data-ko="결근" data-en="Absent">결근</th>
+              <th data-i18n="tc.thIP" data-ko="등록 IP" data-en="Reg. IP">등록 IP</th>
+              <th data-i18n="tc.thMemo" data-ko="메모" data-en="Memo">메모</th>
+              <th data-i18n="tc.thEdit" data-ko="수정" data-en="Edit">수정</th>
+            </tr>
+          </thead>
+          <tbody id="tcTableBody">
+            <tr class="tc-empty-row"><td colspan="9" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 출퇴근 집계 화면 ── -->
+  <div class="tc-subview" id="tcSummaryView" style="display:none;">
+    <div class="sv-page-header-bg">
+      <div class="sv-page-header">
+        <h3><span data-i18n="tc.summaryTitle" data-ko="출퇴근 집계" data-en="Attendance Summary">출퇴근 집계</span></h3>
+        <div class="tc-header-btns">
+          <button class="tc-header-btn" onclick="tcShowManage()" data-i18n="tc.btnManage" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</button>
+          <button class="tc-header-btn" onclick="tcPrint()" data-i18n="tc.btnPrint" data-ko="인쇄" data-en="Print">인쇄</button>
+        </div>
+      </div>
+    </div>
+    <div class="tc-body">
+      <!-- 필터 -->
+      <div class="tc-filter-row">
+        <div class="tc-filter-group">
+          <label class="sg-radio-label"><input type="radio" name="tcSumPeriod" value="monthly" checked onchange="tcToggleSumPeriod()"><span class="sg-radio-dot"></span><span data-i18n="tc.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+          <label class="sg-radio-label"><input type="radio" name="tcSumPeriod" value="range" onchange="tcToggleSumPeriod()"><span class="sg-radio-dot"></span><span data-i18n="tc.range" data-ko="기간" data-en="Range">기간</span></label>
+          <input type="month" class="tc-date-input" id="tcSumMonth" value="2026-04" />
+          <div class="tc-range-wrap" id="tcSumRangeWrap" style="display:none;">
+            <input type="date" class="tc-date-input" id="tcSumStartDate" /><span class="tc-range-sep">~</span><input type="date" class="tc-date-input" id="tcSumEndDate" />
+          </div>
+        </div>
+        <div class="tc-filter-group">
+          <span class="tc-filter-label" data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</span>
+          <select class="tc-select" id="tcSumStaffSelect">
+            <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+            <option>원장님</option>
+          </select>
+        </div>
+        <div class="tc-filter-right">
+          <button class="tc-search-btn" onclick="tcSumSearch()">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+            <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 집계 테이블 -->
+      <div class="tc-table-wrap">
+        <table class="tc-table">
+          <thead>
+            <tr>
+              <th rowspan="2" data-i18n="tc.thStaffSum" data-ko="직원" data-en="Staff">직원</th>
+              <th colspan="2" data-i18n="tc.thAttendance" data-ko="출퇴근 집계" data-en="Attendance">출퇴근 집계</th>
+              <th colspan="2" data-i18n="tc.thLate" data-ko="지각" data-en="Late">지각</th>
+              <th colspan="2" data-i18n="tc.thEarly" data-ko="조퇴" data-en="Early Leave">조퇴</th>
+              <th rowspan="2" data-i18n="tc.thAbsentDays" data-ko="결근일수" data-en="Absent Days">결근일수</th>
+              <th rowspan="2" data-i18n="tc.thDetail" data-ko="상세" data-en="Detail">상세</th>
+            </tr>
+            <tr>
+              <th data-i18n="tc.thDays" data-ko="일수" data-en="Days">일수</th>
+              <th data-i18n="tc.thHours" data-ko="시간" data-en="Hours">시간</th>
+              <th data-i18n="tc.thDays" data-ko="일수" data-en="Days">일수</th>
+              <th data-i18n="tc.thHours" data-ko="시간" data-en="Hours">시간</th>
+              <th data-i18n="tc.thDays" data-ko="일수" data-en="Days">일수</th>
+              <th data-i18n="tc.thHours" data-ko="시간" data-en="Hours">시간</th>
+            </tr>
+          </thead>
+          <tbody id="tcSumTableBody">
+            <tr class="tc-empty-row"><td colspan="9" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 안내 -->
+      <div class="tc-notes">
+        <p data-i18n="tc.note1" data-ko="■ 출근일수 : 지각, 조퇴일을 포함합니다." data-en="■ Work days: includes late and early leave days.">■ 출근일수 : 지각, 조퇴일을 포함합니다.</p>
+        <p data-i18n="tc.note2" data-ko="■ 근무시간 : 출근시각, 퇴근시각 기록이 있는 경우만 계산됩니다." data-en="■ Work hours: calculated only when both clock in and out are recorded.">■ 근무시간 : 출근시각, 퇴근시각 기록이 있는 경우만 계산됩니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 출퇴근 등록 모달 ═══ -->
+<div class="tc-modal-overlay" id="tcClockModal">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.clockTitle" data-ko="출퇴근 등록" data-en="Clock In/Out">출퇴근 등록</span>
+      <button class="tc-modal-close" onclick="tcCloseClockModal()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-modal-field">
+        <label data-i18n="tc.currentTime" data-ko="현재 시각" data-en="Current Time">현재 시각</label>
+        <div class="tc-modal-value" id="tcClockTime"></div>
+      </div>
+      <div class="tc-modal-field">
+        <label data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</label>
+        <select class="tc-modal-input" id="tcClockStaff">
+          <option value="" data-i18n="common.select" data-ko="선택하세요" data-en="Select">선택하세요</option>
+          <option>원장님</option>
+        </select>
+      </div>
+      <div class="tc-modal-field">
+        <label data-i18n="tc.memo" data-ko="메모" data-en="Memo">메모</label>
+        <input type="text" class="tc-modal-input" id="tcClockMemo" />
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-modal-btn tc-modal-btn-primary" onclick="tcDoClock('in')" data-i18n="tc.clockIn" data-ko="출근" data-en="Clock In">출근</button>
+      <button class="tc-modal-btn tc-modal-btn-primary" onclick="tcDoClock('out')" data-i18n="tc.clockOut" data-ko="퇴근" data-en="Clock Out">퇴근</button>
+      <button class="tc-modal-btn tc-modal-btn-outline" onclick="tcCloseClockModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 결근 등록 모달 ═══ -->
+<div class="tc-modal-overlay" id="tcAbsentModal">
+  <div class="tc-modal">
+    <div class="tc-modal-header">
+      <div class="tc-modal-bar"></div>
+      <span class="tc-modal-title" data-i18n="tc.absentTitle" data-ko="결근 등록" data-en="Register Absence">결근 등록</span>
+      <button class="tc-modal-close" onclick="tcCloseAbsentModal()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+    <div class="tc-modal-body">
+      <div class="tc-modal-field">
+        <label data-i18n="tc.date" data-ko="날짜" data-en="Date">날짜</label>
+        <input type="date" class="tc-modal-input" id="tcAbsentDate" value="2026-04-07" />
+      </div>
+      <div class="tc-modal-field">
+        <label data-i18n="tc.staff" data-ko="직원" data-en="Staff">직원</label>
+        <select class="tc-modal-input" id="tcAbsentStaff">
+          <option value="" data-i18n="common.select" data-ko="선택하세요" data-en="Select">선택하세요</option>
+          <option>원장님</option>
+        </select>
+      </div>
+      <div class="tc-modal-field">
+        <label data-i18n="tc.memo" data-ko="메모" data-en="Memo">메모</label>
+        <input type="text" class="tc-modal-input" id="tcAbsentMemo" />
+      </div>
+    </div>
+    <div class="tc-modal-footer">
+      <button class="tc-modal-btn tc-modal-btn-primary" onclick="tcDoAbsent()" data-i18n="sg.save" data-ko="저장" data-en="Save">저장</button>
+      <button class="tc-modal-btn tc-modal-btn-outline" onclick="tcCloseAbsentModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ═══ 직원별 목표 관리 (Staff Goal) 뷰 ═══ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="staffGoalView">
+  <!-- ── 목표 관리 화면 ── -->
+  <div class="sg-subview" id="sgManageView">
+    <div class="sv-page-header-bg">
+      <div class="sv-page-header">
+        <h3><span data-i18n="sg.goalManage" data-ko="직원별 목표 관리" data-en="Staff Goal Management">직원별 목표 관리</span></h3>
+        <div class="sg-header-btns">
+          <button class="sg-header-btn" onclick="sgShowSetting()" data-i18n="sg.goalSetting" data-ko="목표 설정" data-en="Goal Setting">목표 설정</button>
+        </div>
+      </div>
+    </div>
+    <div class="sg-body">
+
+      <!-- 필터 -->
+      <div class="sg-filter-panel">
+        <!-- 1행 -->
+        <div class="sg-filter-row">
+          <div class="sg-filter-group">
+            <label class="sg-radio-label"><input type="radio" name="sgPeriodType" value="monthly" checked onchange="sgTogglePeriod()"><span class="sg-radio-dot"></span><span data-i18n="sg.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+            <label class="sg-radio-label"><input type="radio" name="sgPeriodType" value="range" onchange="sgTogglePeriod()"><span class="sg-radio-dot"></span><span data-i18n="sg.range" data-ko="기간" data-en="Range">기간</span></label>
+            <input type="month" class="sg-input sg-input-date" id="sgMonth" value="2026-04" />
+            <div class="sg-range-inputs" id="sgRangeInputs" style="display:none;">
+              <input type="date" class="sg-input sg-input-date" id="sgStartDate" /><span class="sg-range-sep">~</span><input type="date" class="sg-input sg-input-date" id="sgEndDate" />
+            </div>
+          </div>
+          <div class="sg-filter-group">
+            <span class="sg-filter-label" data-i18n="sg.staff" data-ko="직원" data-en="Staff">직원</span>
+            <select class="sg-select" id="sgStaffSelect">
+              <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+            </select>
+          </div>
+          <div class="sg-filter-right">
+            <button class="sg-btn sg-btn-primary sg-btn-search" onclick="sgSearch()">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+              <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+            </button>
+          </div>
+        </div>
+        <!-- 2행 -->
+        <div class="sg-filter-row">
+          <div class="sg-filter-group">
+            <span class="sg-filter-label" data-i18n="sg.aggBasis" data-ko="집계 기준" data-en="Agg. Basis">집계 기준</span>
+            <div class="sg-help-wrap">
+              <button class="sg-help-btn" onclick="sgToggleTooltip(event)">?</button>
+              <div class="sg-tooltip" id="sgAggTooltip">
+                <span data-i18n="sg.aggTooltip" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership revenue.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</span><br/>
+                <span data-i18n="sg.aggTooltipSale" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales: Service/Product/Membership sales (excl. deduction)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</span><br/>
+                <span data-i18n="sg.aggTooltipRev" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue: Service/Product sales & deduction (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</span>
+              </div>
+            </div>
+            <label class="sg-radio-label"><input type="radio" name="sgAggBasis" value="sale" checked><span class="sg-radio-dot"></span><span data-i18n="sg.saleBasis" data-ko="판매 (회원권 판매 기준)" data-en="Sales (Membership Sales)">판매 (회원권 판매 기준)</span></label>
+            <label class="sg-radio-label"><input type="radio" name="sgAggBasis" value="revenue"><span class="sg-radio-dot"></span><span data-i18n="sg.revBasis" data-ko="매출 (회원권 차감 기준)" data-en="Revenue (Membership Deduction)">매출 (회원권 차감 기준)</span></label>
+            <label class="sg-checkbox-label"><input type="checkbox" id="sgChkPoint" checked><span class="sg-checkbox-box"></span><span data-i18n="sg.includePoint" data-ko="포인트 차감 포함" data-en="Include Point Deduction">포인트 차감 포함</span></label>
+          </div>
+        </div>
+        <!-- 3행 -->
+        <div class="sg-filter-row">
+          <div class="sg-filter-group">
+            <span class="sg-filter-label" data-i18n="sg.goalCalc" data-ko="목표 계산" data-en="Goal Calc.">목표 계산</span>
+            <label class="sg-radio-label"><input type="radio" name="sgGoalCalc" value="daily" checked><span class="sg-radio-dot"></span><span data-i18n="sg.prorated" data-ko="일할" data-en="Prorated">일할</span></label>
+            <label class="sg-radio-label"><input type="radio" name="sgGoalCalc" value="monthly"><span class="sg-radio-dot"></span><span data-i18n="sg.monthlyCalc" data-ko="월간" data-en="Monthly">월간</span></label>
+            <span class="sg-filter-label" style="margin-left:16px;" data-i18n="sg.category" data-ko="구분" data-en="Category">구분</span>
+            <div class="sg-dropdown-wrap" id="sgCatDropdown">
+              <button class="sg-select sg-dropdown-trigger" onclick="sgToggleCatDd(event)">
+                <span id="sgCatLabel" data-i18n="common.all" data-ko="전체" data-en="All">전체</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="sg-dropdown-menu" id="sgCatMenu">
+                <div class="sg-dropdown-title" data-i18n="sg.selectItems" data-ko="아이템 선택" data-en="Select Items">아이템 선택</div>
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" class="sg-cat-chk" value="service" checked onchange="sgUpdateCatLabel()"><span class="sg-checkbox-box"></span><span data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</span></label>
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" class="sg-cat-chk" value="product" checked onchange="sgUpdateCatLabel()"><span class="sg-checkbox-box"></span><span data-i18n="sg.product" data-ko="제품" data-en="Product">제품</span></label>
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" class="sg-cat-chk" value="prepaid" checked onchange="sgUpdateCatLabel()"><span class="sg-checkbox-box"></span><span data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</span></label>
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" class="sg-cat-chk" value="ticket" checked onchange="sgUpdateCatLabel()"><span class="sg-checkbox-box"></span><span data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 차트 -->
+      <div class="sg-chart-panel" id="sgChartPanel">
+        <div class="sg-chart-legend" id="sgChartLegend" style="display:none;">
+          <span class="sg-legend-item"><span class="sg-legend-color" style="background:#6161FF;"></span><span data-i18n="sg.achieved" data-ko="달성" data-en="Achieved">달성</span></span>
+          <span class="sg-legend-item"><span class="sg-legend-color" style="background:#E0E0E0;"></span><span data-i18n="sg.remaining" data-ko="잔여목표" data-en="Remaining">잔여목표</span></span>
+        </div>
+        <div class="sg-chart-empty" id="sgChartEmpty">
+          <span data-i18n="sg.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+        </div>
+        <div class="sg-bar-chart" id="sgBarChart" style="display:none;"></div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="sg-table-panel">
+        <table class="sg-table">
+          <thead>
+            <tr>
+              <th rowspan="2" data-i18n="sg.staffCol" data-ko="담당자" data-en="Staff">담당자</th>
+              <th colspan="2" data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</th>
+              <th colspan="2" data-i18n="sg.product" data-ko="제품" data-en="Product">제품</th>
+              <th colspan="2" data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+              <th colspan="2" data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+              <th colspan="2" data-i18n="sg.total" data-ko="합계" data-en="Total">합계</th>
+            </tr>
+            <tr>
+              <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th><th>%</th>
+              <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th><th>%</th>
+              <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th><th>%</th>
+              <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th><th>%</th>
+              <th data-i18n="sg.achieveGoal" data-ko="달성 / 목표" data-en="Achieve / Goal">달성 / 목표</th><th>%</th>
+            </tr>
+          </thead>
+          <tbody id="sgGoalTbody">
+            <tr class="sg-empty-row"><td colspan="11" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 목표 설정 화면 ── -->
+  <div class="sg-subview" id="sgSettingView" style="display:none;">
+    <div class="sv-page-header-bg">
+      <div class="sv-page-header">
+        <h3><span data-i18n="sg.goalSettingTitle" data-ko="직원 목표 설정" data-en="Staff Goal Setting">직원 목표 설정</span></h3>
+        <div class="sg-header-btns">
+          <button class="sg-header-btn" onclick="sgShowManage()" data-i18n="sg.goalManageBtn" data-ko="목표 관리" data-en="Goal Management">목표 관리</button>
+        </div>
+      </div>
+    </div>
+    <div class="sg-body">
+
+      <div class="sg-setting-filter">
+        <div class="sg-filter-group">
+          <select class="sg-select sg-select-sm" id="sgSetYear"><option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option></select>
+          <span class="sg-filter-unit" data-i18n="sg.year" data-ko="년" data-en="Y">년</span>
+          <select class="sg-select sg-select-sm" id="sgSetMonth"><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04" selected>04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
+          <span class="sg-filter-unit" data-i18n="sg.month" data-ko="월" data-en="M">월</span>
+          <button class="sg-btn sg-btn-accent" onclick="sgCopyPrev()" data-i18n="sg.copyPrevMonth" data-ko="전월 목표 복사" data-en="Copy Previous Month">전월 목표 복사</button>
+        </div>
+        <div class="sg-filter-right">
+          <button class="sg-btn sg-btn-primary sg-btn-search" onclick="sgSearchSetting()">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+            <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sg-setting-panel">
+        <div class="sg-setting-panel-header">
+          <span class="sg-setting-period" id="sgPeriodLabel">2026년 4월</span>
+          <div class="sg-setting-add-area">
+            <span class="sg-filter-label" data-i18n="sg.addStaff" data-ko="직원 추가" data-en="Add Staff">직원 추가</span>
+            <div class="sg-staff-dropdown-wrap" id="sgStaffDdWrap">
+              <button class="sg-select sg-dropdown-trigger" onclick="sgToggleStaffDd(event)">
+                <span id="sgStaffAddLabel" data-i18n="sg.selectStaff" data-ko="직원 선택" data-en="Select Staff">직원 선택</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="sg-dropdown-menu sg-staff-menu" id="sgStaffMenu">
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" id="sgStaffSelAll" onchange="sgToggleSelAll()"><span class="sg-checkbox-box"></span><span data-i18n="sg.selectAll" data-ko="전체 선택" data-en="Select All">전체 선택</span></label>
+                <label class="sg-checkbox-label sg-dropdown-item"><input type="checkbox" class="sg-staff-chk" value="원장님"><span class="sg-checkbox-box"></span><span>원장님</span></label>
+              </div>
+            </div>
+            <button class="sg-btn sg-btn-primary sg-btn-sm" onclick="sgAddStaff()" data-i18n="sg.addToList" data-ko="목록에 추가" data-en="Add to List">목록에 추가</button>
+          </div>
+        </div>
+
+        <table class="sg-table sg-setting-table">
+          <thead>
+            <tr>
+              <th data-i18n="sg.staffCol" data-ko="담당자" data-en="Staff">담당자</th>
+              <th data-i18n="sg.service" data-ko="서비스" data-en="Service">서비스</th>
+              <th data-i18n="sg.product" data-ko="제품" data-en="Product">제품</th>
+              <th data-i18n="sg.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+              <th data-i18n="sg.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+              <th data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="sgSetTbody">
+            <tr class="sg-empty-row"><td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sg-setting-save-area">
+          <button class="sg-btn sg-btn-primary sg-btn-save" id="sgSaveBtn" onclick="sgSave()" data-i18n="sg.save" data-ko="저장" data-en="Save">저장</button>
+        </div>
+
+        <ul class="sg-setting-notes">
+          <li data-i18n="sg.note1" data-ko="직원별로 추가, 삭제한 후에는 저장해야 반영됩니다." data-en="After adding or deleting staff, you must save to apply changes.">직원별로 추가, 삭제한 후에는 저장해야 반영됩니다.</li>
+          <li data-i18n="sg.note2" data-ko="목표가 모두 공백인 경우는 제외됩니다." data-en="Entries with all blank goals will be excluded.">목표가 모두 공백인 경우는 제외됩니다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 직원별 목표 삭제 확인 모달 ═══ -->
+<div class="sg-modal-overlay" id="sgDeleteModal">
+  <div class="sg-modal">
+    <div class="sg-modal-header">
+      <div class="sg-modal-bar"></div>
+      <span class="sg-modal-title" data-i18n="sg.confirm" data-ko="확인" data-en="Confirm">확인</span>
+      <button class="sg-modal-close" onclick="sgCloseDelModal()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+    <div class="sg-modal-body">
+      <p data-i18n="sg.confirmDelete" data-ko="정말 삭제 하시겠습니까?" data-en="Are you sure you want to delete?">정말 삭제 하시겠습니까?</p>
+    </div>
+    <div class="sg-modal-footer">
+      <button class="sg-btn sg-btn-outline" onclick="sgCloseDelModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="sg-btn sg-btn-danger" id="sgConfirmDelBtn" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</button>
     </div>
   </div>
 </div>

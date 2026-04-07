@@ -1,0 +1,473 @@
+/* ========================================
+   아하플러스 v2 — 출퇴근 관리
+   prefix: tc-
+   ======================================== */
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #F5F4F1;
+  color: #212121;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page Layout ── */
+.tc-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+/* ── Page Header ── */
+.tc-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.tc-page-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #212121;
+}
+.tc-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Buttons ── */
+.tc-btn {
+  height: 36px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.tc-btn-primary {
+  background: #6161FF;
+  color: #fff;
+}
+.tc-btn-primary:hover { background: #4F4FE0; }
+.tc-btn-outline {
+  background: #fff;
+  color: #6161FF;
+  border: 1px solid #6161FF;
+}
+.tc-btn-outline:hover { background: #EEF0FF; }
+.tc-btn-danger {
+  background: #F06060;
+  color: #fff;
+}
+.tc-btn-danger:hover { background: #E24B4A; }
+.tc-btn-search { min-width: 100px; }
+
+/* 테이블 안의 등록/수정 버튼 */
+.tc-btn-add,
+.tc-btn-edit {
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.15s;
+}
+.tc-btn-add {
+  background: #fff;
+  color: #6161FF;
+  border: 1px solid #6161FF;
+}
+.tc-btn-add:hover { background: #EEF0FF; }
+.tc-btn-edit {
+  background: #fff;
+  color: #616161;
+  border: 1px solid #E0E0E0;
+}
+.tc-btn-edit:hover {
+  border-color: #6161FF;
+  color: #6161FF;
+}
+
+/* ── Inputs & Selects ── */
+.tc-input {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #212121;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.tc-input:focus { border-color: #6161FF; }
+.tc-input-date { width: 150px; }
+
+.tc-select {
+  height: 32px;
+  padding: 0 28px 0 10px;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #212121;
+  background: #fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+.tc-select:focus { border-color: #6161FF; }
+.tc-select:disabled {
+  background-color: #F5F5F5;
+  color: #9E9E9E;
+  cursor: not-allowed;
+}
+
+/* ── Radio / Checkbox ── */
+.tc-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #212121;
+  cursor: pointer;
+  user-select: none;
+}
+.tc-radio-label input[type="radio"] { display: none; }
+.tc-radio-dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #BDBDBD;
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.tc-radio-label input[type="radio"]:checked + .tc-radio-dot {
+  border-color: #6161FF;
+}
+.tc-radio-label input[type="radio"]:checked + .tc-radio-dot::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 6px; height: 6px;
+  background: #6161FF;
+  border-radius: 50%;
+}
+
+.tc-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #212121;
+  cursor: pointer;
+  user-select: none;
+}
+.tc-checkbox-label input[type="checkbox"] { display: none; }
+.tc-checkbox-box {
+  width: 16px; height: 16px;
+  border: 2px solid #BDBDBD;
+  border-radius: 3px;
+  position: relative;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.tc-checkbox-label input[type="checkbox"]:checked + .tc-checkbox-box {
+  background: #6161FF;
+  border-color: #6161FF;
+}
+.tc-checkbox-label input[type="checkbox"]:checked + .tc-checkbox-box::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 4px;
+  width: 4px; height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ── Filter Panel ── */
+.tc-filter-panel {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.tc-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tc-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tc-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #616161;
+  white-space: nowrap;
+}
+.tc-filter-right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.tc-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tc-range-sep {
+  color: #757575;
+  font-size: 13px;
+}
+
+/* ── Table ── */
+.tc-table-panel {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.tc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tc-table th {
+  background: #FAFAFA;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #616161;
+  text-align: center;
+  border-bottom: 1px solid #E0E0E0;
+  white-space: nowrap;
+}
+.tc-table td {
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #212121;
+  border-bottom: 1px solid #E0E0E0;
+  text-align: center;
+  vertical-align: middle;
+}
+.tc-table tbody tr:last-child td { border-bottom: none; }
+.tc-empty-row td {
+  padding: 32px 12px;
+  color: #9E9E9E;
+  font-size: 13px;
+}
+
+/* 근무 시간 셀 (왼쪽 정렬) */
+.tc-wh-info {
+  text-align: left !important;
+  line-height: 1.8;
+}
+
+/* ── Notes ── */
+.tc-notes {
+  padding: 12px 20px 16px;
+  list-style: disc;
+  margin-left: 16px;
+}
+.tc-notes li {
+  font-size: 12px;
+  color: #757575;
+  line-height: 1.8;
+}
+
+/* ── Modal ── */
+.tc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: tcFadeIn 0.15s ease-out;
+}
+.tc-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 480px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  animation: tcModalIn 0.2s ease-out;
+}
+.tc-modal-wide {
+  width: 680px;
+}
+.tc-modal-sm {
+  width: 400px;
+}
+.tc-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E0E0E0;
+}
+.tc-modal-bar {
+  width: 4px;
+  height: 18px;
+  background: #6161FF;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.tc-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212121;
+  flex: 1;
+}
+.tc-modal-close {
+  width: 28px; height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.tc-modal-close:hover { background: #F5F5F5; }
+.tc-modal-body {
+  padding: 24px 20px;
+}
+.tc-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 20px 16px;
+}
+
+/* ── Modal Form Rows ── */
+.tc-form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.tc-form-row:last-child { margin-bottom: 0; }
+.tc-form-label {
+  width: 80px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #616161;
+  flex-shrink: 0;
+}
+.tc-form-value {
+  font-size: 13px;
+  color: #212121;
+}
+.tc-form-select {
+  flex: 1;
+}
+.tc-form-input {
+  flex: 1;
+}
+
+/* ── Edit Modal: Top Section ── */
+.tc-edit-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.tc-edit-top-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tc-edit-staff-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #212121;
+}
+
+/* ── Edit Modal: Time Table ── */
+.tc-edit-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tc-edit-table th {
+  background: #FAFAFA;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #616161;
+  text-align: center;
+  border-bottom: 1px solid #E0E0E0;
+}
+.tc-edit-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #212121;
+  border-bottom: 1px solid #E0E0E0;
+  vertical-align: middle;
+}
+.tc-edit-table tbody tr:last-child td { border-bottom: none; }
+.tc-edit-label {
+  font-weight: 600;
+  color: #616161;
+  text-align: center;
+  width: 80px;
+}
+.tc-edit-time-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tc-time-select {
+  width: 72px;
+  padding-right: 24px !important;
+}
+.tc-time-unit {
+  font-size: 12px;
+  color: #616161;
+  white-space: nowrap;
+}
+
+/* ── Working Hour Setup Table (inside modal) ── */
+.tc-wh-setup-table {
+  margin-bottom: 0;
+}
+.tc-wh-setup-table td {
+  padding: 9px 12px;
+}
+
+/* ── Animations ── */
+@keyframes tcFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes tcModalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
