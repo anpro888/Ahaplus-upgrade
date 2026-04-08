@@ -7443,7 +7443,8 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .sg-bar-row:last-child { margin-bottom:0; }
 .sg-bar-label { width:60px; font-size:12px; font-weight:500; color:#212121; text-align:right; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sg-bar-track { flex:1; height:28px; background:#F5F5F5; border-radius:6px; position:relative; overflow:hidden; }
-.sg-bar-fill { height:100%; background:linear-gradient(90deg, #7C9EF7 0%, #A8C4F9 100%); border-radius:6px; transition:width 0.5s ease; min-width:0; }
+.sg-bar-fill { height:100%; background:linear-gradient(90deg, #7C9EF7 0%, #A8C4F9 100%); border-radius:6px; transition:width 0.5s ease; min-width:0; flex-shrink:0; }
+.sg-bar-fill-over { background:linear-gradient(90deg, #6161FF 0%, #8B8BFF 100%); }
 .sg-bar-info { position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:#616161; white-space:nowrap; }
 .sg-bar-fill .sg-bar-info-inner { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:#fff; white-space:nowrap; }
 .sg-bar-value { width:50px; font-size:12px; font-weight:600; color:#5A8DF0; text-align:right; flex-shrink:0; }

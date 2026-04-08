@@ -12621,16 +12621,26 @@ function sgRenderChart() {
   sgGoalData.forEach(function(d) {
     var achieved = d.aTotal || 0;
     var pct = d.total > 0 ? (achieved / d.total * 100).toFixed(1) : 0;
-    var fillWidth = d.total > 0 ? Math.min((achieved / d.total) * 100, 100) : 0;
-    var isOver = parseFloat(pct) > 100;
-    var barStyle = isOver
-      ? 'width:100%; background:linear-gradient(90deg, #6161FF 0%, #8B8BFF 100%);'
-      : 'width:' + fillWidth + '%;';
+    var pctNum = parseFloat(pct);
+    var isOver = pctNum > 100;
+
+    // 100% 이하: 기본 파란색 바
+    // 100% 초과: 100%까지 파란색 + 초과분 인디고색 (2단 바)
+    var barHtml;
+    if (isOver) {
+      // 전체 트랙을 100% 기준으로 maxPct까지 스케일
+      var baseWidth = (100 / pctNum) * 100; // 100% 부분이 차지하는 비율
+      barHtml = '<div class="sg-bar-fill" style="width:' + baseWidth + '%;border-radius:6px 0 0 6px;"></div>' +
+                '<div class="sg-bar-fill sg-bar-fill-over" style="width:' + (100 - baseWidth) + '%;border-radius:0 6px 6px 0;"></div>';
+    } else {
+      var fillWidth = d.total > 0 ? (achieved / d.total) * 100 : 0;
+      barHtml = '<div class="sg-bar-fill" style="width:' + fillWidth + '%;"></div>';
+    }
 
     html += '<div class="sg-bar-row">' +
       '<div class="sg-bar-label">' + d.name + '</div>' +
-      '<div class="sg-bar-track" style="position:relative;">' +
-        '<div class="sg-bar-fill" style="' + barStyle + '"></div>' +
+      '<div class="sg-bar-track" style="position:relative;display:flex;">' +
+        barHtml +
         '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
       '<div class="sg-bar-value" style="' + (isOver ? 'color:#6161FF;font-weight:700;' : '') + '">' + pct + '%</div>' +
