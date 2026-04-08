@@ -87,7 +87,7 @@ function openClockInModal() {
 function saveClockIn() {
   var staff = document.getElementById('clockInStaff').value;
   if (!staff) {
-    alert('직원을 선택하세요.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Please select a staff member.' : '직원을 선택하세요.');
     return;
   }
   var now = new Date();
@@ -139,7 +139,7 @@ function openClockOutModalForRow(index) {
 function saveClockOut() {
   var staff = document.getElementById('clockOutStaff').value;
   if (!staff) {
-    alert('직원을 선택하세요.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Please select a staff member.' : '직원을 선택하세요.');
     return;
   }
   var staffName = document.getElementById('clockOutStaff').selectedOptions[0].text;
@@ -171,7 +171,7 @@ function openAbsentModal() {
 function saveAbsent() {
   var staff = document.getElementById('absentStaff').value;
   if (!staff) {
-    alert('직원을 선택하세요.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Please select a staff member.' : '직원을 선택하세요.');
     return;
   }
   var date = document.getElementById('absentDate').value;
@@ -320,7 +320,7 @@ function saveEditTimeClock() {
     } else if (outTotal <= inTotal && outH < inH) {
       // 익일 퇴근으로 간주
     } else if (outTotal <= inTotal) {
-      alert('퇴근 시간은 출근 시간보다 나중이어야 합니다.');
+      alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Clock-Out time must be later than Clock-In time.' : '퇴근 시간은 출근 시간보다 나중이어야 합니다.');
       return;
     }
 
@@ -368,8 +368,8 @@ function populateHourSelect(id, min, max, selectedVal) {
 function populateHourSelectNextDay(id, selectedVal) {
   var select = document.getElementById(id);
   select.innerHTML = '<option value="">Select</option>';
-  // 0~23 (당일) + 24~35 (다음날 00:00~11:00 = 표시: +1일 00~11)
-  for (var h = 0; h <= 35; h++) {
+  // 0~23 (당일) + 24~36 (다음날 00:00~12:00 = 표시: +1일 00~12)
+  for (var h = 0; h <= 36; h++) {
     var opt = document.createElement('option');
     opt.value = h;
     if (h <= 23) {
@@ -478,7 +478,7 @@ function renderWhSetupTable() {
     html += '<td>' + sch.days + '</td>';
     html += '<td>';
     html += '<button class="tc-btn-edit" onclick="editWorkingHour(' + idx + ')" style="margin-right:4px;" data-i18n="tc.editBtn" data-ko="수정" data-en="Edit">수정</button>';
-    html += '<button class="tc-btn-edit" onclick="deleteWorkingHour(' + idx + ')" style="color:#F06060;border-color:#F06060;" data-i18n="tc.delete" data-ko="삭제" data-en="Delete">삭제</button>';
+    html += '<button class="tc-btn-danger" onclick="deleteWorkingHour(' + idx + ')" data-i18n="tc.delete" data-ko="삭제" data-en="Delete">삭제</button>';
     html += '</td>';
     html += '</tr>';
   });
@@ -535,7 +535,7 @@ function saveWorkingHour() {
   var dayVal = document.getElementById('whDayOfWeek').value;
 
   if (!start || !finish || !dayVal) {
-    alert('모든 항목을 입력하세요.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Please fill in all fields.' : '모든 항목을 입력하세요.');
     return;
   }
 
@@ -549,13 +549,13 @@ function saveWorkingHour() {
   }
 
   if (finishMin <= startMin) {
-    alert('종료 시간은 시작 시간보다 나중이어야 합니다.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Finish Time must be later than Start Time.' : '종료 시간은 시작 시간보다 나중이어야 합니다.');
     return;
   }
 
   // 24시간 초과 검증
   if (finishMin - startMin > 24 * 60) {
-    alert('근무시간은 24시간을 초과할 수 없습니다.');
+    alert(typeof currentLang !== 'undefined' && currentLang === 'en' ? 'Working Hours can not exceed 24 hours.' : '근무시간은 24시간을 초과할 수 없습니다.');
     return;
   }
 
@@ -589,7 +589,8 @@ function timeToMinutes(timeStr) {
 // ── 시간 옵션 생성 (30분 간격) ──
 function populateTimeOptions(selectId, includeNextDay) {
   var select = document.getElementById(selectId);
-  select.innerHTML = '<option value="">선택</option>';
+  var selectLabel = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Select' : '선택';
+  select.innerHTML = '<option value="">' + selectLabel + '</option>';
 
   // 당일: 00:00 ~ 23:30
   for (var h = 0; h < 24; h++) {

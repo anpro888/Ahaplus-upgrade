@@ -72,11 +72,32 @@ body {
   color: #fff;
 }
 .tc-btn-danger:hover { background: #E24B4A; }
-.tc-btn-search { min-width: 100px; }
+.tc-search-wrap {
+  text-align: right;
+  margin-top: 12px;
+}
+.tc-filter-row > .tc-btn-search {
+  margin-left: auto;
+}
+.tc-btn-search {
+  height: 36px;
+  padding: 0 32px;
+  background: #6161FF;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Pretendard', sans-serif;
+  transition: background 0.15s;
+}
+.tc-btn-search:hover { background: #4F4FE0; }
 
-/* 테이블 안의 등록/수정 버튼 */
+/* 테이블 안의 등록/수정/삭제 버튼 */
 .tc-btn-add,
-.tc-btn-edit {
+.tc-btn-edit,
+.tc-btn-danger {
   height: 28px;
   padding: 0 14px;
   border-radius: 6px;
@@ -94,12 +115,21 @@ body {
 .tc-btn-add:hover { background: #EEF0FF; }
 .tc-btn-edit {
   background: #fff;
-  color: #616161;
-  border: 1px solid #E0E0E0;
+  color: #6161FF;
+  border: 1px solid #6161FF;
 }
 .tc-btn-edit:hover {
-  border-color: #6161FF;
-  color: #6161FF;
+  background: #EEF0FF;
+}
+.tc-btn-danger {
+  background: #fff;
+  color: #F06060;
+  border: 1px solid #F0B0B0;
+}
+.tc-btn-danger:hover {
+  background: #F06060;
+  color: #fff;
+  border-color: #F06060;
 }
 
 /* ── Inputs & Selects ── */
@@ -107,7 +137,7 @@ body {
   height: 32px;
   padding: 0 10px;
   border: 1px solid #E0E0E0;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 13px;
   font-family: inherit;
   color: #212121;
@@ -116,7 +146,7 @@ body {
   transition: border-color 0.15s;
 }
 .tc-input:focus { border-color: #6161FF; }
-.tc-input-date { width: 150px; }
+.tc-input-date { width: 140px; }
 
 .tc-select {
   height: 32px;
@@ -126,11 +156,13 @@ body {
   font-size: 13px;
   font-family: inherit;
   color: #212121;
-  background: #fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  background: #fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239E9E9E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center;
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   cursor: pointer;
   outline: none;
+  min-width: 120px;
 }
 .tc-select:focus { border-color: #6161FF; }
 .tc-select:disabled {
@@ -145,31 +177,21 @@ body {
   align-items: center;
   gap: 4px;
   font-size: 13px;
+  font-weight: 500;
   color: #212121;
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  margin-right: 12px;
 }
-.tc-radio-label input[type="radio"] { display: none; }
-.tc-radio-dot {
+.tc-radio-label input[type="radio"] {
+  accent-color: #6161FF;
   width: 16px;
   height: 16px;
-  border: 2px solid #BDBDBD;
-  border-radius: 50%;
-  position: relative;
-  transition: border-color 0.15s;
-  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
 }
-.tc-radio-label input[type="radio"]:checked + .tc-radio-dot {
-  border-color: #6161FF;
-}
-.tc-radio-label input[type="radio"]:checked + .tc-radio-dot::after {
-  content: '';
-  position: absolute;
-  top: 3px; left: 3px;
-  width: 6px; height: 6px;
-  background: #6161FF;
-  border-radius: 50%;
-}
+.tc-radio-dot { display: none; }
 
 .tc-checkbox-label {
   display: inline-flex;
@@ -206,10 +228,10 @@ body {
 /* ── Filter Panel ── */
 .tc-filter-panel {
   background: #fff;
-  border: 1px solid #E0E0E0;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   padding: 16px 20px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .tc-filter-row {
   display: flex;
@@ -220,17 +242,13 @@ body {
 .tc-filter-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .tc-filter-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #616161;
+  color: #424242;
   white-space: nowrap;
-}
-.tc-filter-right {
-  margin-left: auto;
-  flex-shrink: 0;
 }
 .tc-range-inputs {
   display: flex;

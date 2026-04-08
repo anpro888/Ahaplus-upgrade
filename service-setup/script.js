@@ -694,10 +694,10 @@ function dcDeleteSelected() {
     alert(isEn ? 'Please select clients to delete.' : '삭제할 고객을 선택해 주세요.');
     return;
   }
-  document.getElementById('dcDeleteModal').style.display = 'flex';
+  document.getElementById('dcDeleteModal').classList.add('show');
 }
 function closeDcDeleteModal() {
-  document.getElementById('dcDeleteModal').style.display = 'none';
+  document.getElementById('dcDeleteModal').classList.remove('show');
 }
 function confirmDcDelete() {
   closeDcDeleteModal();
@@ -824,7 +824,7 @@ function _dlcGetSelectedNos() {
 function dlcRestoreSelected() {
   var nos = _dlcGetSelectedNos();
   if (nos.length === 0) {
-    document.getElementById('dlcAlertModal').style.display = 'flex';
+    document.getElementById('dlcAlertModal').classList.add('show');
     return;
   }
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
@@ -841,11 +841,11 @@ function dlcRestoreSelected() {
 function dlcPermDeleteSelected() {
   var nos = _dlcGetSelectedNos();
   if (nos.length === 0) {
-    document.getElementById('dlcAlertModal').style.display = 'flex';
+    document.getElementById('dlcAlertModal').classList.add('show');
     return;
   }
   // 확인 모달 열기
-  document.getElementById('dlcDeleteConfirmModal').style.display = 'flex';
+  document.getElementById('dlcDeleteConfirmModal').classList.add('show');
 }
 
 function confirmDlcPermDelete() {
@@ -859,11 +859,11 @@ function confirmDlcPermDelete() {
 }
 
 function closeDlcAlertModal() {
-  document.getElementById('dlcAlertModal').style.display = 'none';
+  document.getElementById('dlcAlertModal').classList.remove('show');
 }
 
 function closeDlcDeleteConfirmModal() {
-  document.getElementById('dlcDeleteConfirmModal').style.display = 'none';
+  document.getElementById('dlcDeleteConfirmModal').classList.remove('show');
 }
 
 // ── 가족 목록 페이지 ──
@@ -2649,6 +2649,12 @@ function applyLang() {
   if (amsView && amsView.classList.contains('show') && typeof amsRender === 'function') { amsRender(); }
   var mhView = document.getElementById('msgHistoryView');
   if (mhView && mhView.classList.contains('show') && typeof mhRenderTable === 'function') { mhRenderTable(); }
+  // 출퇴근 테이블 리렌더 (지각/조퇴/근무시간 등 동적 텍스트 반영)
+  var tcView = document.getElementById('timeClockView');
+  if (tcView && tcView.classList.contains('show') && typeof tcSearch === 'function') {
+    var tcManage = document.getElementById('tcManageView');
+    if (tcManage && tcManage.style.display !== 'none') { tcSearch(); }
+  }
   // data-ko / data-en 속성이 있는 모든 요소
   document.querySelectorAll('[data-ko][data-en]').forEach(function(el) {
     var text = currentLang === 'ko' ? el.dataset.ko : el.dataset.en;
@@ -5904,11 +5910,11 @@ function cmShowAlert(msg) {
   var modal = document.getElementById('cmAlertModal');
   var msgEl = document.getElementById('cmAlertMsg');
   if (msgEl) msgEl.textContent = msg;
-  if (modal) modal.style.display = '';
+  if (modal) modal.classList.add('show');
 }
 function cmCloseAlert() {
   var modal = document.getElementById('cmAlertModal');
-  if (modal) modal.style.display = 'none';
+  if (modal) modal.classList.remove('show');
 }
 
 function cmDoSearch() {
@@ -7204,7 +7210,7 @@ function mhSearch() {
   var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
   var fromDate = new Date(from);
   if (fromDate < sixMonthsAgo) {
-    document.getElementById('mhDateAlertOverlay').style.display = 'flex';
+    document.getElementById('mhDateAlertOverlay').classList.add('show');
     return;
   }
   // 필터 적용
@@ -7218,7 +7224,7 @@ function mhSearch() {
   mhRenderTable();
 }
 function closeMhDateAlert() {
-  document.getElementById('mhDateAlertOverlay').style.display = 'none';
+  document.getElementById('mhDateAlertOverlay').classList.remove('show');
 }
 
 // ── 체크박스 ──
@@ -7716,10 +7722,10 @@ function mhFailCodeGoPage(p) {
 
 // ══ 삭제 확인 모달 (svc-popup 패턴) ══
 function openMhDeleteConfirm() {
-  document.getElementById('mhDeleteOverlay').style.display = 'flex';
+  document.getElementById('mhDeleteOverlay').classList.add('show');
 }
 function closeMhDeleteConfirm() {
-  document.getElementById('mhDeleteOverlay').style.display = 'none';
+  document.getElementById('mhDeleteOverlay').classList.remove('show');
 }
 function mhDoDelete() {
   alert('삭제되었습니다.');
@@ -9744,6 +9750,76 @@ function snShowAlimPreview() {
   alert(isEn ? 'KakaoTalk notification preview.' : '알림톡 발송 예시 미리보기');
 }
 
+// ── 자동 발신번호로 설정 ──
+function snSetDefault(btn) {
+  var row = btn.closest('tr');
+  var tbody = document.getElementById('snListBody');
+  var rows = tbody.querySelectorAll('tr');
+
+  rows.forEach(function(r) {
+    // 기존 기본번호 별표 제거
+    var starEl = r.querySelector('.sn-star');
+    if (starEl) starEl.remove();
+
+    // 메모 셀 초기화
+    var memoCell = r.querySelector('.sn-memo-cell');
+    if (memoCell) {
+      var autoLabel = memoCell.querySelector('.sn-auto-label');
+      if (autoLabel) autoLabel.remove();
+    }
+
+    // 설정 셀에 버튼 복원
+    var actionCell = r.querySelector('.sn-action-cell');
+    if (actionCell && !actionCell.querySelector('.sn-set-default-btn')) {
+      actionCell.innerHTML = '<button class="sn-set-default-btn" onclick="snSetDefault(this)" data-i18n="cl.sn_set_default" data-ko="자동 발신번호로 설정" data-en="Set as Default">자동 발신번호로 설정</button><button class="sn-delete-btn" onclick="snDeleteNumber(this)" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>';
+    }
+  });
+
+  // 선택한 행에 별표 추가
+  var numCell = row.querySelector('td');
+  var star = document.createElement('span');
+  star.className = 'sn-star';
+  star.textContent = '★';
+  numCell.insertBefore(star, numCell.firstChild);
+
+  // 메모 셀에 자동발신번호 표시
+  var memoCell = row.querySelector('.sn-memo-cell');
+  if (memoCell) {
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    var label = document.createElement('span');
+    label.className = 'sn-auto-label';
+    label.setAttribute('data-i18n', 'cl.sn_auto_memo');
+    label.setAttribute('data-ko', '자동발신번호');
+    label.setAttribute('data-en', 'Automatic Send Number');
+    label.textContent = isEn ? 'Automatic Send Number' : '자동발신번호';
+    memoCell.appendChild(label);
+  }
+
+  // 설정 셀 버튼 제거 (기본번호는 삭제/변경 불가)
+  var actionCell = row.querySelector('.sn-action-cell');
+  if (actionCell) actionCell.innerHTML = '';
+
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+// ── 발신번호 삭제 ──
+var _snDeleteTarget = null;
+function snDeleteNumber(btn) {
+  _snDeleteTarget = btn.closest('tr');
+  document.getElementById('snDeleteConfirmModal').classList.add('show');
+}
+function snCloseDeleteModal() {
+  document.getElementById('snDeleteConfirmModal').classList.remove('show');
+  _snDeleteTarget = null;
+}
+function snConfirmDelete() {
+  if (_snDeleteTarget) {
+    _snDeleteTarget.remove();
+    _snDeleteTarget = null;
+  }
+  snCloseDeleteModal();
+}
+
 // ══ [FEAT-SENDER-NUMBER] END ══
 
 // ══════════════════════════════════════════════════════════════
@@ -9899,7 +9975,9 @@ function stfRenderWhTable() {
 function stfOpenWhAddModal() {
   stfWhEditIdx = -1;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  document.getElementById('stfWhAddTitle').textContent = isEn ? 'Add Work Hours' : '근무시간 등록';
+  document.getElementById('stfWhAddTitle').textContent = isEn ? 'Add Working Hours' : '근무시간 등록';
+  var delBtn = document.getElementById('stfWhDeleteBtn');
+  if (delBtn) delBtn.style.display = 'none';
   stfPopulateTimeSelects();
   document.getElementById('stfWhStart').value = '00:00';
   document.getElementById('stfWhEnd').value = '00:00';
@@ -9951,7 +10029,7 @@ function stfEditWh(idx) {
   stfWhEditIdx = idx;
   var wh = stfWorkHours[idx];
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  document.getElementById('stfWhAddTitle').textContent = isEn ? 'Edit Work Hours' : '근무시간 수정';
+  document.getElementById('stfWhAddTitle').textContent = isEn ? 'Edit Working Hours' : '근무시간 수정';
   stfPopulateTimeSelects();
   document.getElementById('stfWhStart').value = wh.start;
   document.getElementById('stfWhEnd').value = wh.end;
@@ -9960,7 +10038,15 @@ function stfEditWh(idx) {
   });
   document.getElementById('stfWhDayList').style.display = 'none';
   stfUpdateDayText();
+  var delBtn = document.getElementById('stfWhDeleteBtn');
+  if (delBtn) delBtn.style.display = '';
   document.getElementById('stfWhAddModal').classList.add('show');
+}
+function stfDeleteWhEntry() {
+  if (stfWhEditIdx >= 0) {
+    stfDelWh(stfWhEditIdx);
+    document.getElementById('stfWhAddModal').classList.remove('show');
+  }
 }
 function stfDelWh(idx) {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
@@ -10092,10 +10178,92 @@ document.addEventListener('DOMContentLoaded', function() {
 // 급여 명세서 데이터 저장소
 var paySlipStore = [];
 
+// ── 직원 관리 테이블에서 등록된 직원 목록 가져오기 ──
+function payGetStaffList() {
+  var staffArr = [];
+  var rows = document.querySelectorAll('#stfTableBody tr');
+  rows.forEach(function(row) {
+    var nickTd = row.querySelectorAll('td')[1]; // 직원명(별칭)
+    if (nickTd) {
+      var name = nickTd.textContent.trim();
+      if (name) staffArr.push(name);
+    }
+  });
+  return staffArr;
+}
+
+// ── 급여 관련 모든 직원 드롭다운을 동적으로 갱신 ──
+function payRefreshStaffDropdowns() {
+  var staffArr = payGetStaffList();
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  // 1) 급여 명세서 작성 모달 - payCreateStaff
+  var createSel = document.getElementById('payCreateStaff');
+  if (createSel) {
+    var curVal = createSel.value;
+    createSel.innerHTML = '<option value="" data-i18n="common.opt_select" data-ko="선택" data-en="Select">' + (isEn ? 'Select' : '선택') + '</option>';
+    staffArr.forEach(function(name) {
+      createSel.innerHTML += '<option value="' + name + '">' + name + '</option>';
+    });
+    if (curVal) createSel.value = curVal;
+  }
+
+  // 2) 급여 명세서 메인 필터 - payStaffFilter
+  var filterSel = document.getElementById('payStaffFilter');
+  if (filterSel) {
+    var curVal2 = filterSel.value;
+    filterSel.innerHTML = '<option data-i18n="common.opt_all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+    staffArr.forEach(function(name) {
+      filterSel.innerHTML += '<option value="' + name + '">' + name + '</option>';
+    });
+    if (curVal2) filterSel.value = curVal2;
+  }
+
+  // 3) 인센티브 직원 필터
+  var incSel = document.getElementById('payIncStaffFilter');
+  if (incSel) {
+    var curVal3 = incSel.value;
+    incSel.innerHTML = '<option data-i18n="common.opt_all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+    staffArr.forEach(function(name) {
+      incSel.innerHTML += '<option value="' + name + '">' + name + '</option>';
+    });
+    if (curVal3) incSel.value = curVal3;
+  }
+
+  // 4) 급여 설정 - 직원 멀티 셀렉트 드롭다운들
+  var dropdownIds = ['psetStaffDropdown', 'psetDedStaffDropdown', 'psetItemStaffDropdown'];
+  dropdownIds.forEach(function(ddId) {
+    var dd = document.getElementById(ddId);
+    if (!dd) return;
+    // 전체 선택 체크박스 유지
+    var toggleAllFn = '';
+    if (ddId === 'psetStaffDropdown') toggleAllFn = 'psetStaffToggleAll(this)';
+    else if (ddId === 'psetDedStaffDropdown') toggleAllFn = 'psetDedStaffToggleAll(this)';
+    else if (ddId === 'psetItemStaffDropdown') toggleAllFn = 'psetItemStaffToggleAll(this)';
+    dd.innerHTML =
+      '<label class="pset-staff-option"><input type="checkbox" value="전체" onchange="' + toggleAllFn + '"><span class="stf-day-checkmark">✓</span> <span data-i18n="pay.set_all" data-ko="전체 선택" data-en="Select All">' + (isEn ? 'Select All' : '전체 선택') + '</span></label>';
+    staffArr.forEach(function(name) {
+      dd.innerHTML += '<label class="pset-staff-option"><input type="checkbox" value="' + name + '"><span class="stf-day-checkmark">✓</span> <span>' + name + '</span></label>';
+    });
+  });
+
+  // 5) 급여 명세서 수정 모달 - payEditStaff
+  var editSel = document.getElementById('payEditStaff');
+  if (editSel) {
+    var curVal4 = editSel.value;
+    editSel.innerHTML = '<option value="" data-i18n="common.opt_select" data-ko="선택" data-en="Select">' + (isEn ? 'Select' : '선택') + '</option>';
+    staffArr.forEach(function(name) {
+      editSel.innerHTML += '<option value="' + name + '">' + name + '</option>';
+    });
+    if (curVal4) editSel.value = curVal4;
+  }
+}
+
 function openPayrollView() {
   freezeGnb();
   hideAllViews();
   document.getElementById('payrollView').classList.add('show');
+  payRefreshStaffDropdowns();
   if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
 }
 
@@ -10115,6 +10283,7 @@ function payOpenIncentive() {
   freezeGnb();
   hideAllViews();
   document.getElementById('incentiveView').classList.add('show');
+  payRefreshStaffDropdowns();
   payRenderIncTable();
   if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
 }
@@ -10148,14 +10317,14 @@ function payRenderIncTable() {
 }
 
 // ── 급여 명세서 작성 ──
-function payOpenCreate() { document.getElementById('payCreateModal').classList.add('show'); }
-function payCloseCreate() { document.getElementById('payCreateModal').classList.remove('show'); }
+function payOpenCreate() { payRefreshStaffDropdowns(); document.getElementById('payCreateModal').classList.add('show'); }
+function payCloseCreate() { document.getElementById('payCreateModal').classList.remove('show'); if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang(); }
 function payGenerate() {
   var from = document.getElementById('payCreateFrom').value;
   var to = document.getElementById('payCreateTo').value;
   var staff = document.getElementById('payCreateStaff').value;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  if (!from || !to) { alert(isEn ? 'Please select work period.' : '근무 기간을 선택해 주세요.'); return; }
+  if (!from || !to) { alert(isEn ? 'Please select the working period.' : '근무 기간을 선택해 주세요.'); return; }
   if (!staff) { alert(isEn ? 'Please select staff.' : '직원을 선택해 주세요.'); return; }
   document.getElementById('payCreatePlaceholder').style.display = 'none';
   document.getElementById('payCreateContent').style.display = '';
@@ -10249,7 +10418,8 @@ function payAddToList() {
   var tr = document.createElement('tr');
   tr.setAttribute('data-payslip-id', record.id);
   var netPay = totalPay - totalDed;
-  tr.innerHTML = '<td>' + dateStr + '</td><td>' + staff + '</td><td>' + from + ' ~ ' + to + '</td><td>' + totalPay.toLocaleString() + '</td><td><button class="pay-view-btn" onclick="payOpenViewModal(this)" data-i18n="common.btn_view" data-ko="보기" data-en="View">보기</button></td><td><button class="pay-view-btn" onclick="payOpenIncDetail()" data-i18n="common.btn_view" data-ko="보기" data-en="View">보기</button></td>';
+  var viewLabel = isEn ? 'View' : '보기';
+  tr.innerHTML = '<td>' + dateStr + '</td><td>' + staff + '</td><td>' + from + ' ~ ' + to + '</td><td>' + totalPay.toLocaleString() + '</td><td><button class="pay-view-btn" onclick="payOpenViewModal(this)" data-i18n="common.btn_view" data-ko="보기" data-en="View">' + viewLabel + '</button></td><td><button class="pay-view-btn" onclick="payOpenIncDetail()" data-i18n="common.btn_view" data-ko="보기" data-en="View">' + viewLabel + '</button></td>';
   tbody.appendChild(tr);
   // 요약 갱신
   var allTotal = 0;
@@ -10279,10 +10449,33 @@ function payResetCreateForm() {
 }
 
 // ── 급여 설정 (페이지 뷰) ──
+function payOpenItemSetupPopup() {
+  document.getElementById('payItemSetupPopup').classList.add('show');
+}
+function payCloseItemSetupPopup() {
+  document.getElementById('payItemSetupPopup').classList.remove('show');
+}
+function paySaveItemSetup() {
+  payCloseItemSetupPopup();
+}
+function payEditItemName(btn, currentName) {
+  var newName = prompt('항목명을 입력하세요:', currentName);
+  if (newName && newName.trim()) {
+    var td = btn.closest('tr').querySelector('td:nth-child(2)');
+    if (td) td.textContent = newName.trim();
+  }
+}
+
 function payOpenSettings() {
+  // 열려있는 급여 관련 모달 모두 닫기
+  ['payCreateModal', 'payEditModal', 'payViewModal'].forEach(function(id) {
+    var m = document.getElementById(id);
+    if (m) m.classList.remove('show');
+  });
   freezeGnb();
   hideAllViews();
   document.getElementById('paySettingsView').classList.add('show');
+  payRefreshStaffDropdowns();
   if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
 }
 
@@ -10301,7 +10494,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (pointToggle) {
     pointToggle.addEventListener('change', function() {
       var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-      this.closest('.pset-ded-row').querySelector('.pset-ded-status').textContent = this.checked ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+      this.closest('.pset-ded-row').querySelector('.pset-ded-status').textContent = this.checked ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
     });
   }
 });
@@ -10364,7 +10557,7 @@ function psetToggleRange() {
   var on = document.getElementById('psetRangeToggle').checked;
   document.getElementById('psetRangeCriteria').style.display = on ? '' : 'none';
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  document.getElementById('psetRangeStatus').textContent = on ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+  document.getElementById('psetRangeStatus').textContent = on ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
 }
 
 // 직원 멀티셀렉트
@@ -10387,7 +10580,7 @@ function psetUpdateStaffPh() {
     ph.textContent = names.join(', ');
     ph.classList.add('has-value');
   } else {
-    ph.textContent = isEn ? 'Select Staff' : '직원 선택';
+    ph.textContent = isEn ? 'Empty Selection' : '직원 선택';
     ph.classList.remove('has-value');
   }
 }
@@ -10427,20 +10620,20 @@ function psetAddStaff() {
     card.innerHTML =
       '<div class="pset-staff-card-header">' +
         '<span class="pset-staff-card-name">' + name + '</span>' +
-        '<span class="pset-label" data-i18n="pay.item_base" data-ko="기본급" data-en="Base Pay">기본급</span> <span class="pset-base-pay-display" onclick="psetOpenBasePay(this)" data-value="0">0</span> ' +
-        '<span class="pset-label">소득 구분</span> <select class="pay-select" style="height:28px;font-size:12px;"><option>사업 소득</option><option>근로 소득</option><option>기타 소득</option></select>' +
+        '<span class="pset-label" data-i18n="pay.item_base" data-ko="기본급" data-en="Base Salary">' + (isEn ? 'Base Salary' : '기본급') + '</span> <span class="pset-base-pay-display" onclick="psetOpenBasePay(this)" data-value="0">0</span> ' +
+        '<span class="pset-label" data-i18n="pay.tax_class" data-ko="소득 구분" data-en="Tax Classification">' + (isEn ? 'Tax Classification' : '소득 구분') + '</span> <select class="pay-select" style="height:28px;font-size:12px;"><option data-i18n="pay.income_biz" data-ko="사업 소득" data-en="Business Income">' + (isEn ? 'Business Income' : '사업 소득') + '</option><option data-i18n="pay.income_earned" data-ko="근로 소득" data-en="Earned Income">' + (isEn ? 'Earned Income' : '근로 소득') + '</option><option data-i18n="pay.income_other" data-ko="기타 소득" data-en="Other Income">' + (isEn ? 'Other Income' : '기타 소득') + '</option></select>' +
         '<div class="pset-staff-card-actions">' +
-          '<button class="pset-range-add-btn" onclick="psetOpenRangeReg(this)">매출 구간 등록</button>' +
-          '<button class="pset-staff-del-btn" onclick="psetRemoveStaff(this)">직원 삭제</button>' +
+          '<button class="pset-range-add-btn" onclick="psetOpenRangeReg(this)" data-i18n="pay.btn_add_range" data-ko="매출 구간 등록" data-en="Add Sales Amount Level">' + (isEn ? 'Add Sales Amount Level' : '매출 구간 등록') + '</button>' +
+          '<button class="pset-staff-del-btn" onclick="psetRemoveStaff(this)" data-i18n="pay.del_staff" data-ko="직원 삭제" data-en="Delete Staff">' + (isEn ? 'Delete Staff' : '직원 삭제') + '</button>' +
         '</div>' +
       '</div>' +
       '<table class="pay-table" style="border:1px solid #E0E0E0;">' +
         '<thead><tr>' +
-          '<th rowspan="2">매출 구간</th>' +
-          '<th colspan="2">서비스</th><th colspan="2">제품</th>' +
-          '<th rowspan="2">정액권 판매</th><th rowspan="2">티켓 판매</th><th rowspan="2">수정</th>' +
-        '</tr><tr><th>판매</th><th>차감</th><th>판매</th><th>차감</th></tr></thead>' +
-        '<tbody><tr><td colspan="8" class="pay-empty">매출 구간을 등록하세요.</td></tr></tbody>' +
+          '<th rowspan="2" data-i18n="pay.range_level" data-ko="매출 구간" data-en="Sales Amount Level">' + (isEn ? 'Sales Amount Level' : '매출 구간') + '</th>' +
+          '<th colspan="2" data-i18n="pay.inc_th_svc" data-ko="서비스" data-en="Service">' + (isEn ? 'Service' : '서비스') + '</th><th colspan="2" data-i18n="pay.inc_th_prod" data-ko="제품" data-en="Product">' + (isEn ? 'Product' : '제품') + '</th>' +
+          '<th rowspan="2" data-i18n="pay.inc_th_prepaid" data-ko="정액권 판매" data-en="Prepaid Card Sales">' + (isEn ? 'Prepaid Card Sales' : '정액권 판매') + '</th><th rowspan="2" data-i18n="pay.inc_th_ticket" data-ko="티켓 판매" data-en="Prepaid Service Sales">' + (isEn ? 'Prepaid Service Sales' : '티켓 판매') + '</th><th rowspan="2" data-i18n="pay.spec_th_edit" data-ko="수정" data-en="Edit">' + (isEn ? 'Edit' : '수정') + '</th>' +
+        '</tr><tr><th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">' + (isEn ? 'Sales' : '판매') + '</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduction">' + (isEn ? 'Deduction' : '차감') + '</th><th data-i18n="pay.inc_th_sales" data-ko="판매" data-en="Sales">' + (isEn ? 'Sales' : '판매') + '</th><th data-i18n="pay.inc_th_deduct" data-ko="차감" data-en="Deduction">' + (isEn ? 'Deduction' : '차감') + '</th></tr></thead>' +
+        '<tbody><tr><td colspan="8" class="pay-empty">' + (isEn ? 'Add Sales Amount Level please.' : '매출 구간을 등록하세요.') + '</td></tr></tbody>' +
       '</table>';
     list.appendChild(card);
   });
@@ -10575,7 +10768,7 @@ function psetDeleteRangeEdit() {
     psetRangeEditTargetRow.remove();
     if (!tbody.querySelectorAll('tr').length) {
       var emptyTr = document.createElement('tr');
-      emptyTr.innerHTML = '<td colspan="8" class="pay-empty">' + (isEn ? 'Please register a sales range.' : '매출 구간을 등록하세요.') + '</td>';
+      emptyTr.innerHTML = '<td colspan="8" class="pay-empty">' + (isEn ? 'Add Sales Amount Level please.' : '매출 구간을 등록하세요.') + '</td>';
       tbody.appendChild(emptyTr);
     }
   }
@@ -10644,14 +10837,14 @@ function psetDedToggle(type) {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   if (type === 'product') {
     var on = document.getElementById('psetDedProductToggle').checked;
-    document.getElementById('psetDedProductStatus').textContent = on ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+    document.getElementById('psetDedProductStatus').textContent = on ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
   } else if (type === 'vat') {
     var on = document.getElementById('psetDedVatToggle').checked;
-    document.getElementById('psetDedVatStatus').textContent = on ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+    document.getElementById('psetDedVatStatus').textContent = on ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
     document.getElementById('psetDedVatSub').style.display = on ? '' : 'none';
   } else if (type === 'paymethod') {
     var on = document.getElementById('psetDedPayMethodToggle').checked;
-    document.getElementById('psetDedPayMethodStatus').textContent = on ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+    document.getElementById('psetDedPayMethodStatus').textContent = on ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
     document.getElementById('psetDedPayMethodSub').style.display = on ? '' : 'none';
   }
 }
@@ -10754,36 +10947,36 @@ function psetDedAddStaff() {
     '<div class="pset-staff-card-header">' +
       '<span class="pset-staff-card-name">' + name + '</span>' +
       '<div class="pset-staff-card-actions">' +
-        '<button class="pset-staff-del-btn" onclick="psetDedRemoveStaff(this)" data-i18n="pay.del_staff" data-ko="직원 삭제" data-en="Remove Staff">' + (isEn ? 'Remove Staff' : '직원 삭제') + '</button>' +
+        '<button class="pset-staff-del-btn" onclick="psetDedRemoveStaff(this)" data-i18n="pay.del_staff" data-ko="직원 삭제" data-en="Delete Staff">' + (isEn ? 'Delete Staff' : '직원 삭제') + '</button>' +
       '</div>' +
     '</div>' +
     '<div class="pset-ded-box" style="margin-top:8px;">' +
       // 제품 매출에서 입고가 공제
-      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'Deduct Product Cost from Sales' : '제품 매출에서 입고가 공제') + '</span>' +
+      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'Deduct Product Purchase Cost' : '제품 매출에서 입고가 공제') + '</span>' +
         '<label class="pay-toggle"><input type="checkbox" onchange="psetDedStaffToggle(this)"><span class="pay-toggle-slider"></span></label>' +
-        '<span class="pset-ded-status">' + (isEn ? 'Applied' : '적용함') + '</span></div>' +
+        '<span class="pset-ded-status">' + (isEn ? 'On' : '적용함') + '</span></div>' +
       // 부가세 공제
-      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'VAT Deduction' : '부가세 공제') + '</span>' +
+      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'Deduct VAT' : '부가세 공제') + '</span>' +
         '<label class="pay-toggle"><input type="checkbox" onchange="psetDedStaffToggle(this)"><span class="pay-toggle-slider"></span></label>' +
-        '<span class="pset-ded-status">' + (isEn ? 'Applied' : '적용함') + '</span></div>' +
+        '<span class="pset-ded-status">' + (isEn ? 'On' : '적용함') + '</span></div>' +
       '<div class="pset-ded-sub">' +
-        '<label class="pay-radio"><input type="radio" name="' + uid + '_vat" value="legal" checked> <span>' + (isEn ? 'Legal VAT (divide sales by 1.1)' : '법정 부가세 적용 (매출을 1.1로 나눔)') + '</span></label>' +
-        '<label class="pay-radio"><input type="radio" name="' + uid + '_vat" value="custom"> <span>' + (isEn ? 'Custom Rate(Deduction Rate' : '임의 적용(공제율') + '</span>' +
+        '<label class="pay-radio"><input type="radio" name="' + uid + '_vat" value="legal" checked> <span>' + (isEn ? 'Apply statutory VAT (divide sales by 1.1)' : '법정 부가세 적용 (매출을 1.1로 나눔)') + '</span></label>' +
+        '<label class="pay-radio"><input type="radio" name="' + uid + '_vat" value="custom"> <span>' + (isEn ? 'Arbitrary Application(Deduction Rate' : '임의 적용(공제율') + '</span>' +
           ' <span class="pset-base-pay-display" onclick="psetOpenVatRate()" style="width:60px;height:28px;font-size:12px;" data-value="0">0</span>' +
           ' <span>%)</span></label>' +
       '</div>' +
       // 결제 방법별 공제
-      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'Deduction by Payment Method' : '결제 방법별 공제') + '</span>' +
+      '<div class="pset-ded-row"><span class="pset-ded-label">' + (isEn ? 'Deduct by Payment Method' : '결제 방법별 공제') + '</span>' +
         '<label class="pay-toggle"><input type="checkbox" onchange="psetDedStaffToggle(this)"><span class="pay-toggle-slider"></span></label>' +
-        '<span class="pset-ded-status">' + (isEn ? 'Applied' : '적용함') + '</span></div>' +
+        '<span class="pset-ded-status">' + (isEn ? 'On' : '적용함') + '</span></div>' +
       '<div class="pset-ded-sub">' +
         '<div style="display:flex;justify-content:flex-end;margin-bottom:8px;">' +
           '<button class="pset-range-add-btn" onclick="psetEditPayMethodRates()">' + (isEn ? 'Edit' : '수정') + '</button>' +
         '</div>' +
         '<table class="pay-table pset-pay-method-table">' +
-          '<thead><tr><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Rate' : '공제율') + '</th></tr></thead>' +
+          '<thead><tr><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Deduction Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Deduction Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Deduction Rate' : '공제율') + '</th><th>' + (isEn ? 'Payment Method' : '결제 방법') + '</th><th>' + (isEn ? 'Deduction Rate' : '공제율') + '</th></tr></thead>' +
           '<tbody>' +
-            '<tr><td class="pset-pm-highlight">' + (isEn ? 'Point Ded.' : '포인트 차감') + '</td><td>100.0%</td><td class="pset-pm-highlight">' + (isEn ? 'Prepaid Ded.' : '정액권 차감') + '</td><td></td><td class="pset-pm-highlight">' + (isEn ? 'Ticket Ded.' : '티켓 차감') + '</td><td></td><td>' + (isEn ? 'Outstanding' : '미수금') + '</td><td></td></tr>' +
+            '<tr><td class="pset-pm-highlight">' + (isEn ? 'Point Deduction' : '포인트 차감') + '</td><td>100.0%</td><td class="pset-pm-highlight">' + (isEn ? 'Balance Deduction' : '정액권 차감') + '</td><td></td><td class="pset-pm-highlight">' + (isEn ? 'Service Deduction' : '티켓 차감') + '</td><td></td><td>' + (isEn ? 'Outstanding' : '미수금') + '</td><td></td></tr>' +
             '<tr><td>' + (isEn ? 'Cash' : '현금') + '</td><td></td><td>' + (isEn ? 'Card' : '카드') + '</td><td></td><td>' + (isEn ? 'Bank Transfer' : '계좌이체') + '</td><td></td><td>' + (isEn ? 'Local Currency' : '지역화폐') + '</td><td></td></tr>' +
             '<tr><td>' + (isEn ? 'Naver Pay' : '네이버 페이') + '</td><td></td><td>' + (isEn ? 'Kakao Pay' : '카카오 페이') + '</td><td></td><td>' + (isEn ? 'Gift Card' : '상품권') + '</td><td></td><td></td><td></td></tr>' +
           '</tbody>' +
@@ -10800,7 +10993,7 @@ function psetDedAddStaff() {
 function psetDedStaffToggle(chk) {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var status = chk.closest('.pset-ded-row').querySelector('.pset-ded-status');
-  if (status) status.textContent = chk.checked ? (isEn ? 'Applied' : '적용함') : (isEn ? 'Not Applied' : '적용 안함');
+  if (status) status.textContent = chk.checked ? (isEn ? 'On' : '적용함') : (isEn ? 'Off' : '적용 안함');
 }
 function psetDedRemoveStaff(btn) {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
@@ -10824,7 +11017,7 @@ function psetRenderSpecTable() {
     var incSaleDisp = d.incSale + (d.incSaleType === 'percent' ? ' %' : '');
     var incDedDisp = d.incDed ? d.incDed + ' %' : '';
     var nameStyle = (d.type === 'svc' || d.type === 'tkt') ? ' style="color:#6161FF;font-weight:600;"' : '';
-    var catLabel = d.cat || (d.type === 'pp' ? (isEn ? 'Prepaid' : '정액권') : '');
+    var catLabel = d.cat || (d.type === 'pp' ? (isEn ? 'Prepaid Card' : '정액권') : '');
     return '<tr>' +
       '<td>' + catLabel + '</td>' +
       '<td' + nameStyle + '>' + d.name + '</td>' +
@@ -10855,7 +11048,7 @@ function psetEditSpecItem(idx) {
     document.querySelector('input[name="psetSpecSvcIncType"][value="' + d.incSaleType + '"]').checked = true;
     psetSpecIncTypeChange('Svc');
     // 타이틀/푸터 수정 모드
-    document.getElementById('psetSpecSvcModalTitle').textContent = isEn ? 'Edit Service Incentive' : '서비스 급여 수정';
+    document.getElementById('psetSpecSvcModalTitle').textContent = isEn ? 'Edit Service Salary' : '서비스 급여 수정';
     document.getElementById('psetSpecSvcFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecSvc()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-danger" onclick="psetDeleteSpecFromEdit()">' + (isEn ? 'Delete' : '삭제') + '</button>' +
@@ -10868,7 +11061,7 @@ function psetEditSpecItem(idx) {
     document.getElementById('psetSpecTktPrice').value = d.price ? Number(d.price).toLocaleString() : '';
     document.getElementById('psetSpecTktIncSale').value = d.incSale;
     document.querySelector('input[name="psetSpecTktIncType"][value="' + d.incSaleType + '"]').checked = true;
-    document.getElementById('psetSpecTktModalTitle').textContent = isEn ? 'Edit Ticket Incentive' : '티켓 급여 수정';
+    document.getElementById('psetSpecTktModalTitle').textContent = isEn ? 'Edit Prepaid Service Salary' : '티켓 급여 수정';
     document.getElementById('psetSpecTktFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecTkt()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-danger" onclick="psetDeleteSpecFromEdit()">' + (isEn ? 'Delete' : '삭제') + '</button>' +
@@ -10879,7 +11072,7 @@ function psetEditSpecItem(idx) {
     psetSpecPpItemChange();
     document.getElementById('psetSpecPpIncSale').value = d.incSale;
     document.querySelector('input[name="psetSpecPpIncType"][value="' + d.incSaleType + '"]').checked = true;
-    document.getElementById('psetSpecPpModalTitle').textContent = isEn ? 'Edit Prepaid Card Incentive' : '정액권 급여 수정';
+    document.getElementById('psetSpecPpModalTitle').textContent = isEn ? 'Edit Prepaid Card Salary' : '정액권 급여 수정';
     document.getElementById('psetSpecPpFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecPp()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-danger" onclick="psetDeleteSpecFromEdit()">' + (isEn ? 'Delete' : '삭제') + '</button>' +
@@ -10900,17 +11093,17 @@ function psetResetSpecModalMode(type) {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   psetSpecEditIdx = -1;
   if (type === 'svc') {
-    document.getElementById('psetSpecSvcModalTitle').textContent = isEn ? 'Register Service Incentive' : '서비스 급여 등록';
+    document.getElementById('psetSpecSvcModalTitle').textContent = isEn ? 'Add Service Salary' : '서비스 급여 등록';
     document.getElementById('psetSpecSvcFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecSvc()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecSvc()">' + (isEn ? 'Save' : '저장') + '</button>';
   } else if (type === 'tkt') {
-    document.getElementById('psetSpecTktModalTitle').textContent = isEn ? 'Register Ticket Incentive' : '티켓 급여 등록';
+    document.getElementById('psetSpecTktModalTitle').textContent = isEn ? 'Add Prepaid Service Salary' : '티켓 급여 등록';
     document.getElementById('psetSpecTktFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecTkt()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecTkt()">' + (isEn ? 'Save' : '저장') + '</button>';
   } else if (type === 'pp') {
-    document.getElementById('psetSpecPpModalTitle').textContent = isEn ? 'Register Prepaid Card Incentive' : '정액권 급여 등록';
+    document.getElementById('psetSpecPpModalTitle').textContent = isEn ? 'Add Prepaid Card Salary' : '정액권 급여 등록';
     document.getElementById('psetSpecPpFooter').innerHTML =
       '<button class="pay-footer-btn pay-btn-outline" onclick="psetCloseSpecPp()">' + (isEn ? 'Cancel' : '취소') + '</button>' +
       '<button class="pay-footer-btn pay-btn-primary" onclick="psetSaveSpecPp()">' + (isEn ? 'Save' : '저장') + '</button>';
@@ -11115,7 +11308,7 @@ function payOpenViewModal(btn) {
   document.getElementById('payViewSalaryBody').innerHTML = html;
   document.getElementById('payViewModal').classList.add('show');
 }
-function payCloseView() { document.getElementById('payViewModal').classList.remove('show'); }
+function payCloseView() { document.getElementById('payViewModal').classList.remove('show'); if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang(); }
 function payPrintView() { window.print(); }
 function payEditFromView() {
   var payslipId = parseInt(document.getElementById('payViewModal').getAttribute('data-payslip-id'));
@@ -11156,7 +11349,7 @@ function payEditFromView() {
   payCloseView();
   document.getElementById('payEditModal').classList.add('show');
 }
-function payCloseEdit() { document.getElementById('payEditModal').classList.remove('show'); }
+function payCloseEdit() { document.getElementById('payEditModal').classList.remove('show'); if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang(); }
 function paySaveEdit() {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var payslipId = parseInt(document.getElementById('payEditModal').getAttribute('data-payslip-id'));
@@ -11212,32 +11405,32 @@ function paySaveEdit() {
 // 소득 구분 변경 시 공제 항목 동적 변경
 var payEditDedMap = {
   biz: [
-    {key:'product', ko:'제품 사용', en:'Product Usage'},
-    {key:'late', ko:'지각', en:'Late'},
+    {key:'product', ko:'제품 사용', en:'Product Use'},
+    {key:'late', ko:'지각', en:'Tardiness'},
     {key:'early', ko:'조퇴', en:'Early Leave'},
-    {key:'absent', ko:'결근', en:'Absent'},
-    {key:'other1', ko:'기타 공제1', en:'Other Ded. 1'},
-    {key:'biz_tax', ko:'사업 소득세 자동 계산', en:'Auto Business Tax'}
+    {key:'absent', ko:'결근', en:'Absence'},
+    {key:'other1', ko:'기타 공제1', en:'Other Deduction 1'},
+    {key:'biz_tax', ko:'사업 소득세 자동 계산', en:'Business Income Tax'}
   ],
   earned: [
-    {key:'product', ko:'제품 사용', en:'Product Usage'},
-    {key:'late', ko:'지각', en:'Late'},
+    {key:'product', ko:'제품 사용', en:'Product Use'},
+    {key:'late', ko:'지각', en:'Tardiness'},
     {key:'early', ko:'조퇴', en:'Early Leave'},
-    {key:'absent', ko:'결근', en:'Absent'},
+    {key:'absent', ko:'결근', en:'Absence'},
     {key:'income_tax', ko:'근로 소득세', en:'Income Tax'},
     {key:'resident', ko:'주민세', en:'Resident Tax'},
-    {key:'health', ko:'건강보험', en:'Health Ins.'},
-    {key:'pension', ko:'국민연금', en:'Pension'},
-    {key:'employ', ko:'고용보험', en:'Employment Ins.'},
-    {key:'industrial', ko:'산재보험', en:'Industrial Ins.'},
-    {key:'other1', ko:'기타 공제1', en:'Other Ded. 1'}
+    {key:'health', ko:'건강보험', en:'Health Insurance'},
+    {key:'pension', ko:'국민연금', en:'National Pension'},
+    {key:'employ', ko:'고용보험', en:'Employment Insurance'},
+    {key:'industrial', ko:'산재보험', en:'Industrial Accident Insurance'},
+    {key:'other1', ko:'기타 공제1', en:'Other Deduction 1'}
   ],
   other: [
-    {key:'product', ko:'제품 사용', en:'Product Usage'},
-    {key:'late', ko:'지각', en:'Late'},
+    {key:'product', ko:'제품 사용', en:'Product Use'},
+    {key:'late', ko:'지각', en:'Tardiness'},
     {key:'early', ko:'조퇴', en:'Early Leave'},
-    {key:'absent', ko:'결근', en:'Absent'},
-    {key:'other1', ko:'기타 공제1', en:'Other Ded. 1'}
+    {key:'absent', ko:'결근', en:'Absence'},
+    {key:'other1', ko:'기타 공제1', en:'Other Deduction 1'}
   ]
 };
 function payEditIncomeTypeChange() {
@@ -11355,7 +11548,7 @@ function payConfirmDelete() {
 
 // ── 인센티브 내역 ──
 function payOpenIncDetail() { document.getElementById('payIncDetailModal').classList.add('show'); }
-function payCloseIncDetail() { document.getElementById('payIncDetailModal').classList.remove('show'); }
+function payCloseIncDetail() { document.getElementById('payIncDetailModal').classList.remove('show'); if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang(); }
 function payIncSwitchTab(idx) {
   document.querySelectorAll('.pay-inc-tab').forEach(function(t, i) { t.classList.toggle('active', i === idx); });
   document.querySelectorAll('.pay-inc-panel').forEach(function(p, i) { p.style.display = i === idx ? '' : 'none'; });
@@ -11409,23 +11602,584 @@ document.addEventListener('DOMContentLoaded', function() {
 
 var tcClockTimer = null;
 
+// ── 출퇴근 샘플 데이터 (2026-03-01 ~ 2026-03-31) ──
+var tcSampleData = (function() {
+  var records = [];
+  var staffList = [
+    { name: '원장님', nameEn: 'Director' },
+    { name: '수진', nameEn: 'Sujin' },
+    { name: '지훈', nameEn: 'Jihoon' }
+  ];
+  // 근무 시간 패턴
+  var schedules = {
+    '원장님': { inH: 9, inM: 0, outH: 18, outM: 30 },
+    '수진':   { inH: 9, inM: 0, outH: 18, outM: 0 },
+    '지훈':   { inH: 10, inM: 0, outH: 19, outM: 0 }
+  };
+  // 변동 패턴 (분 단위 오차)
+  var variations = [0, -3, 2, 5, -1, 8, -2, 1, 4, -5, 3, 6, -4, 0, 7, 2, -3, 1, -1, 5, 3, -2, 4, 0, -6, 2, 8, -3, 1, 6, -1];
+
+  for (var d = 1; d <= 31; d++) {
+    var dateStr = '2026-03-' + String(d).padStart(2, '0');
+    var dayOfWeek = new Date(2026, 2, d).getDay(); // 0=Sun
+    if (dayOfWeek === 0) continue; // 일요일 제외
+
+    for (var s = 0; s < staffList.length; s++) {
+      var staff = staffList[s];
+      var sch = schedules[staff.name];
+      var v = variations[(d + s * 7) % variations.length];
+
+      // 결근 패턴: 지훈 3/12, 수진 3/24
+      if (staff.name === '지훈' && d === 12) {
+        records.push({ date: dateStr, staff: staff.name, staffEn: staff.nameEn, inTime: '', outTime: '', workHours: '', absent: 'Y', ip: '', memo: '', tardy: false, leaveEarly: false });
+        continue;
+      }
+      if (staff.name === '수진' && d === 24) {
+        records.push({ date: dateStr, staff: staff.name, staffEn: staff.nameEn, inTime: '', outTime: '', workHours: '', absent: 'Y', ip: '', memo: '', tardy: false, leaveEarly: false });
+        continue;
+      }
+
+      // 퇴근 미등록 패턴: 3/3 원장님, 3/3 지훈, 3/10 수진
+      if ((staff.name === '원장님' && d === 3) || (staff.name === '지훈' && d === 3) || (staff.name === '수진' && d === 10)) {
+        var inH2 = sch.inH;
+        var inM2 = sch.inM + v;
+        if (inM2 < 0) { inM2 += 60; inH2 -= 1; }
+        if (inM2 >= 60) { inM2 -= 60; inH2 += 1; }
+        var inTimeStr2 = String(inH2).padStart(2, '0') + ':' + String(inM2).padStart(2, '0');
+        var tardy2 = (inH2 * 60 + inM2) > (sch.inH * 60 + sch.inM);
+        records.push({ date: dateStr, staff: staff.name, staffEn: staff.nameEn, inTime: inTimeStr2, outTime: '', workHours: '', absent: '', ip: '192.168.1.100', memo: '', tardy: tardy2, leaveEarly: false });
+        continue;
+      }
+
+      var inH = sch.inH;
+      var inM = sch.inM + v;
+      if (inM < 0) { inM += 60; inH -= 1; }
+      if (inM >= 60) { inM -= 60; inH += 1; }
+
+      var outH = sch.outH;
+      var outM = sch.outM + v;
+      if (outM < 0) { outM += 60; outH -= 1; }
+      if (outM >= 60) { outM -= 60; outH += 1; }
+
+      // 조퇴 패턴: 원장님 3/7 (16시 퇴근), 지훈 3/20 (17시 퇴근)
+      if (staff.name === '원장님' && d === 7) { outH = 16; outM = 0; }
+      if (staff.name === '지훈' && d === 20) { outH = 17; outM = 0; }
+
+      var inTimeStr = String(inH).padStart(2, '0') + ':' + String(inM).padStart(2, '0');
+      var outTimeStr = String(outH).padStart(2, '0') + ':' + String(outM).padStart(2, '0');
+
+      // 근무 시간 계산
+      var totalMin = (outH * 60 + outM) - (inH * 60 + inM);
+      var wH = Math.floor(totalMin / 60);
+      var wM = totalMin % 60;
+      var workHoursStr = wH + '시간 ' + wM + '분';
+
+      // 지각 판정: 출근 시각 > 기준 출근
+      var tardy = (inH * 60 + inM) > (sch.inH * 60 + sch.inM);
+      // 조퇴 판정: 퇴근 시각 < 기준 퇴근
+      var leaveEarly = (outH * 60 + outM) < (sch.outH * 60 + sch.outM);
+
+      records.push({
+        date: dateStr, staff: staff.name, staffEn: staff.nameEn,
+        inTime: inTimeStr, outTime: outTimeStr, workHours: workHoursStr,
+        absent: '', ip: '192.168.1.100', memo: '',
+        tardy: tardy, leaveEarly: leaveEarly
+      });
+    }
+  }
+  return records;
+})();
+
+// ── 출퇴근 테이블 렌더링 ──
+var tcCurrentPage = 1;
+var tcPageSize = 10;
+var tcFilteredData = [];
+
+function tcRenderTable(dateFilter) {
+  var tbody = document.getElementById('tcTableBody');
+  if (!tbody) return;
+  var staffVal = document.getElementById('tcStaffSelect') ? document.getElementById('tcStaffSelect').value : 'all';
+  var statusVal = document.getElementById('tcStatusSelect') ? document.getElementById('tcStatusSelect').value : 'all';
+
+  tcFilteredData = tcSampleData.filter(function(r) {
+    if (dateFilter && r.date !== dateFilter) return false;
+    if (staffVal !== 'all' && r.staff !== staffVal) return false;
+    if (statusVal === 'tardy' && !r.tardy) return false;
+    if (statusVal === 'leaveEarly' && !r.leaveEarly) return false;
+    if (statusVal === 'absent' && r.absent !== 'Y') return false;
+    return true;
+  });
+
+  if (tcFilteredData.length === 0) {
+    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="9" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>';
+    tcRenderPagination(0);
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+    return;
+  }
+
+  var totalPages = Math.ceil(tcFilteredData.length / tcPageSize);
+  if (tcCurrentPage > totalPages) tcCurrentPage = totalPages;
+  var start = (tcCurrentPage - 1) * tcPageSize;
+  var pageData = tcFilteredData.slice(start, start + tcPageSize);
+
+  var html = '';
+  pageData.forEach(function(r) {
+    html += tcBuildRow(r);
+  });
+  tbody.innerHTML = html;
+  tcRenderPagination(tcFilteredData.length);
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function tcRenderPagination(total) {
+  var wrap = document.getElementById('tcPaginationWrap');
+  if (!wrap) return;
+  if (total <= tcPageSize) { wrap.innerHTML = ''; return; }
+  var totalPages = Math.ceil(total / tcPageSize);
+  var html = '<div class="tc-pagination">';
+  html += '<button class="tc-page-btn" onclick="tcGoPage(' + Math.max(1, tcCurrentPage - 1) + ')" ' + (tcCurrentPage <= 1 ? 'disabled' : '') + '>&laquo;</button>';
+  for (var p = 1; p <= totalPages; p++) {
+    html += '<button class="tc-page-btn' + (p === tcCurrentPage ? ' tc-page-active' : '') + '" onclick="tcGoPage(' + p + ')">' + p + '</button>';
+  }
+  html += '<button class="tc-page-btn" onclick="tcGoPage(' + Math.min(totalPages, tcCurrentPage + 1) + ')" ' + (tcCurrentPage >= totalPages ? 'disabled' : '') + '>&raquo;</button>';
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+function tcGoPage(page) {
+  tcCurrentPage = page;
+  var type = document.querySelector('input[name="tcPeriodType"]:checked');
+  if (type && type.value === 'monthly') {
+    tcRenderTableByMonth(document.getElementById('tcMonthDate').value);
+  } else if (type && type.value === 'range') {
+    tcRenderTableByRange(document.getElementById('tcStartDate').value, document.getElementById('tcEndDate').value);
+  } else {
+    var dateInput = document.getElementById('tcDailyDate');
+    tcRenderTable(dateInput ? dateInput.value : null);
+  }
+}
+
+// ── 행 HTML 공통 생성 ──
+function tcBuildRow(r) {
+  var idx = tcSampleData.indexOf(r);
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var row = '<tr>';
+  row += '<td>' + r.date + '</td>';
+  row += '<td>' + r.staff + '</td>';
+  row += '<td>' + r.inTime;
+  if (r.tardy) row += ' <span style="color:#F06060;font-weight:600;font-size:11px;">(' + (isEn ? 'Tardy' : '지각') + ')</span>';
+  row += '</td>';
+
+  // 퇴근 시각: 없으면 "등록" 버튼 표시
+  if (r.inTime && !r.outTime && r.absent !== 'Y') {
+    row += '<td><button class="stf-link-btn tc-add-out-btn" onclick="tcOpenClockOutForRow(' + idx + ')" data-i18n="tc.btnAdd" data-ko="등록" data-en="Add">' + (isEn ? 'Add' : '등록') + '</button></td>';
+  } else {
+    row += '<td>' + r.outTime;
+    if (r.leaveEarly) row += ' <span style="color:#F06060;font-weight:600;font-size:11px;">(' + (isEn ? 'Leave Early' : '조퇴') + ')</span>';
+    row += '</td>';
+  }
+
+  // 근무시간: 영문 모드시 "Xh Ym" 형식
+  var whDisplay = r.workHours;
+  if (isEn && whDisplay) {
+    whDisplay = whDisplay.replace(/(\d+)시간\s*/, '$1h ').replace(/(\d+)분/, '$1m');
+  }
+  row += '<td>' + whDisplay + '</td>';
+  row += '<td>' + r.absent + '</td>';
+  row += '<td>' + r.ip + '</td>';
+  row += '<td>' + r.memo + '</td>';
+  row += '<td><button class="stf-link-btn" onclick="tcOpenEditModal(' + idx + ')" data-i18n="tc.btnEdit" data-ko="수정" data-en="Edit">' + (isEn ? 'Edit' : '수정') + '</button></td>';
+  row += '</tr>';
+  return row;
+}
+
+// ── 행에서 퇴근 등록 모달 열기 (직원 자동 선택) ──
+function tcOpenClockOutForRow(idx) {
+  var r = tcSampleData[idx];
+  if (!r) return;
+  document.getElementById('tcClockOutModal').classList.add('tc-show');
+  tcUpdateClockTime('tcClockOutTime');
+  tcClockTimer = setInterval(function() { tcUpdateClockTime('tcClockOutTime'); }, 1000);
+  // 직원 자동 선택
+  var sel = document.getElementById('tcClockOutStaff');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].text === r.staff) { sel.selectedIndex = i; break; }
+  }
+  // 저장 시 해당 레코드 업데이트하도록 인덱스 저장
+  sel.dataset.rowIdx = idx;
+}
+
+// ── 출퇴근 수정 모달 ──
+var tcEditingIdx = -1;
+
+function tcOpenEditModal(idx) {
+  tcEditingIdx = idx;
+  var r = tcSampleData[idx];
+  if (!r) return;
+
+  document.getElementById('tcEditDate').value = r.date;
+  document.getElementById('tcEditStaffName').textContent = r.staff;
+  document.getElementById('tcEditTardy').checked = r.tardy || false;
+  document.getElementById('tcEditLeaveEarly').checked = r.leaveEarly || false;
+
+  // 출근 시간 셀렉트 (0~23)
+  tcPopulateHourSelect('tcEditInHour', 0, 23, r.inTime ? parseInt(r.inTime.split(':')[0]) : '');
+  tcPopulateMinSelect('tcEditInMin', r.inTime ? parseInt(r.inTime.split(':')[1]) : '');
+
+  // 퇴근 시간 셀렉트 (0~23 + 다음날 00~11)
+  tcPopulateHourSelectNextDay('tcEditOutHour', r.outTime ? parseInt(r.outTime.split(':')[0]) : '');
+  tcPopulateMinSelect('tcEditOutMin', r.outTime ? parseInt(r.outTime.split(':')[1]) : '');
+
+  document.getElementById('tcEditModal').classList.add('tc-show');
+}
+
+function tcCloseEditModal() {
+  document.getElementById('tcEditModal').classList.remove('tc-show');
+  tcEditingIdx = -1;
+}
+
+function tcSaveEdit() {
+  if (tcEditingIdx < 0) return;
+  var r = tcSampleData[tcEditingIdx];
+
+  var inH = document.getElementById('tcEditInHour').value;
+  var inM = document.getElementById('tcEditInMin').value;
+  var outH = document.getElementById('tcEditOutHour').value;
+  var outM = document.getElementById('tcEditOutMin').value;
+
+  // 출근 시간
+  if (inH !== '' && inM !== '') {
+    r.inTime = String(inH).padStart(2, '0') + ':' + String(inM).padStart(2, '0');
+  }
+
+  // 퇴근 시간
+  if (outH !== '' && outM !== '') {
+    var oh = parseInt(outH);
+    var om = parseInt(outM);
+    var ih = parseInt(inH);
+    var im = parseInt(inM);
+    var outTotal = oh * 60 + om;
+    var inTotal = ih * 60 + im;
+
+    // 퇴근 <= 출근 검증 (익일이 아닌 경우)
+    if (oh < 24 && outTotal <= inTotal) {
+      alert('퇴근 시간은 출근 시간보다 나중이어야 합니다.');
+      return;
+    }
+
+    var displayH = oh > 23 ? oh - 24 : oh;
+    r.outTime = String(displayH).padStart(2, '0') + ':' + String(om).padStart(2, '0');
+
+    // 근무 시간 계산
+    if (oh > 23) outTotal = (oh - 24) * 60 + om + 24 * 60;
+    if (outTotal <= inTotal) outTotal += 24 * 60;
+    var diff = outTotal - inTotal;
+    r.workHours = Math.floor(diff / 60) + '시간 ' + (diff % 60) + '분';
+  }
+
+  r.date = document.getElementById('tcEditDate').value;
+  r.tardy = document.getElementById('tcEditTardy').checked;
+  r.leaveEarly = document.getElementById('tcEditLeaveEarly').checked;
+
+  tcCloseEditModal();
+  tcSearch();
+}
+
+function tcDeleteRecord() {
+  if (tcEditingIdx < 0) return;
+  if (!confirm('정말 삭제하시겠습니까?')) return;
+  tcSampleData.splice(tcEditingIdx, 1);
+  tcCloseEditModal();
+  tcSearch();
+}
+
+// ── 시간 셀렉트 생성 헬퍼 ──
+function tcPopulateHourSelect(id, min, max, selectedVal) {
+  var sel = document.getElementById(id);
+  sel.innerHTML = '<option value="">Select</option>';
+  for (var h = min; h <= max; h++) {
+    var opt = document.createElement('option');
+    opt.value = h;
+    opt.textContent = String(h).padStart(2, '0');
+    if (selectedVal !== '' && parseInt(selectedVal) === h) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function tcPopulateHourSelectNextDay(id, selectedVal) {
+  var sel = document.getElementById(id);
+  sel.innerHTML = '<option value="">Select</option>';
+  for (var h = 0; h <= 36; h++) {
+    var opt = document.createElement('option');
+    opt.value = h;
+    if (h <= 23) {
+      opt.textContent = String(h).padStart(2, '0');
+    } else {
+      opt.textContent = '+1일 ' + String(h - 24).padStart(2, '0');
+    }
+    if (selectedVal !== '' && parseInt(selectedVal) === h) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function tcPopulateMinSelect(id, selectedVal) {
+  var sel = document.getElementById(id);
+  sel.innerHTML = '<option value="">Select</option>';
+  for (var m = 0; m <= 59; m++) {
+    var opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = String(m).padStart(2, '0');
+    if (selectedVal !== '' && parseInt(selectedVal) === m) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
 function openTimeClock() {
   freezeGnb();
   hideAllViews();
   document.getElementById('timeClockView').classList.add('show');
   tcShowManage();
+  // 기본 날짜로 테이블 렌더링
+  var dateInput = document.getElementById('tcDailyDate');
+  if (dateInput) tcRenderTable(dateInput.value);
   if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
 }
 
 // ── 서브뷰 전환 ──
 function tcShowManage() {
   document.getElementById('tcSummaryView').style.display = 'none';
+  document.getElementById('tcWorkHoursView').style.display = 'none';
   document.getElementById('tcManageView').style.display = 'flex';
+  tcSearch();
 }
+function tcOpenSumDetail(staffName) {
+  // 해당 직원으로 필터 설정 후 출퇴근 관리 화면 전환
+  var sel = document.getElementById('tcStaffSelect');
+  if (sel) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text === staffName || sel.options[i].value === staffName) {
+        sel.selectedIndex = i;
+        break;
+      }
+    }
+  }
+  tcShowManage();
+}
+
 function tcShowSummary() {
   document.getElementById('tcManageView').style.display = 'none';
+  document.getElementById('tcWorkHoursView').style.display = 'none';
   document.getElementById('tcSummaryView').style.display = 'flex';
 }
+function tcShowWorkHours() {
+  document.getElementById('tcManageView').style.display = 'none';
+  document.getElementById('tcSummaryView').style.display = 'none';
+  document.getElementById('tcWorkHoursView').style.display = 'flex';
+}
+
+// ── 근무 시간 설정 데이터 ──
+var tcWhData = {
+  0: [
+    { start: '09:00', finish: '18:30', days: '월, 화, 수, 목, 금, 토' },
+    { start: '09:00', finish: '14:00', days: '일' }
+  ],
+  1: [
+    { start: '09:00', finish: '18:00', days: '월, 화, 수, 목, 금' }
+  ],
+  2: []
+};
+var tcWhEditingStaff = -1;
+var tcWhEditingIdx = -1;
+
+function tcOpenWhSetupModal(staffIdx) {
+  tcWhEditingStaff = staffIdx;
+  tcRenderWhSetup();
+  document.getElementById('tcWhSetupModal').classList.add('tc-show');
+}
+function tcCloseWhSetupModal() {
+  document.getElementById('tcWhSetupModal').classList.remove('tc-show');
+}
+
+function tcRenderWhSetup() {
+  var tbody = document.getElementById('tcWhSetupBody');
+  var schedules = tcWhData[tcWhEditingStaff] || [];
+  if (schedules.length === 0) {
+    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="4">내역이 없습니다</td></tr>';
+    return;
+  }
+  var html = '';
+  schedules.forEach(function(sch, idx) {
+    html += '<tr>';
+    html += '<td>' + sch.start + '</td>';
+    html += '<td>' + sch.finish + '</td>';
+    html += '<td>' + sch.days + '</td>';
+    html += '<td>';
+    html += '<button class="stf-link-btn" onclick="tcEditWhEntry(' + idx + ')" style="margin-right:4px;">수정</button>';
+    html += '<button class="stf-link-btn stf-danger" onclick="tcDeleteWhEntry(' + idx + ')">삭제</button>';
+    html += '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+function tcOpenWhRegisterModal(staffIdx) {
+  tcWhEditingStaff = staffIdx;
+  tcWhEditingIdx = -1;
+  tcPopulateWhTimeOptions('tcWhStartTime', false);
+  tcPopulateWhTimeOptions('tcWhFinishTime', true);
+  tcWhResetDayChecks();
+  document.getElementById('tcWhAddModal').classList.add('tc-show');
+}
+
+function tcOpenWhAddModal() {
+  tcWhEditingIdx = -1;
+  tcPopulateWhTimeOptions('tcWhStartTime', false);
+  tcPopulateWhTimeOptions('tcWhFinishTime', true);
+  tcWhResetDayChecks();
+  document.getElementById('tcWhAddModal').classList.add('tc-show');
+}
+function tcCloseWhAddModal() {
+  document.getElementById('tcWhAddModal').classList.remove('tc-show');
+}
+
+function tcEditWhEntry(idx) {
+  tcWhEditingIdx = idx;
+  var sch = tcWhData[tcWhEditingStaff][idx];
+  tcPopulateWhTimeOptions('tcWhStartTime', false);
+  tcPopulateWhTimeOptions('tcWhFinishTime', true);
+  document.getElementById('tcWhStartTime').value = sch.start;
+  document.getElementById('tcWhFinishTime').value = sch.finish;
+  var dayMap = { '월':'mon','화':'tue','수':'wed','목':'thu','금':'fri','토':'sat','일':'sun' };
+  tcWhResetDayChecks();
+  var dayParts = sch.days.split(',');
+  dayParts.forEach(function(d) {
+    var val = dayMap[d.trim()];
+    if (val) {
+      var cb = document.querySelector('#tcWhDayDropdown input[value="' + val + '"]');
+      if (cb) cb.checked = true;
+    }
+  });
+  tcWhUpdateDayLabel();
+  document.getElementById('tcWhAddModal').classList.add('tc-show');
+}
+
+function tcDeleteWhEntry(idx) {
+  if (!confirm('삭제하시겠습니까?')) return;
+  tcWhData[tcWhEditingStaff].splice(idx, 1);
+  tcRenderWhSetup();
+}
+
+function tcSaveWhEntry() {
+  var start = document.getElementById('tcWhStartTime').value;
+  var finish = document.getElementById('tcWhFinishTime').value;
+  var selectedDays = tcWhGetSelectedDays();
+  if (!start || !finish || selectedDays.length === 0) { alert('모든 항목을 입력하세요.'); return; }
+
+  // 유효성 검증
+  var startMin = tcWhTimeToMin(start);
+  var finishMin = tcWhTimeToMin(finish);
+  if (finish.indexOf('+1') === 0) finishMin += 24 * 60;
+  if (finishMin <= startMin) { alert('종료 시간은 시작 시간보다 나중이어야 합니다.'); return; }
+  if (finishMin - startMin > 24 * 60) { alert('근무시간은 24시간을 초과할 수 없습니다.'); return; }
+
+  var dayMap = { 'mon':'월','tue':'화','wed':'수','thu':'목','fri':'금','sat':'토','sun':'일' };
+  var dayNames = selectedDays.map(function(v) { return dayMap[v] || v; });
+  var entry = { start: start, finish: finish, days: dayNames.join(', ') };
+
+  if (!tcWhData[tcWhEditingStaff]) tcWhData[tcWhEditingStaff] = [];
+  if (tcWhEditingIdx >= 0) {
+    tcWhData[tcWhEditingStaff][tcWhEditingIdx] = entry;
+  } else {
+    tcWhData[tcWhEditingStaff].push(entry);
+  }
+  tcCloseWhAddModal();
+  tcRenderWhSetup();
+}
+
+function tcWhTimeToMin(timeStr) {
+  var cleaned = timeStr.replace('+1일 ', '');
+  var parts = cleaned.split(':');
+  return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+}
+
+function tcPopulateWhTimeOptions(selectId, includeNextDay) {
+  var sel = document.getElementById(selectId);
+  sel.innerHTML = '<option value="">선택</option>';
+  for (var h = 0; h < 24; h++) {
+    for (var m = 0; m < 60; m += 30) {
+      var val = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+      var opt = document.createElement('option');
+      opt.value = val; opt.textContent = val;
+      sel.appendChild(opt);
+    }
+  }
+  if (includeNextDay) {
+    for (var h2 = 0; h2 <= 12; h2++) {
+      for (var m2 = 0; m2 < 60; m2 += 30) {
+        if (h2 === 12 && m2 > 0) break;
+        var val2 = '+1일 ' + String(h2).padStart(2, '0') + ':' + String(m2).padStart(2, '0');
+        var opt2 = document.createElement('option');
+        opt2.value = val2; opt2.textContent = val2;
+        sel.appendChild(opt2);
+      }
+    }
+  }
+}
+
+// ── 요일 다중선택 ──
+function tcWhToggleDayDrop() {
+  document.getElementById('tcWhDayDropdown').classList.toggle('tc-wh-show');
+}
+function tcWhDayToggleAll(el) {
+  var checks = document.querySelectorAll('#tcWhDayDropdown input[type="checkbox"]:not([value="all"])');
+  checks.forEach(function(c) { c.checked = el.checked; });
+  tcWhUpdateDayLabel();
+}
+function tcWhUpdateDayLabel() {
+  var checks = document.querySelectorAll('#tcWhDayDropdown input[type="checkbox"]:checked:not([value="all"])');
+  var placeholder = document.getElementById('tcWhDayPlaceholder');
+  var dayLabelMap = { 'mon':'월','tue':'화','wed':'수','thu':'목','fri':'금','sat':'토','sun':'일' };
+  if (checks.length === 0) {
+    placeholder.textContent = '선택';
+    placeholder.classList.remove('tc-wh-has-value');
+  } else {
+    var names = [];
+    checks.forEach(function(c) { names.push(dayLabelMap[c.value] || c.value); });
+    placeholder.textContent = names.join(', ');
+    placeholder.classList.add('tc-wh-has-value');
+  }
+  // 전체 체크 동기화
+  var allCheck = document.querySelector('#tcWhDayDropdown input[value="all"]');
+  var total = document.querySelectorAll('#tcWhDayDropdown input[type="checkbox"]:not([value="all"])');
+  if (allCheck) allCheck.checked = (checks.length === total.length);
+}
+function tcWhGetSelectedDays() {
+  var checks = document.querySelectorAll('#tcWhDayDropdown input[type="checkbox"]:checked:not([value="all"])');
+  var arr = [];
+  checks.forEach(function(c) { arr.push(c.value); });
+  return arr;
+}
+function tcWhResetDayChecks() {
+  var checks = document.querySelectorAll('#tcWhDayDropdown input[type="checkbox"]');
+  checks.forEach(function(c) { c.checked = false; });
+  var placeholder = document.getElementById('tcWhDayPlaceholder');
+  if (placeholder) { placeholder.textContent = '선택'; placeholder.classList.remove('tc-wh-has-value'); }
+  var dd = document.getElementById('tcWhDayDropdown');
+  if (dd) dd.classList.remove('tc-wh-show');
+}
+// 개별 요일 체크 시 라벨 업데이트
+document.addEventListener('change', function(e) {
+  if (e.target.closest('#tcWhDayDropdown') && e.target.type === 'checkbox' && e.target.value !== 'all') {
+    tcWhUpdateDayLabel();
+  }
+});
+// 외부 클릭 시 요일 드롭다운 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#tcWhDayField')) {
+    var dd = document.getElementById('tcWhDayDropdown');
+    if (dd) dd.classList.remove('tc-wh-show');
+  }
+});
 
 // ── 기간 타입 토글 (관리) ──
 function tcTogglePeriod() {
@@ -11443,25 +12197,153 @@ function tcToggleSumPeriod() {
 }
 
 // ── 검색 ──
-function tcSearch() { /* 서버 연동 시 구현 */ }
+function tcSearch() {
+  var periodType = document.querySelector('input[name="tcPeriodType"]:checked').value;
+  if (periodType === 'daily') {
+    tcRenderTable(document.getElementById('tcDailyDate').value);
+  } else if (periodType === 'monthly') {
+    var month = document.getElementById('tcMonthDate').value; // "2026-03"
+    tcRenderTableByMonth(month);
+  } else {
+    var start = document.getElementById('tcStartDate').value;
+    var end = document.getElementById('tcEndDate').value;
+    tcRenderTableByRange(start, end);
+  }
+}
+
+function tcRenderTableByMonth(month) {
+  var tbody = document.getElementById('tcTableBody');
+  if (!tbody) return;
+  var staffVal = document.getElementById('tcStaffSelect').value;
+  var statusVal = document.getElementById('tcStatusSelect').value;
+
+  tcFilteredData = tcSampleData.filter(function(r) {
+    if (!r.date.startsWith(month)) return false;
+    if (staffVal !== 'all' && r.staff !== staffVal) return false;
+    if (statusVal === 'tardy' && !r.tardy) return false;
+    if (statusVal === 'leaveEarly' && !r.leaveEarly) return false;
+    if (statusVal === 'absent' && r.absent !== 'Y') return false;
+    return true;
+  });
+
+  if (tcFilteredData.length === 0) {
+    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="9">내역이 없습니다</td></tr>';
+    tcRenderPagination(0);
+    return;
+  }
+  var totalPages = Math.ceil(tcFilteredData.length / tcPageSize);
+  if (tcCurrentPage > totalPages) tcCurrentPage = totalPages;
+  var s = (tcCurrentPage - 1) * tcPageSize;
+  var pageData = tcFilteredData.slice(s, s + tcPageSize);
+  var html = '';
+  pageData.forEach(function(r) { html += tcBuildRow(r); });
+  tbody.innerHTML = html;
+  tcRenderPagination(tcFilteredData.length);
+}
+
+function tcRenderTableByRange(start, end) {
+  var tbody = document.getElementById('tcTableBody');
+  if (!tbody) return;
+  var staffVal = document.getElementById('tcStaffSelect').value;
+  var statusVal = document.getElementById('tcStatusSelect').value;
+
+  tcFilteredData = tcSampleData.filter(function(r) {
+    if (start && r.date < start) return false;
+    if (end && r.date > end) return false;
+    if (staffVal !== 'all' && r.staff !== staffVal) return false;
+    if (statusVal === 'tardy' && !r.tardy) return false;
+    if (statusVal === 'leaveEarly' && !r.leaveEarly) return false;
+    if (statusVal === 'absent' && r.absent !== 'Y') return false;
+    return true;
+  });
+
+  if (tcFilteredData.length === 0) {
+    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="9">내역이 없습니다</td></tr>';
+    tcRenderPagination(0);
+    return;
+  }
+  var totalPages = Math.ceil(tcFilteredData.length / tcPageSize);
+  if (tcCurrentPage > totalPages) tcCurrentPage = totalPages;
+  var s = (tcCurrentPage - 1) * tcPageSize;
+  var pageData = tcFilteredData.slice(s, s + tcPageSize);
+  var html = '';
+  pageData.forEach(function(r) { html += tcBuildRow(r); });
+  tbody.innerHTML = html;
+  tcRenderPagination(tcFilteredData.length);
+}
+
 function tcSumSearch() { /* 서버 연동 시 구현 */ }
 
 // ── 인쇄 ──
 function tcPrint() { window.print(); }
 
-// ── 출퇴근 등록 모달 ──
-function tcOpenClockModal() {
-  document.getElementById('tcClockModal').classList.add('tc-show');
-  tcUpdateClockTime();
-  tcClockTimer = setInterval(tcUpdateClockTime, 1000);
+// ── 출근 등록 모달 ──
+function tcOpenClockInModal() {
+  document.getElementById('tcClockInModal').classList.add('tc-show');
+  tcUpdateClockTime('tcClockInTime');
+  tcClockTimer = setInterval(function() { tcUpdateClockTime('tcClockInTime'); }, 1000);
 }
-function tcCloseClockModal() {
-  document.getElementById('tcClockModal').classList.remove('tc-show');
+function tcCloseClockInModal() {
+  document.getElementById('tcClockInModal').classList.remove('tc-show');
   if (tcClockTimer) { clearInterval(tcClockTimer); tcClockTimer = null; }
-  document.getElementById('tcClockStaff').value = '';
-  document.getElementById('tcClockMemo').value = '';
+  document.getElementById('tcClockInStaff').value = '';
+  document.getElementById('tcClockInMemo').value = '';
 }
-function tcUpdateClockTime() {
+function tcDoClockIn() {
+  var staff = document.getElementById('tcClockInStaff').value;
+  if (!staff) { alert('직원을 선택하세요.'); return; }
+  alert('출근 등록되었습니다.');
+  tcCloseClockInModal();
+}
+
+// ── 퇴근 등록 모달 ──
+function tcOpenClockOutModal() {
+  document.getElementById('tcClockOutModal').classList.add('tc-show');
+  tcUpdateClockTime('tcClockOutTime');
+  tcClockTimer = setInterval(function() { tcUpdateClockTime('tcClockOutTime'); }, 1000);
+}
+function tcCloseClockOutModal() {
+  document.getElementById('tcClockOutModal').classList.remove('tc-show');
+  if (tcClockTimer) { clearInterval(tcClockTimer); tcClockTimer = null; }
+  document.getElementById('tcClockOutStaff').value = '';
+  document.getElementById('tcClockOutMemo').value = '';
+}
+function tcDoClockOut() {
+  var sel = document.getElementById('tcClockOutStaff');
+  var staff = sel.value;
+  if (!staff) { alert('직원을 선택하세요.'); return; }
+
+  // 행에서 열었을 경우 해당 레코드 업데이트
+  var rowIdx = sel.dataset.rowIdx;
+  if (rowIdx !== undefined && rowIdx !== '') {
+    var r = tcSampleData[parseInt(rowIdx)];
+    if (r) {
+      var now = new Date();
+      var outH = now.getHours();
+      var outM = now.getMinutes();
+      r.outTime = String(outH).padStart(2, '0') + ':' + String(outM).padStart(2, '0');
+      // 근무 시간 계산
+      if (r.inTime) {
+        var inParts = r.inTime.split(':');
+        var inTotal = parseInt(inParts[0]) * 60 + parseInt(inParts[1]);
+        var outTotal = outH * 60 + outM;
+        if (outTotal <= inTotal) outTotal += 24 * 60;
+        var diff = outTotal - inTotal;
+        r.workHours = Math.floor(diff / 60) + '시간 ' + (diff % 60) + '분';
+      }
+    }
+    sel.dataset.rowIdx = '';
+  }
+
+  alert('퇴근 등록되었습니다.');
+  tcCloseClockOutModal();
+  tcSearch(); // 테이블 갱신
+}
+
+// ── 시각 표시 ──
+function tcUpdateClockTime(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
   var now = new Date();
   var y = now.getFullYear();
   var mo = String(now.getMonth() + 1).padStart(2, '0');
@@ -11471,14 +12353,7 @@ function tcUpdateClockTime() {
   var h12 = h % 12 || 12;
   var mi = String(now.getMinutes()).padStart(2, '0');
   var s = String(now.getSeconds()).padStart(2, '0');
-  document.getElementById('tcClockTime').textContent =
-    y + '-' + mo + '-' + d + '    ' + String(h12).padStart(2, '0') + ':' + mi + ':' + s + ' ' + ampm;
-}
-function tcDoClock(type) {
-  var staff = document.getElementById('tcClockStaff').value;
-  if (!staff) { alert('직원을 선택하세요.'); return; }
-  alert(type === 'in' ? '출근 등록되었습니다.' : '퇴근 등록되었습니다.');
-  tcCloseClockModal();
+  el.textContent = y + '-' + mo + '-' + d + '    ' + String(h12).padStart(2, '0') + ':' + mi + ':' + s + ' ' + ampm;
 }
 
 // ── 결근 등록 모달 ──
@@ -11504,7 +12379,11 @@ function tcDoAbsent() {
 // ══ [FEAT-STAFF-GOAL] 직원별 목표 관리 ══
 // ══════════════════════════════════════════════════════════════
 
-var sgGoalData = [];
+var sgGoalData = [
+  { name: '원장님', service: 1200000, product: 300000, prepaid: 800000, ticket: 400000, total: 2700000, aService: 850000, aProduct: 120000, aPrepaid: 500000, aTicket: 200000, aTotal: 1670000 },
+  { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 620000, aProduct: 85000, aPrepaid: 350000, aTicket: 150000, aTotal: 1205000 },
+  { name: '지훈', service: 600000, product: 150000, prepaid: 0, ticket: 0, total: 750000, aService: 430000, aProduct: 60000, aPrepaid: 0, aTicket: 0, aTotal: 490000 }
+];
 var sgDeleteRow = null;
 /* sgChartInstance 제거 — pure CSS bar chart 사용 */
 
@@ -11551,8 +12430,9 @@ function sgToggleCatDd(e) {
 function sgUpdateCatLabel() {
   var chks = document.querySelectorAll('.sg-cat-chk');
   var all = true, names = [];
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   chks.forEach(function(c) { if (!c.checked) all = false; else names.push(c.closest('label').querySelector('span:last-child').textContent); });
-  document.getElementById('sgCatLabel').textContent = (all || names.length === 0) ? '전체' : names.join(', ');
+  document.getElementById('sgCatLabel').textContent = (all || names.length === 0) ? (isEn ? 'All' : '전체') : names.join(', ');
 }
 
 // ── 직원 드롭다운 ──
@@ -11573,6 +12453,7 @@ function sgAddStaff() {
   var empty = tbody.querySelector('.sg-empty-row');
   if (empty) empty.remove();
 
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   chks.forEach(function(chk) {
     var name = chk.value;
     var dup = false;
@@ -11587,7 +12468,7 @@ function sgAddStaff() {
       '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="product" oninput="sgFmtNum(this)" /></td>' +
       '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="prepaid" oninput="sgFmtNum(this)" /></td>' +
       '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="ticket" oninput="sgFmtNum(this)" /></td>' +
-      '<td><button class="sg-del-btn" onclick="sgOpenDelModal(this)" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</button></td>';
+      '<td><button class="sg-del-btn" onclick="sgOpenDelModal(this)" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">' + (isEn ? 'Delete' : '삭제') + '</button></td>';
     tbody.appendChild(tr);
     chk.checked = false;
   });
@@ -11622,13 +12503,14 @@ function sgCloseDelModal() {
   sgDeleteRow = null;
 }
 function sgConfirmDel() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   if (sgDeleteRow) {
     var name = sgDeleteRow.dataset.staff;
     sgDeleteRow.remove();
     sgGoalData = sgGoalData.filter(function(d) { return d.name !== name; });
     var tbody = document.getElementById('sgSetTbody');
     if (!tbody.querySelector('tr[data-staff]')) {
-      tbody.innerHTML = '<tr class="sg-empty-row"><td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr class="sg-empty-row"><td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data for table">' + (isEn ? 'No data for table' : '내역이 없습니다.') + '</td></tr>';
     }
     sgUpdateSaveState();
   }
@@ -11647,17 +12529,19 @@ function sgSave() {
     sgGoalData.push({ name: row.dataset.staff, service: s, product: p, prepaid: pp, ticket: t, total: s + p + pp + t });
   });
   // 직원 select에 반영
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var sel = document.getElementById('sgStaffSelect');
-  sel.innerHTML = '<option value="all">전체</option>';
+  sel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
   sgGoalData.forEach(function(d) {
     sel.innerHTML += '<option value="' + d.name + '">' + d.name + '</option>';
   });
-  alert('저장되었습니다.');
+  alert(isEn ? 'Saved.' : '저장되었습니다.');
 }
 
 // ── 전월 목표 복사 ──
 function sgCopyPrev() {
-  if (sgGoalData.length === 0) { alert('복사할 전월 목표 데이터가 없습니다.'); return; }
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (sgGoalData.length === 0) { alert(isEn ? 'No previous month goal data to copy.' : '복사할 전월 목표 데이터가 없습니다.'); return; }
   var tbody = document.getElementById('sgSetTbody');
   var empty = tbody.querySelector('.sg-empty-row');
   if (empty) empty.remove();
@@ -11679,7 +12563,7 @@ function sgCopyPrev() {
         '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="product" value="' + d.product.toLocaleString() + '" oninput="sgFmtNum(this)" /></td>' +
         '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="prepaid" value="' + d.prepaid.toLocaleString() + '" oninput="sgFmtNum(this)" /></td>' +
         '<td><input type="text" class="sg-input-number sg-goal-input" data-cat="ticket" value="' + d.ticket.toLocaleString() + '" oninput="sgFmtNum(this)" /></td>' +
-        '<td><button class="sg-del-btn" onclick="sgOpenDelModal(this)" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</button></td>';
+        '<td><button class="sg-del-btn" onclick="sgOpenDelModal(this)" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">' + (isEn ? 'Delete' : '삭제') + '</button></td>';
       tbody.appendChild(tr);
     }
   });
@@ -11687,28 +12571,28 @@ function sgCopyPrev() {
 }
 
 // ── 목표 관리 테이블 렌더링 ──
+function sgPct(a, g) { return g > 0 ? (a / g * 100).toFixed(1) + '%' : '-'; }
+function sgCell(a, g) { return '<td>' + a.toLocaleString() + ' / ' + g.toLocaleString() + '</td><td>' + sgPct(a, g) + '</td>'; }
+
 function sgRenderTable() {
   var tbody = document.getElementById('sgGoalTbody');
   if (sgGoalData.length === 0) {
-    tbody.innerHTML = '<tr class="sg-empty-row"><td colspan="11" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td></tr>';
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    tbody.innerHTML = '<tr class="sg-empty-row"><td colspan="11" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data for table">' + (isEn ? 'No data for table' : '내역이 없습니다.') + '</td></tr>';
     return;
   }
-  var html = '', ts = 0, tp = 0, tpp = 0, tt = 0, ta = 0;
+  var html = '';
+  var ts=0,tp=0,tpp=0,tt=0,ta=0, as=0,ap=0,app=0,at=0,aa=0;
   sgGoalData.forEach(function(d) {
-    ts += d.service; tp += d.product; tpp += d.prepaid; tt += d.ticket; ta += d.total;
+    var aS = d.aService||0, aP = d.aProduct||0, aPP = d.aPrepaid||0, aT = d.aTicket||0, aA = d.aTotal||(aS+aP+aPP+aT);
+    ts+=d.service; tp+=d.product; tpp+=d.prepaid; tt+=d.ticket; ta+=d.total;
+    as+=aS; ap+=aP; app+=aPP; at+=aT; aa+=aA;
     html += '<tr><td>' + d.name + '</td>' +
-      '<td>0<br/>/' + d.service.toLocaleString() + '</td><td></td>' +
-      '<td>0<br/>/' + d.product.toLocaleString() + '</td><td></td>' +
-      '<td>0<br/>/' + d.prepaid.toLocaleString() + '</td><td></td>' +
-      '<td>0<br/>/' + d.ticket.toLocaleString() + '</td><td></td>' +
-      '<td>0<br/>/' + d.total.toLocaleString() + '</td><td></td></tr>';
+      sgCell(aS, d.service) + sgCell(aP, d.product) + sgCell(aPP, d.prepaid) + sgCell(aT, d.ticket) + sgCell(aA, d.total) + '</tr>';
   });
-  html += '<tr class="sg-total-row"><td data-i18n="sg.total" data-ko="합계" data-en="Total">합계</td>' +
-    '<td>0<br/>/' + ts.toLocaleString() + '</td><td></td>' +
-    '<td>0<br/>/' + tp.toLocaleString() + '</td><td></td>' +
-    '<td>0<br/>/' + tpp.toLocaleString() + '</td><td></td>' +
-    '<td>0<br/>/' + tt.toLocaleString() + '</td><td></td>' +
-    '<td>0<br/>/' + ta.toLocaleString() + '</td><td></td></tr>';
+  var isEn2 = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  html += '<tr class="sg-total-row"><td data-i18n="sg.total" data-ko="합계" data-en="Total">' + (isEn2 ? 'Total' : '합계') + '</td>' +
+    sgCell(as,ts) + sgCell(ap,tp) + sgCell(app,tpp) + sgCell(at,tt) + sgCell(aa,ta) + '</tr>';
   tbody.innerHTML = html;
 }
 
@@ -11736,9 +12620,8 @@ function sgRenderChart() {
 
   var html = '';
   sgGoalData.forEach(function(d) {
-    var achieved = 0; // 데모: 달성 0
-    var pct = d.total > 0 ? Math.round((achieved / d.total) * 100) : 0;
-    var barWidth = Math.max((d.total / maxTotal) * 100, 0);
+    var achieved = d.aTotal || 0;
+    var pct = d.total > 0 ? (achieved / d.total * 100).toFixed(1) : 0;
     var fillWidth = d.total > 0 ? (achieved / d.total) * 100 : 0;
 
     html += '<div class="sg-bar-row">' +
@@ -11747,6 +12630,7 @@ function sgRenderChart() {
         '<div class="sg-bar-fill" style="width:' + fillWidth + '%;"></div>' +
         '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
+      '<div class="sg-bar-value">' + pct + '%</div>' +
     '</div>';
   });
   chart.innerHTML = html;

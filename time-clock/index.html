@@ -16,7 +16,6 @@
     <h2 class="tc-page-title" data-i18n="tc.timeClock" data-ko="출퇴근 관리" data-en="Time Clock">출퇴근 관리</h2>
     <div class="tc-header-actions">
       <button class="tc-btn tc-btn-primary" onclick="openClockInModal()" data-i18n="tc.addClockIn" data-ko="출근 등록" data-en="Add Clock-In">출근 등록</button>
-      <button class="tc-btn tc-btn-primary" onclick="openClockOutModal()" data-i18n="tc.addClockOut" data-ko="퇴근 등록" data-en="Add Clock-Out">퇴근 등록</button>
       <button class="tc-btn tc-btn-primary" onclick="openAbsentModal()" data-i18n="tc.addAbsentee" data-ko="결근 등록" data-en="Add Absentee">결근 등록</button>
       <button class="tc-btn tc-btn-outline" onclick="showDaysWorkedView()" data-i18n="tc.daysWorked" data-ko="출퇴근 집계" data-en="Days Worked">출퇴근 집계</button>
       <button class="tc-btn tc-btn-outline" onclick="printTimeClock()" data-i18n="tc.print" data-ko="인쇄" data-en="Print">인쇄</button>
@@ -69,12 +68,7 @@
           <option value="absent" data-i18n="tc.absent" data-ko="결근" data-en="Absent">결근</option>
         </select>
       </div>
-      <div class="tc-filter-right">
-        <button class="tc-btn tc-btn-primary tc-btn-search" onclick="searchTimeClock()">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
-          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
-        </button>
-      </div>
+      <button class="tc-btn-search" style="margin-left:auto;" onclick="searchTimeClock()" data-i18n="common.search" data-ko="검색" data-en="Search">검색</button>
     </div>
   </div>
 
@@ -219,12 +213,7 @@
           <option value="alice">Alice</option>
         </select>
       </div>
-      <div class="tc-filter-right">
-        <button class="tc-btn tc-btn-primary tc-btn-search" onclick="searchDaysWorked()">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
-          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
-        </button>
-      </div>
+      <button class="tc-btn-search" onclick="searchDaysWorked()" data-i18n="common.search" data-ko="검색" data-en="Search">검색</button>
     </div>
   </div>
 
@@ -245,21 +234,21 @@
       <tbody id="dwTableBody">
         <tr>
           <td data-i18n="tc.sampleStaff1" data-ko="홍길동" data-en="Staff 1">홍길동</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button class="tc-btn-edit" onclick="viewDaysWorkedDetail('홍길동')" data-i18n="tc.view" data-ko="수정" data-en="View">수정</button></td>
+          <td>22</td>
+          <td>189<span data-i18n="tc.hour" data-ko="시간" data-en="h"> 시간</span> 30<span data-i18n="tc.min" data-ko="분" data-en="m"> 분</span></td>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+          <td><button class="tc-btn-edit" onclick="viewDaysWorkedDetail('홍길동')" data-i18n="tc.viewDetail" data-ko="보기" data-en="View">보기</button></td>
         </tr>
         <tr>
           <td data-i18n="tc.sampleStaff2" data-ko="김철수" data-en="Staff 2">김철수</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><button class="tc-btn-add" onclick="viewDaysWorkedDetail('김철수')" data-i18n="tc.register" data-ko="등록" data-en="View">등록</button></td>
+          <td>18</td>
+          <td>144<span data-i18n="tc.hour" data-ko="시간" data-en="h"> 시간</span> 00<span data-i18n="tc.min" data-ko="분" data-en="m"> 분</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>3</td>
+          <td><button class="tc-btn-edit" onclick="viewDaysWorkedDetail('김철수')" data-i18n="tc.viewDetail" data-ko="보기" data-en="View">보기</button></td>
         </tr>
       </tbody>
     </table>
@@ -343,7 +332,7 @@
   <div class="tc-modal">
     <div class="tc-modal-header">
       <div class="tc-modal-bar"></div>
-      <span class="tc-modal-title" data-i18n="tc.addAbsentee" data-ko="결근 등록" data-en="Add Absentee">결근 등록</span>
+      <span class="tc-modal-title" data-i18n="tc.addAbsentee" data-ko="결근 등록" data-en="Add Absent Staff">결근 등록</span>
       <button class="tc-modal-close" onclick="closeModal('absentModal')">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
       </button>
@@ -418,13 +407,13 @@
             <td class="tc-edit-label" data-i18n="tc.clockIn" data-ko="출근" data-en="Clock-In">출근</td>
             <td class="tc-edit-time-cell">
               <select class="tc-select tc-time-select" id="editInHour"></select>
-              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="O'clock">시</span>
               <select class="tc-select tc-time-select" id="editInMin"></select>
               <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
             </td>
             <td class="tc-edit-time-cell">
               <select class="tc-select tc-time-select" id="editRefInHour" disabled></select>
-              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="O'clock">시</span>
               <select class="tc-select tc-time-select" id="editRefInMin" disabled></select>
               <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
             </td>
@@ -433,13 +422,13 @@
             <td class="tc-edit-label" data-i18n="tc.clockOut" data-ko="퇴근" data-en="Clock-Out">퇴근</td>
             <td class="tc-edit-time-cell">
               <select class="tc-select tc-time-select" id="editOutHour"></select>
-              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="O'clock">시</span>
               <select class="tc-select tc-time-select" id="editOutMin"></select>
               <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
             </td>
             <td class="tc-edit-time-cell">
               <select class="tc-select tc-time-select" id="editRefOutHour" disabled></select>
-              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="Hour">시</span>
+              <span class="tc-time-unit" data-i18n="tc.hour" data-ko="시" data-en="O'clock">시</span>
               <select class="tc-select tc-time-select" id="editRefOutMin" disabled></select>
               <span class="tc-time-unit" data-i18n="tc.minutes" data-ko="분" data-en="Minutes">분</span>
             </td>
