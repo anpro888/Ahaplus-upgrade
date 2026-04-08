@@ -12666,8 +12666,8 @@ function sgRenderChart() {
       barHtml = '<div class="sg-bar-fill" style="width:' + achieveWidth + '%;"></div>';
     }
 
-    // 목표 위치에 마커 라인 (100% 기준선)
-    var goalMarker = '<div class="sg-bar-goal-marker" style="left:' + goalWidth + '%;"></div>';
+    // 목표 위치에 마커 라인 — 초과 달성자가 있을 때만 표시
+    var goalMarker = hasOver ? '<div class="sg-bar-goal-marker" style="left:' + goalWidth + '%;"></div>' : '';
 
     html += '<div class="sg-bar-row">' +
       '<div class="sg-bar-label">' + d.name + '</div>' +
