@@ -194,16 +194,16 @@
     <div class="mega-menu">
       <div class="mega-col">
         <div class="mega-col-title" data-i18n="gnb.inventory.stock_cat" data-ko="재고 관리" data-en="STOCK MANAGEMENT">재고 관리</div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF0F0;"><svg viewBox="0 0 20 20" fill="none" stroke="#E24B7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l-1 10H5L4 4z"/><path d="M2 4h16M8 7v5M12 7v5"/></svg></span><span data-i18n="gnb.inventory.internal" data-ko="내부 소모 내역" data-en="Stock Internal Use">내부 소모 내역</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h14v10H3z"/><path d="M3 9h14M8 9v6M12 9v6"/></svg></span><span data-i18n="gnb.inventory.adjustment" data-ko="재고 조정 내역" data-en="Stock Adjustment">재고 조정 내역</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z"/><path d="M3 16h14"/></svg></span><span data-i18n="gnb.inventory.history" data-ko="재고 변동 이력" data-en="Stock History">재고 변동 이력</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h14v10H3z"/><path d="M3 9h14"/><path d="M8 12h4"/></svg></span><span data-i18n="gnb.inventory.status" data-ko="재고 현황" data-en="Stock Status">재고 현황</span></div>
+        <div class="mega-col-item" onclick="openInternalUse()"><span class="mci" style="background:#FFF0F0;"><svg viewBox="0 0 20 20" fill="none" stroke="#E24B7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l-1 10H5L4 4z"/><path d="M2 4h16M8 7v5M12 7v5"/></svg></span><span data-i18n="gnb.inventory.internal" data-ko="내부 소모 내역" data-en="Stock Internal Use">내부 소모 내역</span></div>
+        <div class="mega-col-item" onclick="openStockAdjust()"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h14v10H3z"/><path d="M3 9h14M8 9v6M12 9v6"/></svg></span><span data-i18n="gnb.inventory.adjustment" data-ko="재고 조정 내역" data-en="Stock Adjustment History">재고 조정 내역</span></div>
+        <div class="mega-col-item" onclick="openStockHistory()"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z"/><path d="M3 16h14"/></svg></span><span data-i18n="gnb.inventory.history" data-ko="재고 변동 이력" data-en="Stock History">재고 변동 이력</span></div>
+        <div class="mega-col-item" onclick="openStockStatus()"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h14v10H3z"/><path d="M3 9h14"/><path d="M8 12h4"/></svg></span><span data-i18n="gnb.inventory.status" data-ko="재고 현황" data-en="Stock Status">재고 현황</span></div>
       </div>
       <div class="mega-col-sep"></div>
       <div class="mega-col">
         <div class="mega-col-title" data-i18n="gnb.inventory.recv_cat" data-ko="매입 관리" data-en="RECEIVINGS">매입 관리</div>
-        <div class="mega-col-item"><span class="mci" style="background:#E0F7FA;"><svg viewBox="0 0 20 20" fill="none" stroke="#00ACC1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h14v14H3z"/><path d="M7 10l3 3 4-5"/></svg></span><span data-i18n="gnb.inventory.receivings" data-ko="매입" data-en="Receivings">매입</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM11 11h5v5h-5z"/></svg></span><span data-i18n="gnb.inventory.suppliers" data-ko="매입처 관리" data-en="Suppliers">매입처 관리</span></div>
+        <div class="mega-col-item" onclick="openPurchase()"><span class="mci" style="background:#E0F7FA;"><svg viewBox="0 0 20 20" fill="none" stroke="#00ACC1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h14v14H3z"/><path d="M7 10l3 3 4-5"/></svg></span><span data-i18n="gnb.inventory.receivings" data-ko="매입" data-en="Receivings">매입</span></div>
+        <div class="mega-col-item" onclick="openSupplierMgmt()"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM11 11h5v5h-5z"/></svg></span><span data-i18n="gnb.inventory.suppliers" data-ko="매입처 관리" data-en="Suppliers">매입처 관리</span></div>
       </div>
     </div>
   </div>
@@ -212,9 +212,9 @@
   <div class="gnb-item has-menu" data-i18n="gnb.expenditure" data-ko="지출내역" data-en="EXPENDITURE">지출내역
     <div class="mega-menu">
       <div class="mega-col">
-        <div class="mega-col-item"><span class="mci" style="background:#FFF0F0;"><svg viewBox="0 0 20 20" fill="none" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 8h4M8 11h4M8 14h2"/></svg></span><span data-i18n="gnb.expenditure.history" data-ko="지출 내역" data-en="Expenditure History">지출 내역</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z"/><path d="M3 16h14"/><path d="M10 16v-5"/></svg></span><span data-i18n="gnb.expenditure.summary" data-ko="지출 내역 요약" data-en="Expenditure Summary">지출 내역 요약</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 7v3h3"/><path d="M14 2l2 2-2 2"/></svg></span><span data-i18n="gnb.expenditure.items" data-ko="지출 항목 관리" data-en="Expenditure Items">지출 항목 관리</span></div>
+        <div class="mega-col-item" onclick="openExpenseHistory()"><span class="mci" style="background:#FFF0F0;"><svg viewBox="0 0 20 20" fill="none" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M8 8h4M8 11h4M8 14h2"/></svg></span><span data-i18n="gnb.expenditure.history" data-ko="지출 내역" data-en="Expenditure History">지출 내역</span></div>
+        <div class="mega-col-item" onclick="openExpenseSummary()"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z"/><path d="M3 16h14"/><path d="M10 16v-5"/></svg></span><span data-i18n="gnb.expenditure.summary" data-ko="지출 내역 요약" data-en="Expenditure Summary">지출 내역 요약</span></div>
+        <div class="mega-col-item" onclick="openExpenseItemSetup()"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 7v3h3"/><path d="M14 2l2 2-2 2"/></svg></span><span data-i18n="gnb.expenditure.items" data-ko="지출 항목 관리" data-en="Expenditure Items">지출 항목 관리</span></div>
       </div>
     </div>
   </div>
@@ -2454,6 +2454,681 @@
   </div><!-- /.sv-body -->
 </div>
 <!-- ══ [FEAT-SERVICE-SETUP] 서비스 설정 페이지 END ══ -->
+
+<!-- ══ [FEAT-INTERNAL-USE] 내부 소모 내역 페이지 START ══ -->
+<div id="internalUseView">
+  <div class="iu-header-bg">
+    <div class="iu-header">
+      <h3><span data-i18n="iu.title" data-ko="내부 소모 내역" data-en="Stock Internal Use">내부 소모 내역</span></h3>
+      <div class="iu-header-actions">
+        <button class="iu-action-btn primary" onclick="openInternalUseReg()" data-i18n="iu.btn_register" data-ko="내부 소모 등록" data-en="Add Internal Use">내부 소모 등록</button>
+        <button class="iu-action-btn" onclick="iuPrint()" data-i18n="iu.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="iu-body">
+    <div class="iu-filter-box">
+      <div class="iu-filter-row">
+        <span class="iu-filter-label" data-i18n="iu.filter_period" data-ko="기간" data-en="Date Range">기간</span>
+        <input type="date" class="iu-filter-date" id="iuDateFrom" value="2026-04-01">
+        <span class="iu-filter-sep">~</span>
+        <input type="date" class="iu-filter-date" id="iuDateTo" value="2026-04-08">
+        <span class="iu-filter-label" style="margin-left:14px;" data-i18n="iu.filter_product" data-ko="제품" data-en="Product">제품</span>
+        <input type="text" class="iu-filter-input" id="iuProductSearch" data-i18n-ph-ko="제품코드 또는 제품명" data-i18n-ph-en="Product Code or Name" placeholder="제품코드 또는 제품명">
+        <span class="iu-filter-label" style="margin-left:14px;" data-i18n="iu.filter_category" data-ko="분류" data-en="Category">분류</span>
+        <select class="iu-filter-select" id="iuCategoryFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+          <option value="판매" data-ko="판매" data-en="Sales">판매</option>
+        </select>
+        <span class="iu-filter-label" style="margin-left:14px;" data-i18n="iu.filter_staff" data-ko="담당자" data-en="Staff">담당자</span>
+        <select class="iu-filter-select" id="iuStaffFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+          <option value="원장님">원장님</option>
+          <option value="수진">수진</option>
+          <option value="지훈">지훈</option>
+        </select>
+        <button class="iu-search-btn" onclick="iuSearch()" data-i18n="iu.btn_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <div class="iu-summary" id="iuSummary">
+      <span data-i18n="iu.summary_prefix" data-ko="총" data-en="All">총</span> <b id="iuTotalCount">0</b><span data-i18n="iu.summary_count" data-ko="건, 금액 총계" data-en=" records, Total Amount">건, 금액 총계</span> <b id="iuTotalAmount">0</b>
+    </div>
+    <div class="iu-table-wrap">
+      <table class="iu-table">
+        <thead>
+          <tr>
+            <th style="width:100px;" data-i18n="iu.th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th style="width:90px;" data-i18n="iu.th_staff" data-ko="담당자" data-en="Staff">담당자</th>
+            <th style="width:110px;" data-i18n="iu.th_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="iu.th_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:90px;" data-i18n="iu.th_unit_price" data-ko="단가" data-en="Unit Price">단가</th>
+            <th style="width:70px;" data-i18n="iu.th_qty" data-ko="수량" data-en="Qty">수량</th>
+            <th style="width:100px;" data-i18n="iu.th_amount" data-ko="금액" data-en="Amount">금액</th>
+            <th style="width:200px;" data-i18n="iu.th_memo" data-ko="메모" data-en="Notes">메모</th>
+            <th style="width:70px;" data-i18n="iu.th_edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="iuHistoryTbody">
+          <tr><td colspan="9" class="iu-empty" data-i18n="iu.empty" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 내부 소모 등록 — 제품 검색 뷰 -->
+<div id="internalUseRegView">
+  <div class="iu-header-bg">
+    <div class="iu-header">
+      <h3><span data-i18n="iu.reg_title" data-ko="내부 소모 등록" data-en="Add Internal Use">내부 소모 등록</span></h3>
+      <div class="iu-header-actions">
+        <button class="iu-action-btn primary" onclick="openInternalUse()" data-i18n="iu.btn_history" data-ko="내부 소모 내역" data-en="Stock Internal Use">내부 소모 내역</button>
+      </div>
+    </div>
+  </div>
+  <div class="iu-body">
+    <div class="iu-filter-box" style="flex-direction:row; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <span class="iu-filter-label" data-i18n="iu.reg_category" data-ko="분류" data-en="Category">분류</span>
+      <select class="iu-filter-select" id="iuRegCatFilter">
+        <option value="" data-ko="전체" data-en="All">전체</option>
+        <option value="판매" data-ko="판매" data-en="Sales">판매</option>
+      </select>
+      <input type="text" class="iu-filter-input" id="iuRegProductSearch" data-i18n-ph-ko="제품코드 또는 제품명" data-i18n-ph-en="Product Code or Name" placeholder="제품코드 또는 제품명">
+      <label class="iu-chk-label">
+        <input type="checkbox" id="iuIncludeSale">
+        <span class="iu-checkmark">&#10003;</span>
+        <span data-i18n="iu.reg_include_sale" data-ko="판매용 제품 포함" data-en="Include Products for Sales">판매용 제품 포함</span>
+      </label>
+      <button class="iu-search-btn" onclick="iuRegSearch()" data-i18n="iu.btn_search" data-ko="검색" data-en="Search">검색</button>
+    </div>
+    <div class="iu-table-wrap" style="margin-top:16px;">
+      <table class="iu-table">
+        <thead>
+          <tr>
+            <th style="width:140px;" data-i18n="iu.reg_th_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="iu.reg_th_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:160px;" data-i18n="iu.reg_th_spec" data-ko="규격" data-en="Spec">규격</th>
+            <th style="width:120px;" data-i18n="iu.reg_th_stock" data-ko="현 재고" data-en="Stock on Hand">현 재고</th>
+            <th style="width:80px;" data-i18n="iu.reg_th_add" data-ko="추가" data-en="Add">추가</th>
+          </tr>
+        </thead>
+        <tbody id="iuRegTbody">
+          <tr>
+            <td>100001</td>
+            <td>영양제</td>
+            <td></td>
+            <td>0</td>
+            <td><button class="iu-add-btn" onclick="iuOpenRegModal('100001','영양제')" data-i18n="iu.btn_add" data-ko="추가" data-en="Add">추가</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 내부 소모 등록 모달 -->
+<div id="iuRegModal" onclick="if(event.target===this)iuCloseRegModal()">
+  <div class="iu-modal-box">
+    <div class="iu-modal-header ap-modal-header">
+      <div class="iu-modal-header-left">
+        <div class="iu-modal-header-bar"></div>
+        <span class="iu-modal-title" data-i18n="iu.modal_reg_title" data-ko="내부 소모 등록" data-en="Add Internal Use">내부 소모 등록</span>
+      </div>
+      <button class="iu-modal-close ap-modal-close" onclick="iuCloseRegModal()">✕</button>
+    </div>
+    <div class="iu-modal-body">
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_product" data-ko="제품명" data-en="Product Name">제품명</span>
+        <input type="text" class="iu-modal-input" id="iuRegProductName" readonly>
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label"><span data-i18n="iu.modal_qty" data-ko="수량" data-en="Qty">수량</span> <span class="iu-modal-required">*</span></span>
+        <input type="number" class="iu-modal-input" id="iuRegQty" min="1">
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="iu-modal-select" id="iuRegStaff">
+          <option value="" data-ko="선택" data-en="Select">선택</option>
+          <option value="원장님">원장님</option>
+          <option value="수진">수진</option>
+          <option value="지훈">지훈</option>
+        </select>
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_memo" data-ko="메모" data-en="Notes">메모</span>
+        <input type="text" class="iu-modal-input" id="iuRegMemo">
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_date" data-ko="날짜" data-en="Date">날짜</span>
+        <input type="date" class="iu-modal-input" id="iuRegDate" value="2026-04-08">
+      </div>
+    </div>
+    <div class="iu-modal-footer">
+      <button class="iu-modal-btn-cancel" onclick="iuCloseRegModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="iu-modal-btn-save" onclick="iuSaveReg()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 내부 소모 수정 모달 -->
+<div id="iuEditModal" onclick="if(event.target===this)iuCloseEditModal()">
+  <div class="iu-modal-box">
+    <div class="iu-modal-header ap-modal-header">
+      <div class="iu-modal-header-left">
+        <div class="iu-modal-header-bar"></div>
+        <span class="iu-modal-title" data-i18n="iu.modal_edit_title" data-ko="내부 소모 수정" data-en="Edit Internal Use">내부 소모 수정</span>
+      </div>
+      <button class="iu-modal-close ap-modal-close" onclick="iuCloseEditModal()">✕</button>
+    </div>
+    <div class="iu-modal-body">
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_product" data-ko="제품명" data-en="Product Name">제품명</span>
+        <input type="text" class="iu-modal-input" id="iuEditProductName" readonly>
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label"><span data-i18n="iu.modal_qty" data-ko="수량" data-en="Qty">수량</span> <span class="iu-modal-required">*</span></span>
+        <input type="number" class="iu-modal-input" id="iuEditQty" min="1">
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="iu-modal-select" id="iuEditStaff">
+          <option value="" data-ko="선택" data-en="Select">선택</option>
+          <option value="원장님">원장님</option>
+          <option value="수진">수진</option>
+          <option value="지훈">지훈</option>
+        </select>
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_memo" data-ko="메모" data-en="Notes">메모</span>
+        <input type="text" class="iu-modal-input" id="iuEditMemo">
+      </div>
+      <div class="iu-modal-row">
+        <span class="iu-modal-label" data-i18n="iu.modal_date" data-ko="날짜" data-en="Date">날짜</span>
+        <input type="date" class="iu-modal-input" id="iuEditDate">
+      </div>
+    </div>
+    <div class="iu-modal-footer">
+      <button class="iu-modal-btn-cancel" onclick="iuCloseEditModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="iu-modal-btn-delete" onclick="iuDeleteEntry()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="iu-modal-btn-save" onclick="iuSaveEdit()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-INTERNAL-USE] 내부 소모 내역 페이지 END ══ -->
+
+<!-- ══ [FEAT-STOCK-ADJUST] 재고 조정 페이지 START ══ -->
+<!-- 재고 조정 내역 -->
+<div id="stockAdjustView">
+  <div class="sa-header-bg">
+    <div class="sa-header">
+      <h3><span data-i18n="sa.title" data-ko="재고 조정 내역" data-en="Stock Adjustment History">재고 조정 내역</span></h3>
+      <div class="sa-header-actions">
+        <button class="sa-action-btn primary" onclick="openStockAdjustEdit()" data-i18n="sa.btn_adjust" data-ko="재고 임의 조정" data-en="Stock Adjustment">재고 임의 조정</button>
+        <button class="sa-action-btn" onclick="window.print()" data-i18n="sa.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="sa-body">
+    <div class="sa-filter-box">
+      <div class="sa-filter-row">
+        <span class="sa-filter-label" data-i18n="sa.filter_period" data-ko="기간" data-en="Date Range">기간</span>
+        <input type="date" class="sa-filter-date" id="saDateFrom" value="2026-04-01">
+        <span class="sa-filter-sep">~</span>
+        <input type="date" class="sa-filter-date" id="saDateTo" value="2026-04-08">
+        <span class="sa-filter-label" style="margin-left:14px;" data-i18n="sa.filter_product" data-ko="제품" data-en="Product">제품</span>
+        <input type="text" class="sa-filter-input" id="saProductSearch" data-i18n-ph-ko="제품코드 또는 제품명" data-i18n-ph-en="Product Code or Name" placeholder="제품코드 또는 제품명">
+        <button class="sa-search-btn" onclick="saSearch()" data-i18n="sa.btn_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <div class="sa-summary">
+      <span data-i18n="sa.summary_prefix" data-ko="총" data-en="All">총</span> <b id="saTotalCount">0</b><span data-i18n="sa.summary_count" data-ko="건" data-en=" records">건</span>
+    </div>
+    <div class="sa-table-wrap">
+      <table class="sa-table">
+        <thead>
+          <tr>
+            <th style="width:110px;" data-i18n="sa.th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th style="width:130px;" data-i18n="sa.th_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="sa.th_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:110px;" data-i18n="sa.th_before" data-ko="변경 전" data-en="Before">변경 전</th>
+            <th style="width:110px;" data-i18n="sa.th_after" data-ko="변경 후" data-en="After">변경 후</th>
+            <th style="width:110px;" data-i18n="sa.th_diff" data-ko="변동 수량" data-en="Diff">변동 수량</th>
+            <th data-i18n="sa.th_memo" data-ko="메모" data-en="Notes">메모</th>
+          </tr>
+        </thead>
+        <tbody id="saHistoryTbody">
+          <tr><td colspan="7" class="sa-empty" data-i18n="sa.empty" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 재고 임의 조정 -->
+<div id="stockAdjustEditView">
+  <div class="sa-header-bg">
+    <div class="sa-header">
+      <h3><span data-i18n="sa.edit_title" data-ko="재고 임의 조정" data-en="Stock Adjustment">재고 임의 조정</span></h3>
+      <div class="sa-header-actions">
+        <button class="sa-action-btn primary" onclick="openStockAdjust()" data-i18n="sa.btn_history" data-ko="재고 조정 내역" data-en="Stock Adjustment History">재고 조정 내역</button>
+      </div>
+    </div>
+  </div>
+  <div class="sa-body">
+    <div class="sa-filter-box" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span class="sa-filter-label" data-i18n="sa.filter_category" data-ko="분류" data-en="Category">분류</span>
+      <select class="sa-filter-select" id="saEditCatFilter">
+        <option value="" data-ko="전체" data-en="All">전체</option>
+        <option value="판매" data-ko="판매" data-en="Sales">판매</option>
+      </select>
+      <span class="sa-filter-label" style="margin-left:14px;" data-i18n="sa.filter_product" data-ko="제품" data-en="Product">제품</span>
+      <input type="text" class="sa-filter-input" id="saEditProductSearch" data-i18n-ph-ko="제품 코드 / 이름 / 바코드" data-i18n-ph-en="Product Code / Name / Bar" placeholder="제품 코드 / 이름 / 바코드">
+      <button class="sa-search-btn" onclick="saEditSearch()" data-i18n="sa.btn_search" data-ko="검색" data-en="Search" style="margin-left:auto;">검색</button>
+    </div>
+    <div class="sa-table-wrap" style="margin-top:16px;">
+      <table class="sa-table">
+        <thead>
+          <tr>
+            <th style="width:180px;" data-i18n="sa.eth_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="sa.eth_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:160px;" data-i18n="sa.eth_stock_before" data-ko="현 재고&#10;(조정 전)" data-en="Stock on Hand&#10;(Before Adjustment)"><span>현 재고</span><br><span>(조정 전)</span></th>
+            <th style="width:200px;" data-i18n="sa.eth_stock_after" data-ko="현 재고&#10;(조정 후)" data-en="Stock on Hand&#10;(After Adjustment)"><span>현 재고</span><br><span>(조정 후)</span></th>
+          </tr>
+        </thead>
+        <tbody id="saEditTbody">
+          <tr>
+            <td>100001</td>
+            <td>영양제</td>
+            <td>0</td>
+            <td><input type="text" class="sa-adjust-input" id="saAdjust_100001" data-code="100001" data-name="영양제" data-before="0" value="" placeholder=""></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sa-edit-footer">
+      <button class="sa-save-btn" onclick="saSaveAdjust()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-STOCK-ADJUST] 재고 조정 페이지 END ══ -->
+
+<!-- ══ [FEAT-STOCK-HISTORY] 재고 변동 이력 페이지 START ══ -->
+<div id="stockHistoryView">
+  <div class="sh2-header-bg">
+    <div class="sh2-header">
+      <h3><span data-i18n="sh2.title" data-ko="재고 변동 이력" data-en="Stock History">재고 변동 이력</span></h3>
+      <div class="sh2-header-actions">
+        <button class="sh2-action-btn" onclick="window.print()" data-i18n="sh2.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="sh2-body">
+    <div class="sh2-filter-box">
+      <div class="sh2-filter-row">
+        <span class="sh2-filter-label" data-i18n="sh2.filter_period" data-ko="기간" data-en="Date Range">기간</span>
+        <input type="date" class="sh2-filter-date" id="sh2DateFrom" value="2026-04-01">
+        <span class="sh2-filter-sep">~</span>
+        <input type="date" class="sh2-filter-date" id="sh2DateTo" value="2026-04-08">
+        <span class="sh2-filter-label" style="margin-left:14px;" data-i18n="sh2.filter_product" data-ko="제품" data-en="Product">제품</span>
+        <input type="text" class="sh2-filter-input" id="sh2ProductSearch" data-i18n-ph-ko="제품코드" data-i18n-ph-en="Product Code" placeholder="제품코드">
+        <span class="sh2-filter-label" style="margin-left:14px;" data-i18n="sh2.filter_type" data-ko="구분" data-en="Action">구분</span>
+        <select class="sh2-filter-select" id="sh2TypeFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+          <option value="매출" data-ko="매출" data-en="Sales">매출</option>
+          <option value="환불" data-ko="환불" data-en="Refund">환불</option>
+          <option value="매입" data-ko="매입" data-en="Receiving">매입</option>
+          <option value="내부 소모" data-ko="내부 소모" data-en="Internal Use">내부 소모</option>
+          <option value="매입처로 반품" data-ko="매입처로 반품" data-en="Return to Supplier">매입처로 반품</option>
+          <option value="재고 조정" data-ko="재고 조정" data-en="Stock Adjustment">재고 조정</option>
+        </select>
+        <button class="sh2-search-btn" onclick="sh2Search()" data-i18n="sh2.btn_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <div class="sh2-summary">
+      <span data-i18n="sh2.summary_prefix" data-ko="총" data-en="All">총</span> <b id="sh2TotalCount">0</b><span data-i18n="sh2.summary_count" data-ko="건" data-en=" records">건</span>
+    </div>
+    <div class="sh2-table-wrap">
+      <table class="sh2-table">
+        <thead>
+          <tr>
+            <th style="width:130px;" data-i18n="sh2.th_date" data-ko="생성일" data-en="Created Date">생성일</th>
+            <th style="width:120px;" data-i18n="sh2.th_user" data-ko="사용자 ID" data-en="User ID">사용자 ID</th>
+            <th style="width:120px;" data-i18n="sh2.th_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="sh2.th_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:100px;" data-i18n="sh2.th_type" data-ko="구분" data-en="Action">구분</th>
+            <th style="width:100px;" data-i18n="sh2.th_diff" data-ko="변동 수량" data-en="Adjusted Quantity">변동 수량</th>
+            <th style="width:100px;" data-i18n="sh2.th_stock" data-ko="현 재고" data-en="Stock on Hand">현 재고</th>
+            <th style="width:60px;" data-i18n="sh2.th_detail" data-ko="상세" data-en="Detail">상세</th>
+          </tr>
+        </thead>
+        <tbody id="sh2HistoryTbody">
+          <tr><td colspan="8" class="sh2-empty" data-i18n="sh2.empty" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="sh2-notes">
+      <li data-i18n="sh2.note1" data-ko="생성일은 사용자가 시스템에 등록한 일시를 의미합니다." data-en="Created Date shows the date time that the user registered on the system.">생성일은 사용자가 시스템에 등록한 일시를 의미합니다.</li>
+      <li data-i18n="sh2.note2" data-ko="판매/매입/내부 소모 등록 시 날짜를 변경한 경우 실제 재고 변동일시와 시스템 생성일시가 다르다는 점에 주의하시기 바랍니다." data-en="Please note that if you change the date when adding sales/receiving/internal use, the actual inventory change and system create date are different.">판매/매입/내부 소모 등록 시 날짜를 변경한 경우 실제 재고 변동일시와 시스템 생성일시가 다르다는 점에 주의하시기 바랍니다.</li>
+    </ul>
+  </div>
+</div>
+<!-- ══ [FEAT-STOCK-HISTORY] 재고 변동 이력 페이지 END ══ -->
+
+<!-- ══ [FEAT-STOCK-STATUS] 재고 현황 페이지 START ══ -->
+<div id="stockStatusView">
+  <div class="ss-header-bg">
+    <div class="ss-header">
+      <h3><span data-i18n="ss.title" data-ko="재고 현황" data-en="Stock Status">재고 현황</span></h3>
+      <div class="ss-header-actions">
+        <button class="ss-action-btn" onclick="window.print()" data-i18n="ss.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="ss-body">
+    <div class="ss-filter-box">
+      <div class="ss-filter-row">
+        <span class="ss-filter-label" data-i18n="ss.filter_category" data-ko="분류" data-en="Category">분류</span>
+        <select class="ss-filter-select" id="ssCatFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+        </select>
+        <span class="ss-filter-label" style="margin-left:14px;" data-i18n="ss.filter_product" data-ko="제품" data-en="Product">제품</span>
+        <input type="text" class="ss-filter-input" id="ssProductSearch" data-i18n-ph-ko="제품 코드 / 이름 / 바코드" data-i18n-ph-en="Product Code / Name / Barcode" placeholder="제품 코드 / 이름 / 바코드">
+        <span class="ss-filter-label" style="margin-left:14px;" data-i18n="ss.filter_stock" data-ko="현 재고" data-en="Stock on Hand">현 재고</span>
+        <select class="ss-filter-select" id="ssStockFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+          <option value="1up" data-ko="1 이상" data-en="1 or more">1 이상</option>
+          <option value="1down" data-ko="1 미만" data-en="Less than 1">1 미만</option>
+          <option value="0" data-ko="0" data-en="0">0</option>
+        </select>
+        <label class="ss-chk-label" style="margin-left:14px;">
+          <input type="checkbox" id="ssLowStockOnly">
+          <span class="ss-checkmark">&#10003;</span>
+          <span data-i18n="ss.filter_low_stock" data-ko="재고 부족 제품만 보기" data-en="Only products in short supply">재고 부족 제품만 보기</span>
+        </label>
+        <button class="ss-search-btn" onclick="ssSearch()" data-i18n="ss.btn_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <div class="ss-summary-row">
+      <div class="ss-summary">
+        <span data-i18n="ss.summary_prefix" data-ko="총" data-en="All">총</span> <b id="ssTotalCount">0</b><span data-i18n="ss.summary_items" data-ko=" 건, 수량 합계 : " data-en=" Records, Total Qty: "> 건, 수량 합계 : </span><b id="ssTotalQty">0</b><span data-i18n="ss.summary_amt" data-ko=", 재고금액 합계 : " data-en=", Total Stock Value: ">, 재고금액 합계 : </span><b id="ssTotalAmt">0</b>
+      </div>
+      <div class="ss-safety-hint">
+        <span data-i18n="ss.safety_hint" data-ko="* 안전재고 수정은 안전재고 영역을 클릭하세요." data-en="* Click Safety Stock cell to edit">* 안전재고 수정은 안전재고 영역을 클릭하세요.</span>
+      </div>
+    </div>
+    <div class="ss-table-wrap">
+      <table class="ss-table">
+        <thead>
+          <tr>
+            <th style="width:100px;" data-i18n="ss.th_cat" data-ko="분류" data-en="Category">분류</th>
+            <th style="width:120px;" data-i18n="ss.th_code" data-ko="제품코드" data-en="Product Code">제품코드</th>
+            <th data-i18n="ss.th_product" data-ko="제품명" data-en="Product Name">제품명</th>
+            <th style="width:100px;" data-i18n="ss.th_safety" data-ko="안전 재고" data-en="Safety Stock">안전 재고</th>
+            <th style="width:90px;" data-i18n="ss.th_stock" data-ko="현 재고" data-en="Stock on Hand">현 재고</th>
+            <th style="width:90px;" data-i18n="ss.th_buy_price" data-ko="입고가" data-en="Supplier Price">입고가</th>
+            <th style="width:120px;" data-i18n="ss.th_stock_amt" data-ko="재고금액" data-en="Stock Value">재고금액</th>
+            <th style="width:60px;" data-i18n="ss.th_detail" data-ko="상세" data-en="Detail">상세</th>
+          </tr>
+        </thead>
+        <tbody id="ssTableTbody">
+        </tbody>
+      </table>
+    </div>
+    <div class="ss-notes-box">
+      <p data-i18n="ss.note1" data-ko="재고금액 = 입고가 × 현 재고." data-en="* Stock Value = Supplier Price * Stock on Hand."><b>재고금액 = 입고가 × 현 재고.</b></p>
+      <p data-i18n="ss.note2" data-ko="재고 부족 제품: 현재고가 안전재고 미만인 제품." data-en="* Products in short supply : Products with Stock on Hand below the Safety Stock level.">재고 부족 제품: 현재고가 안전재고 미만인 제품.</p>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-STOCK-STATUS] 재고 현황 페이지 END ══ -->
+
+<!-- ══ [FEAT-PURCHASE] 매입 페이지 START ══ -->
+<div id="purchaseView">
+  <div class="pc-header-bg">
+    <div class="pc-header">
+      <h3><span data-i18n="pc.title" data-ko="매입" data-en="Receivings">매입</span></h3>
+      <div class="pc-header-actions">
+        <button class="pc-action-btn primary" onclick="pcOpenRegModal('매입')" data-i18n="pc.btn_purchase" data-ko="매입 등록" data-en="Add Receiving">매입 등록</button>
+        <button class="pc-action-btn primary" onclick="pcOpenRegModal('반품')" data-i18n="pc.btn_return" data-ko="반품 등록" data-en="Add Return">반품 등록</button>
+        <button class="pc-action-btn" onclick="window.print()" data-i18n="pc.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="pc-body">
+    <div class="pc-filter-box">
+      <div class="pc-filter-row">
+        <span class="pc-filter-label" data-i18n="pc.filter_period" data-ko="기간" data-en="Date Range">기간</span>
+        <input type="date" class="pc-filter-date" id="pcDateFrom" value="2026-04-01">
+        <span class="pc-filter-sep">~</span>
+        <input type="date" class="pc-filter-date" id="pcDateTo" value="2026-04-08">
+        <span class="pc-filter-label" style="margin-left:14px;" data-i18n="pc.filter_supplier" data-ko="공급처" data-en="Supplier">공급처</span>
+        <select class="pc-filter-select" id="pcSupplierFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+        </select>
+        <span class="pc-filter-label" style="margin-left:14px;" data-i18n="pc.filter_type" data-ko="구분" data-en="Type">구분</span>
+        <select class="pc-filter-select" id="pcTypeFilter">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+          <option value="반품" data-ko="반품" data-en="Return">반품</option>
+          <option value="매입" data-ko="매입" data-en="Receiving">매입</option>
+        </select>
+        <button class="pc-search-btn" onclick="pcSearch()" data-i18n="pc.btn_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <div class="pc-summary">
+      <span data-i18n="pc.summary_prefix" data-ko="총" data-en="All">총</span> <b id="pcTotalCount">0</b><span data-i18n="pc.summary_count" data-ko=" 건, 총 금액 " data-en=" records, Total Amount "> 건, 총 금액 </span><b id="pcTotalAmount">0</b>
+    </div>
+    <div class="pc-table-wrap">
+      <table class="pc-table">
+        <thead>
+          <tr>
+            <th style="width:80px;" data-i18n="pc.th_type" data-ko="구분" data-en="Type">구분</th>
+            <th style="width:110px;" data-i18n="pc.th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th data-i18n="pc.th_supplier" data-ko="공급처" data-en="Supplier">공급처</th>
+            <th style="width:90px;" data-i18n="pc.th_qty" data-ko="수량" data-en="Quantity">수량</th>
+            <th style="width:100px;" data-i18n="pc.th_amount" data-ko="금액" data-en="Amount">금액</th>
+            <th style="width:200px;" data-i18n="pc.th_memo" data-ko="메모" data-en="Notes">메모</th>
+            <th style="width:80px;" data-i18n="pc.th_detail" data-ko="상세보기" data-en="Details">상세보기</th>
+          </tr>
+        </thead>
+        <tbody id="pcHistoryTbody">
+          <tr><td colspan="7" class="pc-empty" data-i18n="pc.empty" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 매입/반품 등록 모달 -->
+<div id="pcRegModal" onclick="if(event.target===this)pcCloseRegModal()">
+  <div class="pc-modal-box">
+    <div class="pc-modal-header ap-modal-header">
+      <div class="pc-modal-header-left">
+        <div class="pc-modal-header-bar"></div>
+        <span class="pc-modal-title" id="pcRegModalTitle" data-i18n="pc.modal_purchase_title" data-ko="매입 등록" data-en="Add Receivings">매입 등록</span>
+      </div>
+      <button class="pc-modal-close ap-modal-close" onclick="pcCloseRegModal()">✕</button>
+    </div>
+    <div class="pc-modal-body">
+      <div class="pc-modal-form-row">
+        <span class="pc-modal-label" data-i18n="pc.modal_supplier" data-ko="공급처" data-en="Supplier">공급처</span>
+        <select class="pc-modal-select" id="pcRegSupplier">
+          <option value="" data-ko="선택" data-en="Select">선택</option>
+        </select>
+        <span class="pc-modal-label" style="margin-left:20px;" data-i18n="pc.modal_date" data-ko="날짜" data-en="Date">날짜</span>
+        <input type="date" class="pc-modal-input" id="pcRegDate" value="2026-04-08" style="width:160px;">
+      </div>
+      <div class="pc-modal-form-row" style="margin-top:12px; align-items:flex-start;">
+        <span class="pc-modal-label" style="margin-top:8px;" data-i18n="pc.modal_memo" data-ko="메모" data-en="Notes">메모</span>
+        <textarea class="pc-modal-textarea" id="pcRegMemo" rows="4"></textarea>
+      </div>
+      <div class="pc-modal-product-bar">
+        <button class="pc-modal-add-product-btn" onclick="pcOpenProductModal()" data-i18n="pc.modal_add_product" data-ko="제품 추가" data-en="Add Product">제품 추가</button>
+        <span class="pc-modal-product-count" data-i18n="pc.modal_total" data-ko="총" data-en="Total Amount">총</span> <b id="pcRegProductCount">0</b>
+      </div>
+      <div class="pc-modal-table-wrap">
+        <table class="pc-modal-table">
+          <thead>
+            <tr>
+              <th data-i18n="pc.pth_code" data-ko="제품 코드" data-en="Product Code">제품 코드</th>
+              <th data-i18n="pc.pth_name" data-ko="상품명" data-en="Product Name">상품명</th>
+              <th style="width:100px;" data-i18n="pc.pth_price" data-ko="단가" data-en="Unit Price">단가</th>
+              <th style="width:80px;" data-i18n="pc.pth_qty" data-ko="수량" data-en="Qty">수량</th>
+              <th style="width:100px;" data-i18n="pc.pth_amount" data-ko="금액" data-en="Amount">금액</th>
+              <th style="width:60px;" data-i18n="pc.pth_delete" data-ko="삭제" data-en="Delete">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="pcRegProductTbody">
+            <tr><td colspan="6" class="pc-empty" data-i18n="pc.empty" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pc-modal-footer">
+      <button class="pc-modal-btn-cancel" onclick="pcCloseRegModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pc-modal-btn-save" onclick="pcSaveReg()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 제품 추가 모달 (매입/반품용) -->
+<div id="pcProductModal" onclick="if(event.target===this)pcCloseProductModal()">
+  <div class="pc-product-modal-box">
+    <div class="pc-modal-header ap-modal-header">
+      <div class="pc-modal-header-left">
+        <div class="pc-modal-header-bar"></div>
+        <span class="pc-modal-title" data-i18n="pc.product_modal_title" data-ko="제품 추가" data-en="Add Product">제품 추가</span>
+      </div>
+      <button class="pc-modal-close ap-modal-close" onclick="pcCloseProductModal()">✕</button>
+    </div>
+    <div class="pc-product-modal-body">
+      <div class="pc-product-filter-row">
+        <input type="text" class="pc-product-search-input" id="pcProductSearchInput" data-i18n-ph-ko="제품 코드 / 이름 / 바코드" data-i18n-ph-en="Product Code / Name / Barcode" placeholder="제품 코드 / 이름 / 바코드">
+        <button class="pc-product-search-btn" onclick="pcProductSearch()">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+        </button>
+        <select class="pc-product-cat-select" id="pcProductCatFilter" style="margin-left:auto;">
+          <option value="" data-ko="전체" data-en="All">전체</option>
+        </select>
+      </div>
+      <div class="pc-product-table-wrap">
+        <table class="pc-modal-table">
+          <thead>
+            <tr>
+              <th data-i18n="pc.apt_code" data-ko="제품 코드" data-en="Product Code">제품 코드</th>
+              <th data-i18n="pc.apt_name" data-ko="상품명" data-en="Product Name">상품명</th>
+              <th style="width:100px;" data-i18n="pc.apt_price" data-ko="단가" data-en="Unit Price">단가</th>
+              <th style="width:80px;" data-i18n="pc.apt_qty" data-ko="수량" data-en="Qty">수량</th>
+              <th style="width:100px;" data-i18n="pc.apt_amount" data-ko="금액" data-en="Amount">금액</th>
+              <th style="width:80px;" data-i18n="pc.apt_stock" data-ko="현 재고" data-en="Stock on Hand">현 재고</th>
+            </tr>
+          </thead>
+          <tbody id="pcProductTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pc-modal-footer">
+      <button class="pc-modal-btn-cancel" onclick="pcCloseProductModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="pc-modal-btn-save" onclick="pcConfirmProducts()" data-i18n="common.confirm" data-ko="확인" data-en="Confirm">확인</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-PURCHASE] 매입 페이지 END ══ -->
+
+<!-- ══ [FEAT-SUPPLIER] 매입처 관리 페이지 START ══ -->
+<div id="supplierMgmtView">
+  <div class="sp-header-bg">
+    <div class="sp-header">
+      <h3><span data-i18n="sp.title" data-ko="매입처 관리" data-en="Suppliers">매입처 관리</span></h3>
+      <div class="sp-header-actions">
+        <button class="sp-action-btn primary" onclick="spOpenRegModal()" data-i18n="sp.btn_register" data-ko="매입처 등록" data-en="Add Supplier">매입처 등록</button>
+      </div>
+    </div>
+  </div>
+  <div class="sp-body">
+    <div class="sp-toolbar">
+      <label class="sp-chk-label">
+        <input type="checkbox" id="spShowUnused" onchange="spRender()">
+        <span class="sp-checkmark">&#10003;</span>
+        <span data-i18n="sp.show_unused" data-ko="미사용 보기" data-en="Show Inactive">미사용 보기</span>
+      </label>
+    </div>
+    <div class="sp-table-wrap">
+      <table class="sp-table">
+        <thead>
+          <tr>
+            <th style="width:120px;" data-i18n="sp.th_name" data-ko="매입처" data-en="Supplier">매입처</th>
+            <th style="width:100px;" data-i18n="sp.th_manager" data-ko="담당자" data-en="Representative">담당자</th>
+            <th style="width:130px;" data-i18n="sp.th_phone" data-ko="전화 번호" data-en="Phone Number">전화 번호</th>
+            <th data-i18n="sp.th_mobile" data-ko="휴대폰 번호" data-en="Mobile Number">휴대폰 번호</th>
+            <th style="width:110px;" data-i18n="sp.th_fax" data-ko="팩스" data-en="Fax">팩스</th>
+            <th style="width:140px;" data-i18n="sp.th_email" data-ko="이메일" data-en="E-mail">이메일</th>
+            <th data-i18n="sp.th_memo" data-ko="메모" data-en="Notes">메모</th>
+            <th style="width:70px;" data-i18n="sp.th_edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="spTableTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 매입처 등록/수정 모달 -->
+<div id="spRegModal" onclick="if(event.target===this)spCloseRegModal()">
+  <div class="sp-modal-box">
+    <div class="sp-modal-header ap-modal-header">
+      <div class="sp-modal-header-left">
+        <div class="sp-modal-header-bar"></div>
+        <span class="sp-modal-title" id="spRegModalTitle" data-i18n="sp.modal_reg_title" data-ko="매입처 등록" data-en="Add Supplier">매입처 등록</span>
+      </div>
+      <button class="sp-modal-close ap-modal-close" onclick="spCloseRegModal()">✕</button>
+    </div>
+    <div class="sp-modal-body">
+      <div class="sp-modal-row">
+        <span class="sp-modal-label"><span data-i18n="sp.modal_name" data-ko="공급 업체 명" data-en="Supplier Name">공급 업체 명</span> <span class="sp-modal-required">*</span></span>
+        <input type="text" class="sp-modal-input" id="spRegName">
+      </div>
+      <div class="sp-modal-row">
+        <span class="sp-modal-label" data-i18n="sp.modal_manager" data-ko="담당자" data-en="Representative">담당자</span>
+        <input type="text" class="sp-modal-input" id="spRegManager">
+      </div>
+      <div class="sp-modal-row">
+        <span class="sp-modal-label" data-i18n="sp.modal_mobile" data-ko="휴대폰 번호" data-en="Mobile Number">휴대폰 번호</span>
+        <input type="text" class="sp-modal-input" id="spRegMobile" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Number Only (- Exclusion)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="sp-modal-row">
+        <span class="sp-modal-label" data-i18n="sp.modal_phone" data-ko="전화 번호" data-en="Phone Number">전화 번호</span>
+        <input type="text" class="sp-modal-input" id="spRegPhone" data-i18n-ph-ko="숫자만 입력해 주세요(- 제외)" data-i18n-ph-en="Number Only (- Exclusion)" placeholder="숫자만 입력해 주세요(- 제외)">
+      </div>
+      <div class="sp-modal-row">
+        <span class="sp-modal-label" data-i18n="sp.modal_fax" data-ko="팩스" data-en="Fax">팩스</span>
+        <input type="text" class="sp-modal-input" id="spRegFax">
+      </div>
+      <div class="sp-modal-row">
+        <span class="sp-modal-label" data-i18n="sp.modal_email" data-ko="이메일" data-en="E-mail">이메일</span>
+        <input type="text" class="sp-modal-input" id="spRegEmail">
+      </div>
+      <div class="sp-modal-row" style="align-items:flex-start;">
+        <span class="sp-modal-label" style="margin-top:8px;" data-i18n="sp.modal_memo" data-ko="메모" data-en="Notes">메모</span>
+        <textarea class="sp-modal-textarea" id="spRegMemo" rows="4"></textarea>
+      </div>
+      <div class="sp-modal-row" id="spStatusRow" style="display:none;">
+        <span class="sp-modal-label" data-i18n="sp.modal_status" data-ko="상태" data-en="Status">상태</span>
+        <label class="sp-toggle-wrap">
+          <div class="sp-toggle">
+            <input type="checkbox" id="spRegActive" checked>
+            <span class="sp-toggle-slider"></span>
+          </div>
+          <span class="sp-toggle-label" data-i18n="sp.modal_active" data-ko="사용" data-en="Active">사용</span>
+        </label>
+      </div>
+    </div>
+    <div class="sp-modal-footer">
+      <button class="sp-modal-btn-cancel" onclick="spCloseRegModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="sp-modal-btn-save" onclick="spSave()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-SUPPLIER] 매입처 관리 페이지 END ══ -->
 
 <!-- 분류 등록/수정 팝업 -->
 <div id="svCatModal" onclick="if(event.target===this)svCloseCatModal()">
@@ -7208,6 +7883,352 @@
 </div>
 <!-- ══ [FEAT-SMS-REJECT] 수신거부 내역 페이지 END ══ -->
 
+<!-- ══ [FEAT-EXPENSE-ITEM] 지출 항목 관리 페이지 START ══ -->
+<div id="expenseItemView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="ei.title" data-ko="지출 항목 관리" data-en="Expenditure Items">지출 항목 관리</span></h3>
+      <button class="ei-reg-btn" onclick="eiOpenRegModal()" data-i18n="ei.btn_add" data-ko="항목 등록" data-en="Add Item">항목 등록</button>
+    </div>
+  </div>
+  <div class="ei-body">
+    <div class="ei-panel">
+      <div class="ei-panel-bar">
+        <label class="ei-checkbox-label">
+          <input type="checkbox" id="eiShowUnused" onchange="eiToggleUnused(this.checked)"><span class="ei-checkmark">✓</span>
+          <span data-i18n="ei.chk_show_unused" data-ko="미사용보기" data-en="Show Inactives">미사용보기</span>
+        </label>
+      </div>
+      <table class="ei-table">
+        <thead>
+          <tr>
+            <th class="ei-drag-col"></th>
+            <th data-i18n="ei.th_name" data-ko="항목명" data-en="Item Name">항목명</th>
+            <th style="width:100px;" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="eiTbody">
+          <tr draggable="true" data-ei-id="1" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_salary" data-ko="급여" data-en="Salary">급여</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="2" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_rent" data-ko="임대료" data-en="Rent">임대료</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="3" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_maintenance" data-ko="관리비" data-en="Maintenance">관리비</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="4" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_marketing" data-ko="홍보비" data-en="Marketing">홍보비</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="5" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_meals" data-ko="식대" data-en="Meals">식대</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="6" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_materials" data-ko="재료비" data-en="Materials">재료비</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+          <tr draggable="true" data-ei-id="7" data-ei-active="true">
+            <td class="ei-drag-col"><span class="ei-drag-handle"></span></td>
+            <td class="ei-td-name" data-i18n="ei.item_etc" data-ko="기타" data-en="Others">기타</td>
+            <td><button class="ei-edit-btn" onclick="eiOpenEditModal(this)" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="ei-drag-hint" data-i18n="ei.drag_hint" data-ko="* 순서를 변경하려면 항목을 드래그 하세요." data-en="* To change the order, drag and drop the item.">* 순서를 변경하려면 항목을 드래그 하세요.</div>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-EXPENSE-ITEM] 지출 항목 관리 페이지 END ══ -->
+
+<!-- ══ [FEAT-EXPENSE-ITEM] 항목 등록 모달 ══ -->
+<div class="ei-modal-overlay" id="eiRegOverlay" onclick="eiCloseRegModal()"></div>
+<div class="ei-modal-wrap" id="eiRegModal">
+  <div class="ei-modal-box">
+    <div class="ei-modal-header ap-modal-header">
+      <div class="ei-modal-header-left">
+        <div class="ei-modal-bar"></div>
+        <span class="ei-modal-title ap-modal-title" data-i18n="ei.reg_title" data-ko="항목 등록" data-en="Add Item">항목 등록</span>
+      </div>
+      <button class="ei-modal-close ap-modal-close" onclick="eiCloseRegModal()">✕</button>
+    </div>
+    <div class="ei-modal-body">
+      <div class="ei-modal-row">
+        <label class="ei-modal-label"><span data-i18n="ei.item_name_label" data-ko="항목명" data-en="Item Name">항목명</span> <span class="ei-required">*</span></label>
+        <input class="ei-modal-input" id="eiRegNameInput" type="text" placeholder="항목명을 입력하세요" data-i18n-ph-ko="항목명을 입력하세요" data-i18n-ph-en="Enter item name" maxlength="30">
+      </div>
+    </div>
+    <div class="ei-modal-footer">
+      <button class="ei-btn-cancel" onclick="eiCloseRegModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="ei-btn-save" onclick="eiSaveReg()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ [FEAT-EXPENSE-ITEM] 항목 수정 모달 ══ -->
+<div class="ei-modal-overlay" id="eiEditOverlay" onclick="eiCloseEditModal()"></div>
+<div class="ei-modal-wrap" id="eiEditModal">
+  <div class="ei-modal-box">
+    <div class="ei-modal-header ap-modal-header">
+      <div class="ei-modal-header-left">
+        <div class="ei-modal-bar"></div>
+        <span class="ei-modal-title ap-modal-title" data-i18n="ei.edit_title" data-ko="항목 수정" data-en="Edit Item">항목 수정</span>
+      </div>
+      <button class="ei-modal-close ap-modal-close" onclick="eiCloseEditModal()">✕</button>
+    </div>
+    <div class="ei-modal-body">
+      <div class="ei-modal-row">
+        <label class="ei-modal-label"><span data-i18n="ei.item_name_label" data-ko="항목명" data-en="Item Name">항목명</span> <span class="ei-required">*</span></label>
+        <input class="ei-modal-input" id="eiEditNameInput" type="text" placeholder="항목명을 입력하세요" data-i18n-ph-ko="항목명을 입력하세요" data-i18n-ph-en="Enter item name" maxlength="30">
+      </div>
+      <div class="ei-modal-row" style="margin-top:16px;">
+        <label class="ei-modal-label" data-i18n="common.status_label" data-ko="상태" data-en="Status">상태</label>
+        <div class="ei-toggle-wrap">
+          <label class="ei-toggle">
+            <input type="checkbox" id="eiEditStatusToggle" checked onchange="eiUpdateStatusLabel()">
+            <span class="ei-toggle-slider"></span>
+          </label>
+          <span class="ei-toggle-label" id="eiEditStatusLabel" data-i18n="common.active" data-ko="사용" data-en="Active">사용</span>
+        </div>
+      </div>
+    </div>
+    <div class="ei-modal-footer">
+      <button class="ei-btn-cancel" onclick="eiCloseEditModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="ei-btn-delete" id="eiDeleteBtn" onclick="eiDeleteItem()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="ei-btn-save" onclick="eiSaveEdit()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-EXPENSE-ITEM] END ══ -->
+
+<!-- ══ [FEAT-EXPENSE-SUMMARY] 지출 내역 요약 페이지 START ══ -->
+<div id="expenseSummaryView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="es.title" data-ko="지출 내역 요약" data-en="Expenditure Summary">지출 내역 요약</span></h3>
+    </div>
+  </div>
+  <div class="es-body">
+    <!-- 필터 영역 -->
+    <div class="es-filter-box">
+      <div class="es-filter-row">
+        <label class="es-radio-label">
+          <input type="radio" name="esMode" value="monthly" checked onchange="esToggleMode()">
+          <span data-i18n="es.monthly" data-ko="월별" data-en="Month">월별</span>
+        </label>
+        <label class="es-radio-label">
+          <input type="radio" name="esMode" value="range" onchange="esToggleMode()">
+          <span data-i18n="es.range" data-ko="기간" data-en="Date Range">기간</span>
+        </label>
+        <div class="es-date-group" id="esMonthlyGroup">
+          <input type="month" class="es-date-input" id="esMonth" value="2026-04">
+        </div>
+        <div class="es-date-group" id="esRangeGroup" style="display:none;">
+          <input type="date" class="es-date-input" id="esDateFrom" value="2026-04-01">
+          <span class="es-date-sep">~</span>
+          <input type="date" class="es-date-input" id="esDateTo" value="2026-04-08">
+        </div>
+        <button class="es-search-btn" onclick="esSearch()" data-i18n="common.search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <!-- 테이블 영역 -->
+    <div class="es-table-wrap">
+      <table class="es-table">
+        <thead>
+          <tr>
+            <th data-i18n="es.th_item" data-ko="항목" data-en="Items">항목</th>
+            <th data-i18n="es.th_count" data-ko="건 수" data-en="Number of Records">건 수</th>
+            <th data-i18n="es.th_amount" data-ko="금액" data-en="Amount">금액</th>
+          </tr>
+        </thead>
+        <tbody id="esTbody">
+          <tr class="es-empty-row">
+            <td colspan="3" class="es-empty" data-i18n="es.no_data" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-EXPENSE-SUMMARY] 지출 내역 요약 페이지 END ══ -->
+
+<!-- ══ [FEAT-EXPENSE-HISTORY] 지출 내역 페이지 START ══ -->
+<div id="expenseHistoryView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="eh.title" data-ko="지출 내역" data-en="Expenditure History">지출 내역</span></h3>
+      <div class="eh-header-actions">
+        <button class="eh-action-btn primary" onclick="ehOpenAddModal()" data-i18n="eh.btn_add" data-ko="지출 추가" data-en="Add Expenditure">지출 추가</button>
+        <button class="eh-action-btn" onclick="ehPrint()" data-i18n="eh.btn_print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+  <div class="eh-body">
+    <!-- 필터 영역 -->
+    <div class="eh-filter-box">
+      <div class="eh-filter-row">
+        <label class="eh-radio-label">
+          <input type="radio" name="ehMode" value="daily" onchange="ehToggleMode()">
+          <span data-i18n="eh.daily" data-ko="일별" data-en="Date">일별</span>
+        </label>
+        <label class="eh-radio-label">
+          <input type="radio" name="ehMode" value="monthly" checked onchange="ehToggleMode()">
+          <span data-i18n="eh.monthly" data-ko="월별" data-en="Month">월별</span>
+        </label>
+        <label class="eh-radio-label">
+          <input type="radio" name="ehMode" value="range" onchange="ehToggleMode()">
+          <span data-i18n="eh.range" data-ko="기간" data-en="Date Range">기간</span>
+        </label>
+        <div class="eh-date-group" id="ehDailyGroup" style="display:none;">
+          <input type="date" class="eh-date-input" id="ehDate">
+        </div>
+        <div class="eh-date-group" id="ehMonthlyGroup">
+          <input type="month" class="eh-date-input" id="ehMonth">
+        </div>
+        <div class="eh-date-group" id="ehRangeGroup" style="display:none;">
+          <input type="date" class="eh-date-input" id="ehDateFrom">
+          <span class="eh-date-sep">~</span>
+          <input type="date" class="eh-date-input" id="ehDateTo">
+        </div>
+        <span class="eh-filter-label" data-i18n="eh.filter_item" data-ko="항목" data-en="Item">항목</span>
+        <select class="eh-filter-select" id="ehFilterItem">
+          <option value="" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+        </select>
+        <span class="eh-filter-label" data-i18n="eh.filter_payment" data-ko="결제 방법" data-en="Payment Method">결제 방법</span>
+        <select class="eh-filter-select" id="ehFilterPayment">
+          <option value="" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="현금" data-i18n="eh.pay_cash" data-ko="현금" data-en="Cash">현금</option>
+          <option value="카드" data-i18n="eh.pay_card" data-ko="카드" data-en="Card">카드</option>
+          <option value="계좌이체" data-i18n="eh.pay_transfer" data-ko="계좌이체" data-en="Transfer">계좌이체</option>
+          <option value="지역화폐" data-i18n="eh.pay_local" data-ko="지역화폐" data-en="Local Currency">지역화폐</option>
+          <option value="네이버 페이" data-i18n="eh.pay_naver" data-ko="네이버 페이" data-en="Naver Pay">네이버 페이</option>
+          <option value="카카오 페이" data-i18n="eh.pay_kakao" data-ko="카카오 페이" data-en="Kakao Pay">카카오 페이</option>
+          <option value="상품권" data-i18n="eh.pay_voucher" data-ko="상품권" data-en="Voucher">상품권</option>
+        </select>
+        <button class="eh-search-btn" onclick="ehSearch()" data-i18n="common.search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+    <!-- 총지출 -->
+    <div class="eh-total-label">
+      <span data-i18n="eh.total_expense" data-ko="총지출" data-en="Total Expenditure">총지출</span>: <b id="ehTotalAmount">0</b>
+    </div>
+    <!-- 테이블 -->
+    <div class="eh-table-wrap">
+      <table class="eh-table">
+        <thead>
+          <tr>
+            <th style="width:140px;" data-i18n="eh.th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th data-i18n="eh.th_item" data-ko="항목" data-en="Items">항목</th>
+            <th data-i18n="eh.th_payment" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+            <th style="width:140px;" data-i18n="eh.th_amount" data-ko="금액" data-en="Amount">금액</th>
+            <th data-i18n="eh.th_memo" data-ko="메모" data-en="Notes">메모</th>
+            <th style="width:70px;" data-i18n="common.edit" data-ko="수정" data-en="Edit">수정</th>
+          </tr>
+        </thead>
+        <tbody id="ehTbody">
+          <tr class="eh-empty-row">
+            <td colspan="6" class="eh-empty" data-i18n="eh.no_data" data-ko="내역이 없습니다" data-en="No data for table">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-EXPENSE-HISTORY] 지출 내역 페이지 END ══ -->
+
+<!-- ══ [FEAT-EXPENSE-HISTORY] 지출 추가 모달 ══ -->
+<div class="eh-add-overlay" id="ehAddOverlay" onclick="ehCloseAddModal()"></div>
+<div class="eh-add-wrap" id="ehAddModal">
+  <div class="eh-add-box">
+    <div class="eh-add-header ap-modal-header">
+      <div class="eh-add-header-left">
+        <div class="eh-add-bar"></div>
+        <span class="eh-add-title ap-modal-title" id="ehAddModalTitle" data-i18n="eh.add_title" data-ko="지출 추가" data-en="Add Expenditure">지출 추가</span>
+      </div>
+      <button class="eh-add-close ap-modal-close" onclick="ehCloseAddModal()">✕</button>
+    </div>
+    <div class="eh-add-body">
+      <table class="eh-add-table">
+        <thead>
+          <tr>
+            <th style="width:180px;" data-i18n="eh.th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th style="width:180px;" data-i18n="eh.th_item" data-ko="항목" data-en="Items">항목</th>
+            <th style="width:180px;" data-i18n="eh.th_payment" data-ko="결제 방법" data-en="Payment Method">결제 방법</th>
+            <th style="width:140px;" data-i18n="eh.th_amount" data-ko="금액" data-en="Amount">금액</th>
+            <th data-i18n="eh.th_memo" data-ko="메모" data-en="Notes">메모</th>
+          </tr>
+        </thead>
+        <tbody id="ehAddTbody"></tbody>
+      </table>
+    </div>
+    <div class="eh-add-footer">
+      <button class="eh-btn-cancel" onclick="ehCloseAddModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="eh-btn-save" onclick="ehSaveAdd()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ [FEAT-EXPENSE-HISTORY] 지출 수정 모달 ══ -->
+<div class="eh-add-overlay" id="ehEditOverlay" onclick="ehCloseEditModal()"></div>
+<div class="eh-add-wrap" id="ehEditModal">
+  <div class="eh-edit-box">
+    <div class="eh-add-header ap-modal-header">
+      <div class="eh-add-header-left">
+        <div class="eh-add-bar"></div>
+        <span class="eh-add-title ap-modal-title" data-i18n="eh.edit_title" data-ko="지출 수정" data-en="Edit Expenditure">지출 수정</span>
+      </div>
+      <button class="eh-add-close ap-modal-close" onclick="ehCloseEditModal()">✕</button>
+    </div>
+    <div class="eh-edit-body">
+      <div class="eh-edit-row">
+        <label class="eh-edit-label" data-i18n="eh.th_date" data-ko="날짜" data-en="Date">날짜</label>
+        <input type="date" class="eh-edit-input" id="ehEditDate">
+      </div>
+      <div class="eh-edit-row">
+        <label class="eh-edit-label"><span data-i18n="eh.th_item" data-ko="항목" data-en="Items">항목</span> <span class="ei-required">*</span></label>
+        <select class="eh-edit-select" id="ehEditItem"></select>
+      </div>
+      <div class="eh-edit-row">
+        <label class="eh-edit-label"><span data-i18n="eh.th_payment" data-ko="결제 방법" data-en="Payment Method">결제 방법</span> <span class="ei-required">*</span></label>
+        <select class="eh-edit-select" id="ehEditPayment">
+          <option value="" data-i18n="common.select" data-ko="선택" data-en="Select">선택</option>
+          <option value="현금">현금</option>
+          <option value="카드">카드</option>
+          <option value="계좌이체">계좌이체</option>
+          <option value="지역화폐">지역화폐</option>
+          <option value="네이버 페이">네이버 페이</option>
+          <option value="카카오 페이">카카오 페이</option>
+          <option value="상품권">상품권</option>
+        </select>
+      </div>
+      <div class="eh-edit-row">
+        <label class="eh-edit-label" data-i18n="eh.th_amount" data-ko="금액" data-en="Amount">금액</label>
+        <input type="text" class="eh-edit-input" id="ehEditAmount" inputmode="numeric">
+      </div>
+      <div class="eh-edit-row">
+        <label class="eh-edit-label" data-i18n="eh.th_memo" data-ko="메모" data-en="Notes">메모</label>
+        <input type="text" class="eh-edit-input" id="ehEditMemo" maxlength="100">
+      </div>
+    </div>
+    <div class="eh-add-footer">
+      <button class="eh-btn-cancel" onclick="ehCloseEditModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
+      <button class="eh-btn-delete" onclick="ehDeleteRow()" data-i18n="common.delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="eh-btn-save" onclick="ehSaveEdit()" data-i18n="common.save" data-ko="저장" data-en="Save">저장</button>
+    </div>
+  </div>
+</div>
+<!-- ══ [FEAT-EXPENSE-HISTORY] END ══ -->
+
 <!-- ══ 문자발송내역 전용 문자 발송 모달 (고객관리와 동일 구조, 전환문자→수신번호) ══ -->
 <div class="cm-sms-overlay" id="mhSmsOverlay" onclick="closeMhSmsSendModal()"></div>
 <div class="cm-sms-modal" id="mhSmsModal">
@@ -9871,7 +10892,7 @@
 <div class="tc-modal-overlay ap-modal-overlay" id="tcClockInModal">
   <div class="tc-modal ap-modal">
     <div class="tc-modal-header ap-modal-header">
-      <span class="tc-modal-title ap-modal-title" data-i18n="tc.clockInTitle" data-ko="출근 등록" data-en="Clock In/Out">출근 등록</span>
+      <span class="tc-modal-title ap-modal-title" data-i18n="tc.clockInTitle" data-ko="출근 등록" data-en="Clock In">출근 등록</span>
       <button class="tc-modal-close ap-modal-close" onclick="tcCloseClockInModal()">✕</button>
     </div>
     <div class="tc-modal-body ap-modal-body">
