@@ -12652,7 +12652,7 @@ function sgRenderChart() {
         barHtml + goalMarker +
         '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
-      '<div class="sg-bar-value" style="' + (isOver ? 'color:#FF8A3D;font-weight:700;' : '') + '">' + pct + '%</div>' +
+      '<div class="sg-bar-value" style="' + (isOver ? 'color:#6161FF;font-weight:700;' : '') + '">' + pct + '%</div>' +
     '</div>';
   });
   chart.innerHTML = html;

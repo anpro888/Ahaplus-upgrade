@@ -7444,7 +7444,7 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .sg-bar-label { width:60px; font-size:12px; font-weight:500; color:#212121; text-align:right; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sg-bar-track { flex:1; height:28px; background:#F0F0F0; border-radius:6px; position:relative; overflow:hidden; display:flex; }
 .sg-bar-fill { height:100%; background:linear-gradient(90deg, #7C9EF7 0%, #A8C4F9 100%); transition:width 0.5s ease; min-width:0; flex-shrink:0; }
-.sg-bar-fill-over { background:linear-gradient(90deg, #FF9F43 0%, #FECA57 100%); }
+.sg-bar-fill-over { background:linear-gradient(90deg, #6161FF 0%, #4F4FE0 100%); }
 .sg-bar-goal-marker { position:absolute; top:0; bottom:0; width:2px; background:#fff; z-index:2; opacity:0.85; box-shadow:0 0 3px rgba(0,0,0,0.15); }
 .sg-bar-info { position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:#616161; white-space:nowrap; }
 .sg-bar-fill .sg-bar-info-inner { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:11px; font-weight:600; color:#fff; white-space:nowrap; }
