@@ -12378,11 +12378,20 @@ function tcDoAbsent() {
 // ══ [FEAT-STAFF-GOAL] 직원별 목표 관리 ══
 // ══════════════════════════════════════════════════════════════
 
-var sgGoalData = [
-  { name: '원장님', service: 1200000, product: 300000, prepaid: 800000, ticket: 400000, total: 2700000, aService: 850000, aProduct: 120000, aPrepaid: 500000, aTicket: 200000, aTotal: 1670000 },
-  { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 950000, aProduct: 250000, aPrepaid: 580000, aTicket: 350000, aTotal: 2130000 },
-  { name: '지훈', service: 600000, product: 150000, prepaid: 0, ticket: 0, total: 750000, aService: 430000, aProduct: 60000, aPrepaid: 0, aTicket: 0, aTotal: 490000 }
-];
+// 월별 목표 데이터
+var sgGoalDataByMonth = {
+  '2026-03': [
+    { name: '원장님', service: 1200000, product: 300000, prepaid: 800000, ticket: 400000, total: 2700000, aService: 850000, aProduct: 120000, aPrepaid: 500000, aTicket: 200000, aTotal: 1670000 },
+    { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 620000, aProduct: 85000, aPrepaid: 350000, aTicket: 150000, aTotal: 1205000 },
+    { name: '지훈', service: 600000, product: 150000, prepaid: 0, ticket: 0, total: 750000, aService: 430000, aProduct: 60000, aPrepaid: 0, aTicket: 0, aTotal: 490000 }
+  ],
+  '2026-04': [
+    { name: '원장님', service: 1200000, product: 300000, prepaid: 800000, ticket: 400000, total: 2700000, aService: 850000, aProduct: 120000, aPrepaid: 500000, aTicket: 200000, aTotal: 1670000 },
+    { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 950000, aProduct: 250000, aPrepaid: 580000, aTicket: 350000, aTotal: 2130000 },
+    { name: '지훈', service: 600000, product: 150000, prepaid: 0, ticket: 0, total: 750000, aService: 430000, aProduct: 60000, aPrepaid: 0, aTicket: 0, aTotal: 490000 }
+  ]
+};
+var sgGoalData = sgGoalDataByMonth['2026-04'];
 var sgDeleteRow = null;
 /* sgChartInstance 제거 — pure CSS bar chart 사용 */
 
@@ -12667,7 +12676,16 @@ function sgRenderChart() {
 }
 
 // ── 검색 ──
-function sgSearch() { sgRenderTable(); sgRenderChart(); }
+function sgSearch() {
+  // 월별 선택 시 해당 월 데이터로 전환
+  var periodType = document.querySelector('input[name="sgPeriodType"]:checked');
+  if (periodType && periodType.value === 'monthly') {
+    var month = document.getElementById('sgMonth').value; // "2026-04"
+    sgGoalData = sgGoalDataByMonth[month] || [];
+  }
+  sgRenderTable();
+  sgRenderChart();
+}
 function sgSearchSetting() { sgUpdatePeriodLabel(); }
 
 // ── 기간 라벨 ──
