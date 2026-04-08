@@ -12685,7 +12685,7 @@ function sgRenderChart() {
       '<div class="sg-bar-label">' + d.name + '</div>' +
       '<div class="sg-bar-track">' +
         barHtml + goalMarker +
-        '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
+        '<div class="sg-bar-info"' + (isOver ? ' style="color:#fff;"' : '') + '>' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
       '<div class="sg-bar-value" style="' + (isOver ? 'color:#6161FF;font-weight:700;' : '') + '">' + pct + '%</div>' +
     '</div>';
