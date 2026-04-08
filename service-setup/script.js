@@ -12630,13 +12630,19 @@ function sgRenderChart() {
   var overLegend = document.getElementById('sgOverLegend');
   if (overLegend) overLegend.style.display = hasOver ? '' : 'none';
 
-  // 전체 스케일: 모든 직원의 목표와 달성 중 최대값 기준
+  // 전체 스케일: 초과 달성자가 있으면 달성값 포함, 없으면 목표값 기준
   var maxVal = 0;
-  sgGoalData.forEach(function(d) {
-    var achieved = d.aTotal || 0;
-    if (d.total > maxVal) maxVal = d.total;
-    if (achieved > maxVal) maxVal = achieved;
-  });
+  if (hasOver) {
+    sgGoalData.forEach(function(d) {
+      var achieved = d.aTotal || 0;
+      if (d.total > maxVal) maxVal = d.total;
+      if (achieved > maxVal) maxVal = achieved;
+    });
+  } else {
+    sgGoalData.forEach(function(d) {
+      if (d.total > maxVal) maxVal = d.total;
+    });
+  }
   if (maxVal === 0) maxVal = 1;
 
   var html = '';
