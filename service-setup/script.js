@@ -11711,9 +11711,9 @@ function tcRenderTable(dateFilter) {
   });
 
   if (tcFilteredData.length === 0) {
-    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="9" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>';
+    var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+    tbody.innerHTML = '<tr class="tc-empty-row"><td colspan="9" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data for table">' + (isEn ? 'No data for table' : '내역이 없습니다') + '</td></tr>';
     tcRenderPagination(0);
-    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
     return;
   }
 
@@ -11728,7 +11728,6 @@ function tcRenderTable(dateFilter) {
   });
   tbody.innerHTML = html;
   tcRenderPagination(tcFilteredData.length);
-  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
 }
 
 function tcRenderPagination(total) {
