@@ -12380,7 +12380,7 @@ function tcDoAbsent() {
 
 var sgGoalData = [
   { name: '원장님', service: 1200000, product: 300000, prepaid: 800000, ticket: 400000, total: 2700000, aService: 850000, aProduct: 120000, aPrepaid: 500000, aTicket: 200000, aTotal: 1670000 },
-  { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 620000, aProduct: 85000, aPrepaid: 350000, aTicket: 150000, aTotal: 1205000 },
+  { name: '수진', service: 800000, product: 200000, prepaid: 500000, ticket: 300000, total: 1800000, aService: 950000, aProduct: 250000, aPrepaid: 580000, aTicket: 350000, aTotal: 2130000 },
   { name: '지훈', service: 600000, product: 150000, prepaid: 0, ticket: 0, total: 750000, aService: 430000, aProduct: 60000, aPrepaid: 0, aTicket: 0, aTotal: 490000 }
 ];
 var sgDeleteRow = null;
@@ -12621,15 +12621,19 @@ function sgRenderChart() {
   sgGoalData.forEach(function(d) {
     var achieved = d.aTotal || 0;
     var pct = d.total > 0 ? (achieved / d.total * 100).toFixed(1) : 0;
-    var fillWidth = d.total > 0 ? (achieved / d.total) * 100 : 0;
+    var fillWidth = d.total > 0 ? Math.min((achieved / d.total) * 100, 100) : 0;
+    var isOver = parseFloat(pct) > 100;
+    var barStyle = isOver
+      ? 'width:100%; background:linear-gradient(90deg, #6161FF 0%, #8B8BFF 100%);'
+      : 'width:' + fillWidth + '%;';
 
     html += '<div class="sg-bar-row">' +
       '<div class="sg-bar-label">' + d.name + '</div>' +
       '<div class="sg-bar-track" style="position:relative;">' +
-        '<div class="sg-bar-fill" style="width:' + fillWidth + '%;"></div>' +
+        '<div class="sg-bar-fill" style="' + barStyle + '"></div>' +
         '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
-      '<div class="sg-bar-value">' + pct + '%</div>' +
+      '<div class="sg-bar-value" style="' + (isOver ? 'color:#6161FF;font-weight:700;' : '') + '">' + pct + '%</div>' +
     '</div>';
   });
   chart.innerHTML = html;
