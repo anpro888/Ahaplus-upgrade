@@ -12645,6 +12645,17 @@ function sgRenderChart() {
   }
   if (maxVal === 0) maxVal = 1;
 
+  // 최대 달성률 계산 (초과 달성 시 스케일 확장용)
+  var maxPct = 0;
+  sgGoalData.forEach(function(d) {
+    var achieved = d.aTotal || 0;
+    var p = d.total > 0 ? (achieved / d.total * 100) : 0;
+    if (p > maxPct) maxPct = p;
+  });
+  if (maxPct === 0) maxPct = 100;
+  // 초과 없으면 100%가 전체 바 너비
+  var scale = hasOver ? maxPct : 100;
+
   var html = '';
   sgGoalData.forEach(function(d) {
     var achieved = d.aTotal || 0;
@@ -12652,22 +12663,23 @@ function sgRenderChart() {
     var pctNum = parseFloat(pct);
     var isOver = pctNum > 100;
 
-    // 전체 스케일 기준으로 바 너비 계산
-    var goalWidth = (d.total / maxVal) * 100;     // 목표가 전체 트랙에서 차지하는 %
-    var achieveWidth = (achieved / maxVal) * 100;  // 달성이 전체 트랙에서 차지하는 %
+    // 달성률 기준으로 바 너비 계산
+    var fillWidth = (pctNum / scale) * 100;
+    var goalMarkerPos = (100 / scale) * 100; // 100% 위치
 
     var barHtml;
     if (isOver) {
-      // 목표까지 파란색 + 초과분 주황색 그라데이션
+      var baseWidth = (goalMarkerPos / 100) * fillWidth; // 100%까지 비율
+      var overWidth = fillWidth - baseWidth;
       barHtml =
-        '<div class="sg-bar-fill" style="width:' + goalWidth + '%;border-radius:6px 0 0 6px;"></div>' +
-        '<div class="sg-bar-fill sg-bar-fill-over" style="width:' + (achieveWidth - goalWidth) + '%;border-radius:0 6px 6px 0;"></div>';
+        '<div class="sg-bar-fill" style="width:' + baseWidth + '%;border-radius:6px 0 0 6px;"></div>' +
+        '<div class="sg-bar-fill sg-bar-fill-over" style="width:' + overWidth + '%;border-radius:0 6px 6px 0;"></div>';
     } else {
-      barHtml = '<div class="sg-bar-fill" style="width:' + achieveWidth + '%;"></div>';
+      barHtml = '<div class="sg-bar-fill" style="width:' + fillWidth + '%;"></div>';
     }
 
     // 목표 위치에 마커 라인 — 초과 달성자가 있을 때만 표시
-    var goalMarker = hasOver ? '<div class="sg-bar-goal-marker" style="left:' + goalWidth + '%;"></div>' : '';
+    var goalMarker = hasOver ? '<div class="sg-bar-goal-marker" style="left:' + goalMarkerPos + '%;"></div>' : '';
 
     html += '<div class="sg-bar-row">' +
       '<div class="sg-bar-label">' + d.name + '</div>' +
