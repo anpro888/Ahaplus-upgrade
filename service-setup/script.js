@@ -12613,6 +12613,14 @@ function sgRenderChart() {
   chart.style.display = 'block';
   legend.style.display = 'flex';
 
+  // 초과 달성 직원이 있을 때만 범례 표시
+  var hasOver = sgGoalData.some(function(d) {
+    var achieved = d.aTotal || 0;
+    return d.total > 0 && (achieved / d.total * 100) > 100;
+  });
+  var overLegend = document.getElementById('sgOverLegend');
+  if (overLegend) overLegend.style.display = hasOver ? '' : 'none';
+
   // 전체 스케일: 모든 직원의 목표와 달성 중 최대값 기준
   var maxVal = 0;
   sgGoalData.forEach(function(d) {
