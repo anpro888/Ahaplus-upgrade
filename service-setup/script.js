@@ -12613,9 +12613,14 @@ function sgRenderChart() {
   chart.style.display = 'block';
   legend.style.display = 'flex';
 
-  var maxTotal = 0;
-  sgGoalData.forEach(function(d) { if (d.total > maxTotal) maxTotal = d.total; });
-  if (maxTotal === 0) maxTotal = 1;
+  // 전체 스케일: 모든 직원의 목표와 달성 중 최대값 기준
+  var maxVal = 0;
+  sgGoalData.forEach(function(d) {
+    var achieved = d.aTotal || 0;
+    if (d.total > maxVal) maxVal = d.total;
+    if (achieved > maxVal) maxVal = achieved;
+  });
+  if (maxVal === 0) maxVal = 1;
 
   var html = '';
   sgGoalData.forEach(function(d) {
@@ -12624,23 +12629,27 @@ function sgRenderChart() {
     var pctNum = parseFloat(pct);
     var isOver = pctNum > 100;
 
-    // 100% 이하: 기본 파란색 바
-    // 100% 초과: 100%까지 파란색 + 초과분 인디고색 (2단 바)
+    // 전체 스케일 기준으로 바 너비 계산
+    var goalWidth = (d.total / maxVal) * 100;     // 목표가 전체 트랙에서 차지하는 %
+    var achieveWidth = (achieved / maxVal) * 100;  // 달성이 전체 트랙에서 차지하는 %
+
     var barHtml;
     if (isOver) {
-      // 전체 트랙을 100% 기준으로 maxPct까지 스케일
-      var baseWidth = (100 / pctNum) * 100; // 100% 부분이 차지하는 비율
-      barHtml = '<div class="sg-bar-fill" style="width:' + baseWidth + '%;border-radius:6px 0 0 6px;"></div>' +
-                '<div class="sg-bar-fill sg-bar-fill-over" style="width:' + (100 - baseWidth) + '%;border-radius:0 6px 6px 0;"></div>';
+      // 목표까지 파란색 + 초과분 주황색 그라데이션
+      barHtml =
+        '<div class="sg-bar-fill" style="width:' + goalWidth + '%;border-radius:6px 0 0 6px;"></div>' +
+        '<div class="sg-bar-fill sg-bar-fill-over" style="width:' + (achieveWidth - goalWidth) + '%;border-radius:0 6px 6px 0;"></div>';
     } else {
-      var fillWidth = d.total > 0 ? (achieved / d.total) * 100 : 0;
-      barHtml = '<div class="sg-bar-fill" style="width:' + fillWidth + '%;"></div>';
+      barHtml = '<div class="sg-bar-fill" style="width:' + achieveWidth + '%;"></div>';
     }
+
+    // 목표 위치에 마커 라인 (100% 기준선)
+    var goalMarker = '<div class="sg-bar-goal-marker" style="left:' + goalWidth + '%;"></div>';
 
     html += '<div class="sg-bar-row">' +
       '<div class="sg-bar-label">' + d.name + '</div>' +
-      '<div class="sg-bar-track" style="position:relative;display:flex;">' +
-        barHtml +
+      '<div class="sg-bar-track">' +
+        barHtml + goalMarker +
         '<div class="sg-bar-info">' + pct + '% / ' + d.total.toLocaleString() + '</div>' +
       '</div>' +
       '<div class="sg-bar-value" style="' + (isOver ? 'color:#FF8A3D;font-weight:700;' : '') + '">' + pct + '%</div>' +
