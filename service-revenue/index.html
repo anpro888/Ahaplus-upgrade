@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 서비스 매출 분석</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="svra-page">
+
+  <!-- 헤더 -->
+  <div class="svra-page-header">
+    <h2 class="svra-page-title" data-i18n="svra.title" data-ko="서비스 매출 분석" data-en="Service Revenue Analysis">서비스 매출 분석</h2>
+    <div class="svra-header-actions">
+      <button class="svra-btn svra-btn-outline" onclick="history.back()" data-i18n="common.goBack" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+      <button class="svra-btn svra-btn-primary" onclick="printPage()" data-i18n="common.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="svra-filter-panel">
+    <div class="svra-filter-row">
+      <!-- 기간 타입 -->
+      <div class="svra-filter-group">
+        <label class="svra-radio-label">
+          <input type="radio" name="periodType" value="daily" onchange="togglePeriodType()">
+          <span class="svra-radio-dot"></span>
+          <span data-i18n="svra.daily" data-ko="일별" data-en="Daily">일별</span>
+        </label>
+        <label class="svra-radio-label">
+          <input type="radio" name="periodType" value="monthly" checked onchange="togglePeriodType()">
+          <span class="svra-radio-dot"></span>
+          <span data-i18n="svra.monthly" data-ko="월별" data-en="Monthly">월별</span>
+        </label>
+        <label class="svra-radio-label">
+          <input type="radio" name="periodType" value="range" onchange="togglePeriodType()">
+          <span class="svra-radio-dot"></span>
+          <span data-i18n="svra.range" data-ko="기간" data-en="Range">기간</span>
+        </label>
+        <!-- 일별 -->
+        <input type="date" class="svra-input svra-input-date" id="dailyDate" value="2026-04-09" style="display:none;" />
+        <!-- 월별 -->
+        <input type="month" class="svra-input svra-input-date" id="monthlyDate" value="2026-04" />
+        <!-- 기간 -->
+        <div class="svra-range-inputs" id="rangeInputs" style="display:none;">
+          <input type="date" class="svra-input svra-input-date" id="rangeStart" value="2026-04-01" />
+          <span class="svra-range-sep">~</span>
+          <input type="date" class="svra-input svra-input-date" id="rangeEnd" value="2026-04-09" />
+        </div>
+      </div>
+
+      <!-- 분석 항목 -->
+      <div class="svra-filter-group">
+        <span class="svra-filter-label" data-i18n="svra.analysisItem" data-ko="분석 항목" data-en="Analysis Item">분석 항목</span>
+        <select class="svra-select" id="analysisType" onchange="onAnalysisTypeChange()">
+          <option value="staff" data-i18n="svra.staff" data-ko="직원" data-en="Staff">직원</option>
+          <option value="category" data-i18n="svra.category" data-ko="분류" data-en="Category">분류</option>
+          <option value="service" data-i18n="svra.service" data-ko="서비스" data-en="Service">서비스</option>
+          <option value="weekday" data-i18n="svra.weekday" data-ko="요일" data-en="Weekday">요일</option>
+          <option value="hour" data-i18n="svra.hour" data-ko="시간" data-en="Hour">시간</option>
+        </select>
+      </div>
+
+      <!-- 직원 -->
+      <div class="svra-filter-group">
+        <span class="svra-filter-label" data-i18n="svra.staffLabel" data-ko="직원" data-en="Staff">직원</span>
+        <select class="svra-select" id="staffSelect">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="원장님">원장님</option>
+          <option value="별별별">별별별</option>
+          <option value="staff">staff</option>
+        </select>
+      </div>
+
+      <!-- 차트 유형 (분류 선택 시에만 노출) -->
+      <div class="svra-filter-group" id="chartTypeGroup" style="display:none;">
+        <span class="svra-filter-label" data-i18n="svra.chartType" data-ko="차트" data-en="Chart">차트</span>
+        <select class="svra-select svra-select-sm" id="chartTypeSelect" onchange="doSearch()">
+          <option value="pie" data-i18n="svra.pie" data-ko="파이" data-en="Pie">파이</option>
+          <option value="bar" data-i18n="svra.bar" data-ko="막대" data-en="Bar">막대</option>
+        </select>
+      </div>
+
+      <!-- 수량/금액 -->
+      <div class="svra-filter-group">
+        <label class="svra-radio-label">
+          <input type="radio" name="valueType" value="quantity">
+          <span class="svra-radio-dot"></span>
+          <span data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</span>
+        </label>
+        <label class="svra-radio-label">
+          <input type="radio" name="valueType" value="amount" checked>
+          <span class="svra-radio-dot"></span>
+          <span data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</span>
+        </label>
+      </div>
+
+      <!-- 검색 -->
+      <div class="svra-filter-right">
+        <button class="svra-btn svra-btn-primary svra-btn-search" onclick="doSearch()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 콘텐츠: 차트 + 테이블 -->
+  <div class="svra-content">
+    <!-- 차트 -->
+    <div class="svra-chart-panel" id="chartPanel">
+      <div class="svra-chart-legend" id="chartLegend" style="display:none;"></div>
+      <div class="svra-chart-empty" id="chartEmpty">
+        <span data-i18n="svra.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+      </div>
+      <canvas id="revenueChart" style="display:none;"></canvas>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="svra-table-panel">
+      <table class="svra-table">
+        <thead>
+          <tr>
+            <th id="colHeader" data-i18n="svra.staff" data-ko="직원" data-en="Staff">직원</th>
+            <th data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</th>
+            <th data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</th>
+            <th data-i18n="svra.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr class="svra-empty-row">
+            <td colspan="4" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 안내 문구 -->
+  <div class="svra-notes">
+    <ul>
+      <li data-i18n="svra.note1" data-ko="서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다." data-en="Only service sales (including prepaid card and ticket deductions) are counted.">서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다.</li>
+      <li data-i18n="svra.note2" data-ko="금액과 수량에는 환불이 반영되어 집계됩니다." data-en="Refunds are reflected in amount and quantity calculations.">금액과 수량에는 환불이 반영되어 집계됩니다.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

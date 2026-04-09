@@ -6,6 +6,7 @@
 <title>아하플러스 — 예약</title>
 <link rel="stylesheet" href="style.css?v=3">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -220,7 +221,7 @@
   </div>
 
   <!-- 분석 (서브메뉴 없음) -->
-  <div class="gnb-item" data-i18n="gnb.report" data-ko="분석" data-en="REPORT">분석</div>
+  <div class="gnb-item" data-i18n="gnb.report" data-ko="분석" data-en="REPORT" onclick="openReportView()">분석</div>
 
   <!-- 설정 -->
   <div class="gnb-item has-menu" data-i18n="gnb.setup" data-ko="설정" data-en="SETUP">설정
@@ -11245,6 +11246,872 @@
     <div class="sg-modal-footer ap-modal-footer">
       <button class="sg-btn sg-btn-outline" onclick="sgCloseDelModal()" data-i18n="common.cancel" data-ko="취소" data-en="Cancel">취소</button>
       <button class="sg-btn sg-btn-danger" id="sgConfirmDelBtn" data-i18n="sg.delete" data-ko="삭제" data-en="Delete">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     보고서 (분석) 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="reportView">
+  <!-- 헤더 -->
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="gnb.report" data-ko="보고서" data-en="Reports">보고서</span></h3>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="rp-body">
+
+    <!-- AI 분석 보고서 카드 -->
+    <div class="rp-ai-card">
+      <div class="rp-ai-header">
+        <span class="rp-ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6161FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        </span>
+        <span class="rp-ai-title" data-i18n="rp.ai_title" data-ko="AI 분석 보고서" data-en="AI Analysis Report">AI 분석 보고서</span>
+      </div>
+      <div class="rp-ai-btns">
+        <button class="rp-ai-btn" onclick="rpSelectAiTab(this)">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8l4-4 3 3 4-4 3 3v10H3z"/><path d="M3 16h14"/></svg>
+          <span data-i18n="rp.ai_tab1" data-ko="종합 분석" data-en="Overview Analysis">종합 분석</span>
+        </button>
+        <button class="rp-ai-btn" onclick="rpSelectAiTab(this)">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+          <span data-i18n="rp.ai_tab2" data-ko="직원 성과 분석" data-en="Staff Performance">직원 성과 분석</span>
+        </button>
+        <button class="rp-ai-btn" onclick="rpSelectAiTab(this)">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l4-4 3 3 5-6"/><path d="M12 9h4v4"/></svg>
+          <span data-i18n="rp.ai_tab3" data-ko="영업 추세 분석" data-en="Sales Trend">영업 추세 분석</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 보고서 목록 4열 -->
+    <div class="rp-grid">
+
+      <!-- 영업 분석 -->
+      <div class="rp-col">
+        <div class="rp-col-title" data-i18n="rp.sales" data-ko="영업 분석" data-en="Sales Analysis">영업 분석</div>
+        <div class="rp-col-list">
+          <div class="rp-col-item" data-i18n="rp.s1" data-ko="일별 매출 분석" data-en="Daily Sales Analysis" onclick="openDailySales()">일별 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s2" data-ko="월별 매출 분석" data-en="Monthly Sales Analysis" onclick="openMonthlySales()">월별 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s3" data-ko="월별 직원별 매출 분석" data-en="Monthly Staff Sales" onclick="openStaffSales()">월별 직원별 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s4" data-ko="서비스 매출 분석" data-en="Service Sales Analysis" onclick="openServiceRevenue()">서비스 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s5" data-ko="서비스 항목별 매출" data-en="Sales by Service Item" onclick="openServiceItemSales()">서비스 항목별 매출</div>
+          <div class="rp-col-item" data-i18n="rp.s6" data-ko="월별 서비스 매출 분석" data-en="Monthly Service Sales" onclick="openMonthlyServiceSales()">월별 서비스 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s7" data-ko="영업구분별 서비스 매출" data-en="Service Sales by Category" onclick="openSalesCatService()">영업구분별 서비스 매출</div>
+          <div class="rp-col-item" data-i18n="rp.s8" data-ko="제품별 매출 분석" data-en="Product Sales Analysis" onclick="openProductRevenue()">제품별 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s9" data-ko="월별 제품 매출 분석" data-en="Monthly Product Sales">월별 제품 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s10" data-ko="할인 유형별 매출 분석" data-en="Sales by Discount Type">할인 유형별 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s11" data-ko="재방문 고객 매출 분석" data-en="Returning Client Sales">재방문 고객 매출 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s12" data-ko="회원권 재구매 분석" data-en="Membership Repurchase">회원권 재구매 분석</div>
+          <div class="rp-col-item" data-i18n="rp.s13" data-ko="손익 계산서" data-en="Profit & Loss Statement">손익 계산서</div>
+        </div>
+      </div>
+
+      <!-- 고객 분석 -->
+      <div class="rp-col">
+        <div class="rp-col-title" data-i18n="rp.clients" data-ko="고객 분석" data-en="Client Analysis">고객 분석</div>
+        <div class="rp-col-list">
+          <div class="rp-col-item" data-i18n="rp.c1" data-ko="전체 고객 현황" data-en="All Client Status">전체 고객 현황</div>
+          <div class="rp-col-item" data-i18n="rp.c2" data-ko="기간별 고객 현황" data-en="Client Status by Period">기간별 고객 현황</div>
+          <div class="rp-col-item" data-i18n="rp.c3" data-ko="고객 유형별 분석" data-en="Client Type Analysis">고객 유형별 분석</div>
+          <div class="rp-col-item" data-i18n="rp.c4" data-ko="신규고객 재방문 분석" data-en="New Client Revisit">신규고객 재방문 분석</div>
+          <div class="rp-col-item" data-i18n="rp.c5" data-ko="월별 신규 고객" data-en="Monthly New Clients">월별 신규 고객</div>
+          <div class="rp-col-item" data-i18n="rp.c6" data-ko="월별 소개 고객 분석" data-en="Monthly Referred Clients">월별 소개 고객 분석</div>
+          <div class="rp-col-item" data-i18n="rp.c7" data-ko="신규고객 방문경로 분석" data-en="New Client Visit Source">신규고객 방문경로 분석</div>
+        </div>
+      </div>
+
+      <!-- 예약 분석 -->
+      <div class="rp-col">
+        <div class="rp-col-title" data-i18n="rp.booking" data-ko="예약 분석" data-en="Booking Analysis">예약 분석</div>
+        <div class="rp-col-list">
+          <div class="rp-col-item" data-i18n="rp.b1" data-ko="예약 상세 집계" data-en="Booking Detail Summary">예약 상세 집계</div>
+          <div class="rp-col-item" data-i18n="rp.b2" data-ko="일별 예약 분석" data-en="Daily Booking Analysis">일별 예약 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b3" data-ko="월별 예약 분석" data-en="Monthly Booking Analysis">월별 예약 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b4" data-ko="예약 자원별 분석" data-en="Booking by Resource">예약 자원별 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b5" data-ko="예약 요일별 분석" data-en="Booking by Day of Week">예약 요일별 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b6" data-ko="예약 시간대별 분석" data-en="Booking by Time Slot">예약 시간대별 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b7" data-ko="예약 경로별 분석" data-en="Booking by Channel">예약 경로별 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b8" data-ko="예약률 분석" data-en="Booking Rate Analysis">예약률 분석</div>
+          <div class="rp-col-item" data-i18n="rp.b9" data-ko="자원 운용률 분석" data-en="Resource Utilization">자원 운용률 분석</div>
+        </div>
+      </div>
+
+      <!-- 회원권 및 포인트 잔액 -->
+      <div class="rp-col">
+        <div class="rp-col-title" data-i18n="rp.membership" data-ko="회원권 및 포인트 잔액" data-en="Membership & Point Balance">회원권 및 포인트 잔액</div>
+        <div class="rp-col-list">
+          <div class="rp-col-item" data-i18n="rp.m1" data-ko="고객별 정액권 보유 내역" data-en="Prepaid Card by Client">고객별 정액권 보유 내역</div>
+          <div class="rp-col-item" data-i18n="rp.m2" data-ko="정액권별 잔액 합계" data-en="Prepaid Card Balance Total">정액권별 잔액 합계</div>
+          <div class="rp-col-item" data-i18n="rp.m3" data-ko="고객별 티켓 보유 내역" data-en="Prepaid Service by Client">고객별 티켓 보유 내역</div>
+          <div class="rp-col-item" data-i18n="rp.m4" data-ko="티켓별 잔액 합계" data-en="Prepaid Service Balance Total">티켓별 잔액 합계</div>
+          <div class="rp-col-item" data-i18n="rp.m5" data-ko="고객별 포인트 잔액" data-en="Point Balance by Client">고객별 포인트 잔액</div>
+          <div class="rp-col-item" data-i18n="rp.m6" data-ko="회원권 기한 만료 잔액" data-en="Expired Membership Balance">회원권 기한 만료 잔액</div>
+          <div class="rp-col-item" data-i18n="rp.m7" data-ko="월별 기한 만료 잔액" data-en="Monthly Expired Balance">월별 기한 만료 잔액</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     일별 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpDailySalesView">
+  <!-- 헤더 -->
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.daily_title" data-ko="일별 매출 분석" data-en="Daily Sales Analysis">일별 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpDsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpDsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="rp-ds-body">
+    <!-- 필터 영역 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="rp.ds_period" data-ko="기간" data-en="Period">기간</span>
+        <input type="date" class="rp-ds-date-input" id="rpDsDateFrom">
+        <span class="rp-ds-tilde">~</span>
+        <input type="date" class="rp-ds-date-input" id="rpDsDateTo">
+
+        <span class="rp-ds-label" style="margin-left:20px;" data-i18n="rp.ds_basis" data-ko="집계 기준" data-en="Basis">집계 기준</span>
+        <span class="rp-ds-help-wrap">
+          <span class="rp-ds-help-icon" id="rpDsHelpIcon">?</span>
+          <div class="rp-ds-tooltip" id="rpDsTooltip">
+            <div data-i18n="rp.ds_tooltip1" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership sales.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</div>
+            <div data-i18n="rp.ds_tooltip2" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales basis: Service/Product/Membership sales (excl. deductions)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</div>
+            <div data-i18n="rp.ds_tooltip3" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue basis: Service/Product sales & membership deductions (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</div>
+          </div>
+        </span>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpDsBasis" value="sales" checked>
+          <span data-i18n="rp.ds_basis_sales" data-ko="판매 (회원권 판매 기준)" data-en="Sales (Membership Sales Basis)">판매 (회원권 판매 기준)</span>
+        </label>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpDsBasis" value="revenue">
+          <span data-i18n="rp.ds_basis_revenue" data-ko="매출 (회원권 차감 기준)" data-en="Revenue (Membership Deduction Basis)">매출 (회원권 차감 기준)</span>
+        </label>
+
+        <button class="rp-ds-search-btn" onclick="rpDsSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 영역 -->
+    <div class="rp-ds-chart-box">
+      <div class="rp-ds-chart-top-row">
+        <div class="rp-ds-chart-legend">
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#6161FF;"></span><span data-i18n="rp.ds_th_service" data-ko="서비스" data-en="Service">서비스</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#43A047;"></span><span data-i18n="rp.ds_th_product" data-ko="제품" data-en="Product">제품</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#F5A623;"></span><span data-i18n="rp.ds_th_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#E24B4A;"></span><span data-i18n="rp.ds_th_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-line"></span><span data-i18n="rp.ds_avg" data-ko="평균" data-en="Average">평균</span> (<span id="rpDsAvgValue">0</span>)</span>
+        </div>
+        <div class="rp-ds-display-wrap">
+          <span class="rp-ds-display-label" data-i18n="rp.ds_display" data-ko="표시 항목" data-en="Display">표시 항목</span>
+          <select class="rp-ds-display-select" id="rpDsDisplaySelect" onchange="rpDsUpdateChart()">
+            <option value="all" data-i18n="rp.ds_all" data-ko="전체" data-en="All">전체</option>
+            <option value="service" data-i18n="rp.ds_service" data-ko="서비스" data-en="Service">서비스</option>
+            <option value="product" data-i18n="rp.ds_product" data-ko="제품" data-en="Product">제품</option>
+            <option value="prepaid" data-i18n="rp.ds_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</option>
+            <option value="ticket" data-i18n="rp.ds_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</option>
+          </select>
+        </div>
+      </div>
+      <div class="rp-ds-chart-wrap">
+        <canvas id="rpDsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 테이블 영역 -->
+    <div class="rp-ds-table-box">
+      <table class="rp-ds-table">
+        <thead>
+          <tr>
+            <th data-i18n="rp.ds_th_date" data-ko="날짜" data-en="Date">날짜</th>
+            <th data-i18n="rp.ds_th_service" data-ko="서비스" data-en="Service">서비스</th>
+            <th data-i18n="rp.ds_th_product" data-ko="제품" data-en="Product">제품</th>
+            <th data-i18n="rp.ds_th_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+            <th data-i18n="rp.ds_th_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+            <th data-i18n="rp.ds_th_total" data-ko="합계" data-en="Total">합계</th>
+          </tr>
+        </thead>
+        <tbody id="rpDsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     월별 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpMonthlySalesView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.monthly_title" data-ko="월별 매출 분석" data-en="Monthly Sales Analysis">월별 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpMsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpMsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="rp.ds_period" data-ko="기간" data-en="Period">기간</span>
+        <select class="rp-ms-select" id="rpMsYearFrom"></select>
+        <span class="rp-ds-label" style="font-weight:400;" data-i18n="rp.ms_year" data-ko="년" data-en="Y">년</span>
+        <select class="rp-ms-select rp-ms-select-sm" id="rpMsMonthFrom"></select>
+        <span class="rp-ds-label" style="font-weight:400;" data-i18n="rp.ms_month" data-ko="월" data-en="M">월</span>
+        <span class="rp-ds-tilde">~</span>
+        <select class="rp-ms-select" id="rpMsYearTo"></select>
+        <span class="rp-ds-label" style="font-weight:400;" data-i18n="rp.ms_year" data-ko="년" data-en="Y">년</span>
+        <select class="rp-ms-select rp-ms-select-sm" id="rpMsMonthTo"></select>
+        <span class="rp-ds-label" style="font-weight:400;" data-i18n="rp.ms_month" data-ko="월" data-en="M">월</span>
+
+        <span class="rp-ds-label" style="margin-left:20px;" data-i18n="rp.ds_basis" data-ko="집계 기준" data-en="Basis">집계 기준</span>
+        <span class="rp-ds-help-wrap">
+          <span class="rp-ds-help-icon" id="rpMsHelpIcon">?</span>
+          <div class="rp-ds-tooltip" id="rpMsTooltip">
+            <div data-i18n="rp.ds_tooltip1" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership sales.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</div>
+            <div data-i18n="rp.ds_tooltip2" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales basis: Service/Product/Membership sales (excl. deductions)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</div>
+            <div data-i18n="rp.ds_tooltip3" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue basis: Service/Product sales & membership deductions (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</div>
+          </div>
+        </span>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpMsBasis" value="sales" checked>
+          <span data-i18n="rp.ds_basis_sales" data-ko="판매 (회원권 판매 기준)" data-en="Sales (Membership Sales Basis)">판매 (회원권 판매 기준)</span>
+        </label>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpMsBasis" value="revenue">
+          <span data-i18n="rp.ds_basis_revenue" data-ko="매출 (회원권 차감 기준)" data-en="Revenue (Membership Deduction Basis)">매출 (회원권 차감 기준)</span>
+        </label>
+
+        <button class="rp-ds-search-btn" onclick="rpMsSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 -->
+    <div class="rp-ds-chart-box">
+      <div class="rp-ds-chart-top-row">
+        <div class="rp-ds-chart-legend">
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#6161FF;"></span><span data-i18n="rp.ds_th_service" data-ko="서비스" data-en="Service">서비스</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#43A047;"></span><span data-i18n="rp.ds_th_product" data-ko="제품" data-en="Product">제품</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#F5A623;"></span><span data-i18n="rp.ds_th_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-box" style="background:#E24B4A;"></span><span data-i18n="rp.ds_th_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-line" style="border-top-style:solid; border-color:#4F4FE0;"></span><span data-i18n="rp.ms_total_line" data-ko="합계" data-en="Total">합계</span></span>
+          <span class="rp-ds-legend-item"><span class="rp-ds-legend-line"></span><span data-i18n="rp.ds_avg" data-ko="평균" data-en="Average">평균</span> (<span id="rpMsAvgValue">0</span>)</span>
+        </div>
+        <div class="rp-ds-display-wrap">
+          <span class="rp-ds-display-label" data-i18n="rp.ds_display" data-ko="표시 항목" data-en="Display">표시 항목</span>
+          <select class="rp-ds-display-select" id="rpMsDisplaySelect" onchange="rpMsUpdateChart()">
+            <option value="all" data-i18n="rp.ds_all" data-ko="전체" data-en="All">전체</option>
+            <option value="service" data-i18n="rp.ds_service" data-ko="서비스" data-en="Service">서비스</option>
+            <option value="product" data-i18n="rp.ds_product" data-ko="제품" data-en="Product">제품</option>
+            <option value="prepaid" data-i18n="rp.ds_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</option>
+            <option value="ticket" data-i18n="rp.ds_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</option>
+          </select>
+        </div>
+      </div>
+      <div class="rp-ds-chart-wrap">
+        <canvas id="rpMsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="rp-ds-table-box">
+      <table class="rp-ds-table">
+        <thead>
+          <tr>
+            <th data-i18n="rp.ms_th_month" data-ko="월" data-en="Month">월</th>
+            <th data-i18n="rp.ds_th_service" data-ko="서비스" data-en="Service">서비스</th>
+            <th data-i18n="rp.ds_th_product" data-ko="제품" data-en="Product">제품</th>
+            <th data-i18n="rp.ds_th_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+            <th data-i18n="rp.ds_th_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+            <th data-i18n="rp.ds_th_total" data-ko="합계" data-en="Total">합계</th>
+          </tr>
+        </thead>
+        <tbody id="rpMsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     월별 직원별 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpStaffSalesView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.staff_title" data-ko="월별 직원별 매출 분석" data-en="Monthly Staff Sales Analysis">월별 직원별 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpSsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpSsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <!-- 1행: 기간 모드 + 날짜 + 집계 기준 + 항목 + 직원 + 체크박스 + 검색 -->
+      <div class="rp-ds-filter-row">
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSsPeriodMode" value="month" checked onchange="rpSsTogglePeriod()"><span data-i18n="rp.ss_month" data-ko="월" data-en="Month">월</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSsPeriodMode" value="range" onchange="rpSsTogglePeriod()"><span data-i18n="rp.ss_range" data-ko="기간" data-en="Range">기간</span></label>
+
+        <span id="rpSsMonthGroup" style="display:inline-flex;align-items:center;gap:4px;">
+          <input type="month" class="rp-ds-date-input" id="rpSsSingleMonth" style="width:150px;">
+        </span>
+        <span id="rpSsRangeGroup" style="display:none;align-items:center;gap:4px;">
+          <select class="rp-ms-select" id="rpSsYearFrom"></select>
+          <span class="rp-ds-label" style="font-weight:400;">년</span>
+          <select class="rp-ms-select rp-ms-select-sm" id="rpSsMonthFrom"></select>
+          <span class="rp-ds-label" style="font-weight:400;">월</span>
+          <span class="rp-ds-tilde">~</span>
+          <select class="rp-ms-select" id="rpSsYearTo"></select>
+          <span class="rp-ds-label" style="font-weight:400;">년</span>
+          <select class="rp-ms-select rp-ms-select-sm" id="rpSsMonthTo"></select>
+          <span class="rp-ds-label" style="font-weight:400;">월</span>
+        </span>
+
+        <span class="rp-ds-label" style="margin-left:16px;" data-i18n="rp.ds_basis" data-ko="집계 기준" data-en="Basis">집계 기준</span>
+        <span class="rp-ds-help-wrap">
+          <span class="rp-ds-help-icon">?</span>
+          <div class="rp-ds-tooltip">
+            <div data-i18n="rp.ds_tooltip1" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership sales.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</div>
+            <div data-i18n="rp.ds_tooltip2" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales basis: Service/Product/Membership sales (excl. deductions)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</div>
+            <div data-i18n="rp.ds_tooltip3" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue basis: Service/Product sales & membership deductions (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</div>
+          </div>
+        </span>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSsBasis" value="sales" checked><span data-i18n="rp.ds_basis_sales" data-ko="판매 (회원권 판매 기준)" data-en="Sales (Membership Sales Basis)">판매 (회원권 판매 기준)</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSsBasis" value="revenue"><span data-i18n="rp.ds_basis_revenue" data-ko="매출 (회원권 차감 기준)" data-en="Revenue (Membership Deduction Basis)">매출 (회원권 차감 기준)</span></label>
+
+        <span class="rp-ds-label" style="margin-left:16px;" data-i18n="rp.ss_item" data-ko="항목" data-en="Item">항목</span>
+        <div class="rp-ss-multi-wrap" id="rpSsItemWrap">
+          <div class="rp-ss-multi-btn" onclick="rpSsToggleDrop('rpSsItemDrop')">
+            <span id="rpSsItemLabel" data-i18n="rp.ds_all" data-ko="전체" data-en="All">전체</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="rp-ss-multi-drop" id="rpSsItemDrop">
+            <label class="rp-ss-multi-item"><input type="checkbox" value="service" checked onchange="rpSsMultiChanged('item')"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ds_service" data-ko="서비스" data-en="Service">서비스</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="product" checked onchange="rpSsMultiChanged('item')"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ds_product" data-ko="제품" data-en="Product">제품</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="prepaid" checked onchange="rpSsMultiChanged('item')"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ds_prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="ticket" checked onchange="rpSsMultiChanged('item')"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ds_ticket" data-ko="티켓" data-en="Prepaid Service">티켓</span></label>
+          </div>
+        </div>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="rp.ss_staff" data-ko="직원" data-en="Staff">직원</span>
+        <div class="rp-ss-multi-wrap" id="rpSsStaffWrap">
+          <div class="rp-ss-multi-btn" onclick="rpSsToggleDrop('rpSsStaffDrop')">
+            <span id="rpSsStaffLabel" data-i18n="rp.ds_all" data-ko="전체" data-en="All">전체</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" style="flex-shrink:0;"><path d="M1 1l4 4 4-4" stroke="#9E9E9E" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="rp-ss-multi-drop" id="rpSsStaffDrop">
+            <label class="rp-ss-multi-item"><input type="checkbox" value="all" checked onchange="rpSsStaffAllToggle(this)"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ss_select_all" data-ko="전체 선택" data-en="Select All">전체 선택</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="owner" checked onchange="rpSsMultiChanged('staff')"><span class="rp-ss-multi-check">✓</span><span>원장님</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="star" checked onchange="rpSsMultiChanged('staff')"><span class="rp-ss-multi-check">✓</span><span>별별별</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="staff1" checked onchange="rpSsMultiChanged('staff')"><span class="rp-ss-multi-check">✓</span><span>staff</span></label>
+            <label class="rp-ss-multi-item"><input type="checkbox" value="none" checked onchange="rpSsMultiChanged('staff')"><span class="rp-ss-multi-check">✓</span><span data-i18n="rp.ss_unassigned" data-ko="선택 안함" data-en="Unassigned">선택 안함</span></label>
+          </div>
+        </div>
+
+        <label class="rp-ss-chk-label" style="margin-left:16px;"><input type="checkbox" id="rpSsChkPoint" checked><span class="rp-ss-chk-mark">✓</span><span data-i18n="rp.ss_point" data-ko="포인트 차감 포함" data-en="Include Point Deductions">포인트 차감 포함</span></label>
+        <label class="rp-ss-chk-label"><input type="checkbox" id="rpSsChkTransfer" checked><span class="rp-ss-chk-mark">✓</span><span data-i18n="rp.ss_transfer" data-ko="매출 이동 포함" data-en="Include Sales Transfer">매출 이동 포함</span></label>
+
+        <button class="rp-ds-search-btn" onclick="rpSsSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="rp-ss-table-wrap">
+      <table class="rp-ss-table" id="rpSsTable">
+        <thead id="rpSsTableHead"></thead>
+        <tbody id="rpSsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 안내문 -->
+    <div class="rp-ss-notes">
+      <p data-i18n="rp.ss_note1" data-ko="* 수량/판매/고객은 각각 (서비스, 제품, 회원권 판매수량 / 판매 수 / 고객 수)를 의미 합니다." data-en="* Qty/Sales/Clients refer to (Service, Product, Membership sales qty / sales count / client count).">* 수량/판매/고객은 각각 (서비스, 제품, 회원권 판매수량 / 판매 수 / 고객 수)를 의미 합니다.</p>
+      <p data-i18n="rp.ss_note2" data-ko="• 같은 고객이 여러 번 방문하면 고객 수 1명으로 집계됩니다." data-en="• Repeat visits by the same client count as 1 client.">• 같은 고객이 여러 번 방문하면 고객 수 1명으로 집계됩니다.</p>
+      <p data-i18n="rp.ss_note3" data-ko="• 옵션율 = (수량 - 판매건수)/판매건수 × 100 (기본 상품 외에 추가 판매한 옵션이 얼마나 되는 지를 보여주는 지표입니다.)" data-en="• Option rate = (Qty - Sales count) / Sales count × 100 (shows how many add-on options were sold beyond the base service).">• 옵션율 = (수량 - 판매건수)/판매건수 × 100 (기본 상품 외에 추가 판매한 옵션이 얼마나 되는 지를 보여주는 지표입니다.)</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     서비스 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpServiceRevenueView">
+  <!-- 헤더 -->
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.svra_title" data-ko="서비스 매출 분석" data-en="Service Revenue Analysis">서비스 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpSvraGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpSvraPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="rp-ds-body">
+    <!-- 필터 영역 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <!-- 기간 타입 -->
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpSvraPeriod" value="daily" onchange="rpSvraTogglePeriod()">
+          <span data-i18n="svra.daily" data-ko="일별" data-en="Daily">일별</span>
+        </label>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpSvraPeriod" value="monthly" checked onchange="rpSvraTogglePeriod()">
+          <span data-i18n="svra.monthly" data-ko="월별" data-en="Monthly">월별</span>
+        </label>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpSvraPeriod" value="range" onchange="rpSvraTogglePeriod()">
+          <span data-i18n="svra.range" data-ko="기간" data-en="Range">기간</span>
+        </label>
+        <input type="date" class="rp-ds-date-input" id="rpSvraDailyDate" style="display:none;" />
+        <input type="month" class="rp-ds-date-input" id="rpSvraMonthlyDate" />
+        <div class="rp-svra-range-inputs" id="rpSvraRangeInputs" style="display:none;">
+          <input type="date" class="rp-ds-date-input" id="rpSvraRangeStart" />
+          <span class="rp-ds-tilde">~</span>
+          <input type="date" class="rp-ds-date-input" id="rpSvraRangeEnd" />
+        </div>
+
+        <!-- 분석 항목 -->
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="svra.analysisItem" data-ko="분석 항목" data-en="Analysis Item">분석 항목</span>
+        <select class="rp-ds-select" id="rpSvraAnalysisType" onchange="rpSvraOnAnalysisChange()">
+          <option value="staff" data-i18n="svra.staff" data-ko="직원" data-en="Staff">직원</option>
+          <option value="category" data-i18n="svra.category" data-ko="분류" data-en="Category">분류</option>
+          <option value="service" data-i18n="svra.service" data-ko="서비스" data-en="Service">서비스</option>
+          <option value="weekday" data-i18n="svra.weekday" data-ko="요일" data-en="Weekday">요일</option>
+          <option value="hour" data-i18n="svra.hour" data-ko="시간" data-en="Hour">시간</option>
+        </select>
+
+        <!-- 직원 -->
+        <span class="rp-ds-label" data-i18n="svra.staffLabel" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpSvraStaffSelect">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="원장님">원장님</option>
+          <option value="별별별">별별별</option>
+          <option value="staff">staff</option>
+        </select>
+
+        <!-- 차트 유형 (분류 선택 시에만 노출) -->
+        <span class="rp-ds-label rp-svra-chart-type-group" id="rpSvraChartTypeLabel" style="display:none;" data-i18n="svra.chartType" data-ko="차트" data-en="Chart">차트</span>
+        <select class="rp-ds-select rp-svra-chart-type-group" id="rpSvraChartTypeSelect" style="display:none;" onchange="rpSvraSearch()">
+          <option value="pie" data-i18n="svra.pie" data-ko="파이" data-en="Pie">파이</option>
+          <option value="bar" data-i18n="svra.bar" data-ko="막대" data-en="Bar">막대</option>
+        </select>
+
+        <!-- 수량/금액 -->
+        <label class="rp-ds-radio-label" style="margin-left:12px;">
+          <input type="radio" name="rpSvraValueType" value="quantity">
+          <span data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</span>
+        </label>
+        <label class="rp-ds-radio-label">
+          <input type="radio" name="rpSvraValueType" value="amount" checked>
+          <span data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</span>
+        </label>
+
+        <!-- 검색 -->
+        <button class="rp-ds-search-btn" onclick="rpSvraSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 + 테이블 -->
+    <div class="rp-svra-content">
+      <!-- 차트 -->
+      <div class="rp-svra-chart-panel" id="rpSvraChartPanel">
+        <div class="rp-svra-chart-legend" id="rpSvraChartLegend" style="display:none;"></div>
+        <div class="rp-svra-chart-empty" id="rpSvraChartEmpty">
+          <span data-i18n="svra.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+        </div>
+        <!-- HTML 바 차트 -->
+        <div class="rp-svra-bar-chart" id="rpSvraBarChart" style="display:none;"></div>
+        <!-- 파이 차트 (Canvas) -->
+        <div class="rp-svra-pie-wrap" id="rpSvraPieWrap" style="display:none;">
+          <canvas id="rpSvraPieCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th id="rpSvraColHeader" data-i18n="svra.staff" data-ko="직원" data-en="Staff">직원</th>
+              <th data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="svra.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+            </tr>
+          </thead>
+          <tbody id="rpSvraTableBody">
+            <tr><td colspan="4" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 안내 문구 -->
+    <div class="rp-svra-notes">
+      <p data-i18n="svra.note1" data-ko="• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다." data-en="• Only service sales (including prepaid card and ticket deductions) are counted.">• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다.</p>
+      <p data-i18n="svra.note2" data-ko="• 금액과 수량에는 환불이 반영되어 집계됩니다." data-en="• Refunds are reflected in amount and quantity calculations.">• 금액과 수량에는 환불이 반영되어 집계됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     서비스 항목별 매출 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpServiceItemView">
+  <!-- 헤더 -->
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.svis_title" data-ko="서비스 항목별 매출" data-en="Sales by Service Item">서비스 항목별 매출</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpSvisGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpSvisPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="rp-ds-body">
+    <!-- 필터 영역 (1줄) -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSvisPeriod" value="daily" onchange="rpSvisTogglePeriod()"><span data-i18n="svra.daily" data-ko="일별" data-en="Daily">일별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSvisPeriod" value="monthly" checked onchange="rpSvisTogglePeriod()"><span data-i18n="svra.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSvisPeriod" value="range" onchange="rpSvisTogglePeriod()"><span data-i18n="svra.range" data-ko="기간" data-en="Range">기간</span></label>
+        <input type="date" class="rp-ds-date-input" id="rpSvisDailyDate" style="display:none;" />
+        <input type="month" class="rp-ds-date-input" id="rpSvisMonthlyDate" />
+        <div class="rp-svra-range-inputs" id="rpSvisRangeInputs" style="display:none;">
+          <input type="date" class="rp-ds-date-input" id="rpSvisRangeStart" />
+          <span class="rp-ds-tilde">~</span>
+          <input type="date" class="rp-ds-date-input" id="rpSvisRangeEnd" />
+        </div>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="svis.category" data-ko="분류" data-en="Category">분류</span>
+        <select class="rp-ds-select" id="rpSvisCategorySelect" onchange="rpSvisOnCategoryChange()">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+        </select>
+
+        <span class="rp-ds-label" data-i18n="svis.service" data-ko="서비스" data-en="Service">서비스</span>
+        <select class="rp-ds-select" id="rpSvisServiceSelect" style="min-width:140px;">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+        </select>
+
+        <label class="rp-ds-radio-label" style="margin-left:8px;"><input type="radio" name="rpSvisValueType" value="quantity"><span data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpSvisValueType" value="amount" checked><span data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</span></label>
+
+        <button class="rp-ds-search-btn" onclick="rpSvisSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 + 테이블 -->
+    <div class="rp-svra-content">
+      <!-- 차트 (수평 막대 고정) -->
+      <div class="rp-svra-chart-panel" id="rpSvisChartPanel">
+        <div class="rp-svra-chart-legend" id="rpSvisChartLegend" style="display:none;"></div>
+        <div class="rp-svra-chart-empty" id="rpSvisChartEmpty">
+          <span data-i18n="svra.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+        </div>
+        <div class="rp-svra-bar-chart" id="rpSvisBarChart" style="display:none;"></div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th id="rpSvisColHeader" data-i18n="svis.service" data-ko="직원" data-en="Staff">직원</th>
+              <th data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="svra.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+            </tr>
+          </thead>
+          <tbody id="rpSvisTableBody">
+            <tr><td colspan="4" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 안내 문구 -->
+    <div class="rp-svra-notes">
+      <p data-i18n="svis.note1" data-ko="• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다." data-en="• Only service sales (including prepaid card and ticket deductions) are counted.">• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다.</p>
+      <p data-i18n="svis.note2" data-ko="• 금액과 수량에는 환불이 반영되어 집계됩니다." data-en="• Refunds are reflected in amount and quantity calculations.">• 금액과 수량에는 환불이 반영되어 집계됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     월별 서비스 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpMonthlyServiceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.msv_title" data-ko="월별 서비스 매출 분석" data-en="Monthly Service Sales Analysis">월별 서비스 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpMsvGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpMsvPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 (1행) -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="rp.ds_period" data-ko="기간" data-en="Period">기간</span>
+        <select class="rp-ms-select" id="rpMsvYearFrom"></select>
+        <span class="rp-ds-label" style="font-weight:400;">년</span>
+        <select class="rp-ms-select rp-ms-select-sm" id="rpMsvMonthFrom"></select>
+        <span class="rp-ds-label" style="font-weight:400;">월</span>
+        <span class="rp-ds-tilde">~</span>
+        <select class="rp-ms-select" id="rpMsvYearTo"></select>
+        <span class="rp-ds-label" style="font-weight:400;">년</span>
+        <select class="rp-ms-select rp-ms-select-sm" id="rpMsvMonthTo"></select>
+        <span class="rp-ds-label" style="font-weight:400;">월</span>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="svis.category" data-ko="분류" data-en="Category">분류</span>
+        <select class="rp-ds-select" id="rpMsvCategorySelect" onchange="rpMsvOnCategoryChange()"><option value="all">전체</option></select>
+
+        <span class="rp-ds-label" data-i18n="svis.service" data-ko="서비스" data-en="Service">서비스</span>
+        <select class="rp-ds-select" id="rpMsvServiceSelect" style="min-width:120px;"><option value="all">전체</option></select>
+
+        <span class="rp-ds-label" data-i18n="svra.staffLabel" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpMsvStaffSelect"><option value="all">전체</option></select>
+
+        <div class="rp-msv-chart-toggle" id="rpMsvChartToggle">
+          <button class="rp-msv-toggle-btn" data-type="line" onclick="rpMsvSetChartType('line')" title="선"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 14L6.5 8.5L10 11L16 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="rp-msv-toggle-btn" data-type="bar" onclick="rpMsvSetChartType('bar')" title="막대"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="8" width="3.5" height="8" rx="1" fill="currentColor"/><rect x="7.25" y="4" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="12.5" y="6" width="3.5" height="10" rx="1" fill="currentColor"/></svg></button>
+          <button class="rp-msv-toggle-btn active" data-type="barline" onclick="rpMsvSetChartType('barline')" title="막대 선"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="9" width="3.5" height="7" rx="1" fill="currentColor" opacity="0.5"/><rect x="7.25" y="5" width="3.5" height="11" rx="1" fill="currentColor" opacity="0.5"/><rect x="12.5" y="7" width="3.5" height="9" rx="1" fill="currentColor" opacity="0.5"/><path d="M3.75 7L9 3.5L14.25 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+
+        <label class="rp-ds-radio-label" style="margin-left:8px;"><input type="radio" name="rpMsvValueType" value="quantity"><span data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpMsvValueType" value="amount" checked><span data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</span></label>
+
+        <button class="rp-ds-search-btn" onclick="rpMsvSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 + 테이블 -->
+    <div class="rp-svra-content">
+      <!-- 차트 -->
+      <div class="rp-svra-chart-panel" id="rpMsvChartPanel" style="min-height:320px;">
+        <div class="rp-svra-chart-legend" id="rpMsvChartLegend" style="display:none;"></div>
+        <div class="rp-svra-chart-empty" id="rpMsvChartEmpty">
+          <span data-i18n="svra.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+        </div>
+        <div style="position:relative;width:100%;height:280px;" id="rpMsvCanvasWrap" class="rp-ds-chart-wrap">
+          <canvas id="rpMsvChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="rp.ms_th_month" data-ko="월" data-en="Month">월</th>
+              <th data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="svra.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+            </tr>
+          </thead>
+          <tbody id="rpMsvTableBody">
+            <tr><td colspan="4" class="rp-svra-empty-td">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 안내 문구 -->
+    <div class="rp-svra-notes">
+      <p data-i18n="svis.note1" data-ko="• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다." data-en="• Only service sales (including prepaid card and ticket deductions) are counted.">• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다.</p>
+      <p data-i18n="svis.note2" data-ko="• 금액과 수량에는 환불이 반영되어 집계됩니다." data-en="• Refunds are reflected in amount and quantity calculations.">• 금액과 수량에는 환불이 반영되어 집계됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     영업구분별 서비스 매출 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpSalesCatServiceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.scs_title" data-ko="영업구분별 서비스 매출" data-en="Service Sales by Sales Category">영업구분별 서비스 매출</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpScsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpScsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 (1행) -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <label class="rp-ds-radio-label"><input type="radio" name="rpScsPeriod" value="daily" onchange="rpScsTogglePeriod()"><span data-i18n="svra.daily" data-ko="일별" data-en="Daily">일별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpScsPeriod" value="monthly" checked onchange="rpScsTogglePeriod()"><span data-i18n="svra.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpScsPeriod" value="range" onchange="rpScsTogglePeriod()"><span data-i18n="svra.range" data-ko="기간" data-en="Range">기간</span></label>
+        <input type="date" class="rp-ds-date-input" id="rpScsDailyDate" style="display:none;" />
+        <input type="month" class="rp-ds-date-input" id="rpScsMonthlyDate" />
+        <div class="rp-svra-range-inputs" id="rpScsRangeInputs" style="display:none;">
+          <input type="date" class="rp-ds-date-input" id="rpScsRangeStart" />
+          <span class="rp-ds-tilde">~</span>
+          <input type="date" class="rp-ds-date-input" id="rpScsRangeEnd" />
+        </div>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="svra.staffLabel" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpScsStaffSelect"><option value="all">전체</option></select>
+
+        <span class="rp-ds-label" data-i18n="svis.category" data-ko="분류" data-en="Category">분류</span>
+        <select class="rp-ds-select" id="rpScsCategorySelect" onchange="rpScsOnCategoryChange()"><option value="all">전체</option></select>
+
+        <span class="rp-ds-label" data-i18n="svis.service" data-ko="서비스" data-en="Service">서비스</span>
+        <select class="rp-ds-select" id="rpScsServiceSelect" style="min-width:120px;"><option value="all">전체</option></select>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="rp.ds_basis" data-ko="집계 기준" data-en="Basis">집계 기준</span>
+        <span class="rp-ds-help-wrap">
+          <span class="rp-ds-help-icon">?</span>
+          <div class="rp-ds-tooltip">
+            <div data-i18n="rp.ds_tooltip1" data-ko="회원권(정액권, 티켓) 매출의 기준을 선택합니다." data-en="Select the basis for membership sales.">회원권(정액권, 티켓) 매출의 기준을 선택합니다.</div>
+            <div data-i18n="rp.ds_tooltip2" data-ko="- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)" data-en="- Sales basis: Service/Product/Membership sales (excl. deductions)">- 판매 기준 : 서비스/제품/회원권 판매 (회원권 차감 제외)</div>
+            <div data-i18n="rp.ds_tooltip3" data-ko="- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)" data-en="- Revenue basis: Service/Product sales & membership deductions (excl. membership sales)">- 매출 기준 : 서비스/제품 판매 및 회원권 차감 (회원권 판매 제외)</div>
+          </div>
+        </span>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpScsBasis" value="sales" checked><span data-i18n="rp.ds_basis_sales" data-ko="판매" data-en="Sales">판매</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpScsBasis" value="revenue"><span data-i18n="rp.ds_basis_revenue" data-ko="매출" data-en="Revenue">매출</span></label>
+
+        <label class="cm-chk-label" style="margin-left:4px;font-size:13px;">
+          <input type="checkbox" id="rpScsPointInclude" checked>
+          <span class="cm-checkmark">✓</span>
+          <span data-i18n="rp.scs_point" data-ko="포인트 차감 포함" data-en="Include Point Deduction">포인트 차감 포함</span>
+        </label>
+
+        <button class="rp-ds-search-btn" onclick="rpScsSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="rp-ds-table-box">
+      <table class="rp-ds-table" id="rpScsTable">
+        <thead id="rpScsTableHead">
+          <tr>
+            <th data-i18n="svra.staff" data-ko="직원" data-en="Staff">직원</th>
+            <th data-ko="선택 안함" data-en="None">선택 안함</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th data-i18n="common.total" data-ko="합계" data-en="Total">합계</th>
+          </tr>
+        </thead>
+        <tbody id="rpScsTableBody">
+          <tr><td colspan="6" style="padding:32px 12px;color:#9E9E9E;font-size:13px;" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 안내 문구 -->
+    <div class="rp-svra-notes" style="margin-top:12px;">
+      <p data-i18n="svis.note1" data-ko="• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다." data-en="• Only service sales (including prepaid card and ticket deductions) are counted.">• 서비스판매(정액권 및 티켓 차감 포함)만 집계됩니다.</p>
+      <p data-i18n="rp.scs_note2" data-ko="• 금액과 수량에는 모두 환불이 반영되어 집계됩니다." data-en="• Refunds are reflected in both amount and quantity calculations.">• 금액과 수량에는 모두 환불이 반영되어 집계됩니다.</p>
+      <p data-i18n="rp.scs_note3" data-ko="• 푸른색의 숫자는 수량을 나타냅니다." data-en="• Blue numbers indicate quantity.">• 푸른색의 숫자는 수량을 나타냅니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     제품별 매출 분석 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpProductRevenueView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="rp.prd_title" data-ko="제품별 매출 분석" data-en="Product Sales Analysis">제품별 매출 분석</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpPrdGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpPrdPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 (1행) -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <label class="rp-ds-radio-label"><input type="radio" name="rpPrdPeriod" value="daily" onchange="rpPrdTogglePeriod()"><span data-i18n="svra.daily" data-ko="일별" data-en="Daily">일별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpPrdPeriod" value="monthly" checked onchange="rpPrdTogglePeriod()"><span data-i18n="svra.monthly" data-ko="월별" data-en="Monthly">월별</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpPrdPeriod" value="range" onchange="rpPrdTogglePeriod()"><span data-i18n="svra.range" data-ko="기간" data-en="Range">기간</span></label>
+        <input type="date" class="rp-ds-date-input" id="rpPrdDailyDate" style="display:none;" />
+        <input type="month" class="rp-ds-date-input" id="rpPrdMonthlyDate" />
+        <div class="rp-svra-range-inputs" id="rpPrdRangeInputs" style="display:none;">
+          <input type="date" class="rp-ds-date-input" id="rpPrdRangeStart" />
+          <span class="rp-ds-tilde">~</span>
+          <input type="date" class="rp-ds-date-input" id="rpPrdRangeEnd" />
+        </div>
+
+        <span class="rp-ds-label" style="margin-left:12px;" data-i18n="rp.prd_analysisItem" data-ko="분석 항목" data-en="Analysis Item">분석 항목</span>
+        <select class="rp-ds-select" id="rpPrdAnalysisType" onchange="rpPrdOnAnalysisChange()">
+          <option value="product" data-ko="제품" data-en="Product">제품</option>
+          <option value="staff" data-ko="직원" data-en="Staff">직원</option>
+        </select>
+
+        <span class="rp-ds-label" data-i18n="svra.staffLabel" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpPrdStaffSelect"><option value="all">전체</option></select>
+
+        <label class="rp-ds-radio-label" style="margin-left:8px;"><input type="radio" name="rpPrdValueType" value="quantity"><span data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="rpPrdValueType" value="amount" checked><span data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</span></label>
+
+        <button class="rp-ds-search-btn" onclick="rpPrdSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 + 테이블 -->
+    <div class="rp-svra-content">
+      <div class="rp-svra-chart-panel" id="rpPrdChartPanel">
+        <div class="rp-svra-chart-legend" id="rpPrdChartLegend" style="display:none;"></div>
+        <div class="rp-svra-chart-empty" id="rpPrdChartEmpty">
+          <span data-i18n="svra.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+        </div>
+        <div class="rp-svra-bar-chart" id="rpPrdBarChart" style="display:none;"></div>
+      </div>
+
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th id="rpPrdColHeader" data-ko="제품" data-en="Product">제품</th>
+              <th data-i18n="svra.quantity" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="svra.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="svra.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+            </tr>
+          </thead>
+          <tbody id="rpPrdTableBody">
+            <tr><td colspan="4" class="rp-svra-empty-td">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rp-svra-notes">
+      <p data-i18n="rp.prd_note1" data-ko="• 제품 판매(정액권 차감 포함)만 집계됩니다." data-en="• Only product sales (including prepaid card deductions) are counted.">• 제품 판매(정액권 차감 포함)만 집계됩니다.</p>
+      <p data-i18n="rp.prd_note2" data-ko="• 금액과 수량에는 환불이 반영되어 집계됩니다." data-en="• Refunds are reflected in amount and quantity calculations.">• 금액과 수량에는 환불이 반영되어 집계됩니다.</p>
     </div>
   </div>
 </div>

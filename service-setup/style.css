@@ -8083,3 +8083,207 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .eh-edit-select { flex:1; height:36px; border:1px solid #E0E0E0; border-radius:6px; padding:0 28px 0 12px; font-size:13px; color:#212121; font-family:'Pretendard',sans-serif; outline:none; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center; -webkit-appearance:none; -moz-appearance:none; appearance:none; cursor:pointer; }
 .eh-edit-select:focus { border-color:#6161FF; }
 /* ══ [FEAT-EXPENSE-HISTORY] END ══ */
+
+/* ══════════════════════════════════════════════════════════════
+   보고서 (분석) 뷰  — prefix: rp-
+   ══════════════════════════════════════════════════════════════ */
+#reportView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; }
+#reportView.show { display:flex; }
+
+/* 본문 */
+.rp-body { flex:1; overflow-y:auto; padding:20px; min-height:0; max-width:1600px; width:100%; }
+
+/* ── AI 분석 보고서 카드 ── */
+.rp-ai-card { background:#fff; border:1px solid #E0E0E0; border-radius:8px; padding:20px 24px 20px; margin-bottom:20px; }
+.rp-ai-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.rp-ai-icon { width:36px; height:36px; border-radius:50%; background:#EEF0FF; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rp-ai-title { font-size:15px; font-weight:700; color:#212121; }
+.rp-ai-btns { display:flex; gap:8px; }
+.rp-ai-btn {
+  display:flex; align-items:center; gap:6px;
+  height:36px; padding:0 18px; border:none; background:#6161FF;
+  border-radius:6px; font-size:13px; font-weight:500; color:#fff;
+  cursor:pointer; font-family:'Pretendard',sans-serif; transition:0.15s;
+}
+.rp-ai-btn:hover { background:#4F4FE0; }
+.rp-ai-btn svg { flex-shrink:0; }
+
+/* ── 보고서 4열 그리드 ── */
+.rp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.rp-col { background:#fff; border:1px solid #E0E0E0; border-radius:8px; overflow:hidden; }
+.rp-col-title { font-size:13px; font-weight:700; color:#212121; padding:14px 16px 10px; border-bottom:1px solid #E0E0E0; }
+.rp-col-list { display:flex; flex-direction:column; }
+.rp-col-item {
+  font-size:12px; color:#212121; padding:10px 16px;
+  border-bottom:1px solid #E0E0E0; cursor:pointer;
+  transition:background 0.12s;
+}
+.rp-col-item:last-child { border-bottom:none; }
+.rp-col-item:hover { background:#EEF0FF; }
+.rp-col-item::before { content:'- '; color:#757575; }
+
+/* ── 반응형 ── */
+@media (max-width:1200px) { .rp-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px) { .rp-grid { grid-template-columns:1fr; } }
+/* ── 일별 매출 분석 뷰 ── */
+#rpDailySalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpDailySalesView.show { display:flex; }
+
+.rp-ds-header-actions { display:flex; gap:8px; align-items:center; }
+.rp-ds-action-btn { height:36px; padding:0 20px; border:1px solid #E0E0E0; background:#fff; border-radius:6px; font-size:13px; font-weight:600; color:#616161; cursor:pointer; font-family:inherit; transition:0.15s; white-space:nowrap; }
+.rp-ds-action-btn:hover { background:#F5F5F5; border-color:#BDBDBD; }
+.rp-ds-action-btn.primary { background:#6161FF; color:#fff; border-color:#6161FF; }
+.rp-ds-action-btn.primary:hover { background:#4F4FE0; }
+
+.rp-ds-body { flex:1; overflow-y:auto; padding:20px; min-height:0; max-width:1600px; width:100%; }
+
+/* 필터 */
+.rp-ds-filter-box { background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06); padding:16px 20px; margin-bottom:12px; }
+.rp-ds-filter-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.rp-ds-label { font-size:13px; font-weight:600; color:#212121; white-space:nowrap; }
+.rp-ds-date-input { height:36px; border:1px solid #E0E0E0; border-radius:6px; padding:0 10px; font-size:13px; color:#212121; font-family:inherit; outline:none; width:150px; }
+.rp-ds-date-input:focus { border-color:#6161FF; box-shadow:0 0 0 3px rgba(97,97,255,0.1); }
+.rp-ds-tilde { color:#757575; font-size:13px; }
+.rp-ds-radio-label { display:inline-flex; align-items:center; gap:4px; font-size:13px; font-weight:500; color:#212121; cursor:pointer; user-select:none; white-space:nowrap; }
+.rp-ds-radio-label input[type="radio"] { accent-color:#6161FF; width:16px; height:16px; margin:0; cursor:pointer; }
+.rp-ds-help-wrap { position:relative; display:inline-flex; align-items:center; }
+.rp-ds-help-icon { width:18px; height:18px; border-radius:50%; border:1.5px solid #BDBDBD; background:#fff; font-size:11px; font-weight:700; color:#9E9E9E; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; line-height:1; flex-shrink:0; }
+.rp-ds-help-wrap:hover .rp-ds-tooltip { display:block; }
+
+.rp-ds-search-btn { height:32px; padding:0 24px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; justify-content:center; transition:background 0.15s; margin-left:4px; }
+.rp-ds-search-btn:hover { background:#4F4FE0; }
+
+/* 툴팁 */
+.rp-ds-tooltip { display:none; position:absolute; top:calc(100% + 8px); left:0; background:#1A1A4E; color:#fff; font-size:12px; line-height:1.8; padding:12px 14px; border-radius:8px; z-index:10; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+.rp-ds-tooltip::after { content:''; position:absolute; bottom:100%; left:9px; border:6px solid transparent; border-bottom-color:#1A1A4E; }
+
+/* 차트 */
+.rp-ds-chart-box { background:#fff; border:1px solid #E0E0E0; border-radius:8px; padding:20px; margin-bottom:12px; }
+.rp-ds-chart-top-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.rp-ds-chart-legend { display:flex; justify-content:center; gap:20px; flex:1; }
+.rp-ds-display-wrap { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.rp-ds-display-label { font-size:12px; font-weight:500; color:#616161; white-space:nowrap; }
+.rp-ds-display-select { height:32px; border:1px solid #E0E0E0; border-radius:6px; padding:0 28px 0 10px; font-size:12px; color:#212121; font-family:'Pretendard',sans-serif; outline:none; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center; -webkit-appearance:none; -moz-appearance:none; appearance:none; cursor:pointer; min-width:100px; }
+.rp-ds-display-select:focus { border-color:#6161FF; }
+.rp-ds-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#212121; }
+.rp-ds-legend-box { width:20px; height:12px; border-radius:2px; flex-shrink:0; }
+.rp-ds-legend-line { width:20px; height:0; border-top:2px dashed #F5A623; flex-shrink:0; }
+.rp-ds-chart-wrap { position:relative; height:320px; }
+.rp-ds-chart-wrap canvas { width:100% !important; height:100% !important; }
+
+/* 테이블 */
+.rp-ds-table-box { border:1px solid #D0D0D0; border-radius:10px; overflow:hidden; }
+.rp-ds-table { width:100%; border-collapse:collapse; background:#fff; }
+.rp-ds-table thead th { background:#FAFAFA; font-size:11px; font-weight:600; color:#9E9E9E; padding:8px 12px; border-bottom:1px solid #E0E0E0; border-right:1px solid #F0EEE9; text-align:center; }
+.rp-ds-table thead th:last-child { border-right:none; }
+.rp-ds-table tbody td { font-size:12px; color:#212121; padding:8px 12px; border-bottom:1px solid #F0EEE9; border-right:1px solid #F0EEE9; text-align:center; }
+.rp-ds-table tbody td:last-child { border-right:none; }
+.rp-ds-table tbody tr:last-child td { font-weight:700; background:#F7F7FF; border-top:1.5px solid #D0D0D0; border-bottom:none; }
+.rp-ds-table tbody tr:last-child td:first-child { color:#6161FF; }
+.rp-ds-table tbody tr:hover:not(:last-child) { background:#FAFAFA; }
+/* ── 월별 매출 분석 뷰 ── */
+#rpMonthlySalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlySalesView.show { display:flex; }
+.rp-ms-select { height:36px; border:1px solid #E0E0E0; border-radius:6px; padding:0 28px 0 10px; font-size:13px; color:#212121; font-family:'Pretendard',sans-serif; outline:none; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center; -webkit-appearance:none; -moz-appearance:none; appearance:none; cursor:pointer; min-width:80px; }
+.rp-ms-select:focus { border-color:#6161FF; }
+.rp-ms-select-sm { min-width:60px; }
+/* ── 월별 직원별 매출 분석 뷰 ── */
+#rpStaffSalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpStaffSalesView.show { display:flex; }
+
+/* 멀티 셀렉트 드롭다운 */
+.rp-ss-multi-wrap { position:relative; display:inline-block; }
+.rp-ss-multi-btn { height:36px; min-width:120px; border:1px solid #E0E0E0; border-radius:6px; padding:0 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; font-size:13px; color:#212121; background:#fff; }
+.rp-ss-multi-btn:hover { border-color:#BDBDBD; }
+.rp-ss-multi-drop { display:none; position:absolute; z-index:10; left:0; top:calc(100% + 2px); min-width:100%; background:#fff; border:1px solid #E0E0E0; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); max-height:220px; overflow-y:auto; padding:6px 0; }
+.rp-ss-multi-drop.show { display:block; }
+.rp-ss-multi-item { display:flex; align-items:center; gap:8px; padding:8px 14px; font-size:13px; color:#212121; cursor:pointer; }
+.rp-ss-multi-item:hover { background:#FAFAFA; }
+.rp-ss-multi-item input[type="checkbox"] { display:none; }
+.rp-ss-multi-check { width:18px; height:18px; border:1.5px solid #BDBDBD; border-radius:4px; display:flex; align-items:center; justify-content:center; transition:0.2s; font-size:11px; color:transparent; flex-shrink:0; background:#fff; }
+.rp-ss-multi-item input[type="checkbox"]:checked + .rp-ss-multi-check { background:#6161FF; border-color:#6161FF; color:#fff; }
+
+/* 체크박스 (cm-chk-label 패턴) */
+.rp-ss-chk-label { display:inline-flex; align-items:center; cursor:pointer; gap:5px; font-size:13px; color:#212121; }
+.rp-ss-chk-label input[type="checkbox"] { display:none; }
+.rp-ss-chk-mark { width:18px; height:18px; border:1.5px solid #BDBDBD; border-radius:4px; display:flex; align-items:center; justify-content:center; transition:0.2s; font-size:11px; color:transparent; flex-shrink:0; background:#fff; }
+.rp-ss-chk-label input[type="checkbox"]:checked + .rp-ss-chk-mark { background:#6161FF; border-color:#6161FF; color:#fff; }
+
+.rp-ss-table-wrap { border:1px solid #D0D0D0; border-radius:10px; overflow-x:auto; margin-bottom:12px; }
+.rp-ss-table { width:100%; border-collapse:collapse; background:#fff; min-width:900px; }
+.rp-ss-table thead th { background:#FAFAFA; font-size:11px; font-weight:600; color:#9E9E9E; padding:8px 10px; border-bottom:1px solid #E0E0E0; border-right:1px solid #F0EEE9; text-align:center; white-space:nowrap; }
+.rp-ss-table thead th:last-child { border-right:none; }
+.rp-ss-table tbody td { font-size:12px; color:#212121; padding:8px 10px; border-bottom:1px solid #F0EEE9; border-right:1px solid #F0EEE9; text-align:center; white-space:nowrap; }
+.rp-ss-table tbody td:last-child { border-right:none; }
+.rp-ss-table tbody tr:last-child td { border-bottom:none; }
+.rp-ss-table tbody tr.rp-ss-row-sales td { background:#fff; }
+.rp-ss-table tbody tr.rp-ss-row-total td { background:#F7F7FF; font-weight:600; }
+.rp-ss-table tbody tr.rp-ss-row-total-first td { border-top:1.5px solid #D0D0D0; }
+.rp-ss-table tbody tr.rp-ss-row-avg td { background:#F7F7FF; }
+.rp-ss-table tbody tr.rp-ss-row-avg-first td { border-top:1.5px solid #D0D0D0; }
+.rp-ss-table tbody td.rp-ss-sales-val { color:#6161FF; font-weight:600; }
+.rp-ss-table tbody td.rp-ss-month-label { font-weight:500; color:#616161; background:#FAFAFA; }
+.rp-ss-table tbody tr.rp-ss-row-total td.rp-ss-month-label { color:#6161FF; background:#F7F7FF; }
+
+.rp-ss-notes { margin-top:16px; padding:16px 20px 16px 36px; font-size:12px; color:#757575; line-height:2; background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+.rp-ss-notes p { margin:0; list-style:disc outside; display:list-item; }
+/* ── 서비스 매출 분석 뷰 ── */
+#rpServiceRevenueView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpServiceRevenueView.show { display:flex; }
+
+.rp-ds-select { height:32px; border:1px solid #E0E0E0; border-radius:6px; padding:0 28px 0 10px; font-size:13px; color:#212121; font-family:'Pretendard',sans-serif; outline:none; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23757575' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center; -webkit-appearance:none; -moz-appearance:none; appearance:none; cursor:pointer; min-width:100px; }
+.rp-ds-select:focus { border-color:#6161FF; }
+
+.rp-svra-range-inputs { display:flex; align-items:center; gap:6px; }
+
+.rp-svra-content { display:flex; gap:16px; margin-bottom:12px; align-items:flex-start; }
+
+.rp-svra-chart-panel { flex:1; min-width:0; background:#fff; border:1px solid #E0E0E0; border-radius:8px; padding:20px; display:flex; flex-direction:column; position:relative; }
+.rp-svra-chart-empty { font-size:13px; color:#6161FF; text-align:center; padding:40px 0; }
+.rp-svra-chart-legend { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:16px; width:100%; flex-wrap:wrap; }
+.rp-svra-legend-item { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#616161; }
+.rp-svra-legend-color { width:14px; height:14px; border-radius:2px; display:inline-block; flex-shrink:0; }
+
+/* HTML 바 차트 (직원별 목표 디자인 참고) */
+.rp-svra-bar-chart { width:100%; }
+.rp-svra-bar-row { display:flex; align-items:center; gap:0; margin-bottom:10px; }
+.rp-svra-bar-row:last-child { margin-bottom:0; }
+.rp-svra-bar-label { width:72px; flex-shrink:0; font-size:13px; font-weight:500; color:#212121; text-align:right; padding-right:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rp-svra-bar-track { flex:1; min-width:0; height:28px; background:#F5F5F5; border-radius:4px; display:flex; align-items:center; position:relative; }
+.rp-svra-bar-fill { height:100%; background:linear-gradient(90deg, #8B8BFF 0%, #6161FF 100%); border-radius:4px; min-width:2px; transition:width 0.3s ease; position:relative; flex-shrink:0; }
+.rp-svra-bar-info { white-space:nowrap; font-size:11px; font-weight:600; color:#616161; padding-left:8px; flex-shrink:0; }
+.rp-svra-bar-info-inside { position:absolute; right:8px; top:50%; transform:translateY(-50%); white-space:nowrap; font-size:11px; font-weight:600; color:#fff; }
+
+/* 파이 차트 canvas */
+.rp-svra-pie-wrap { width:100%; display:flex; justify-content:center; }
+.rp-svra-pie-wrap canvas { max-width:300px; max-height:300px; }
+
+.rp-svra-table-panel { flex:1; min-width:0; border:1px solid #D0D0D0; border-radius:10px; overflow:hidden; }
+
+.rp-svra-empty-td { padding:32px 12px !important; color:#9E9E9E !important; font-size:13px !important; }
+.rp-svra-total-row td { font-weight:600 !important; background:#F7F7FF !important; border-top:1.5px solid #D0D0D0 !important; }
+.rp-svra-total-row td:first-child { color:#6161FF !important; }
+
+.rp-svra-notes { margin-top:0; padding:16px 20px 16px 36px; font-size:12px; color:#757575; line-height:2; background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+.rp-svra-notes p { margin:0; list-style:disc outside; display:list-item; }
+/* ── 서비스 항목별 매출 뷰 ── */
+#rpServiceItemView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpServiceItemView.show { display:flex; }
+/* ── 월별 서비스 매출 분석 뷰 ── */
+#rpMonthlyServiceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyServiceView.show { display:flex; }
+
+.rp-msv-chart-toggle { display:inline-flex; border:1px solid #E0E0E0; border-radius:6px; overflow:hidden; margin-left:8px; }
+.rp-msv-toggle-btn { width:34px; height:32px; border:none; background:#fff; color:#9E9E9E; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:all 0.15s; border-right:1px solid #E0E0E0; padding:0; }
+.rp-msv-toggle-btn:last-child { border-right:none; }
+.rp-msv-toggle-btn:hover { background:#F5F5F5; color:#616161; }
+.rp-msv-toggle-btn.active { background:#6161FF; color:#fff; }
+.rp-msv-toggle-btn.active:hover { background:#4F4FE0; }
+/* ── 영업구분별 서비스 매출 뷰 ── */
+#rpSalesCatServiceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpSalesCatServiceView.show { display:flex; }
+.rp-scs-qty { color:#6161FF; font-weight:500; font-size:11px; }
+/* ── 제품별 매출 분석 뷰 ── */
+#rpProductRevenueView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpProductRevenueView.show { display:flex; }
+/* ══ [FEAT-REPORT] END ══ */

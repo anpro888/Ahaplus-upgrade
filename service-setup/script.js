@@ -6211,7 +6211,8 @@ function hideAllViews() {
     'internalUseView','internalUseRegView',
     'stockAdjustView','stockAdjustEditView',
     'stockHistoryView','stockStatusView','purchaseView','supplierMgmtView',
-    'expenseItemView','expenseSummaryView','expenseHistoryView'
+    'expenseItemView','expenseSummaryView','expenseHistoryView',
+    'reportView','rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView','rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView','rpProductRevenueView'
   ];
   viewIds.forEach(function(id) {
     var el = document.getElementById(id);
@@ -14088,3 +14089,2036 @@ function ehDeleteRow() {
 function ehPrint() { window.print(); }
 
 // ══ [FEAT-EXPENSE-HISTORY] END ══
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-REPORT] 보고서 (분석) 뷰
+// ══════════════════════════════════════════════════════════════
+function openReportView() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpSelectAiTab(btn) {
+  btn.closest('.rp-ai-btns').querySelectorAll('.rp-ai-btn').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+}
+// ── 일별 매출 분석 ──
+var rpDsChart = null;
+var rpDsData = [];
+
+function openDailySales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpDailySalesView').classList.add('show');
+  rpDsInitDates();
+  rpDsSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpDsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+}
+
+function rpDsPrint() { window.print(); }
+
+function rpDsInitDates() {
+  var today = new Date();
+  var y = today.getFullYear();
+  var m = String(today.getMonth() + 1).padStart(2, '0');
+  var d = String(today.getDate()).padStart(2, '0');
+  var first = y + '-' + m + '-01';
+  var last = y + '-' + m + '-' + d;
+  document.getElementById('rpDsDateFrom').value = first;
+  document.getElementById('rpDsDateTo').value = last;
+}
+
+var rpDsSampleData = {
+  '2026-03-01':{service:185000,product:42000,prepaid:0,ticket:0},
+  '2026-03-02':{service:210000,product:35000,prepaid:50000,ticket:0},
+  '2026-03-03':{service:98000,product:0,prepaid:0,ticket:30000},
+  '2026-03-04':{service:320000,product:67000,prepaid:0,ticket:0},
+  '2026-03-05':{service:275000,product:55000,prepaid:100000,ticket:20000},
+  '2026-03-06':{service:410000,product:88000,prepaid:0,ticket:0},
+  '2026-03-07':{service:390000,product:72000,prepaid:50000,ticket:35000},
+  '2026-03-08':{service:520000,product:95000,prepaid:0,ticket:0},
+  '2026-03-09':{service:480000,product:110000,prepaid:80000,ticket:25000},
+  '2026-03-10':{service:155000,product:28000,prepaid:0,ticket:0},
+  '2026-03-11':{service:345000,product:62000,prepaid:0,ticket:40000},
+  '2026-03-12':{service:290000,product:48000,prepaid:150000,ticket:0},
+  '2026-03-13':{service:380000,product:73000,prepaid:0,ticket:0},
+  '2026-03-14':{service:425000,product:82000,prepaid:0,ticket:55000},
+  '2026-03-15':{service:550000,product:120000,prepaid:200000,ticket:0},
+  '2026-03-16':{service:510000,product:98000,prepaid:0,ticket:30000},
+  '2026-03-17':{service:130000,product:15000,prepaid:0,ticket:0},
+  '2026-03-18':{service:365000,product:58000,prepaid:0,ticket:0},
+  '2026-03-19':{service:310000,product:45000,prepaid:50000,ticket:20000},
+  '2026-03-20':{service:420000,product:78000,prepaid:0,ticket:0},
+  '2026-03-21':{service:470000,product:92000,prepaid:100000,ticket:45000},
+  '2026-03-22':{service:580000,product:135000,prepaid:0,ticket:0},
+  '2026-03-23':{service:495000,product:105000,prepaid:80000,ticket:35000},
+  '2026-03-24':{service:145000,product:22000,prepaid:0,ticket:0},
+  '2026-03-25':{service:355000,product:65000,prepaid:0,ticket:25000},
+  '2026-03-26':{service:305000,product:52000,prepaid:0,ticket:0},
+  '2026-03-27':{service:395000,product:70000,prepaid:150000,ticket:0},
+  '2026-03-28':{service:460000,product:88000,prepaid:0,ticket:60000},
+  '2026-03-29':{service:540000,product:115000,prepaid:0,ticket:0},
+  '2026-03-30':{service:485000,product:100000,prepaid:50000,ticket:30000},
+  '2026-03-31':{service:160000,product:30000,prepaid:0,ticket:0},
+  '2026-04-01':{service:340000,product:58000,prepaid:0,ticket:0},
+  '2026-04-02':{service:295000,product:42000,prepaid:100000,ticket:25000},
+  '2026-04-03':{service:410000,product:75000,prepaid:0,ticket:0},
+  '2026-04-04':{service:380000,product:68000,prepaid:0,ticket:40000},
+  '2026-04-05':{service:530000,product:125000,prepaid:200000,ticket:0},
+  '2026-04-06':{service:490000,product:108000,prepaid:0,ticket:50000},
+  '2026-04-07':{service:175000,product:20000,prepaid:0,ticket:0},
+  '2026-04-08':{service:360000,product:62000,prepaid:50000,ticket:0},
+  '2026-04-09':{service:320000,product:55000,prepaid:0,ticket:30000}
+};
+
+// 매출 기준 (회원권 차감 포함, 판매 제외) — 일별
+var rpDsSampleRevenue = {
+  '2026-03-01':{service:185000,product:42000,prepaid:0,ticket:0},
+  '2026-03-02':{service:210000,product:35000,prepaid:25000,ticket:0},
+  '2026-03-03':{service:98000,product:0,prepaid:0,ticket:15000},
+  '2026-03-04':{service:320000,product:67000,prepaid:0,ticket:0},
+  '2026-03-05':{service:275000,product:55000,prepaid:50000,ticket:10000},
+  '2026-03-06':{service:410000,product:88000,prepaid:0,ticket:0},
+  '2026-03-07':{service:390000,product:72000,prepaid:25000,ticket:18000},
+  '2026-03-08':{service:520000,product:95000,prepaid:0,ticket:0},
+  '2026-03-09':{service:480000,product:110000,prepaid:40000,ticket:12000},
+  '2026-03-10':{service:155000,product:28000,prepaid:0,ticket:0},
+  '2026-03-11':{service:345000,product:62000,prepaid:0,ticket:20000},
+  '2026-03-12':{service:290000,product:48000,prepaid:75000,ticket:0},
+  '2026-03-13':{service:380000,product:73000,prepaid:0,ticket:0},
+  '2026-03-14':{service:425000,product:82000,prepaid:0,ticket:28000},
+  '2026-03-15':{service:550000,product:120000,prepaid:100000,ticket:0},
+  '2026-03-16':{service:510000,product:98000,prepaid:0,ticket:15000},
+  '2026-03-17':{service:130000,product:15000,prepaid:0,ticket:0},
+  '2026-03-18':{service:365000,product:58000,prepaid:0,ticket:0},
+  '2026-03-19':{service:310000,product:45000,prepaid:25000,ticket:10000},
+  '2026-03-20':{service:420000,product:78000,prepaid:0,ticket:0},
+  '2026-03-21':{service:470000,product:92000,prepaid:50000,ticket:22000},
+  '2026-03-22':{service:580000,product:135000,prepaid:0,ticket:0},
+  '2026-03-23':{service:495000,product:105000,prepaid:40000,ticket:18000},
+  '2026-03-24':{service:145000,product:22000,prepaid:0,ticket:0},
+  '2026-03-25':{service:355000,product:65000,prepaid:0,ticket:12000},
+  '2026-03-26':{service:305000,product:52000,prepaid:0,ticket:0},
+  '2026-03-27':{service:395000,product:70000,prepaid:75000,ticket:0},
+  '2026-03-28':{service:460000,product:88000,prepaid:0,ticket:30000},
+  '2026-03-29':{service:540000,product:115000,prepaid:0,ticket:0},
+  '2026-03-30':{service:485000,product:100000,prepaid:25000,ticket:15000},
+  '2026-03-31':{service:160000,product:30000,prepaid:0,ticket:0},
+  '2026-04-01':{service:340000,product:58000,prepaid:0,ticket:0},
+  '2026-04-02':{service:295000,product:42000,prepaid:50000,ticket:12000},
+  '2026-04-03':{service:410000,product:75000,prepaid:0,ticket:0},
+  '2026-04-04':{service:380000,product:68000,prepaid:0,ticket:20000},
+  '2026-04-05':{service:530000,product:125000,prepaid:100000,ticket:0},
+  '2026-04-06':{service:490000,product:108000,prepaid:0,ticket:25000},
+  '2026-04-07':{service:175000,product:20000,prepaid:0,ticket:0},
+  '2026-04-08':{service:360000,product:62000,prepaid:25000,ticket:0},
+  '2026-04-09':{service:320000,product:55000,prepaid:0,ticket:15000}
+};
+
+function rpDsGetBasis() {
+  var radios = document.querySelectorAll('input[name="rpDsBasis"]');
+  for (var i = 0; i < radios.length; i++) { if (radios[i].checked) return radios[i].value; }
+  return 'sales';
+}
+
+function rpDsGenerateData() {
+  var from = document.getElementById('rpDsDateFrom').value;
+  var to = document.getElementById('rpDsDateTo').value;
+  if (!from || !to) return [];
+
+  var data = [];
+  var cur = new Date(from);
+  var end = new Date(to);
+  while (cur <= end) {
+    var dateStr = cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' + String(cur.getDate()).padStart(2, '0');
+    var basis = rpDsGetBasis();
+    var src = basis === 'revenue' ? rpDsSampleRevenue : rpDsSampleData;
+    var sample = src[dateStr] || { service: 0, product: 0, prepaid: 0, ticket: 0 };
+    var total = sample.service + sample.product + sample.prepaid + sample.ticket;
+    data.push({ date: dateStr, service: sample.service, product: sample.product, prepaid: sample.prepaid, ticket: sample.ticket, total: total });
+    cur.setDate(cur.getDate() + 1);
+  }
+  return data;
+}
+
+function rpDsSearch() {
+  rpDsData = rpDsGenerateData();
+  rpDsRenderTable();
+  rpDsUpdateChart();
+}
+
+function rpDsRenderTable() {
+  var tbody = document.getElementById('rpDsTableBody');
+  var html = '';
+  var sumS = 0, sumP = 0, sumPr = 0, sumT = 0, sumTot = 0;
+
+  rpDsData.forEach(function(row) {
+    sumS += row.service; sumP += row.product; sumPr += row.prepaid; sumT += row.ticket; sumTot += row.total;
+    html += '<tr>';
+    html += '<td>' + row.date + '</td>';
+    html += '<td>' + row.service.toLocaleString() + '</td>';
+    html += '<td>' + row.product.toLocaleString() + '</td>';
+    html += '<td>' + row.prepaid.toLocaleString() + '</td>';
+    html += '<td>' + row.ticket.toLocaleString() + '</td>';
+    html += '<td>' + row.total.toLocaleString() + '</td>';
+    html += '</tr>';
+  });
+
+  var totalLabel = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Total' : '합계';
+  html += '<tr>';
+  html += '<td>' + totalLabel + '</td>';
+  html += '<td>' + sumS.toLocaleString() + '</td>';
+  html += '<td>' + sumP.toLocaleString() + '</td>';
+  html += '<td>' + sumPr.toLocaleString() + '</td>';
+  html += '<td>' + sumT.toLocaleString() + '</td>';
+  html += '<td>' + sumTot.toLocaleString() + '</td>';
+  html += '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpDsUpdateChart() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var filter = document.getElementById('rpDsDisplaySelect').value;
+  var labels = rpDsData.map(function(r) { return r.date; });
+  var svcData = rpDsData.map(function(r) { return (filter === 'all' || filter === 'service') ? r.service : 0; });
+  var prdData = rpDsData.map(function(r) { return (filter === 'all' || filter === 'product') ? r.product : 0; });
+  var preData = rpDsData.map(function(r) { return (filter === 'all' || filter === 'prepaid') ? r.prepaid : 0; });
+  var tktData = rpDsData.map(function(r) { return (filter === 'all' || filter === 'ticket') ? r.ticket : 0; });
+  var totals  = rpDsData.map(function(r, i) { return svcData[i] + prdData[i] + preData[i] + tktData[i]; });
+
+  var sum = totals.reduce(function(a, b) { return a + b; }, 0);
+  var avg = totals.length > 0 ? Math.round(sum / totals.length) : 0;
+  document.getElementById('rpDsAvgValue').textContent = avg.toLocaleString();
+
+  var avgLine = totals.map(function() { return avg; });
+
+  var canvas = document.getElementById('rpDsChart');
+  var ctx = canvas.getContext('2d');
+
+  if (rpDsChart) { rpDsChart.destroy(); rpDsChart = null; }
+
+  // 그라데이션 생성 (세로 방향: 위 밝은색 → 아래 진한색)
+  var h = canvas.height || 320;
+  function makeGrad(lightColor, darkColor) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, lightColor);
+    g.addColorStop(1, darkColor);
+    return g;
+  }
+  var gradSvc = makeGrad('#9B9BFF', '#6161FF');
+  var gradPrd = makeGrad('#7DDBA3', '#3CB371');
+  var gradPre = makeGrad('#FFD480', '#F0A830');
+  var gradTkt = makeGrad('#FF9E9E', '#E06060');
+
+  rpDsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: isEn ? 'Service' : '서비스',
+          data: svcData,
+          backgroundColor: gradSvc,
+          stack: 'stack',
+          order: 2
+        },
+        {
+          label: isEn ? 'Product' : '제품',
+          data: prdData,
+          backgroundColor: gradPrd,
+          stack: 'stack',
+          order: 2
+        },
+        {
+          label: isEn ? 'Prepaid Card' : '정액권',
+          data: preData,
+          backgroundColor: gradPre,
+          stack: 'stack',
+          order: 2
+        },
+        {
+          label: isEn ? 'Prepaid Service' : '티켓',
+          data: tktData,
+          backgroundColor: gradTkt,
+          stack: 'stack',
+          order: 2
+        },
+        {
+          label: isEn ? 'Average' : '평균',
+          data: avgLine,
+          type: 'line',
+          borderColor: '#F5A623',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          tension: 0,
+          fill: false,
+          order: 1,
+          yAxisID: 'yLine'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      barPercentage: 0.5,
+      categoryPercentage: 0.7,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.parsed.y === 0 && ctx.dataset.type !== 'line') return null;
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' },
+            color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        },
+        yLine: {
+          display: false,
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// 툴팁은 CSS hover로만 동작 (인라인 스타일 간섭 없음)
+
+// ── 월별 매출 분석 ──
+var rpMsChart = null;
+var rpMsData = [];
+
+// 판매 기준 (회원권 판매 포함, 차감 제외)
+var rpMsSampleSales = {
+  '2025-01':{service:4200000,product:850000,prepaid:300000,ticket:120000},
+  '2025-02':{service:3800000,product:720000,prepaid:0,ticket:180000},
+  '2025-03':{service:4500000,product:920000,prepaid:500000,ticket:0},
+  '2025-04':{service:4100000,product:810000,prepaid:0,ticket:250000},
+  '2025-05':{service:4800000,product:1050000,prepaid:400000,ticket:150000},
+  '2025-06':{service:5200000,product:1100000,prepaid:0,ticket:200000},
+  '2025-07':{service:5500000,product:1250000,prepaid:600000,ticket:0},
+  '2025-08':{service:5100000,product:980000,prepaid:0,ticket:320000},
+  '2025-09':{service:4600000,product:890000,prepaid:350000,ticket:180000},
+  '2025-10':{service:4900000,product:1020000,prepaid:0,ticket:0},
+  '2025-11':{service:5300000,product:1150000,prepaid:500000,ticket:280000},
+  '2025-12':{service:6100000,product:1400000,prepaid:800000,ticket:350000},
+  '2026-01':{service:4800000,product:950000,prepaid:400000,ticket:200000},
+  '2026-02':{service:4300000,product:780000,prepaid:0,ticket:150000},
+  '2026-03':{service:10580000,product:2105000,prepaid:1540000,ticket:675000},
+  '2026-04':{service:3300000,product:613000,prepaid:350000,ticket:145000}
+};
+// 매출 기준 (회원권 차감 포함, 판매 제외)
+var rpMsSampleRevenue = {
+  '2025-01':{service:4200000,product:850000,prepaid:0,ticket:0},
+  '2025-02':{service:3800000,product:720000,prepaid:180000,ticket:95000},
+  '2025-03':{service:4500000,product:920000,prepaid:250000,ticket:0},
+  '2025-04':{service:4100000,product:810000,prepaid:0,ticket:130000},
+  '2025-05':{service:4800000,product:1050000,prepaid:200000,ticket:80000},
+  '2025-06':{service:5200000,product:1100000,prepaid:0,ticket:110000},
+  '2025-07':{service:5500000,product:1250000,prepaid:310000,ticket:0},
+  '2025-08':{service:5100000,product:980000,prepaid:0,ticket:160000},
+  '2025-09':{service:4600000,product:890000,prepaid:175000,ticket:90000},
+  '2025-10':{service:4900000,product:1020000,prepaid:0,ticket:0},
+  '2025-11':{service:5300000,product:1150000,prepaid:280000,ticket:140000},
+  '2025-12':{service:6100000,product:1400000,prepaid:420000,ticket:180000},
+  '2026-01':{service:4800000,product:950000,prepaid:210000,ticket:100000},
+  '2026-02':{service:4300000,product:780000,prepaid:0,ticket:75000},
+  '2026-03':{service:10580000,product:2105000,prepaid:820000,ticket:340000},
+  '2026-04':{service:3300000,product:613000,prepaid:180000,ticket:70000}
+};
+
+function openMonthlySales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlySalesView').classList.add('show');
+  rpMsInitSelects();
+  rpMsSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+}
+
+function rpMsPrint() { window.print(); }
+
+function rpMsInitSelects() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth() + 1;
+
+  var yFrom = document.getElementById('rpMsYearFrom');
+  var yTo = document.getElementById('rpMsYearTo');
+  var mFrom = document.getElementById('rpMsMonthFrom');
+  var mTo = document.getElementById('rpMsMonthTo');
+
+  yFrom.innerHTML = ''; yTo.innerHTML = '';
+  for (var y = curY - 3; y <= curY + 1; y++) {
+    yFrom.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+    yTo.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  }
+
+  mFrom.innerHTML = ''; mTo.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var mv = String(m).padStart(2, '0');
+    mFrom.innerHTML += '<option value="' + mv + '"' + (m === 1 ? ' selected' : '') + '>' + mv + '</option>';
+    mTo.innerHTML += '<option value="' + mv + '"' + (m === curM ? ' selected' : '') + '>' + mv + '</option>';
+  }
+}
+
+function rpMsGetBasis() {
+  var radios = document.querySelectorAll('input[name="rpMsBasis"]');
+  for (var i = 0; i < radios.length; i++) { if (radios[i].checked) return radios[i].value; }
+  return 'sales';
+}
+
+function rpMsGenerateData() {
+  var yf = parseInt(document.getElementById('rpMsYearFrom').value);
+  var mf = parseInt(document.getElementById('rpMsMonthFrom').value);
+  var yt = parseInt(document.getElementById('rpMsYearTo').value);
+  var mt = parseInt(document.getElementById('rpMsMonthTo').value);
+  var src = rpMsGetBasis() === 'revenue' ? rpMsSampleRevenue : rpMsSampleSales;
+
+  var data = [];
+  var cy = yf, cm = mf;
+  while (cy < yt || (cy === yt && cm <= mt)) {
+    var key = cy + '-' + String(cm).padStart(2, '0');
+    var sample = src[key] || { service: 0, product: 0, prepaid: 0, ticket: 0 };
+    var total = sample.service + sample.product + sample.prepaid + sample.ticket;
+    data.push({ month: key, service: sample.service, product: sample.product, prepaid: sample.prepaid, ticket: sample.ticket, total: total });
+    cm++;
+    if (cm > 12) { cm = 1; cy++; }
+  }
+  return data;
+}
+
+function rpMsSearch() {
+  rpMsData = rpMsGenerateData();
+  rpMsRenderTable();
+  rpMsUpdateChart();
+}
+
+function rpMsRenderTable() {
+  var tbody = document.getElementById('rpMsTableBody');
+  var html = '';
+  var sumS = 0, sumP = 0, sumPr = 0, sumT = 0, sumTot = 0;
+
+  rpMsData.forEach(function(row) {
+    sumS += row.service; sumP += row.product; sumPr += row.prepaid; sumT += row.ticket; sumTot += row.total;
+    html += '<tr><td>' + row.month + '</td><td>' + row.service.toLocaleString() + '</td><td>' + row.product.toLocaleString() + '</td><td>' + row.prepaid.toLocaleString() + '</td><td>' + row.ticket.toLocaleString() + '</td><td>' + row.total.toLocaleString() + '</td></tr>';
+  });
+
+  var totalLabel = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Total' : '합계';
+  html += '<tr><td>' + totalLabel + '</td><td>' + sumS.toLocaleString() + '</td><td>' + sumP.toLocaleString() + '</td><td>' + sumPr.toLocaleString() + '</td><td>' + sumT.toLocaleString() + '</td><td>' + sumTot.toLocaleString() + '</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpMsUpdateChart() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var filter = document.getElementById('rpMsDisplaySelect').value;
+  var labels = rpMsData.map(function(r) { return r.month; });
+  var svcData = rpMsData.map(function(r) { return (filter === 'all' || filter === 'service') ? r.service : 0; });
+  var prdData = rpMsData.map(function(r) { return (filter === 'all' || filter === 'product') ? r.product : 0; });
+  var preData = rpMsData.map(function(r) { return (filter === 'all' || filter === 'prepaid') ? r.prepaid : 0; });
+  var tktData = rpMsData.map(function(r) { return (filter === 'all' || filter === 'ticket') ? r.ticket : 0; });
+  var totData = rpMsData.map(function(r, i) { return svcData[i] + prdData[i] + preData[i] + tktData[i]; });
+
+  var sum = totData.reduce(function(a, b) { return a + b; }, 0);
+  var avg = totData.length > 0 ? Math.round(sum / totData.length) : 0;
+  document.getElementById('rpMsAvgValue').textContent = avg.toLocaleString();
+  var avgLine = totData.map(function() { return avg; });
+
+  var canvas = document.getElementById('rpMsChart');
+  var ctx = canvas.getContext('2d');
+  if (rpMsChart) { rpMsChart.destroy(); rpMsChart = null; }
+
+  // 그라데이션 생성 (세로 방향: 위 밝은색 → 아래 진한색)
+  var mh = canvas.height || 320;
+  function msMakeGrad(lightColor, darkColor) {
+    var g = ctx.createLinearGradient(0, 0, 0, mh);
+    g.addColorStop(0, lightColor);
+    g.addColorStop(1, darkColor);
+    return g;
+  }
+  var msGradSvc = msMakeGrad('#9B9BFF', '#6161FF');
+  var msGradPrd = msMakeGrad('#7DDBA3', '#3CB371');
+  var msGradPre = msMakeGrad('#FFD480', '#F0A830');
+  var msGradTkt = msMakeGrad('#FF9E9E', '#E06060');
+
+  rpMsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: isEn ? 'Service' : '서비스', data: svcData, backgroundColor: msGradSvc, stack: 'stack', order: 3, yAxisID: 'y', maxBarThickness: 48 },
+        { label: isEn ? 'Product' : '제품', data: prdData, backgroundColor: msGradPrd, stack: 'stack', order: 3, yAxisID: 'y', maxBarThickness: 48 },
+        { label: isEn ? 'Prepaid Card' : '정액권', data: preData, backgroundColor: msGradPre, stack: 'stack', order: 3, yAxisID: 'y', maxBarThickness: 48 },
+        { label: isEn ? 'Prepaid Service' : '티켓', data: tktData, backgroundColor: msGradTkt, stack: 'stack', order: 3, yAxisID: 'y', maxBarThickness: 48 },
+        {
+          label: isEn ? 'Total' : '합계',
+          data: totData, type: 'line',
+          borderColor: '#4F4FE0', backgroundColor: 'transparent',
+          pointBackgroundColor: '#4F4FE0', pointRadius: 4, borderWidth: 2.5,
+          tension: 0, fill: false, order: 1, yAxisID: 'yLine'
+        },
+        {
+          label: isEn ? 'Average' : '평균',
+          data: avgLine, type: 'line',
+          borderColor: '#F5A623', backgroundColor: 'transparent',
+          pointRadius: 0, borderWidth: 2, borderDash: [6, 4],
+          tension: 0, fill: false, order: 2, yAxisID: 'yLine'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      barPercentage: 0.5,
+      categoryPercentage: 0.7,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.parsed.y === 0 && ctx.dataset.type !== 'line') return null;
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' }, color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        },
+        yLine: {
+          display: false,
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+// ── 월별 직원별 매출 분석 ──
+var rpSsStaffs = [
+  { id: 'owner', ko: '원장님', en: 'Owner' },
+  { id: 'star', ko: '별별별', en: 'Star' },
+  { id: 'staff1', ko: 'staff', en: 'staff' }
+];
+
+// 월별 직원별 샘플 — rpMsSampleSales의 합계와 일치
+var rpSsMonthlyData = {
+  '2026-01': { total:{sales:6350000,qty:32,txn:28,clients:22,avg:120000}, owner:{sales:3200000,qty:16,txn:14,clients:12,avg:120000}, star:{sales:1800000,qty:9,txn:8,clients:6,avg:120000}, staff1:{sales:850000,qty:4,txn:3,clients:2,avg:120000}, none:{sales:500000,qty:3,txn:3,clients:2,avg:120000} },
+  '2026-02': { total:{sales:5230000,qty:26,txn:22,clients:18,avg:120000}, owner:{sales:2600000,qty:13,txn:11,clients:9,avg:120000}, star:{sales:1500000,qty:7,txn:6,clients:5,avg:120000}, staff1:{sales:730000,qty:3,txn:3,clients:2,avg:120000}, none:{sales:400000,qty:3,txn:2,clients:2,avg:120000} },
+  '2026-03': { total:{sales:14900000,qty:75,txn:65,clients:48,avg:120000}, owner:{sales:7500000,qty:38,txn:33,clients:25,avg:120000}, star:{sales:4200000,qty:21,txn:18,clients:13,avg:120000}, staff1:{sales:2100000,qty:10,txn:9,clients:6,avg:120000}, none:{sales:1100000,qty:6,txn:5,clients:4,avg:120000} },
+  '2026-04': { total:{sales:4408000,qty:22,txn:19,clients:15,avg:120000}, owner:{sales:2200000,qty:11,txn:9,clients:7,avg:120000}, star:{sales:1250000,qty:6,txn:5,clients:4,avg:120000}, staff1:{sales:608000,qty:3,txn:3,clients:2,avg:120000}, none:{sales:350000,qty:2,txn:2,clients:2,avg:120000} }
+};
+
+function openStaffSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpStaffSalesView').classList.add('show');
+  rpSsInitControls();
+  // DOM 업데이트 후 검색 실행
+  setTimeout(function() {
+    rpSsSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+function rpSsGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpSsPrint() { window.print(); }
+
+function rpSsTogglePeriod() {
+  var mode = document.querySelector('input[name="rpSsPeriodMode"]:checked').value;
+  document.getElementById('rpSsMonthGroup').style.display = mode === 'month' ? 'inline-flex' : 'none';
+  document.getElementById('rpSsRangeGroup').style.display = mode === 'range' ? 'inline-flex' : 'none';
+}
+
+function rpSsInitControls() {
+  var now = new Date();
+  var curY = now.getFullYear(), curM = now.getMonth() + 1;
+  document.getElementById('rpSsSingleMonth').value = curY + '-' + String(curM).padStart(2, '0');
+
+  ['rpSsYearFrom','rpSsYearTo'].forEach(function(id) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    for (var y = curY - 3; y <= curY + 1; y++) sel.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  });
+  ['rpSsMonthFrom','rpSsMonthTo'].forEach(function(id, idx) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    var def = idx === 0 ? 1 : curM;
+    for (var m = 1; m <= 12; m++) sel.innerHTML += '<option value="' + String(m).padStart(2, '0') + '"' + (m === def ? ' selected' : '') + '>' + String(m).padStart(2, '0') + '</option>';
+  });
+}
+
+function rpSsToggleDrop(id) {
+  var el = document.getElementById(id);
+  var wasOpen = el.classList.contains('show');
+  // 다른 드롭다운 닫기
+  document.querySelectorAll('.rp-ss-multi-drop.show').forEach(function(d) { d.classList.remove('show'); });
+  if (!wasOpen) el.classList.add('show');
+}
+
+function rpSsMultiChanged(type) {
+  var dropId = type === 'item' ? 'rpSsItemDrop' : 'rpSsStaffDrop';
+  var labelId = type === 'item' ? 'rpSsItemLabel' : 'rpSsStaffLabel';
+  var checks = document.querySelectorAll('#' + dropId + ' input[type="checkbox"]:not([value="all"])');
+  var checked = [];
+  checks.forEach(function(c) { if (c.checked) checked.push(c.parentElement.querySelector('span:last-child').textContent); });
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (checked.length === 0) document.getElementById(labelId).textContent = isEn ? 'None' : '없음';
+  else if (checked.length === checks.length) document.getElementById(labelId).textContent = isEn ? 'All' : '전체';
+  else document.getElementById(labelId).textContent = checked.join(', ');
+
+  // 전체 체크박스 동기화
+  if (type === 'staff') {
+    var allCb = document.querySelector('#rpSsStaffDrop input[value="all"]');
+    if (allCb) allCb.checked = (checked.length === checks.length);
+  }
+}
+
+function rpSsStaffAllToggle(cb) {
+  var checks = document.querySelectorAll('#rpSsStaffDrop input[type="checkbox"]:not([value="all"])');
+  checks.forEach(function(c) { c.checked = cb.checked; });
+  rpSsMultiChanged('staff');
+}
+
+// 외부 클릭 시 드롭다운 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.rp-ss-multi-wrap')) {
+    document.querySelectorAll('.rp-ss-multi-drop.show').forEach(function(d) { d.classList.remove('show'); });
+  }
+});
+
+function rpSsGetMonths() {
+  var mode = document.querySelector('input[name="rpSsPeriodMode"]:checked').value;
+  if (mode === 'month') {
+    var v = document.getElementById('rpSsSingleMonth').value;
+    return v ? [v] : [];
+  }
+  var yf = parseInt(document.getElementById('rpSsYearFrom').value);
+  var mf = parseInt(document.getElementById('rpSsMonthFrom').value);
+  var yt = parseInt(document.getElementById('rpSsYearTo').value);
+  var mt = parseInt(document.getElementById('rpSsMonthTo').value);
+  var months = [], cy = yf, cm = mf;
+  while (cy < yt || (cy === yt && cm <= mt)) {
+    months.push(cy + '-' + String(cm).padStart(2, '0'));
+    cm++; if (cm > 12) { cm = 1; cy++; }
+  }
+  return months;
+}
+
+function rpSsSearch() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var months = rpSsGetMonths();
+
+  // 멀티셀렉트에서 선택된 직원
+  var staffChecks = document.querySelectorAll('#rpSsStaffDrop input[type="checkbox"]:not([value="all"]):checked');
+  var allStaffMap = { owner: { id:'owner', ko:'원장님', en:'Owner' }, star: { id:'star', ko:'별별별', en:'Star' }, staff1: { id:'staff1', ko:'staff', en:'staff' }, none: { id:'none', ko:'선택 안함', en:'Unassigned' } };
+  var cols = [];
+  staffChecks.forEach(function(c) { if (allStaffMap[c.value]) cols.push(allStaffMap[c.value]); });
+
+  // thead
+  var thead = document.getElementById('rpSsTableHead');
+  var hHtml = '<tr><th colspan="2" data-i18n="rp.ss_div" data-ko="구분" data-en="Division">' + (isEn ? 'Division' : '구분') + '</th>';
+  hHtml += '<th data-i18n="rp.ds_all" data-ko="전체" data-en="Total">' + (isEn ? 'Total' : '전체') + '</th>';
+  cols.forEach(function(c) { hHtml += '<th>' + (isEn ? c.en : c.ko) + '</th>'; });
+  hHtml += '</tr>';
+  thead.innerHTML = hHtml;
+
+  // tbody
+  var tbody = document.getElementById('rpSsTableBody');
+  var bHtml = '';
+  var grandTotal = { sales: 0, qty: 0, txn: 0, clients: 0 };
+  var grandStaff = {};
+  cols.forEach(function(c) { grandStaff[c.id] = { sales: 0, qty: 0, txn: 0, clients: 0 }; });
+
+  months.forEach(function(mon) {
+    var d = rpSsMonthlyData[mon] || {};
+    var t = d.total || { sales: 0, qty: 0, txn: 0, clients: 0, avg: 0 };
+    grandTotal.sales += t.sales; grandTotal.qty += t.qty; grandTotal.txn += t.txn; grandTotal.clients += t.clients;
+
+    var optRate = t.txn > 0 ? Math.round((t.qty - t.txn) / t.txn * 100) : 0;
+    var avgPrice = t.txn > 0 ? Math.round(t.sales / t.txn) : 0;
+
+    // 판매 row
+    bHtml += '<tr class="rp-ss-row-sales"><td class="rp-ss-month-label" rowspan="3">' + mon + '</td>';
+    bHtml += '<td>' + (isEn ? 'Sales' : '판매') + '</td>';
+    bHtml += '<td class="rp-ss-sales-val">' + (t.sales > 0 ? t.sales.toLocaleString() : '') + '</td>';
+    cols.forEach(function(c) {
+      var sd = d[c.id] || { sales: 0 };
+      grandStaff[c.id].sales += sd.sales;
+      bHtml += '<td class="rp-ss-sales-val">' + (sd.sales > 0 ? sd.sales.toLocaleString() : '') + '</td>';
+    });
+    bHtml += '</tr>';
+
+    // 수량/판매/고객 row
+    bHtml += '<tr><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td>' + (t.qty > 0 ? t.qty + '개(' + optRate + '%)' : '') + '</td>';
+    cols.forEach(function(c) {
+      var sd = d[c.id] || { qty: 0, txn: 0, clients: 0 };
+      grandStaff[c.id].qty += sd.qty; grandStaff[c.id].txn += sd.txn; grandStaff[c.id].clients += sd.clients;
+      if (sd.txn > 0) {
+        var sOpt = sd.txn > 0 ? Math.round((sd.qty - sd.txn) / sd.txn * 100) : 0;
+        bHtml += '<td>' + sd.qty + '개(' + sOpt + '%)  ' + sd.txn + '건  ' + sd.clients + '명</td>';
+      } else { bHtml += '<td></td>'; }
+    });
+    bHtml += '</tr>';
+
+    // 객단가 row
+    bHtml += '<tr><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
+    bHtml += '<td>' + (avgPrice > 0 ? avgPrice.toLocaleString() : '') + '</td>';
+    cols.forEach(function(c) {
+      var sd = d[c.id] || { sales: 0, txn: 0 };
+      var sa = sd.txn > 0 ? Math.round(sd.sales / sd.txn) : 0;
+      bHtml += '<td>' + (sa > 0 ? sa.toLocaleString() : '') + '</td>';
+    });
+    bHtml += '</tr>';
+  });
+
+  // 기간 전체 합계
+  if (months.length > 1) {
+    var gOpt = grandTotal.txn > 0 ? Math.round((grandTotal.qty - grandTotal.txn) / grandTotal.txn * 100) : 0;
+    var gAvg = grandTotal.txn > 0 ? Math.round(grandTotal.sales / grandTotal.txn) : 0;
+
+    bHtml += '<tr class="rp-ss-row-total rp-ss-row-total-first"><td class="rp-ss-month-label" rowspan="3">' + (isEn ? 'Period Total' : '기간 전체') + '</td>';
+    bHtml += '<td>' + (isEn ? 'Sales' : '판매') + '</td>';
+    bHtml += '<td class="rp-ss-sales-val">' + grandTotal.sales.toLocaleString() + '</td>';
+    cols.forEach(function(c) { bHtml += '<td class="rp-ss-sales-val">' + (grandStaff[c.id].sales > 0 ? grandStaff[c.id].sales.toLocaleString() : '') + '</td>'; });
+    bHtml += '</tr>';
+
+    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td>' + grandTotal.qty + '개(' + gOpt + '%)  ' + grandTotal.txn + '건  ' + grandTotal.clients + '명</td>';
+    cols.forEach(function(c) {
+      var g = grandStaff[c.id];
+      if (g.txn > 0) { var o = Math.round((g.qty - g.txn) / g.txn * 100); bHtml += '<td>' + g.qty + '개(' + o + '%)  ' + g.txn + '건  ' + g.clients + '명</td>'; }
+      else { bHtml += '<td></td>'; }
+    });
+    bHtml += '</tr>';
+
+    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
+    bHtml += '<td>' + gAvg.toLocaleString() + '</td>';
+    cols.forEach(function(c) { var g = grandStaff[c.id]; var a = g.txn > 0 ? Math.round(g.sales / g.txn) : 0; bHtml += '<td>' + (a > 0 ? a.toLocaleString() : '') + '</td>'; });
+    bHtml += '</tr>';
+
+    // 월평균
+    var mCnt = months.length;
+    var maAvg = Math.round(grandTotal.sales / mCnt);
+    bHtml += '<tr class="rp-ss-row-avg rp-ss-row-avg-first"><td class="rp-ss-month-label" rowspan="3">' + (isEn ? 'Monthly Avg' : '월평균') + '</td>';
+    bHtml += '<td>' + (isEn ? 'Sales' : '판매') + '</td>';
+    bHtml += '<td class="rp-ss-sales-val">' + maAvg.toLocaleString() + '</td>';
+    cols.forEach(function(c) { var a = Math.round(grandStaff[c.id].sales / mCnt); bHtml += '<td class="rp-ss-sales-val">' + (a > 0 ? a.toLocaleString() : '') + '</td>'; });
+    bHtml += '</tr>';
+
+    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td></td>';
+    cols.forEach(function() { bHtml += '<td></td>'; });
+    bHtml += '</tr>';
+
+    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
+    bHtml += '<td></td>';
+    cols.forEach(function() { bHtml += '<td></td>'; });
+    bHtml += '</tr>';
+  }
+
+  tbody.innerHTML = bHtml;
+}
+// ══ [FEAT-REPORT] END ══
+
+// ═══════════════════════════════════════════════════════════
+//  서비스 매출 분석 (rpSvra)
+// ═══════════════════════════════════════════════════════════
+
+var rpSvraSampleData = {
+  staff: {
+    all: [
+      { label: '원장님', quantity: 15, amount: 450000 },
+      { label: '별별별', quantity: 12, amount: 360000 },
+      { label: 'staff', quantity: 8, amount: 240000 }
+    ],
+    '원장님': [{ label: '원장님', quantity: 15, amount: 450000 }],
+    '별별별': [{ label: '별별별', quantity: 12, amount: 360000 }],
+    'staff': [{ label: 'staff', quantity: 8, amount: 240000 }]
+  },
+  category: {
+    all: [
+      { label: '헤어', quantity: 22, amount: 660000 },
+      { label: '네일', quantity: 8, amount: 240000 },
+      { label: '피부관리', quantity: 5, amount: 150000 }
+    ],
+    '원장님': [
+      { label: '헤어', quantity: 10, amount: 300000 },
+      { label: '피부관리', quantity: 5, amount: 150000 }
+    ],
+    '별별별': [
+      { label: '헤어', quantity: 7, amount: 210000 },
+      { label: '네일', quantity: 5, amount: 150000 }
+    ],
+    'staff': [
+      { label: '헤어', quantity: 5, amount: 150000 },
+      { label: '네일', quantity: 3, amount: 90000 }
+    ]
+  },
+  service: {
+    all: [
+      { label: '커트', quantity: 12, amount: 240000 },
+      { label: '펌', quantity: 5, amount: 250000 },
+      { label: '염색', quantity: 5, amount: 200000 },
+      { label: '클리닉', quantity: 4, amount: 120000 },
+      { label: '젤네일', quantity: 5, amount: 100000 },
+      { label: '속눈썹', quantity: 3, amount: 90000 },
+      { label: '두피관리', quantity: 1, amount: 50000 }
+    ],
+    '원장님': [
+      { label: '커트', quantity: 6, amount: 120000 },
+      { label: '펌', quantity: 4, amount: 200000 },
+      { label: '염색', quantity: 3, amount: 120000 },
+      { label: '두피관리', quantity: 1, amount: 50000 }
+    ],
+    '별별별': [
+      { label: '커트', quantity: 4, amount: 80000 },
+      { label: '젤네일', quantity: 5, amount: 100000 },
+      { label: '염색', quantity: 2, amount: 80000 },
+      { label: '클리닉', quantity: 2, amount: 60000 }
+    ],
+    'staff': [
+      { label: '커트', quantity: 2, amount: 40000 },
+      { label: '펌', quantity: 1, amount: 50000 },
+      { label: '속눈썹', quantity: 3, amount: 90000 },
+      { label: '클리닉', quantity: 2, amount: 60000 }
+    ]
+  },
+  weekday: {
+    all: [
+      { label: '월', quantity: 4, amount: 120000 },
+      { label: '화', quantity: 6, amount: 180000 },
+      { label: '수', quantity: 5, amount: 150000 },
+      { label: '목', quantity: 7, amount: 210000 },
+      { label: '금', quantity: 8, amount: 240000 },
+      { label: '토', quantity: 3, amount: 90000 },
+      { label: '일', quantity: 2, amount: 60000 }
+    ],
+    '원장님': [
+      { label: '월', quantity: 2, amount: 60000 },
+      { label: '화', quantity: 3, amount: 90000 },
+      { label: '수', quantity: 2, amount: 60000 },
+      { label: '목', quantity: 3, amount: 90000 },
+      { label: '금', quantity: 3, amount: 90000 },
+      { label: '토', quantity: 1, amount: 30000 },
+      { label: '일', quantity: 1, amount: 30000 }
+    ],
+    '별별별': [
+      { label: '월', quantity: 1, amount: 30000 },
+      { label: '화', quantity: 2, amount: 60000 },
+      { label: '수', quantity: 2, amount: 60000 },
+      { label: '목', quantity: 3, amount: 90000 },
+      { label: '금', quantity: 3, amount: 90000 },
+      { label: '토', quantity: 1, amount: 30000 }
+    ],
+    'staff': [
+      { label: '월', quantity: 1, amount: 30000 },
+      { label: '화', quantity: 1, amount: 30000 },
+      { label: '수', quantity: 1, amount: 30000 },
+      { label: '목', quantity: 1, amount: 30000 },
+      { label: '금', quantity: 2, amount: 60000 },
+      { label: '토', quantity: 1, amount: 30000 },
+      { label: '일', quantity: 1, amount: 30000 }
+    ]
+  },
+  hour: {
+    all: [
+      { label: '10시', quantity: 3, amount: 90000 },
+      { label: '11시', quantity: 5, amount: 150000 },
+      { label: '12시', quantity: 4, amount: 120000 },
+      { label: '13시', quantity: 3, amount: 90000 },
+      { label: '14시', quantity: 6, amount: 180000 },
+      { label: '15시', quantity: 5, amount: 150000 },
+      { label: '16시', quantity: 4, amount: 120000 },
+      { label: '17시', quantity: 3, amount: 90000 },
+      { label: '18시', quantity: 2, amount: 60000 }
+    ],
+    '원장님': [
+      { label: '10시', quantity: 2, amount: 60000 },
+      { label: '11시', quantity: 2, amount: 60000 },
+      { label: '13시', quantity: 2, amount: 60000 },
+      { label: '14시', quantity: 3, amount: 90000 },
+      { label: '15시', quantity: 3, amount: 90000 },
+      { label: '16시', quantity: 2, amount: 60000 },
+      { label: '17시', quantity: 1, amount: 30000 }
+    ],
+    '별별별': [
+      { label: '10시', quantity: 1, amount: 30000 },
+      { label: '11시', quantity: 2, amount: 60000 },
+      { label: '12시', quantity: 2, amount: 60000 },
+      { label: '14시', quantity: 2, amount: 60000 },
+      { label: '15시', quantity: 2, amount: 60000 },
+      { label: '16시', quantity: 2, amount: 60000 },
+      { label: '18시', quantity: 1, amount: 30000 }
+    ],
+    'staff': [
+      { label: '11시', quantity: 1, amount: 30000 },
+      { label: '12시', quantity: 2, amount: 60000 },
+      { label: '13시', quantity: 1, amount: 30000 },
+      { label: '14시', quantity: 1, amount: 30000 },
+      { label: '16시', quantity: 1, amount: 30000 },
+      { label: '17시', quantity: 1, amount: 30000 },
+      { label: '18시', quantity: 1, amount: 30000 }
+    ]
+  }
+};
+
+var rpSvraChartInstance = null;
+var rpSvraCurrentData = [];
+
+var rpSvraHeaderLabels = {
+  staff:    { ko: '직원',   en: 'Staff' },
+  category: { ko: '분류',   en: 'Category' },
+  service:  { ko: '서비스', en: 'Service' },
+  weekday:  { ko: '요일',   en: 'Weekday' },
+  hour:     { ko: '시간',   en: 'Hour' }
+};
+
+// 분석 항목별 차트 규칙: staff/service/weekday/hour = 수평 막대 고정, category = 파이(기본) 전환 가능
+var rpSvraChartRules = {
+  staff:    { defaultType: 'bar',  changeable: false },
+  category: { defaultType: 'pie',  changeable: true },
+  service:  { defaultType: 'bar',  changeable: false },
+  weekday:  { defaultType: 'bar',  changeable: false },
+  hour:     { defaultType: 'bar',  changeable: false }
+};
+
+var rpSvraPieColors = [
+  '#6161FF', '#3CB371', '#F0A830', '#E06060', '#3DA5D9',
+  '#9B59B6', '#E8764A', '#2DA8A8', '#D4689A', '#9B7B5B'
+];
+// 그라데이션 쌍: [밝은색, 진한색]
+var rpSvraPieGradients = [
+  ['#9B9BFF', '#6161FF'],  // 인디고
+  ['#7DDBA3', '#3CB371'],  // 그린
+  ['#FFD480', '#F0A830'],  // 앰버
+  ['#FF9E9E', '#E06060'],  // 코랄
+  ['#7EC8E3', '#3DA5D9'],  // 스카이블루
+  ['#C9A0DC', '#9B59B6'],  // 라벤더
+  ['#FFB088', '#E8764A'],  // 피치
+  ['#6ECFCF', '#2DA8A8'],  // 틸
+  ['#F4A4C0', '#D4689A'],  // 로즈
+  ['#C4A882', '#9B7B5B']   // 샌드
+];
+
+function openServiceRevenue() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpServiceRevenueView').classList.add('show');
+  rpSvraInit();
+  setTimeout(function() {
+    rpSvraSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpSvraGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+}
+
+function rpSvraPrint() { window.print(); }
+
+function rpSvraInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpSvraMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpSvraDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpSvraRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpSvraRangeEnd').value = y + '-' + m + '-' + d;
+  rpSvraTogglePeriod();
+  rpSvraOnAnalysisChange();
+}
+
+function rpSvraTogglePeriod() {
+  var type = document.querySelector('input[name="rpSvraPeriod"]:checked').value;
+  document.getElementById('rpSvraDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpSvraMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpSvraRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpSvraGetChartType() {
+  var analysisType = document.getElementById('rpSvraAnalysisType').value;
+  var rule = rpSvraChartRules[analysisType];
+  if (rule.changeable) {
+    return document.getElementById('rpSvraChartTypeSelect').value;
+  }
+  return rule.defaultType;
+}
+
+function rpSvraOnAnalysisChange() {
+  var type = document.getElementById('rpSvraAnalysisType').value;
+  var th = document.getElementById('rpSvraColHeader');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var label = rpSvraHeaderLabels[type];
+  th.textContent = isEn ? label.en : label.ko;
+  th.setAttribute('data-ko', label.ko);
+  th.setAttribute('data-en', label.en);
+  th.setAttribute('data-i18n', 'svra.' + type);
+
+  // 차트 타입 드롭다운 표시/숨김
+  var rule = rpSvraChartRules[type];
+  var chartTypeLabel = document.getElementById('rpSvraChartTypeLabel');
+  var chartTypeSelect = document.getElementById('rpSvraChartTypeSelect');
+  if (rule.changeable) {
+    chartTypeLabel.style.display = '';
+    chartTypeSelect.style.display = '';
+    chartTypeSelect.value = rule.defaultType;
+  } else {
+    chartTypeLabel.style.display = 'none';
+    chartTypeSelect.style.display = 'none';
+  }
+
+  // 데이터 로드 상태면 즉시 갱신
+  rpSvraSearch();
+}
+
+function rpSvraGetData() {
+  var analysisType = document.getElementById('rpSvraAnalysisType').value;
+  var staff = document.getElementById('rpSvraStaffSelect').value;
+  var key = staff === 'all' ? 'all' : staff;
+  var typeData = rpSvraSampleData[analysisType];
+  return (typeData && typeData[key]) ? typeData[key] : [];
+}
+
+function rpSvraSearch() {
+  rpSvraCurrentData = rpSvraGetData();
+  rpSvraRenderTable(rpSvraCurrentData);
+  rpSvraRenderChart(rpSvraCurrentData);
+}
+
+function rpSvraRenderTable(data) {
+  var tbody = document.getElementById('rpSvraTableBody');
+  var valueType = document.querySelector('input[name="rpSvraValueType"]:checked').value;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalQty = 0, totalAmt = 0;
+  data.forEach(function(d) { totalQty += d.quantity; totalAmt += d.amount; });
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var ratioBase = valueType === 'amount' ? totalAmt : totalQty;
+    var ratio = ratioBase > 0 ? ((valueType === 'amount' ? d.amount : d.quantity) / ratioBase * 100).toFixed(1) : '0.0';
+    html += '<tr>' +
+      '<td>' + d.label + '</td>' +
+      '<td>' + d.quantity.toLocaleString() + '</td>' +
+      '<td>' + d.amount.toLocaleString() + '</td>' +
+      '<td>' + ratio + '%</td>' +
+      '</tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row">' +
+    '<td data-i18n="common.total" data-ko="합계" data-en="Total">' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + totalQty.toLocaleString() + '</td>' +
+    '<td>' + totalAmt.toLocaleString() + '</td>' +
+    '<td>100.0%</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpSvraRenderChart(data) {
+  var chartType = rpSvraGetChartType();
+  // 차트 전환 시 이전 차트 정리
+  var barChart = document.getElementById('rpSvraBarChart');
+  var pieWrap = document.getElementById('rpSvraPieWrap');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpSvraChartInstance) { rpSvraChartInstance.destroy(); rpSvraChartInstance = null; }
+
+  if (chartType === 'pie') {
+    rpSvraRenderPieChart(data);
+  } else {
+    rpSvraRenderBarChart(data);
+  }
+}
+
+function rpSvraRenderBarChart(data) {
+  var barChart = document.getElementById('rpSvraBarChart');
+  var emptyMsg = document.getElementById('rpSvraChartEmpty');
+  var legendDiv = document.getElementById('rpSvraChartLegend');
+  var valueType = document.querySelector('input[name="rpSvraValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    barChart.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  // 내림차순 정렬 (큰 값이 위)
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var values = sorted.map(function(d) { return valueType === 'amount' ? d.amount : d.quantity; });
+  var maxVal = Math.max.apply(null, values);
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var labelText = valueType === 'amount' ? (isEn ? 'Amount' : '금액') : (isEn ? 'Quantity' : '수량');
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total.toLocaleString() + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var val = valueType === 'amount' ? d.amount : d.quantity;
+    var pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var infoText = val.toLocaleString() + ' (' + ratio + '%)';
+
+    // 바가 55% 이상이면 내부에 텍스트, 아니면 외부
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row">' +
+        '<span class="rp-svra-bar-label">' + d.label + '</span>' +
+        '<div class="rp-svra-bar-track">' +
+          '<div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div>' +
+        '</div>' +
+        '</div>';
+    } else {
+      html += '<div class="rp-svra-bar-row">' +
+        '<span class="rp-svra-bar-label">' + d.label + '</span>' +
+        '<div class="rp-svra-bar-track">' +
+          '<div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div>' +
+          '<span class="rp-svra-bar-info">' + infoText + '</span>' +
+        '</div>' +
+        '</div>';
+    }
+  });
+
+  barChart.innerHTML = html;
+}
+
+function rpSvraRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpSvraPieWrap');
+  var canvas = document.getElementById('rpSvraPieCanvas');
+  var emptyMsg = document.getElementById('rpSvraChartEmpty');
+  var legendDiv = document.getElementById('rpSvraChartLegend');
+  var valueType = document.querySelector('input[name="rpSvraValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    pieWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) {
+    return valueType === 'amount' ? d.amount : d.quantity;
+  });
+  var baseColors = sorted.map(function(_, i) { return rpSvraPieColors[i % rpSvraPieColors.length]; });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  // 범례 — 그라데이션 표현
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var val = valueType === 'amount' ? d.amount : d.quantity;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    legendHtml += '<span class="rp-svra-legend-item">' +
+      '<span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' +
+      d.label + ' (' + ratio + '%)' +
+      '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpSvraChartInstance) rpSvraChartInstance.destroy();
+
+  var ctx = canvas.getContext('2d');
+
+  // Canvas 그라데이션 생성
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpSvraChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: gradColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'rpSvraPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 12px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  서비스 항목별 매출 (rpSvis)
+// ═══════════════════════════════════════════════════════════
+
+// svServiceData 기반 샘플 매출 데이터 자동 생성
+function rpSvisBuildSampleData() {
+  var data = { all: { all: [] } };
+  var prices = {
+    '네일 케어': 15000, '(회원) 네일 케어': 12000, '젤네일 기본': 30000, '(회원) 젤네일 기본': 25000,
+    '젤네일 프렌치': 40000, '젤네일 그라데이션': 45000, '아트': 20000,
+    '패디 케어': 20000, '(회원) 패디 케어': 15000, '젤패디 기본': 35000, '(회원) 젤패디 기본': 30000, '각질제거': 10000,
+    '칼라추가': 5000, '쏙오프': 10000, '파츠': 10000, '스톤': 15000, '랩핑': 15000, '팁': 8000, '익스텐션': 25000, '보수': 12000
+  };
+  var qtys = {
+    '네일 케어': 12, '(회원) 네일 케어': 5, '젤네일 기본': 18, '(회원) 젤네일 기본': 8,
+    '젤네일 프렌치': 8, '젤네일 그라데이션': 6, '아트': 10,
+    '패디 케어': 9, '(회원) 패디 케어': 3, '젤패디 기본': 7, '(회원) 젤패디 기본': 2, '각질제거': 5,
+    '칼라추가': 8, '쏙오프': 6, '파츠': 4, '스톤': 3, '랩핑': 2, '팁': 3, '익스텐션': 1, '보수': 2
+  };
+
+  Object.keys(svServiceData).forEach(function(catName) {
+    data[catName] = { all: [] };
+    svServiceData[catName].forEach(function(svc) {
+      var q = qtys[svc.name] || Math.floor(Math.random() * 10 + 1);
+      var p = prices[svc.name] || 20000;
+      var item = { label: svc.name, quantity: q, amount: q * p };
+      data[catName].all.push(item);
+      data[catName][svc.name] = [item];
+      data.all.all.push(item);
+    });
+  });
+  return data;
+}
+
+var rpSvisSampleData = null;
+var rpSvisCurrentData = [];
+
+function openServiceItemSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpServiceItemView').classList.add('show');
+  // svServiceData 기반으로 샘플 데이터 빌드 (첫 호출 또는 갱신)
+  rpSvisSampleData = rpSvisBuildSampleData();
+  rpSvisInit();
+  setTimeout(function() {
+    rpSvisSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpSvisGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+}
+
+function rpSvisPrint() { window.print(); }
+
+function rpSvisInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpSvisMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpSvisDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpSvisRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpSvisRangeEnd').value = y + '-' + m + '-' + d;
+  rpSvisTogglePeriod();
+
+  // svServiceData에서 분류 목록 동적 생성
+  var catSel = document.getElementById('rpSvisCategorySelect');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  Object.keys(svServiceData).forEach(function(catName) {
+    catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
+  });
+
+  rpSvisOnCategoryChange();
+}
+
+function rpSvisTogglePeriod() {
+  var type = document.querySelector('input[name="rpSvisPeriod"]:checked').value;
+  document.getElementById('rpSvisDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpSvisMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpSvisRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpSvisOnCategoryChange() {
+  var cat = document.getElementById('rpSvisCategorySelect').value;
+  var svcSel = document.getElementById('rpSvisServiceSelect');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+
+  if (cat !== 'all' && svServiceData[cat]) {
+    svServiceData[cat].forEach(function(svc) {
+      svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+    });
+  } else {
+    Object.keys(svServiceData).forEach(function(catKey) {
+      svServiceData[catKey].forEach(function(svc) {
+        svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+      });
+    });
+  }
+}
+
+function rpSvisGetData() {
+  if (!rpSvisSampleData) rpSvisSampleData = rpSvisBuildSampleData();
+  var cat = document.getElementById('rpSvisCategorySelect').value;
+  var svc = document.getElementById('rpSvisServiceSelect').value;
+  var catKey = cat === 'all' ? 'all' : cat;
+  var svcKey = svc === 'all' ? 'all' : svc;
+
+  var catData = rpSvisSampleData[catKey];
+  if (!catData) return [];
+  return catData[svcKey] || [];
+}
+
+function rpSvisSearch() {
+  rpSvisCurrentData = rpSvisGetData();
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var th = document.getElementById('rpSvisColHeader');
+  th.textContent = isEn ? 'Service' : '서비스';
+  th.setAttribute('data-ko', '서비스');
+  th.setAttribute('data-en', 'Service');
+
+  rpSvisRenderTable(rpSvisCurrentData);
+  rpSvisRenderBarChart(rpSvisCurrentData);
+}
+
+function rpSvisRenderTable(data) {
+  var tbody = document.getElementById('rpSvisTableBody');
+  var valueType = document.querySelector('input[name="rpSvisValueType"]:checked').value;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalQty = 0, totalAmt = 0;
+  data.forEach(function(d) { totalQty += d.quantity; totalAmt += d.amount; });
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var ratioBase = valueType === 'amount' ? totalAmt : totalQty;
+    var ratio = ratioBase > 0 ? ((valueType === 'amount' ? d.amount : d.quantity) / ratioBase * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.label + '</td><td>' + d.quantity.toLocaleString() + '</td><td>' + d.amount.toLocaleString() + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalQty.toLocaleString() + '</td><td>' + totalAmt.toLocaleString() + '</td><td>100.0%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpSvisRenderBarChart(data) {
+  var barChart = document.getElementById('rpSvisBarChart');
+  var emptyMsg = document.getElementById('rpSvisChartEmpty');
+  var legendDiv = document.getElementById('rpSvisChartLegend');
+  var valueType = document.querySelector('input[name="rpSvisValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    barChart.style.display = 'none';
+    barChart.innerHTML = '';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var values = sorted.map(function(d) { return valueType === 'amount' ? d.amount : d.quantity; });
+  var maxVal = Math.max.apply(null, values);
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var labelText = valueType === 'amount' ? (isEn ? 'Amount' : '금액') : (isEn ? 'Quantity' : '수량');
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(90deg,#9B9BFF,#6161FF);"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total.toLocaleString() + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var val = valueType === 'amount' ? d.amount : d.quantity;
+    var pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var infoText = val.toLocaleString() + ' (' + ratio + '%)';
+
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + d.label + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div></div></div>';
+    } else {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + d.label + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div><span class="rp-svra-bar-info">' + infoText + '</span></div></div>';
+    }
+  });
+
+  barChart.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  월별 서비스 매출 분석 (rpMsv)
+// ═══════════════════════════════════════════════════════════
+
+var rpMsvChart = null;
+
+function rpMsvBuildMonthlyData(months) {
+  var cat = document.getElementById('rpMsvCategorySelect').value;
+  var svc = document.getElementById('rpMsvServiceSelect').value;
+  var staff = document.getElementById('rpMsvStaffSelect').value;
+
+  var baseAmounts = {
+    '2025-01':1800000,'2025-02':1650000,'2025-03':2100000,'2025-04':1950000,
+    '2025-05':2200000,'2025-06':2400000,'2025-07':2600000,'2025-08':2500000,
+    '2025-09':2300000,'2025-10':2100000,'2025-11':1900000,'2025-12':2800000,
+    '2026-01':2050000,'2026-02':1850000,'2026-03':2450000,'2026-04':1680000
+  };
+  var baseQtys = {
+    '2025-01':45,'2025-02':42,'2025-03':55,'2025-04':50,
+    '2025-05':58,'2025-06':62,'2025-07':68,'2025-08':65,
+    '2025-09':60,'2025-10':55,'2025-11':48,'2025-12':72,
+    '2026-01':52,'2026-02':47,'2026-03':63,'2026-04':43
+  };
+
+  var catFactor = (cat === 'all') ? 1.0 : (cat === '네일' ? 0.55 : cat === '패디' ? 0.25 : 0.2);
+  var svcFactor = (svc === 'all') ? 1.0 : 0.15;
+  var staffFactor = (staff === 'all') ? 1.0 : 0.35;
+  var factor = catFactor * svcFactor * staffFactor;
+
+  var result = [];
+  months.forEach(function(m) {
+    var amt = Math.round((baseAmounts[m] || 1500000) * factor);
+    var qty = Math.round((baseQtys[m] || 40) * factor);
+    result.push({ month: m, quantity: qty, amount: amt });
+  });
+  return result;
+}
+
+function openMonthlyServiceSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyServiceView').classList.add('show');
+  rpMsvInit();
+  setTimeout(function() {
+    rpMsvSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpMsvGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpMsvPrint() { window.print(); }
+
+function rpMsvSetChartType(type) {
+  document.querySelectorAll('#rpMsvChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpMsvSearch();
+}
+
+function rpMsvInit() {
+  var now = new Date();
+  var curY = now.getFullYear(), curM = now.getMonth() + 1;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  ['rpMsvYearFrom','rpMsvYearTo'].forEach(function(id) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    for (var y = curY - 3; y <= curY + 1; y++) sel.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  });
+  ['rpMsvMonthFrom','rpMsvMonthTo'].forEach(function(id, idx) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    var def = idx === 0 ? 1 : curM;
+    for (var m = 1; m <= 12; m++) sel.innerHTML += '<option value="' + String(m).padStart(2, '0') + '"' + (m === def ? ' selected' : '') + '>' + String(m).padStart(2, '0') + '</option>';
+  });
+
+  var catSel = document.getElementById('rpMsvCategorySelect');
+  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  Object.keys(svServiceData).forEach(function(catName) {
+    catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
+  });
+  rpMsvOnCategoryChange();
+
+  var staffSel = document.getElementById('rpMsvStaffSelect');
+  staffSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  rpSsStaffs.forEach(function(s) {
+    staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
+  });
+}
+
+function rpMsvOnCategoryChange() {
+  var cat = document.getElementById('rpMsvCategorySelect').value;
+  var svcSel = document.getElementById('rpMsvServiceSelect');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  if (cat !== 'all' && svServiceData[cat]) {
+    svServiceData[cat].forEach(function(svc) {
+      svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+    });
+  } else {
+    Object.keys(svServiceData).forEach(function(catKey) {
+      svServiceData[catKey].forEach(function(svc) {
+        svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+      });
+    });
+  }
+}
+
+function rpMsvGetMonths() {
+  var yf = document.getElementById('rpMsvYearFrom').value;
+  var mf = document.getElementById('rpMsvMonthFrom').value;
+  var yt = document.getElementById('rpMsvYearTo').value;
+  var mt = document.getElementById('rpMsvMonthTo').value;
+  var start = new Date(parseInt(yf), parseInt(mf) - 1, 1);
+  var end = new Date(parseInt(yt), parseInt(mt) - 1, 1);
+  var months = [];
+  var cur = new Date(start);
+  while (cur <= end) {
+    months.push(cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0'));
+    cur.setMonth(cur.getMonth() + 1);
+  }
+  return months;
+}
+
+function rpMsvSearch() {
+  var months = rpMsvGetMonths();
+  var data = rpMsvBuildMonthlyData(months);
+  rpMsvRenderTable(data);
+  rpMsvRenderChart(data);
+}
+
+function rpMsvRenderTable(data) {
+  var tbody = document.getElementById('rpMsvTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalQty = 0, totalAmt = 0;
+  data.forEach(function(d) { totalQty += d.quantity; totalAmt += d.amount; });
+
+  var html = '';
+  data.forEach(function(d) {
+    var ratio = totalAmt > 0 ? (d.amount / totalAmt * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.month + '</td><td>' + d.quantity.toLocaleString() + '</td><td>' + d.amount.toLocaleString() + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalQty.toLocaleString() + '</td><td>' + totalAmt.toLocaleString() + '</td><td>100.0%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpMsvRenderChart(data) {
+  var canvas = document.getElementById('rpMsvChart');
+  var emptyMsg = document.getElementById('rpMsvChartEmpty');
+  var legendDiv = document.getElementById('rpMsvChartLegend');
+  var canvasWrap = document.getElementById('rpMsvCanvasWrap');
+  var activeBtn = document.querySelector('#rpMsvChartToggle .rp-msv-toggle-btn.active');
+  var chartType = activeBtn ? activeBtn.getAttribute('data-type') : 'barline';
+  var valueType = document.querySelector('input[name="rpMsvValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    canvasWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    if (rpMsvChart) { rpMsvChart.destroy(); rpMsvChart = null; }
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  canvasWrap.style.display = '';
+  legendDiv.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var labelText = valueType === 'amount' ? (isEn ? 'Amount' : '금액') : (isEn ? 'Quantity' : '수량');
+  var labels = data.map(function(d) { return d.month; });
+  var values = data.map(function(d) { return valueType === 'amount' ? d.amount : d.quantity; });
+
+  var sum = values.reduce(function(a, b) { return a + b; }, 0);
+  var avg = values.length > 0 ? Math.round(sum / values.length) : 0;
+  var avgLine = values.map(function() { return avg; });
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(90deg,#9B9BFF,#6161FF);"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#F0A830;border-radius:0;height:2px;margin-top:6px;"></span>' + (isEn ? 'Average' : '평균') + ' (' + avg.toLocaleString() + ')</span>';
+
+  if (rpMsvChart) rpMsvChart.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var h = canvas.height || 280;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  var datasets = [];
+
+  if (chartType === 'line') {
+    datasets.push({
+      label: labelText,
+      data: values,
+      borderColor: '#6161FF',
+      backgroundColor: 'rgba(97,97,255,0.08)',
+      pointBackgroundColor: '#6161FF',
+      pointRadius: 4,
+      borderWidth: 2.5,
+      tension: 0.1,
+      fill: true
+    });
+  } else if (chartType === 'bar') {
+    datasets.push({
+      label: labelText,
+      data: values,
+      backgroundColor: grad,
+      borderRadius: 3,
+      maxBarThickness: 48
+    });
+  } else {
+    datasets.push({
+      label: labelText,
+      data: values,
+      type: 'bar',
+      backgroundColor: grad,
+      borderRadius: 3,
+      maxBarThickness: 48,
+      order: 2
+    });
+    datasets.push({
+      label: labelText + ' (line)',
+      data: values,
+      type: 'line',
+      borderColor: '#4F4FE0',
+      backgroundColor: 'transparent',
+      pointBackgroundColor: '#4F4FE0',
+      pointRadius: 4,
+      borderWidth: 2.5,
+      tension: 0,
+      fill: false,
+      order: 1
+    });
+  }
+
+  datasets.push({
+    label: isEn ? 'Average' : '평균',
+    data: avgLine,
+    type: 'line',
+    borderColor: '#F0A830',
+    backgroundColor: 'transparent',
+    pointRadius: 0,
+    borderWidth: 2,
+    borderDash: [6, 4],
+    tension: 0,
+    fill: false,
+    order: 0
+  });
+
+  rpMsvChart = new Chart(ctx, {
+    type: chartType === 'line' ? 'line' : 'bar',
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' }, color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  영업구분별 서비스 매출 (rpScs)
+// ═══════════════════════════════════════════════════════════
+
+var rpScsSalesCats = ['선택 안함', 'A', 'B', 'C'];
+
+function openSalesCatService() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpSalesCatServiceView').classList.add('show');
+  rpScsInit();
+  setTimeout(function() {
+    rpScsSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpScsGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpScsPrint() { window.print(); }
+
+function rpScsInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpScsMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpScsDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpScsRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpScsRangeEnd').value = y + '-' + m + '-' + d;
+  rpScsTogglePeriod();
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  var staffSel = document.getElementById('rpScsStaffSelect');
+  staffSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  rpSsStaffs.forEach(function(s) {
+    staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
+  });
+
+  var catSel = document.getElementById('rpScsCategorySelect');
+  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  Object.keys(svServiceData).forEach(function(catName) {
+    catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
+  });
+  rpScsOnCategoryChange();
+}
+
+function rpScsTogglePeriod() {
+  var type = document.querySelector('input[name="rpScsPeriod"]:checked').value;
+  document.getElementById('rpScsDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpScsMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpScsRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpScsOnCategoryChange() {
+  var cat = document.getElementById('rpScsCategorySelect').value;
+  var svcSel = document.getElementById('rpScsServiceSelect');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  if (cat !== 'all' && svServiceData[cat]) {
+    svServiceData[cat].forEach(function(svc) {
+      svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+    });
+  } else {
+    Object.keys(svServiceData).forEach(function(catKey) {
+      svServiceData[catKey].forEach(function(svc) {
+        svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
+      });
+    });
+  }
+}
+
+function rpScsSearch() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var staffFilter = document.getElementById('rpScsStaffSelect').value;
+  var staffList = (staffFilter === 'all') ? rpSsStaffs : rpSsStaffs.filter(function(s) { return s.id === staffFilter; });
+
+  var rows = [];
+  staffList.forEach(function(s) {
+    var row = { staff: isEn ? s.en : s.ko, cats: {} };
+    var totalAmt = 0, totalQty = 0;
+    rpScsSalesCats.forEach(function(cat) {
+      var seed = (s.id.length * 31 + cat.charCodeAt(0));
+      var amt = Math.round((seed * 7919 % 400000) + 80000);
+      var qty = Math.round((seed * 127 % 15) + 2);
+      row.cats[cat] = { amount: amt, quantity: qty };
+      totalAmt += amt;
+      totalQty += qty;
+    });
+    row.total = { amount: totalAmt, quantity: totalQty };
+    rows.push(row);
+  });
+
+  rpScsRenderTable(rows);
+}
+
+function rpScsRenderTable(rows) {
+  var tbody = document.getElementById('rpScsTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:32px 12px;color:#9E9E9E;font-size:13px;">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var grandCats = {};
+  rpScsSalesCats.forEach(function(cat) { grandCats[cat] = { amount: 0, quantity: 0 }; });
+  var grandTotal = { amount: 0, quantity: 0 };
+
+  var html = '';
+  rows.forEach(function(r) {
+    html += '<tr><td>' + r.staff + '</td>';
+    rpScsSalesCats.forEach(function(cat) {
+      var d = r.cats[cat];
+      grandCats[cat].amount += d.amount;
+      grandCats[cat].quantity += d.quantity;
+      html += '<td>' + d.amount.toLocaleString() + '<br><span class="rp-scs-qty">' + d.quantity.toLocaleString() + '</span></td>';
+    });
+    grandTotal.amount += r.total.amount;
+    grandTotal.quantity += r.total.quantity;
+    html += '<td style="font-weight:600;">' + r.total.amount.toLocaleString() + '<br><span class="rp-scs-qty">' + r.total.quantity.toLocaleString() + '</span></td>';
+    html += '</tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td>';
+  rpScsSalesCats.forEach(function(cat) {
+    html += '<td>' + grandCats[cat].amount.toLocaleString() + '<br><span class="rp-scs-qty">' + grandCats[cat].quantity.toLocaleString() + '</span></td>';
+  });
+  html += '<td>' + grandTotal.amount.toLocaleString() + '<br><span class="rp-scs-qty">' + grandTotal.quantity.toLocaleString() + '</span></td>';
+  html += '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  제품별 매출 분석 (rpPrd)
+// ═══════════════════════════════════════════════════════════
+
+var rpPrdHeaderLabels = { product:{ko:'제품',en:'Product'}, staff:{ko:'직원',en:'Staff'} };
+
+function rpPrdBuildSampleData() {
+  var products = [];
+  if (typeof pkgProductData !== 'undefined') pkgProductData.forEach(function(p){products.push(p.name);});
+  ['영양제','헤어에센스','두피토닉','네일오일','핸드크림','풋크림'].forEach(function(n){if(products.indexOf(n)===-1)products.push(n);});
+  var data={product:{all:[]},staff:{all:[]}};
+  var prices=[35000,28000,42000,18000,22000,15000];
+  products.forEach(function(name,i){
+    var qty=Math.max(1,12-i*2),price=prices[i%prices.length];
+    data.product.all.push({label:name,quantity:qty,amount:qty*price});
+  });
+  rpSsStaffs.forEach(function(s,si){
+    var tQ=0,tA=0; data.product[s.ko]=[];
+    products.forEach(function(name,i){
+      var bq=Math.max(1,12-i*2),f=si===0?0.45:si===1?0.35:0.2;
+      var qty=Math.max(0,Math.round(bq*f)),price=prices[i%prices.length];
+      data.product[s.ko].push({label:name,quantity:qty,amount:qty*price});
+      tQ+=qty;tA+=qty*price;
+    });
+    data.staff.all.push({label:s.ko,quantity:tQ,amount:tA});
+  });
+  return data;
+}
+
+var rpPrdSampleData=null;
+
+function openProductRevenue(){
+  freezeGnb();hideAllViews();
+  document.getElementById('rpProductRevenueView').classList.add('show');
+  rpPrdSampleData=rpPrdBuildSampleData();
+  rpPrdInit();
+  setTimeout(function(){rpPrdSearch();if(typeof currentLang!=='undefined'&&currentLang==='en')applyLang();},0);
+}
+function rpPrdGoBack(){hideAllViews();document.getElementById('reportView').classList.add('show');}
+function rpPrdPrint(){window.print();}
+
+function rpPrdInit(){
+  var now=new Date(),y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0'),d=String(now.getDate()).padStart(2,'0');
+  document.getElementById('rpPrdMonthlyDate').value=y+'-'+m;
+  document.getElementById('rpPrdDailyDate').value=y+'-'+m+'-'+d;
+  document.getElementById('rpPrdRangeStart').value=y+'-'+m+'-01';
+  document.getElementById('rpPrdRangeEnd').value=y+'-'+m+'-'+d;
+  rpPrdTogglePeriod();
+  var isEn=(typeof currentLang!=='undefined'&&currentLang==='en');
+  var sel=document.getElementById('rpPrdStaffSelect');
+  sel.innerHTML='<option value="all">'+(isEn?'All':'\uC804\uCCB4')+'</option>';
+  rpSsStaffs.forEach(function(s){sel.innerHTML+='<option value="'+s.ko+'">'+(isEn?s.en:s.ko)+'</option>';});
+  rpPrdOnAnalysisChange();
+}
+
+function rpPrdTogglePeriod(){
+  var t=document.querySelector('input[name="rpPrdPeriod"]:checked').value;
+  document.getElementById('rpPrdDailyDate').style.display=t==='daily'?'':'none';
+  document.getElementById('rpPrdMonthlyDate').style.display=t==='monthly'?'':'none';
+  document.getElementById('rpPrdRangeInputs').style.display=t==='range'?'flex':'none';
+}
+
+function rpPrdOnAnalysisChange(){
+  var type=document.getElementById('rpPrdAnalysisType').value;
+  var th=document.getElementById('rpPrdColHeader');
+  var isEn=(typeof currentLang!=='undefined'&&currentLang==='en');
+  var l=rpPrdHeaderLabels[type];
+  th.textContent=isEn?l.en:l.ko;
+}
+
+function rpPrdGetData(){
+  if(!rpPrdSampleData)rpPrdSampleData=rpPrdBuildSampleData();
+  var at=document.getElementById('rpPrdAnalysisType').value;
+  var staff=document.getElementById('rpPrdStaffSelect').value;
+  if(at==='staff')return rpPrdSampleData.staff.all||[];
+  var key=staff==='all'?'all':staff;
+  return(rpPrdSampleData.product[key])?rpPrdSampleData.product[key]:[];
+}
+
+function rpPrdSearch(){
+  var data=rpPrdGetData();
+  rpPrdOnAnalysisChange();
+  rpPrdRenderTable(data);
+  rpPrdRenderBarChart(data);
+}
+
+function rpPrdRenderTable(data){
+  var tbody=document.getElementById('rpPrdTableBody');
+  var vt=document.querySelector('input[name="rpPrdValueType"]:checked').value;
+  var isEn=(typeof currentLang!=='undefined'&&currentLang==='en');
+  if(!data||data.length===0){tbody.innerHTML='<tr><td colspan="4" class="rp-svra-empty-td">'+(isEn?'No data available':'\uB0B4\uC5ED\uC774 \uC5C6\uC2B5\uB2C8\uB2E4')+'</td></tr>';return;}
+  var tQ=0,tA=0;
+  data.forEach(function(d){tQ+=d.quantity;tA+=d.amount;});
+  var sorted=data.slice().sort(function(a,b){return vt==='amount'?b.amount-a.amount:b.quantity-a.quantity;});
+  var html='';
+  sorted.forEach(function(d){
+    var rb=vt==='amount'?tA:tQ;
+    var r=rb>0?((vt==='amount'?d.amount:d.quantity)/rb*100).toFixed(1):'0.0';
+    html+='<tr><td>'+d.label+'</td><td>'+d.quantity.toLocaleString()+'</td><td>'+d.amount.toLocaleString()+'</td><td>'+r+'%</td></tr>';
+  });
+  html+='<tr class="rp-svra-total-row"><td>'+(isEn?'Total':'\uD569\uACC4')+'</td><td>'+tQ.toLocaleString()+'</td><td>'+tA.toLocaleString()+'</td><td>100.0%</td></tr>';
+  tbody.innerHTML=html;
+}
+
+function rpPrdRenderBarChart(data){
+  var bc=document.getElementById('rpPrdBarChart');
+  var em=document.getElementById('rpPrdChartEmpty');
+  var lg=document.getElementById('rpPrdChartLegend');
+  var vt=document.querySelector('input[name="rpPrdValueType"]:checked').value;
+  if(!data||data.length===0){bc.style.display='none';bc.innerHTML='';em.style.display='';lg.style.display='none';return;}
+  em.style.display='none';bc.style.display='block';lg.style.display='flex';
+  var sorted=data.slice().sort(function(a,b){return vt==='amount'?b.amount-a.amount:b.quantity-a.quantity;});
+  var vals=sorted.map(function(d){return vt==='amount'?d.amount:d.quantity;});
+  var mx=Math.max.apply(null,vals);
+  var tot=vals.reduce(function(s,v){return s+v;},0);
+  var isEn=(typeof currentLang!=='undefined'&&currentLang==='en');
+  var lt=vt==='amount'?(isEn?'Amount':'\uAE08\uC561'):(isEn?'Quantity':'\uC218\uB7C9');
+  lg.innerHTML='<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(90deg,#9B9BFF,#6161FF);"></span>'+lt+'</span><span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">'+(isEn?'Total':'\uD569\uACC4')+' '+tot.toLocaleString()+'</span>';
+  var h='';
+  sorted.forEach(function(d){
+    var v=vt==='amount'?d.amount:d.quantity;
+    var p=mx>0?(v/mx*100):0;
+    var r=tot>0?(v/tot*100).toFixed(1):'0.0';
+    var info=v.toLocaleString()+' ('+r+'%)';
+    if(p>=55){h+='<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">'+d.label+'</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:'+p+'%;"><span class="rp-svra-bar-info-inside">'+info+'</span></div></div></div>';}
+    else{h+='<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">'+d.label+'</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:'+p+'%;"></div><span class="rp-svra-bar-info">'+info+'</span></div></div>';}
+  });
+  bc.innerHTML=h;
+}
