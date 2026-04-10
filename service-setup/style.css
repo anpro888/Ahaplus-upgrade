@@ -2592,8 +2592,8 @@ html, body { height: 100%; font-family: -apple-system, 'Pretendard', 'Apple SD G
 .sh2-empty { padding:40px 0; text-align:center; color:#9E9E9E; font-size:13px; }
 .sh2-detail-btn { padding:4px 12px; border:1px solid #E0E0E0; background:#fff; border-radius:5px; font-size:11px; color:#6161FF; cursor:pointer; font-weight:500; font-family:inherit; transition:0.15s; white-space:nowrap; }
 .sh2-detail-btn:hover { background:#6161FF; color:#fff; border-color:#6161FF; }
-.sh2-notes { margin-top:16px; padding:0 0 0 20px; flex-shrink:0; }
-.sh2-notes li { font-size:11px; color:#9E9E9E; line-height:1.8; }
+.sh2-notes { margin-top:16px; padding:16px 20px 16px 36px; flex-shrink:0; background:#fff; border:1px solid #E0E0E0; border-radius:8px; }
+.sh2-notes li { font-size:12px; color:#757575; line-height:1.8; }
 /* ══ [FEAT-STOCK-HISTORY] 재고 변동 이력 페이지 END ══ */
 
 /* ══ [FEAT-STOCK-STATUS] 재고 현황 페이지 START ══ */
@@ -8225,6 +8225,12 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .rp-ss-table tbody td.rp-ss-month-label { font-weight:500; color:#616161; background:#FAFAFA; }
 .rp-ss-table tbody tr.rp-ss-row-total td.rp-ss-month-label { color:#6161FF; background:#F7F7FF; }
 
+/* 3등분 셀 (수량/판매/고객, 객단가) */
+.rp-ss-table td.rp-ss-sub3 { padding:0 !important; }
+.rp-ss-sub3-wrap { display:flex; }
+.rp-ss-sub3-wrap > span { flex:1; padding:8px 6px; text-align:right; border-left:1px solid #F0EEE9; white-space:nowrap; }
+.rp-ss-sub3-wrap > span:first-child { border-left:none; }
+
 .rp-ss-notes { margin-top:16px; padding:16px 20px 16px 36px; font-size:12px; color:#757575; line-height:2; background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
 .rp-ss-notes p { margin:0; list-style:disc outside; display:list-item; }
 /* ── 서비스 매출 분석 뷰 ── */
@@ -8286,4 +8292,146 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 /* ── 제품별 매출 분석 뷰 ── */
 #rpProductRevenueView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
 #rpProductRevenueView.show { display:flex; }
+#rpMonthlyProductView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyProductView.show { display:flex; }
+#rpDiscountSalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpDiscountSalesView.show { display:flex; }
+#rpRevisitSalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpRevisitSalesView.show { display:flex; }
+.rp-rvs-table-wrap { flex:1; overflow:auto; padding:0 0 16px; }
+.rp-rvs-table { width:100%; }
+.rp-rvs-table thead tr:first-child th { text-align:center; border-bottom:1px solid #E0E0E0; }
+.rp-rvs-table thead tr:first-child th[rowspan] { vertical-align:middle; }
+.rp-rvs-table thead tr:last-child th { text-align:center; }
+.rp-rvs-table tbody td { text-align:center; }
+.rp-rvs-table tbody td:first-child { text-align:center; font-weight:500; }
+#rpMemberRepurchaseView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMemberRepurchaseView.show { display:flex; }
+#rpProfitLossView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpProfitLossView.show { display:flex; }
+.rp-pnl-table tbody td { background:#fff; font-weight:400; color:#212121; vertical-align:middle; }
+.rp-pnl-table tbody td:last-child { text-align:right; padding-right:16px; }
+.rp-pnl-table tbody td[rowspan] { font-weight:600; }
+.rp-pnl-table .rp-pnl-subtotal td { background:#FAFAFA; font-weight:600; }
+.rp-pnl-table .rp-pnl-profit td { background:#EEF0FF; font-weight:700; color:#6161FF; }
+/* ── [FEAT-CLIENT-STATUS] 전체 고객 현황 ── */
+#rpClientStatusView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpClientStatusView.show { display:flex; }
+#rpClientStatusView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-cs-total-row td { font-weight:600; background:#FAFAFA; }
+
+/* ── [FEAT-PERIOD-CLIENT] 기간별 고객 현황 ── */
+#rpPeriodClientView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpPeriodClientView.show { display:flex; }
+#rpPeriodClientView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+
+.rp-pcs-tables { display:flex; gap:16px; margin-bottom:12px; align-items:flex-start; }
+.rp-pcs-table-section { flex:1; min-width:0; }
+.rp-pcs-section-title { font-size:14px; font-weight:700; color:#212121; margin-bottom:8px; }
+.rp-pcs-table thead th { vertical-align:middle; }
+.rp-pcs-table thead th[rowspan] { border-right:1px solid #E0E0E0; }
+.rp-pcs-table tbody td:first-child { font-weight:600; background:#FAFAFA; }
+.rp-pcs-note-indent { padding-left:16px !important; }
+/* ── [FEAT-CLIENT-TYPE] 고객 유형별 분석 ── */
+#rpClientTypeView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpClientTypeView.show { display:flex; }
+#rpClientTypeView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── [FEAT-NEW-CLIENT-REVISIT] 신규고객 재방문 분석 ── */
+#rpNewClientRevisitView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpNewClientRevisitView.show { display:flex; }
+#rpNewClientRevisitView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-ncr-table thead th { vertical-align:middle; white-space:nowrap; }
+.rp-ncr-table thead th[rowspan] { border-right:1px solid #E0E0E0; }
+.rp-ncr-table tbody td:first-child { font-weight:600; background:#FAFAFA; }
+.rp-ncr-table tbody td:nth-child(2) { color:#6161FF; font-weight:600; }
+/* ── [FEAT-MONTHLY-NEW-CLIENT] 월별 신규 고객 ── */
+#rpMonthlyNewClientView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyNewClientView.show { display:flex; }
+#rpMonthlyNewClientView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-mnc-chart-panel { min-height:380px; }
+.rp-mnc-chart-wrap { width:100%; flex:1; position:relative; }
+.rp-mnc-chart-wrap canvas { width:100% !important; height:320px !important; }
+/* ── [FEAT-MONTHLY-REFERRAL] 월별 소개 고객 분석 ── */
+#rpMonthlyReferralView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyReferralView.show { display:flex; }
+#rpMonthlyReferralView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── [FEAT-VISIT-SOURCE] 신규고객 방문경로 분석 ── */
+#rpVisitSourceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpVisitSourceView.show { display:flex; }
+#rpVisitSourceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 예약 상세 집계 ── */
+#rpBookingDetailView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingDetailView.show { display:flex; }
+#rpBookingDetailView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-bda-section { background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.06); padding:20px; margin-bottom:16px; }
+.rp-bda-section-title { font-size:14px; font-weight:700; color:#212121; margin-bottom:12px; }
+.rp-bda-table-wrap { border:1px solid #E0E0E0; border-radius:6px; overflow:hidden; }
+.rp-bda-highlight { color:#6161FF !important; font-weight:600; }
+.rp-bda-change-row td { font-weight:600; background:#FAFAFA; }
+/* ── 예약 차트 높이 제한 (요일별/시간대별/자원별) ── */
+/* 예약 분석 차트+테이블 5:5 비율 */
+#rpBookingByWeekdayView .rp-svra-chart-panel,
+#rpBookingByTimeslotView .rp-svra-chart-panel,
+#rpBookingByResourceView .rp-svra-chart-panel { flex:1; }
+#rpBookingByWeekdayView .rp-svra-table-panel,
+#rpBookingByTimeslotView .rp-svra-table-panel,
+#rpBookingByResourceView .rp-svra-table-panel { flex:1; }
+/* 막대 canvas 높이 제한 */
+.rp-bwa-bar-wrap, .rp-bta-bar-wrap { width:100%; height:320px; position:relative; }
+.rp-bwa-bar-wrap canvas, .rp-bta-bar-wrap canvas { width:100% !important; height:100% !important; }
+/* ── 예약 시간대별 분석 ── */
+#rpBookingByTimeslotView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingByTimeslotView.show { display:flex; }
+#rpBookingByTimeslotView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 예약 요일별 분석 ── */
+#rpBookingByWeekdayView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingByWeekdayView.show { display:flex; }
+#rpBookingByWeekdayView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 예약 자원별 분석 ── */
+#rpBookingByResourceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingByResourceView.show { display:flex; }
+#rpBookingByResourceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 월별 예약 분석 ── */
+#rpMonthlyBookingView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyBookingView.show { display:flex; }
+#rpMonthlyBookingView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 일별 예약 분석 ── */
+#rpDailyBookingView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpDailyBookingView.show { display:flex; }
+#rpDailyBookingView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 예약 경로별 분석 ── */
+#rpBookingByChannelView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingByChannelView.show { display:flex; }
+#rpBookingByChannelView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+#rpBookingByChannelView .rp-svra-chart-panel,
+#rpBookingByChannelView .rp-svra-table-panel { flex:1; }
+.rp-bch-bar-wrap { width:100%; height:320px; position:relative; }
+.rp-bch-bar-wrap canvas { width:100% !important; height:100% !important; }
+.rp-bch-doughnut-wrap { width:100%; display:flex; justify-content:center; align-items:center; min-height:320px; }
+.rp-bch-doughnut-wrap canvas { max-width:300px; max-height:300px; }
+.rp-bch-center-text { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; pointer-events:none; }
+.rp-bch-center-value { font-size:24px; font-weight:700; color:#212121; line-height:1.2; }
+.rp-bch-center-label { font-size:12px; color:#757575; margin-top:2px; }
+/* ── 예약률 분석 ── */
+#rpBookingRateView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpBookingRateView.show { display:flex; }
+#rpBookingRateView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+#rpBookingRateView .rp-svra-chart-panel,
+#rpBookingRateView .rp-brt-right-panel { flex:1; }
+.rp-brt-right-panel { display:flex; flex-direction:column; gap:12px; min-width:0; }
+.rp-brt-doughnut-wrap { width:100%; display:flex; justify-content:center; align-items:center; min-height:320px; }
+.rp-brt-doughnut-wrap canvas { max-width:300px; max-height:300px; }
+.rp-brt-center-text { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; pointer-events:none; }
+.rp-brt-center-value { font-size:24px; font-weight:700; color:#212121; line-height:1.2; }
+.rp-brt-center-label { font-size:12px; color:#757575; margin-top:2px; }
+.rp-brt-notes { padding:12px 16px; font-size:12px; color:#757575; line-height:1.8; }
+/* ── 자원 운용률 분석 ── */
+#rpResourceUtilView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpResourceUtilView.show { display:flex; }
+#rpResourceUtilView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+#rpResourceUtilView .rp-svra-chart-panel,
+#rpResourceUtilView .rp-rut-right-panel { flex:1; }
+.rp-rut-right-panel { display:flex; flex-direction:column; gap:0; min-width:0; }
+.rp-rut-bar-wrap { width:100%; height:360px; position:relative; }
+.rp-rut-bar-wrap canvas { width:100% !important; height:100% !important; }
 /* ══ [FEAT-REPORT] END ══ */

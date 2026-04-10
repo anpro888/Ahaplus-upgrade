@@ -3534,6 +3534,29 @@ function applyLang() {
   if (spView && spView.classList.contains('show') && typeof spRender === 'function') { spRender(); }
   var pcView = document.getElementById('purchaseView');
   if (pcView && pcView.classList.contains('show') && typeof pcSearch === 'function') { pcSearch(); }
+  // 분석 페이지 동적 리렌더 (차트 범례, 테이블 합계, 셀렉트 옵션)
+  var rpSsView = document.getElementById('rpStaffSalesView');
+  if (rpSsView && rpSsView.classList.contains('show') && typeof rpSsSearch === 'function') { rpSsSearch(); }
+  var rpSvraView = document.getElementById('rpServiceRevenueView');
+  if (rpSvraView && rpSvraView.classList.contains('show') && typeof rpSvraSearch === 'function') { rpSvraSearch(); }
+  var rpSvisView = document.getElementById('rpServiceItemView');
+  if (rpSvisView && rpSvisView.classList.contains('show') && typeof rpSvisSearch === 'function') { rpSvisSearch(); }
+  var rpMsvView = document.getElementById('rpMonthlyServiceView');
+  if (rpMsvView && rpMsvView.classList.contains('show') && typeof rpMsvSearch === 'function') { rpMsvSearch(); }
+  var rpScsView = document.getElementById('rpSalesCatServiceView');
+  if (rpScsView && rpScsView.classList.contains('show') && typeof rpScsSearch === 'function') { rpScsSearch(); }
+  var rpPrdView = document.getElementById('rpProductRevenueView');
+  if (rpPrdView && rpPrdView.classList.contains('show') && typeof rpPrdSearch === 'function') { rpPrdSearch(); }
+  var rpMpvView = document.getElementById('rpMonthlyProductView');
+  if (rpMpvView && rpMpvView.classList.contains('show') && typeof rpMpvSearch === 'function') { rpMpvSearch(); }
+  var rpDscView = document.getElementById('rpDiscountSalesView');
+  if (rpDscView && rpDscView.classList.contains('show') && typeof rpDscSearch === 'function') { rpDscSearch(); }
+  var rpRvsView = document.getElementById('rpRevisitSalesView');
+  if (rpRvsView && rpRvsView.classList.contains('show') && typeof rpRvsSearch === 'function') { rpRvsSearch(); }
+  var rpMrpView = document.getElementById('rpMemberRepurchaseView');
+  if (rpMrpView && rpMrpView.classList.contains('show') && typeof rpMrpSearch === 'function') { rpMrpSearch(); }
+  var rpPnlView = document.getElementById('rpProfitLossView');
+  if (rpPnlView && rpPnlView.classList.contains('show') && typeof rpPnlSearch === 'function') { rpPnlSearch(); }
   // 출퇴근 테이블 리렌더 (지각/조퇴/근무시간 등 동적 텍스트 반영)
   var tcView = document.getElementById('timeClockView');
   if (tcView && tcView.classList.contains('show') && typeof tcSearch === 'function') {
@@ -3897,7 +3920,7 @@ function prdSyncCats() {
   var filterSel = document.getElementById('prdFilterCat');
   if (filterSel) {
     var prev = filterSel.value;
-    filterSel.innerHTML = '<option value="">' + (currentLang === 'en' ? 'All' : '전체') + '</option>';
+    filterSel.innerHTML = '<option value="" data-i18n="common.all" data-ko="전체" data-en="All">' + (currentLang === 'en' ? 'All' : '전체') + '</option>';
     prdCats.forEach(function(c) { filterSel.innerHTML += '<option value="' + c + '">' + c + '</option>'; });
     filterSel.value = prev;
   }
@@ -6212,7 +6235,7 @@ function hideAllViews() {
     'stockAdjustView','stockAdjustEditView',
     'stockHistoryView','stockStatusView','purchaseView','supplierMgmtView',
     'expenseItemView','expenseSummaryView','expenseHistoryView',
-    'reportView','rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView','rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView','rpProductRevenueView'
+    'reportView','rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView','rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView','rpProductRevenueView','rpMonthlyProductView','rpDiscountSalesView','rpRevisitSalesView','rpMemberRepurchaseView','rpProfitLossView','rpClientStatusView','rpPeriodClientView','rpClientTypeView','rpNewClientRevisitView','rpMonthlyNewClientView','rpMonthlyReferralView','rpVisitSourceView','rpBookingDetailView','rpDailyBookingView','rpMonthlyBookingView','rpBookingByResourceView','rpBookingByWeekdayView','rpBookingByTimeslotView','rpBookingByChannelView','rpBookingRateView','rpResourceUtilView'
   ];
   viewIds.forEach(function(id) {
     var el = document.getElementById(id);
@@ -6641,7 +6664,7 @@ function cmPopulatePrepaidCards() {
   if (!sel) return;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   // 기존 옵션 유지 (전체)
-  sel.innerHTML = '<option>' + (isEn ? 'All' : '전체') + '</option>';
+  sel.innerHTML = '<option data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   // 설정 > 정액권 테이블에서 이름 가져오기
   var rows = document.querySelectorAll('#psCardTbody tr');
   rows.forEach(function(row) {
@@ -6663,7 +6686,7 @@ function cmTicketCatChange() {
   if (!catSel || !itemSel) return;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var cat = catSel.value;
-  itemSel.innerHTML = '<option value="">' + (isEn ? 'All' : '전체') + '</option>';
+  itemSel.innerHTML = '<option value="" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   if (cat) {
     itemSel.disabled = false;
     itemSel.style.opacity = '1';
@@ -6685,7 +6708,7 @@ function cmProdCatChange() {
   if (!catSel || !itemSel) return;
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var cat = catSel.value;
-  itemSel.innerHTML = '<option value="">' + (isEn ? 'All' : '전체') + '</option>';
+  itemSel.innerHTML = '<option value="" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   if (cat) {
     itemSel.disabled = false;
     itemSel.style.opacity = '1';
@@ -13459,7 +13482,7 @@ function sgSave() {
   // 직원 select에 반영
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
   var sel = document.getElementById('sgStaffSelect');
-  sel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  sel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   sgGoalData.forEach(function(d) {
     sel.innerHTML += '<option value="' + d.name + '">' + d.name + '</option>';
   });
@@ -13903,7 +13926,7 @@ function ehPopulateItemFilter() {
   var sel = document.getElementById('ehFilterItem');
   var items = ehGetExpenseItems();
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  sel.innerHTML = '<option value="">' + (isEn ? 'All' : '전체') + '</option>';
+  sel.innerHTML = '<option value="" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   items.forEach(function(name) {
     var opt = document.createElement('option');
     opt.value = name; opt.textContent = name;
@@ -14646,12 +14669,23 @@ var rpSsStaffs = [
 ];
 
 // 월별 직원별 샘플 — rpMsSampleSales의 합계와 일치
-var rpSsMonthlyData = {
+// 판매 기준 (회원권 판매 포함, 차감 제외)
+var rpSsMonthlyData_sales = {
   '2026-01': { total:{sales:6350000,qty:32,txn:28,clients:22,avg:120000}, owner:{sales:3200000,qty:16,txn:14,clients:12,avg:120000}, star:{sales:1800000,qty:9,txn:8,clients:6,avg:120000}, staff1:{sales:850000,qty:4,txn:3,clients:2,avg:120000}, none:{sales:500000,qty:3,txn:3,clients:2,avg:120000} },
   '2026-02': { total:{sales:5230000,qty:26,txn:22,clients:18,avg:120000}, owner:{sales:2600000,qty:13,txn:11,clients:9,avg:120000}, star:{sales:1500000,qty:7,txn:6,clients:5,avg:120000}, staff1:{sales:730000,qty:3,txn:3,clients:2,avg:120000}, none:{sales:400000,qty:3,txn:2,clients:2,avg:120000} },
   '2026-03': { total:{sales:14900000,qty:75,txn:65,clients:48,avg:120000}, owner:{sales:7500000,qty:38,txn:33,clients:25,avg:120000}, star:{sales:4200000,qty:21,txn:18,clients:13,avg:120000}, staff1:{sales:2100000,qty:10,txn:9,clients:6,avg:120000}, none:{sales:1100000,qty:6,txn:5,clients:4,avg:120000} },
   '2026-04': { total:{sales:4408000,qty:22,txn:19,clients:15,avg:120000}, owner:{sales:2200000,qty:11,txn:9,clients:7,avg:120000}, star:{sales:1250000,qty:6,txn:5,clients:4,avg:120000}, staff1:{sales:608000,qty:3,txn:3,clients:2,avg:120000}, none:{sales:350000,qty:2,txn:2,clients:2,avg:120000} }
 };
+
+// 매출 기준 (회원권 차감 포함, 판매 제외)
+var rpSsMonthlyData_revenue = {
+  '2026-01': { total:{sales:5120000,qty:38,txn:33,clients:22,avg:155000}, owner:{sales:2580000,qty:19,txn:17,clients:12,avg:152000}, star:{sales:1450000,qty:11,txn:9,clients:6,avg:161000}, staff1:{sales:690000,qty:5,txn:4,clients:2,avg:173000}, none:{sales:400000,qty:3,txn:3,clients:2,avg:133000} },
+  '2026-02': { total:{sales:4380000,qty:31,txn:26,clients:18,avg:168000}, owner:{sales:2180000,qty:16,txn:13,clients:9,avg:168000}, star:{sales:1260000,qty:9,txn:7,clients:5,avg:180000}, staff1:{sales:580000,qty:4,txn:4,clients:2,avg:145000}, none:{sales:360000,qty:2,txn:2,clients:2,avg:180000} },
+  '2026-03': { total:{sales:12500000,qty:88,txn:76,clients:48,avg:164000}, owner:{sales:6300000,qty:45,txn:39,clients:25,avg:162000}, star:{sales:3520000,qty:24,txn:21,clients:13,avg:168000}, staff1:{sales:1780000,qty:12,txn:10,clients:6,avg:178000}, none:{sales:900000,qty:7,txn:6,clients:4,avg:150000} },
+  '2026-04': { total:{sales:3650000,qty:27,txn:23,clients:15,avg:159000}, owner:{sales:1820000,qty:14,txn:12,clients:7,avg:152000}, star:{sales:1030000,qty:8,txn:6,clients:4,avg:172000}, staff1:{sales:500000,qty:3,txn:3,clients:2,avg:167000}, none:{sales:300000,qty:2,txn:2,clients:2,avg:150000} }
+};
+
+var rpSsMonthlyData = rpSsMonthlyData_sales;
 
 function openStaffSales() {
   freezeGnb();
@@ -14751,18 +14785,20 @@ function rpSsGetMonths() {
 
 function rpSsSearch() {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var basis = document.querySelector('input[name="rpSsBasis"]:checked').value;
+  rpSsMonthlyData = basis === 'revenue' ? rpSsMonthlyData_revenue : rpSsMonthlyData_sales;
   var months = rpSsGetMonths();
 
   // 멀티셀렉트에서 선택된 직원
   var staffChecks = document.querySelectorAll('#rpSsStaffDrop input[type="checkbox"]:not([value="all"]):checked');
-  var allStaffMap = { owner: { id:'owner', ko:'원장님', en:'Owner' }, star: { id:'star', ko:'별별별', en:'Star' }, staff1: { id:'staff1', ko:'staff', en:'staff' }, none: { id:'none', ko:'선택 안함', en:'Unassigned' } };
+  var allStaffMap = { owner: { id:'owner', ko:'원장님', en:'Owner' }, star: { id:'star', ko:'별별별', en:'Star' }, staff1: { id:'staff1', ko:'staff', en:'staff' }, none: { id:'none', ko:'선택 안함', en:'Not Select' } };
   var cols = [];
   staffChecks.forEach(function(c) { if (allStaffMap[c.value]) cols.push(allStaffMap[c.value]); });
 
   // thead
   var thead = document.getElementById('rpSsTableHead');
-  var hHtml = '<tr><th colspan="2" data-i18n="rp.ss_div" data-ko="구분" data-en="Division">' + (isEn ? 'Division' : '구분') + '</th>';
-  hHtml += '<th data-i18n="rp.ds_all" data-ko="전체" data-en="Total">' + (isEn ? 'Total' : '전체') + '</th>';
+  var hHtml = '<tr><th colspan="2" data-i18n="rp.ss_div" data-ko="구분" data-en="Type">' + (isEn ? 'Type' : '구분') + '</th>';
+  hHtml += '<th data-i18n="rp.ds_all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</th>';
   cols.forEach(function(c) { hHtml += '<th>' + (isEn ? c.en : c.ko) + '</th>'; });
   hHtml += '</tr>';
   thead.innerHTML = hHtml;
@@ -14794,25 +14830,30 @@ function rpSsSearch() {
     bHtml += '</tr>';
 
     // 수량/판매/고객 row
-    bHtml += '<tr><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
-    bHtml += '<td>' + (t.qty > 0 ? t.qty + '개(' + optRate + '%)' : '') + '</td>';
+    bHtml += '<tr><td>' + (isEn ? 'Qty(Op%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + (t.qty > 0 ? t.qty + (isEn ? '(' + optRate + '%)' : '개(' + optRate + '%)') : '') + '</span><span>' + (t.txn > 0 ? t.txn + (isEn ? '' : '건') : '') + '</span><span>' + (t.clients > 0 ? t.clients + (isEn ? '' : '명') : '') + '</span></div></td>';
     cols.forEach(function(c) {
       var sd = d[c.id] || { qty: 0, txn: 0, clients: 0 };
       grandStaff[c.id].qty += sd.qty; grandStaff[c.id].txn += sd.txn; grandStaff[c.id].clients += sd.clients;
       if (sd.txn > 0) {
         var sOpt = sd.txn > 0 ? Math.round((sd.qty - sd.txn) / sd.txn * 100) : 0;
-        bHtml += '<td>' + sd.qty + '개(' + sOpt + '%)  ' + sd.txn + '건  ' + sd.clients + '명</td>';
-      } else { bHtml += '<td></td>'; }
+        bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + sd.qty + (isEn ? '(' + sOpt + '%)' : '개(' + sOpt + '%)') + '</span><span>' + sd.txn + (isEn ? '' : '건') + '</span><span>' + sd.clients + (isEn ? '' : '명') + '</span></div></td>';
+      } else { bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>'; }
     });
     bHtml += '</tr>';
 
     // 객단가 row
-    bHtml += '<tr><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
-    bHtml += '<td>' + (avgPrice > 0 ? avgPrice.toLocaleString() : '') + '</td>';
+    var avgPerQty = t.qty > 0 ? Math.round(t.sales / t.qty) : 0;
+    var avgPerTxn = t.txn > 0 ? Math.round(t.sales / t.txn) : 0;
+    var avgPerClient = t.clients > 0 ? Math.round(t.sales / t.clients) : 0;
+    bHtml += '<tr><td>' + (isEn ? 'Average Sales' : '객단가') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + (avgPerQty > 0 ? avgPerQty.toLocaleString() : '') + '</span><span>' + (avgPerTxn > 0 ? avgPerTxn.toLocaleString() : '') + '</span><span>' + (avgPerClient > 0 ? avgPerClient.toLocaleString() : '') + '</span></div></td>';
     cols.forEach(function(c) {
-      var sd = d[c.id] || { sales: 0, txn: 0 };
-      var sa = sd.txn > 0 ? Math.round(sd.sales / sd.txn) : 0;
-      bHtml += '<td>' + (sa > 0 ? sa.toLocaleString() : '') + '</td>';
+      var sd = d[c.id] || { sales: 0, qty: 0, txn: 0, clients: 0 };
+      var aQ = sd.qty > 0 ? Math.round(sd.sales / sd.qty) : 0;
+      var aT = sd.txn > 0 ? Math.round(sd.sales / sd.txn) : 0;
+      var aC = sd.clients > 0 ? Math.round(sd.sales / sd.clients) : 0;
+      bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + (aQ > 0 ? aQ.toLocaleString() : '') + '</span><span>' + (aT > 0 ? aT.toLocaleString() : '') + '</span><span>' + (aC > 0 ? aC.toLocaleString() : '') + '</span></div></td>';
     });
     bHtml += '</tr>';
   });
@@ -14828,18 +14869,21 @@ function rpSsSearch() {
     cols.forEach(function(c) { bHtml += '<td class="rp-ss-sales-val">' + (grandStaff[c.id].sales > 0 ? grandStaff[c.id].sales.toLocaleString() : '') + '</td>'; });
     bHtml += '</tr>';
 
-    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
-    bHtml += '<td>' + grandTotal.qty + '개(' + gOpt + '%)  ' + grandTotal.txn + '건  ' + grandTotal.clients + '명</td>';
+    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Qty(Op%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + grandTotal.qty + (isEn ? '(' + gOpt + '%)' : '개(' + gOpt + '%)') + '</span><span>' + grandTotal.txn + (isEn ? '' : '건') + '</span><span>' + grandTotal.clients + (isEn ? '' : '명') + '</span></div></td>';
     cols.forEach(function(c) {
       var g = grandStaff[c.id];
-      if (g.txn > 0) { var o = Math.round((g.qty - g.txn) / g.txn * 100); bHtml += '<td>' + g.qty + '개(' + o + '%)  ' + g.txn + '건  ' + g.clients + '명</td>'; }
-      else { bHtml += '<td></td>'; }
+      if (g.txn > 0) { var o = Math.round((g.qty - g.txn) / g.txn * 100); bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + g.qty + (isEn ? '(' + o + '%)' : '개(' + o + '%)') + '</span><span>' + g.txn + (isEn ? '' : '건') + '</span><span>' + g.clients + (isEn ? '' : '명') + '</span></div></td>'; }
+      else { bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>'; }
     });
     bHtml += '</tr>';
 
-    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
-    bHtml += '<td>' + gAvg.toLocaleString() + '</td>';
-    cols.forEach(function(c) { var g = grandStaff[c.id]; var a = g.txn > 0 ? Math.round(g.sales / g.txn) : 0; bHtml += '<td>' + (a > 0 ? a.toLocaleString() : '') + '</td>'; });
+    var gAvgQ = grandTotal.qty > 0 ? Math.round(grandTotal.sales / grandTotal.qty) : 0;
+    var gAvgT = grandTotal.txn > 0 ? Math.round(grandTotal.sales / grandTotal.txn) : 0;
+    var gAvgC = grandTotal.clients > 0 ? Math.round(grandTotal.sales / grandTotal.clients) : 0;
+    bHtml += '<tr class="rp-ss-row-total"><td>' + (isEn ? 'Average Sales' : '객단가') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + (gAvgQ > 0 ? gAvgQ.toLocaleString() : '') + '</span><span>' + (gAvgT > 0 ? gAvgT.toLocaleString() : '') + '</span><span>' + (gAvgC > 0 ? gAvgC.toLocaleString() : '') + '</span></div></td>';
+    cols.forEach(function(c) { var g = grandStaff[c.id]; var aQ = g.qty > 0 ? Math.round(g.sales / g.qty) : 0; var aT = g.txn > 0 ? Math.round(g.sales / g.txn) : 0; var aC = g.clients > 0 ? Math.round(g.sales / g.clients) : 0; bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span>' + (aQ > 0 ? aQ.toLocaleString() : '') + '</span><span>' + (aT > 0 ? aT.toLocaleString() : '') + '</span><span>' + (aC > 0 ? aC.toLocaleString() : '') + '</span></div></td>'; });
     bHtml += '</tr>';
 
     // 월평균
@@ -14851,14 +14895,14 @@ function rpSsSearch() {
     cols.forEach(function(c) { var a = Math.round(grandStaff[c.id].sales / mCnt); bHtml += '<td class="rp-ss-sales-val">' + (a > 0 ? a.toLocaleString() : '') + '</td>'; });
     bHtml += '</tr>';
 
-    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Qty(Opt%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
-    bHtml += '<td></td>';
-    cols.forEach(function() { bHtml += '<td></td>'; });
+    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Qty(Op%)/Sales/Clients' : '수량(옵션율)/판매/고객') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>';
+    cols.forEach(function() { bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>'; });
     bHtml += '</tr>';
 
-    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Avg Price' : '객단가') + '</td>';
-    bHtml += '<td></td>';
-    cols.forEach(function() { bHtml += '<td></td>'; });
+    bHtml += '<tr class="rp-ss-row-avg"><td>' + (isEn ? 'Average Sales' : '객단가') + '</td>';
+    bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>';
+    cols.forEach(function() { bHtml += '<td class="rp-ss-sub3"><div class="rp-ss-sub3-wrap"><span></span><span></span><span></span></div></td>'; });
     bHtml += '</tr>';
   }
 
@@ -15021,16 +15065,21 @@ var rpSvraHeaderLabels = {
 
 // 분석 항목별 차트 규칙: staff/service/weekday/hour = 수평 막대 고정, category = 파이(기본) 전환 가능
 var rpSvraChartRules = {
-  staff:    { defaultType: 'bar',  changeable: false },
-  category: { defaultType: 'pie',  changeable: true },
-  service:  { defaultType: 'bar',  changeable: false },
-  weekday:  { defaultType: 'bar',  changeable: false },
-  hour:     { defaultType: 'bar',  changeable: false }
+  staff:    { defaultType: 'bar' },
+  category: { defaultType: 'bar' },
+  service:  { defaultType: 'bar' },
+  weekday:  { defaultType: 'bar' },
+  hour:     { defaultType: 'bar' }
 };
+
+var rpSvraCurrentChartType = 'bar';
 
 var rpSvraPieColors = [
   '#6161FF', '#3CB371', '#F0A830', '#E06060', '#3DA5D9',
-  '#9B59B6', '#E8764A', '#2DA8A8', '#D4689A', '#9B7B5B'
+  '#9B59B6', '#E8764A', '#2DA8A8', '#D4689A', '#9B7B5B',
+  '#5BA3E6', '#E8699A', '#7DC24B', '#8E6CCF', '#D4A843',
+  '#4AAF9E', '#CC5555', '#4A90BF', '#C4935A', '#7AAF55',
+  '#A864CC', '#D98F4A', '#55BFA0', '#CC5577'
 ];
 // 그라데이션 쌍: [밝은색, 진한색]
 var rpSvraPieGradients = [
@@ -15043,7 +15092,21 @@ var rpSvraPieGradients = [
   ['#FFB088', '#E8764A'],  // 피치
   ['#6ECFCF', '#2DA8A8'],  // 틸
   ['#F4A4C0', '#D4689A'],  // 로즈
-  ['#C4A882', '#9B7B5B']   // 샌드
+  ['#C4A882', '#9B7B5B'],  // 샌드
+  ['#A8D8FF', '#5BA3E6'],  // 세룰리안
+  ['#FFB3D9', '#E8699A'],  // 핫핑크
+  ['#B8E986', '#7DC24B'],  // 라임
+  ['#D4B8FF', '#8E6CCF'],  // 바이올렛
+  ['#FFE08A', '#D4A843'],  // 골드
+  ['#8DD3C7', '#4AAF9E'],  // 민트
+  ['#FFA3A3', '#CC5555'],  // 버건디
+  ['#A0CBE8', '#4A90BF'],  // 블루그레이
+  ['#E8C49A', '#C4935A'],  // 카라멜
+  ['#B5D99A', '#7AAF55'],  // 세이지
+  ['#D9A8E8', '#A864CC'],  // 오키드
+  ['#FFD1A3', '#D98F4A'],  // 탠저린
+  ['#A8E8D8', '#55BFA0'],  // 에메랄드
+  ['#E8A8B8', '#CC5577']   // 크랜베리
 ];
 
 function openServiceRevenue() {
@@ -15085,12 +15148,16 @@ function rpSvraTogglePeriod() {
 }
 
 function rpSvraGetChartType() {
-  var analysisType = document.getElementById('rpSvraAnalysisType').value;
-  var rule = rpSvraChartRules[analysisType];
-  if (rule.changeable) {
-    return document.getElementById('rpSvraChartTypeSelect').value;
-  }
-  return rule.defaultType;
+  return rpSvraCurrentChartType;
+}
+
+function rpSvraSetChartType(type) {
+  rpSvraCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpSvraChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpSvraSearch();
 }
 
 function rpSvraOnAnalysisChange() {
@@ -15102,19 +15169,6 @@ function rpSvraOnAnalysisChange() {
   th.setAttribute('data-ko', label.ko);
   th.setAttribute('data-en', label.en);
   th.setAttribute('data-i18n', 'svra.' + type);
-
-  // 차트 타입 드롭다운 표시/숨김
-  var rule = rpSvraChartRules[type];
-  var chartTypeLabel = document.getElementById('rpSvraChartTypeLabel');
-  var chartTypeSelect = document.getElementById('rpSvraChartTypeSelect');
-  if (rule.changeable) {
-    chartTypeLabel.style.display = '';
-    chartTypeSelect.style.display = '';
-    chartTypeSelect.value = rule.defaultType;
-  } else {
-    chartTypeLabel.style.display = 'none';
-    chartTypeSelect.style.display = 'none';
-  }
 
   // 데이터 로드 상태면 즉시 갱신
   rpSvraSearch();
@@ -15430,7 +15484,7 @@ function rpSvisInit() {
   // svServiceData에서 분류 목록 동적 생성
   var catSel = document.getElementById('rpSvisCategorySelect');
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  catSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   Object.keys(svServiceData).forEach(function(catName) {
     catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
   });
@@ -15450,7 +15504,7 @@ function rpSvisOnCategoryChange() {
   var svcSel = document.getElementById('rpSvisServiceSelect');
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
 
-  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  svcSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
 
   if (cat !== 'all' && svServiceData[cat]) {
     svServiceData[cat].forEach(function(svc) {
@@ -15477,6 +15531,18 @@ function rpSvisGetData() {
   return catData[svcKey] || [];
 }
 
+var rpSvisCurrentChartType = 'bar';
+var rpSvisChartInstance = null;
+
+function rpSvisSetChartType(type) {
+  rpSvisCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpSvisChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpSvisSearch();
+}
+
 function rpSvisSearch() {
   rpSvisCurrentData = rpSvisGetData();
 
@@ -15487,7 +15553,22 @@ function rpSvisSearch() {
   th.setAttribute('data-en', 'Service');
 
   rpSvisRenderTable(rpSvisCurrentData);
-  rpSvisRenderBarChart(rpSvisCurrentData);
+  rpSvisRenderChart_svis(rpSvisCurrentData);
+}
+
+function rpSvisRenderChart_svis(data) {
+  var barChart = document.getElementById('rpSvisBarChart');
+  var pieWrap = document.getElementById('rpSvisPieWrap');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpSvisChartInstance) { rpSvisChartInstance.destroy(); rpSvisChartInstance = null; }
+
+  if (rpSvisCurrentChartType === 'pie') {
+    rpSvisRenderPieChart(data);
+  } else {
+    rpSvisRenderBarChart(data);
+  }
 }
 
 function rpSvisRenderTable(data) {
@@ -15568,6 +15649,102 @@ function rpSvisRenderBarChart(data) {
   barChart.innerHTML = html;
 }
 
+function rpSvisRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpSvisPieWrap');
+  var canvas = document.getElementById('rpSvisPieCanvas');
+  var emptyMsg = document.getElementById('rpSvisChartEmpty');
+  var legendDiv = document.getElementById('rpSvisChartLegend');
+  var valueType = document.querySelector('input[name="rpSvisValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    pieWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) {
+    return valueType === 'amount' ? d.amount : d.quantity;
+  });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var val = valueType === 'amount' ? d.amount : d.quantity;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    legendHtml += '<span class="rp-svra-legend-item">' +
+      '<span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' +
+      d.label + ' (' + ratio + '%)' +
+      '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpSvisChartInstance) rpSvisChartInstance.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpSvisChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: gradColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + ' (' + ratio + '%)';
+            }
+          }
+        },
+        datalabels: {
+          color: '#333',
+          font: { size: 11, weight: '600', family: 'Pretendard' },
+          formatter: function(value) {
+            var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+            return ratio + '%';
+          },
+          anchor: 'center',
+          align: 'center',
+          display: function(ctx) {
+            var value = ctx.dataset.data[ctx.dataIndex];
+            return total > 0 && (value / total * 100) >= 5;
+          }
+        }
+      }
+    }
+  });
+}
+
 // ═══════════════════════════════════════════════════════════
 //  월별 서비스 매출 분석 (rpMsv)
 // ═══════════════════════════════════════════════════════════
@@ -15645,14 +15822,14 @@ function rpMsvInit() {
   });
 
   var catSel = document.getElementById('rpMsvCategorySelect');
-  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  catSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   Object.keys(svServiceData).forEach(function(catName) {
     catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
   });
   rpMsvOnCategoryChange();
 
   var staffSel = document.getElementById('rpMsvStaffSelect');
-  staffSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  staffSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   rpSsStaffs.forEach(function(s) {
     staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
   });
@@ -15662,7 +15839,7 @@ function rpMsvOnCategoryChange() {
   var cat = document.getElementById('rpMsvCategorySelect').value;
   var svcSel = document.getElementById('rpMsvServiceSelect');
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  svcSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   if (cat !== 'all' && svServiceData[cat]) {
     svServiceData[cat].forEach(function(svc) {
       svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
@@ -15893,13 +16070,13 @@ function rpScsInit() {
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
 
   var staffSel = document.getElementById('rpScsStaffSelect');
-  staffSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  staffSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   rpSsStaffs.forEach(function(s) {
     staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
   });
 
   var catSel = document.getElementById('rpScsCategorySelect');
-  catSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  catSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   Object.keys(svServiceData).forEach(function(catName) {
     catSel.innerHTML += '<option value="' + catName + '">' + catName + '</option>';
   });
@@ -15917,7 +16094,7 @@ function rpScsOnCategoryChange() {
   var cat = document.getElementById('rpScsCategorySelect').value;
   var svcSel = document.getElementById('rpScsServiceSelect');
   var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
-  svcSel.innerHTML = '<option value="all">' + (isEn ? 'All' : '전체') + '</option>';
+  svcSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
   if (cat !== 'all' && svServiceData[cat]) {
     svServiceData[cat].forEach(function(svc) {
       svcSel.innerHTML += '<option value="' + svc.name + '">' + svc.name + '</option>';
@@ -16043,7 +16220,7 @@ function rpPrdInit(){
   rpPrdTogglePeriod();
   var isEn=(typeof currentLang!=='undefined'&&currentLang==='en');
   var sel=document.getElementById('rpPrdStaffSelect');
-  sel.innerHTML='<option value="all">'+(isEn?'All':'\uC804\uCCB4')+'</option>';
+  sel.innerHTML='<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">'+(isEn?'All':'전체')+'</option>';
   rpSsStaffs.forEach(function(s){sel.innerHTML+='<option value="'+s.ko+'">'+(isEn?s.en:s.ko)+'</option>';});
   rpPrdOnAnalysisChange();
 }
@@ -16072,11 +16249,38 @@ function rpPrdGetData(){
   return(rpPrdSampleData.product[key])?rpPrdSampleData.product[key]:[];
 }
 
+var rpPrdCurrentChartType = 'bar';
+var rpPrdChartInstance = null;
+
+function rpPrdSetChartType(type) {
+  rpPrdCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpPrdChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpPrdSearch();
+}
+
 function rpPrdSearch(){
   var data=rpPrdGetData();
   rpPrdOnAnalysisChange();
   rpPrdRenderTable(data);
-  rpPrdRenderBarChart(data);
+  rpPrdRenderChart(data);
+}
+
+function rpPrdRenderChart(data) {
+  var barChart = document.getElementById('rpPrdBarChart');
+  var pieWrap = document.getElementById('rpPrdPieWrap');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpPrdChartInstance) { rpPrdChartInstance.destroy(); rpPrdChartInstance = null; }
+
+  if (rpPrdCurrentChartType === 'pie') {
+    rpPrdRenderPieChart(data);
+  } else {
+    rpPrdRenderBarChart(data);
+  }
 }
 
 function rpPrdRenderTable(data){
@@ -16121,4 +16325,4848 @@ function rpPrdRenderBarChart(data){
     else{h+='<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">'+d.label+'</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:'+p+'%;"></div><span class="rp-svra-bar-info">'+info+'</span></div></div>';}
   });
   bc.innerHTML=h;
+}
+
+function rpPrdRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpPrdPieWrap');
+  var canvas = document.getElementById('rpPrdPieCanvas');
+  var emptyMsg = document.getElementById('rpPrdChartEmpty');
+  var legendDiv = document.getElementById('rpPrdChartLegend');
+  var valueType = document.querySelector('input[name="rpPrdValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    pieWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) {
+    return valueType === 'amount' ? b.amount - a.amount : b.quantity - a.quantity;
+  });
+
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) {
+    return valueType === 'amount' ? d.amount : d.quantity;
+  });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var val = valueType === 'amount' ? d.amount : d.quantity;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    legendHtml += '<span class="rp-svra-legend-item">' +
+      '<span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' +
+      d.label + ' (' + ratio + '%)' +
+      '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpPrdChartInstance) rpPrdChartInstance.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpPrdChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: gradColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + ' (' + ratio + '%)';
+            }
+          }
+        },
+        datalabels: {
+          color: '#333',
+          font: { size: 11, weight: '600', family: 'Pretendard' },
+          formatter: function(value) {
+            var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+            return ratio + '%';
+          },
+          anchor: 'center',
+          align: 'center',
+          display: function(ctx) {
+            var value = ctx.dataset.data[ctx.dataIndex];
+            return total > 0 && (value / total * 100) >= 5;
+          }
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  월별 제품 매출 분석 (rpMpv)
+// ═══════════════════════════════════════════════════════════
+
+var rpMpvChart = null;
+var rpMpvProducts = ['영양제','헤어에센스','두피토닉','네일오일','핸드크림','풋크림'];
+
+function rpMpvBuildMonthlyData(months) {
+  var product = document.getElementById('rpMpvProductSelect').value;
+  var staff = document.getElementById('rpMpvStaffSelect').value;
+
+  var baseAmounts = {
+    '2025-01':320000,'2025-02':280000,'2025-03':410000,'2025-04':350000,
+    '2025-05':480000,'2025-06':520000,'2025-07':560000,'2025-08':490000,
+    '2025-09':430000,'2025-10':380000,'2025-11':340000,'2025-12':620000,
+    '2026-01':380000,'2026-02':310000,'2026-03':450000,'2026-04':280000
+  };
+  var baseQtys = {
+    '2025-01':12,'2025-02':10,'2025-03':15,'2025-04':13,
+    '2025-05':18,'2025-06':20,'2025-07':22,'2025-08':19,
+    '2025-09':16,'2025-10':14,'2025-11':12,'2025-12':24,
+    '2026-01':14,'2026-02':11,'2026-03':17,'2026-04':10
+  };
+
+  var productFactor = (product === 'all') ? 1.0 : (1.0 / rpMpvProducts.length);
+  var staffFactor = (staff === 'all') ? 1.0 : 0.35;
+  var factor = productFactor * staffFactor;
+
+  var result = [];
+  months.forEach(function(m) {
+    var amt = Math.round((baseAmounts[m] || 300000) * factor);
+    var qty = Math.round((baseQtys[m] || 10) * factor);
+    result.push({ month: m, quantity: qty, amount: amt });
+  });
+  return result;
+}
+
+function openMonthlyProductSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyProductView').classList.add('show');
+  rpMpvInit();
+  setTimeout(function() {
+    rpMpvSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpMpvGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpMpvPrint() { window.print(); }
+
+function rpMpvSetChartType(type) {
+  document.querySelectorAll('#rpMpvChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpMpvSearch();
+}
+
+function rpMpvInit() {
+  var now = new Date();
+  var curY = now.getFullYear(), curM = now.getMonth() + 1;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  ['rpMpvYearFrom','rpMpvYearTo'].forEach(function(id) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    for (var y = curY - 3; y <= curY + 1; y++) sel.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  });
+  ['rpMpvMonthFrom','rpMpvMonthTo'].forEach(function(id, idx) {
+    var sel = document.getElementById(id);
+    sel.innerHTML = '';
+    var def = idx === 0 ? 1 : curM;
+    for (var m = 1; m <= 12; m++) sel.innerHTML += '<option value="' + String(m).padStart(2, '0') + '"' + (m === def ? ' selected' : '') + '>' + String(m).padStart(2, '0') + '</option>';
+  });
+
+  var prodSel = document.getElementById('rpMpvProductSelect');
+  prodSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+  rpMpvProducts.forEach(function(p) {
+    prodSel.innerHTML += '<option value="' + p + '">' + p + '</option>';
+  });
+
+  var staffSel = document.getElementById('rpMpvStaffSelect');
+  staffSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+  rpSsStaffs.forEach(function(s) {
+    staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
+  });
+}
+
+function rpMpvGetMonths() {
+  var yf = document.getElementById('rpMpvYearFrom').value;
+  var mf = document.getElementById('rpMpvMonthFrom').value;
+  var yt = document.getElementById('rpMpvYearTo').value;
+  var mt = document.getElementById('rpMpvMonthTo').value;
+  var start = new Date(parseInt(yf), parseInt(mf) - 1, 1);
+  var end = new Date(parseInt(yt), parseInt(mt) - 1, 1);
+  var months = [];
+  var cur = new Date(start);
+  while (cur <= end) {
+    months.push(cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0'));
+    cur.setMonth(cur.getMonth() + 1);
+  }
+  return months;
+}
+
+function rpMpvSearch() {
+  var months = rpMpvGetMonths();
+  var data = rpMpvBuildMonthlyData(months);
+  rpMpvRenderTable(data);
+  rpMpvRenderChart(data);
+}
+
+function rpMpvRenderTable(data) {
+  var tbody = document.getElementById('rpMpvTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalQty = 0, totalAmt = 0;
+  data.forEach(function(d) { totalQty += d.quantity; totalAmt += d.amount; });
+
+  var html = '';
+  data.forEach(function(d) {
+    var ratio = totalAmt > 0 ? (d.amount / totalAmt * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.month + '</td><td>' + d.quantity.toLocaleString() + '</td><td>' + d.amount.toLocaleString() + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalQty.toLocaleString() + '</td><td>' + totalAmt.toLocaleString() + '</td><td>100.0%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpMpvRenderChart(data) {
+  var canvas = document.getElementById('rpMpvChart');
+  var emptyMsg = document.getElementById('rpMpvChartEmpty');
+  var legendDiv = document.getElementById('rpMpvChartLegend');
+  var canvasWrap = document.getElementById('rpMpvCanvasWrap');
+  var activeBtn = document.querySelector('#rpMpvChartToggle .rp-msv-toggle-btn.active');
+  var chartType = activeBtn ? activeBtn.getAttribute('data-type') : 'barline';
+  var valueType = document.querySelector('input[name="rpMpvValueType"]:checked').value;
+
+  if (!data || data.length === 0) {
+    canvasWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    if (rpMpvChart) { rpMpvChart.destroy(); rpMpvChart = null; }
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  canvasWrap.style.display = '';
+  legendDiv.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var labelText = valueType === 'amount' ? (isEn ? 'Amount' : '금액') : (isEn ? 'Quantity' : '수량');
+  var labels = data.map(function(d) { return d.month; });
+  var values = data.map(function(d) { return valueType === 'amount' ? d.amount : d.quantity; });
+
+  var sum = values.reduce(function(a, b) { return a + b; }, 0);
+  var avg = values.length > 0 ? Math.round(sum / values.length) : 0;
+  var avgLine = values.map(function() { return avg; });
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(90deg,#9B9BFF,#6161FF);"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#F0A830;border-radius:0;height:2px;margin-top:6px;"></span>' + (isEn ? 'Average' : '평균') + ' (' + avg.toLocaleString() + ')</span>';
+
+  if (rpMpvChart) rpMpvChart.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var h = canvas.height || 280;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  var datasets = [];
+
+  if (chartType === 'line') {
+    datasets.push({
+      label: labelText,
+      data: values,
+      borderColor: '#6161FF',
+      backgroundColor: 'rgba(97,97,255,0.08)',
+      pointBackgroundColor: '#6161FF',
+      pointRadius: 4,
+      borderWidth: 2.5,
+      tension: 0.1,
+      fill: true
+    });
+  } else if (chartType === 'bar') {
+    datasets.push({
+      label: labelText,
+      data: values,
+      backgroundColor: grad,
+      borderRadius: 3,
+      maxBarThickness: 48
+    });
+  } else {
+    datasets.push({
+      label: labelText,
+      data: values,
+      type: 'bar',
+      backgroundColor: grad,
+      borderRadius: 3,
+      maxBarThickness: 48,
+      order: 2
+    });
+    datasets.push({
+      label: labelText + ' (line)',
+      data: values,
+      type: 'line',
+      borderColor: '#4F4FE0',
+      backgroundColor: 'transparent',
+      pointBackgroundColor: '#4F4FE0',
+      pointRadius: 4,
+      borderWidth: 2.5,
+      tension: 0,
+      fill: false,
+      order: 1
+    });
+  }
+
+  datasets.push({
+    label: isEn ? 'Average' : '평균',
+    data: avgLine,
+    type: 'line',
+    borderColor: '#F0A830',
+    backgroundColor: 'transparent',
+    pointRadius: 0,
+    borderWidth: 2,
+    borderDash: [6, 4],
+    tension: 0,
+    fill: false,
+    order: 0
+  });
+
+  rpMpvChart = new Chart(ctx, {
+    type: chartType === 'line' ? 'line' : 'bar',
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' }, color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  할인 유형별 매출 분석 (rpDsc)
+// ═══════════════════════════════════════════════════════════
+
+var rpDscCurrentChartType = 'bar';
+var rpDscChartInstance = null;
+
+var rpDscSampleData = {
+  all: [
+    { label: '할인 구분 없음', quantity: 18, amount: 540000 },
+    { label: '할인이벤트', quantity: 8, amount: 120000 },
+    { label: '단골 할인', quantity: 5, amount: 75000 },
+    { label: '첫방문 할인', quantity: 3, amount: 60000 },
+    { label: '소개 할인', quantity: 2, amount: 30000 }
+  ],
+  owner: [
+    { label: '할인 구분 없음', quantity: 8, amount: 240000 },
+    { label: '할인이벤트', quantity: 4, amount: 60000 },
+    { label: '단골 할인', quantity: 3, amount: 45000 }
+  ],
+  star: [
+    { label: '할인 구분 없음', quantity: 6, amount: 180000 },
+    { label: '할인이벤트', quantity: 3, amount: 45000 },
+    { label: '첫방문 할인', quantity: 2, amount: 40000 }
+  ],
+  staff1: [
+    { label: '할인 구분 없음', quantity: 4, amount: 120000 },
+    { label: '할인이벤트', quantity: 1, amount: 15000 },
+    { label: '소개 할인', quantity: 2, amount: 30000 }
+  ]
+};
+
+function openDiscountSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpDiscountSalesView').classList.add('show');
+  rpDscInit();
+  setTimeout(function() {
+    rpDscSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpDscGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpDscPrint() { window.print(); }
+
+function rpDscInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpDscMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpDscDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpDscRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpDscRangeEnd').value = y + '-' + m + '-' + d;
+  rpDscTogglePeriod();
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var staffSel = document.getElementById('rpDscStaffSelect');
+  staffSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+  rpSsStaffs.forEach(function(s) {
+    staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
+  });
+}
+
+function rpDscTogglePeriod() {
+  var type = document.querySelector('input[name="rpDscPeriod"]:checked').value;
+  document.getElementById('rpDscDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpDscMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpDscRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpDscSetChartType(type) {
+  rpDscCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpDscChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpDscSearch();
+}
+
+function rpDscGetData() {
+  var staff = document.getElementById('rpDscStaffSelect').value;
+  if (staff === 'all') return rpDscSampleData.all || [];
+  return rpDscSampleData[staff] || [];
+}
+
+function rpDscSearch() {
+  var data = rpDscGetData();
+  rpDscRenderTable(data);
+  rpDscRenderChartRouter(data);
+}
+
+function rpDscRenderTable(data) {
+  var tbody = document.getElementById('rpDscTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalQty = 0, totalAmt = 0;
+  data.forEach(function(d) { totalQty += d.quantity; totalAmt += d.amount; });
+
+  var sorted = data.slice().sort(function(a, b) { return b.amount - a.amount; });
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var ratio = totalAmt > 0 ? (d.amount / totalAmt * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.label + '</td><td>' + d.quantity.toLocaleString() + '</td><td>' + d.amount.toLocaleString() + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr class="rp-svra-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalQty.toLocaleString() + '</td><td>' + totalAmt.toLocaleString() + '</td><td>100.0%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpDscRenderChartRouter(data) {
+  var barChart = document.getElementById('rpDscBarChart');
+  var pieWrap = document.getElementById('rpDscPieWrap');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpDscChartInstance) { rpDscChartInstance.destroy(); rpDscChartInstance = null; }
+
+  if (rpDscCurrentChartType === 'pie') {
+    rpDscRenderPieChart(data);
+  } else {
+    rpDscRenderBarChart(data);
+  }
+}
+
+function rpDscRenderBarChart(data) {
+  var barChart = document.getElementById('rpDscBarChart');
+  var emptyMsg = document.getElementById('rpDscChartEmpty');
+  var legendDiv = document.getElementById('rpDscChartLegend');
+
+  if (!data || data.length === 0) {
+    barChart.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.amount - a.amount; });
+  var values = sorted.map(function(d) { return d.amount; });
+  var maxVal = Math.max.apply(null, values);
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(90deg,#9B9BFF,#6161FF);"></span>' + (isEn ? 'Discount Amount' : '할인 금액') + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total.toLocaleString() + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var pct = maxVal > 0 ? (d.amount / maxVal * 100) : 0;
+    var ratio = total > 0 ? (d.amount / total * 100).toFixed(1) : '0.0';
+    var infoText = d.amount.toLocaleString() + ' (' + ratio + '%)';
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + d.label + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div></div></div>';
+    } else {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + d.label + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div><span class="rp-svra-bar-info">' + infoText + '</span></div></div>';
+    }
+  });
+
+  barChart.innerHTML = html;
+}
+
+function rpDscRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpDscPieWrap');
+  var canvas = document.getElementById('rpDscPieCanvas');
+  var emptyMsg = document.getElementById('rpDscChartEmpty');
+  var legendDiv = document.getElementById('rpDscChartLegend');
+
+  if (!data || data.length === 0) {
+    pieWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.amount - a.amount; });
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) { return d.amount; });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.amount / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    legendHtml += '<span class="rp-svra-legend-item">' +
+      '<span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' +
+      d.label + ' (' + ratio + '%)' +
+      '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpDscChartInstance) rpDscChartInstance.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpDscChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: gradColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + ' (' + ratio + '%)';
+            }
+          }
+        },
+        datalabels: {
+          color: '#333',
+          font: { size: 11, weight: '600', family: 'Pretendard' },
+          formatter: function(value) {
+            var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+            return ratio + '%';
+          },
+          anchor: 'center',
+          align: 'center',
+          display: function(ctxDl) {
+            var value = ctxDl.dataset.data[ctxDl.dataIndex];
+            return total > 0 && (value / total * 100) >= 5;
+          }
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  재방문 고객 매출 분석 (rpRvs)
+// ═══════════════════════════════════════════════════════════
+
+var rpRvsSampleData = [
+  { service: '젤네일 기본',     newQty: 3, newAmt: 90000,  revQty: 8,  revAmt: 240000, unrQty: 1, unrAmt: 30000 },
+  { service: '젤네일 프렌치',   newQty: 1, newAmt: 40000,  revQty: 4,  revAmt: 160000, unrQty: 0, unrAmt: 0 },
+  { service: '젤네일 그라데이션', newQty: 2, newAmt: 70000,  revQty: 3,  revAmt: 105000, unrQty: 0, unrAmt: 0 },
+  { service: '젤패디 기본',     newQty: 1, newAmt: 35000,  revQty: 3,  revAmt: 105000, unrQty: 1, unrAmt: 35000 },
+  { service: '네일 케어',       newQty: 0, newAmt: 0,      revQty: 5,  revAmt: 75000,  unrQty: 2, unrAmt: 30000 },
+  { service: '패디 케어',       newQty: 0, newAmt: 0,      revQty: 4,  revAmt: 60000,  unrQty: 1, unrAmt: 15000 },
+  { service: '아트',            newQty: 2, newAmt: 60000,  revQty: 3,  revAmt: 90000,  unrQty: 0, unrAmt: 0 },
+  { service: '디지털펌',        newQty: 0, newAmt: 0,      revQty: 0,  revAmt: 0,      unrQty: 1, unrAmt: 120000 }
+];
+
+function openRevisitSales() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpRevisitSalesView').classList.add('show');
+  rpRvsInit();
+  setTimeout(function() {
+    rpRvsSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpRvsGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpRvsPrint() { window.print(); }
+
+function rpRvsInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpRvsMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpRvsDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpRvsRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpRvsRangeEnd').value = y + '-' + m + '-' + d;
+  rpRvsTogglePeriod();
+}
+
+function rpRvsTogglePeriod() {
+  var type = document.querySelector('input[name="rpRvsPeriod"]:checked').value;
+  document.getElementById('rpRvsDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpRvsMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpRvsRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpRvsSearch() {
+  rpRvsRenderTable(rpRvsSampleData);
+}
+
+function rpRvsRenderTable(data) {
+  var tbody = document.getElementById('rpRvsTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totNewQty = 0, totNewAmt = 0, totRevQty = 0, totRevAmt = 0, totUnrQty = 0, totUnrAmt = 0;
+  data.forEach(function(d) {
+    totNewQty += d.newQty; totNewAmt += d.newAmt;
+    totRevQty += d.revQty; totRevAmt += d.revAmt;
+    totUnrQty += d.unrQty; totUnrAmt += d.unrAmt;
+  });
+
+  var html = '';
+  data.forEach(function(d) {
+    var sumQty = d.newQty + d.revQty + d.unrQty;
+    var sumAmt = d.newAmt + d.revAmt + d.unrAmt;
+    html += '<tr>' +
+      '<td>' + d.service + '</td>' +
+      '<td>' + (d.newQty > 0 ? d.newQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.newAmt > 0 ? d.newAmt.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.revQty > 0 ? d.revQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.revAmt > 0 ? d.revAmt.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.unrQty > 0 ? d.unrQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.unrAmt > 0 ? d.unrAmt.toLocaleString() : '') + '</td>' +
+      '<td>' + (sumQty > 0 ? sumQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (sumAmt > 0 ? sumAmt.toLocaleString() : '') + '</td>' +
+      '</tr>';
+  });
+
+  var grandQty = totNewQty + totRevQty + totUnrQty;
+  var grandAmt = totNewAmt + totRevAmt + totUnrAmt;
+  html += '<tr class="rp-svra-total-row">' +
+    '<td>' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + (totNewQty > 0 ? totNewQty.toLocaleString() : '') + '</td>' +
+    '<td>' + (totNewAmt > 0 ? totNewAmt.toLocaleString() : '') + '</td>' +
+    '<td>' + (totRevQty > 0 ? totRevQty.toLocaleString() : '') + '</td>' +
+    '<td>' + (totRevAmt > 0 ? totRevAmt.toLocaleString() : '') + '</td>' +
+    '<td>' + (totUnrQty > 0 ? totUnrQty.toLocaleString() : '') + '</td>' +
+    '<td>' + (totUnrAmt > 0 ? totUnrAmt.toLocaleString() : '') + '</td>' +
+    '<td>' + grandQty.toLocaleString() + '</td>' +
+    '<td>' + grandAmt.toLocaleString() + '</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  회원권 재구매 분석 (rpMrp)
+// ═══════════════════════════════════════════════════════════
+
+var rpMrpSampleData = {
+  prepaid: {
+    all: [
+      { name: '20만원권', newQty: 2, newAmt: 400000, repQty: 3, repAmt: 600000 },
+      { name: '30만원권', newQty: 1, newAmt: 300000, repQty: 2, repAmt: 600000 },
+      { name: '20만원권(현금)', newQty: 1, newAmt: 200000, repQty: 1, repAmt: 200000 },
+      { name: '30만원권(현금)', newQty: 0, newAmt: 0, repQty: 1, repAmt: 300000 },
+      { name: '50만원권', newQty: 1, newAmt: 500000, repQty: 0, repAmt: 0 }
+    ],
+    owner: [
+      { name: '20만원권', newQty: 1, newAmt: 200000, repQty: 2, repAmt: 400000 },
+      { name: '30만원권', newQty: 1, newAmt: 300000, repQty: 1, repAmt: 300000 }
+    ],
+    star: [
+      { name: '20만원권', newQty: 1, newAmt: 200000, repQty: 1, repAmt: 200000 },
+      { name: '50만원권', newQty: 1, newAmt: 500000, repQty: 0, repAmt: 0 }
+    ],
+    staff1: [
+      { name: '20만원권(현금)', newQty: 1, newAmt: 200000, repQty: 1, repAmt: 200000 },
+      { name: '30만원권(현금)', newQty: 0, newAmt: 0, repQty: 1, repAmt: 300000 }
+    ]
+  },
+  ticket: {
+    all: [
+      { name: '네일케어 5회권', newQty: 2, newAmt: 150000, repQty: 1, repAmt: 75000 },
+      { name: '패디케어 10회권', newQty: 1, newAmt: 120000, repQty: 2, repAmt: 240000 }
+    ],
+    owner: [
+      { name: '네일케어 5회권', newQty: 1, newAmt: 75000, repQty: 1, repAmt: 75000 }
+    ],
+    star: [
+      { name: '패디케어 10회권', newQty: 1, newAmt: 120000, repQty: 1, repAmt: 120000 }
+    ],
+    staff1: [
+      { name: '네일케어 5회권', newQty: 1, newAmt: 75000, repQty: 0, repAmt: 0 },
+      { name: '패디케어 10회권', newQty: 0, newAmt: 0, repQty: 1, repAmt: 120000 }
+    ]
+  }
+};
+
+function openMemberRepurchase() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMemberRepurchaseView').classList.add('show');
+  rpMrpInit();
+  setTimeout(function() {
+    rpMrpSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpMrpGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpMrpPrint() { window.print(); }
+
+function rpMrpInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpMrpMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpMrpDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpMrpRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpMrpRangeEnd').value = y + '-' + m + '-' + d;
+  rpMrpTogglePeriod();
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var staffSel = document.getElementById('rpMrpStaffSelect');
+  staffSel.innerHTML = '<option value="all" data-i18n="common.all" data-ko="전체" data-en="All">' + (isEn ? 'All' : '전체') + '</option>';
+  rpSsStaffs.forEach(function(s) {
+    staffSel.innerHTML += '<option value="' + s.id + '">' + (isEn ? s.en : s.ko) + '</option>';
+  });
+}
+
+function rpMrpTogglePeriod() {
+  var type = document.querySelector('input[name="rpMrpPeriod"]:checked').value;
+  document.getElementById('rpMrpDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpMrpMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpMrpRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpMrpGetData() {
+  var inclPrepaid = document.getElementById('rpMrpChkPrepaid').checked;
+  var inclTicket = document.getElementById('rpMrpChkTicket').checked;
+  var staff = document.getElementById('rpMrpStaffSelect').value;
+  var key = staff === 'all' ? 'all' : staff;
+  var result = [];
+
+  if (inclPrepaid && rpMrpSampleData.prepaid[key]) {
+    result = result.concat(rpMrpSampleData.prepaid[key]);
+  }
+  if (inclTicket && rpMrpSampleData.ticket[key]) {
+    result = result.concat(rpMrpSampleData.ticket[key]);
+  }
+  return result;
+}
+
+function rpMrpSearch() {
+  var data = rpMrpGetData();
+  rpMrpRenderTable(data);
+}
+
+function rpMrpRenderTable(data) {
+  var tbody = document.getElementById('rpMrpTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="rp-svra-empty-td">' + (isEn ? 'No data available' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totNewQty = 0, totNewAmt = 0, totRepQty = 0, totRepAmt = 0;
+  data.forEach(function(d) {
+    totNewQty += d.newQty; totNewAmt += d.newAmt;
+    totRepQty += d.repQty; totRepAmt += d.repAmt;
+  });
+
+  var html = '';
+  data.forEach(function(d) {
+    var sumQty = d.newQty + d.repQty;
+    var sumAmt = d.newAmt + d.repAmt;
+    html += '<tr>' +
+      '<td>' + d.name + '</td>' +
+      '<td>' + (d.newQty > 0 ? d.newQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.newAmt > 0 ? d.newAmt.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.repQty > 0 ? d.repQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (d.repAmt > 0 ? d.repAmt.toLocaleString() : '') + '</td>' +
+      '<td>' + (sumQty > 0 ? sumQty.toLocaleString() : '') + '</td>' +
+      '<td>' + (sumAmt > 0 ? sumAmt.toLocaleString() : '') + '</td>' +
+      '</tr>';
+  });
+
+  var grandQty = totNewQty + totRepQty;
+  var grandAmt = totNewAmt + totRepAmt;
+  html += '<tr class="rp-svra-total-row">' +
+    '<td>' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + (totNewQty > 0 ? totNewQty.toLocaleString() : '') + '</td>' +
+    '<td>' + (totNewAmt > 0 ? totNewAmt.toLocaleString() : '') + '</td>' +
+    '<td>' + (totRepQty > 0 ? totRepQty.toLocaleString() : '') + '</td>' +
+    '<td>' + (totRepAmt > 0 ? totRepAmt.toLocaleString() : '') + '</td>' +
+    '<td>' + grandQty.toLocaleString() + '</td>' +
+    '<td>' + grandAmt.toLocaleString() + '</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  손익 계산서 (rpPnl)
+// ═══════════════════════════════════════════════════════════
+
+var rpPnlRevenueData = [
+  { label: '서비스 매출', labelEn: 'Service Revenue', amount: 2850000 },
+  { label: '제품 매출', labelEn: 'Product Revenue', amount: 420000 }
+];
+
+// 지출 항목별 샘플 금액
+var rpPnlExpenseAmounts = {
+  '급여': 1200000, '임대료': 800000, '관리비': 250000,
+  '홍보비': 150000, '식대': 180000, '재료비': 350000, '기타': 120000
+};
+
+function rpPnlBuildExpenseFromItems() {
+  var rows = document.querySelectorAll('#eiTbody tr[data-ei-active="true"]');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var result = [];
+  rows.forEach(function(row) {
+    var nameCell = row.querySelector('.ei-td-name');
+    if (!nameCell) return;
+    var ko = nameCell.getAttribute('data-ko') || nameCell.textContent.trim();
+    var en = nameCell.getAttribute('data-en') || ko;
+    var amt = rpPnlExpenseAmounts[ko] || 0;
+    result.push({ label: ko, labelEn: en, amount: amt });
+  });
+  return result;
+}
+
+function openProfitLoss() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpProfitLossView').classList.add('show');
+  rpPnlInit();
+  setTimeout(function() {
+    rpPnlSearch();
+    if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+  }, 0);
+}
+
+function rpPnlGoBack() { hideAllViews(); document.getElementById('reportView').classList.add('show'); }
+function rpPnlPrint() { window.print(); }
+
+function rpPnlInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpPnlMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpPnlDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpPnlRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpPnlRangeEnd').value = y + '-' + m + '-' + d;
+  rpPnlTogglePeriod();
+}
+
+function rpPnlTogglePeriod() {
+  var type = document.querySelector('input[name="rpPnlPeriod"]:checked').value;
+  document.getElementById('rpPnlDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpPnlMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpPnlRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpPnlSearch() {
+  var data = {
+    revenue: rpPnlRevenueData,
+    expense: rpPnlBuildExpenseFromItems()
+  };
+  rpPnlRenderTable(data);
+}
+
+function rpPnlRenderTable(data) {
+  var tbody = document.getElementById('rpPnlTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  var revItems = data.revenue.filter(function(d) { return d.amount > 0; });
+  var expItems = data.expense.filter(function(d) { return d.amount > 0; });
+
+  var revTotal = 0;
+  revItems.forEach(function(d) { revTotal += d.amount; });
+  var expTotal = 0;
+  expItems.forEach(function(d) { expTotal += d.amount; });
+  var profit = revTotal - expTotal;
+
+  var html = '';
+
+  // 매출 항목 (합계 포함 rowspan)
+  var revRowspan = revItems.length + 1;
+  revItems.forEach(function(d, i) {
+    html += '<tr class="' + (i === 0 ? 'rp-pnl-first' : 'rp-pnl-detail') + '">';
+    if (i === 0) html += '<td rowspan="' + revRowspan + '">' + (isEn ? 'Revenue' : '매출') + '</td>';
+    html += '<td>' + (isEn ? d.labelEn : d.label) + '</td>';
+    html += '<td>' + d.amount.toLocaleString() + '</td>';
+    html += '</tr>';
+  });
+  html += '<tr class="rp-pnl-subtotal">';
+  html += '<td>' + (isEn ? 'Revenue Total' : '매출 합계') + '</td>';
+  html += '<td>' + revTotal.toLocaleString() + '</td>';
+  html += '</tr>';
+
+  // 지출 항목 (합계 포함 rowspan)
+  var expRowspan = expItems.length + 1;
+  expItems.forEach(function(d, i) {
+    html += '<tr class="' + (i === 0 ? 'rp-pnl-first' : 'rp-pnl-detail') + '">';
+    if (i === 0) html += '<td rowspan="' + expRowspan + '">' + (isEn ? 'Expenditure' : '지출') + '</td>';
+    html += '<td>' + (isEn ? d.labelEn : d.label) + '</td>';
+    html += '<td>' + d.amount.toLocaleString() + '</td>';
+    html += '</tr>';
+  });
+  html += '<tr class="rp-pnl-subtotal">';
+  html += '<td>' + (isEn ? 'Expenditure Total' : '지출 합계') + '</td>';
+  html += '<td>' + expTotal.toLocaleString() + '</td>';
+  html += '</tr>';
+
+  // 영업 이익
+  html += '<tr class="rp-pnl-profit">';
+  html += '<td>' + (isEn ? 'Operating Income' : '영업 이익') + '</td>';
+  html += '<td>' + (isEn ? '(Revenue Total - Expenditure Total)' : '(매출합계 - 지출 합계)') + '</td>';
+  html += '<td>' + profit.toLocaleString() + '</td>';
+  html += '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-CLIENT-STATUS] 전체 고객 현황
+// ══════════════════════════════════════════════════════════════
+
+var rpCsChartInstance = null;
+var rpCsCurrentChartType = 'pie';
+
+var rpCsDataSimple = [
+  { label: '회원',      labelEn: 'Member',         count: 8 },
+  { label: '비회원',    labelEn: 'Non-member',     count: 3 },
+  { label: '휴면 고객', labelEn: 'Dormant Client', count: 3 }
+];
+
+var rpCsDataDetail = [
+  { label: '회원',               labelEn: 'Member',                count: 8 },
+  { label: '비회원 (회원권 만료)', labelEn: 'Non-member (Expired)',  count: 0 },
+  { label: '비회원',              labelEn: 'Non-member',            count: 3 },
+  { label: '휴면 회원',           labelEn: 'Dormant Member',        count: 1 },
+  { label: '휴면 비회원',         labelEn: 'Dormant Non-member',    count: 2 }
+];
+
+function openClientStatus() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpClientStatusView').classList.add('show');
+  rpCsSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpCsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpCsPrint() {
+  window.print();
+}
+
+function rpCsSetChartType(type) {
+  rpCsCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpCsChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpCsSearch();
+}
+
+function rpCsSearch() {
+  var isDetail = document.getElementById('rpCsDetailCheck').checked;
+  var data = isDetail ? rpCsDataDetail : rpCsDataSimple;
+
+  rpCsRenderChart(data);
+  rpCsRenderTable(data);
+}
+
+function rpCsRenderChart(data) {
+  var barChart = document.getElementById('rpCsBarChart');
+  var pieWrap = document.getElementById('rpCsPieWrap');
+  var emptyMsg = document.getElementById('rpCsChartEmpty');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpCsChartInstance) { rpCsChartInstance.destroy(); rpCsChartInstance = null; }
+
+  if (rpCsCurrentChartType === 'pie') {
+    rpCsRenderPieChart(data);
+  } else {
+    rpCsRenderBarChart(data);
+  }
+}
+
+function rpCsRenderBarChart(data) {
+  var barChart = document.getElementById('rpCsBarChart');
+  var emptyMsg = document.getElementById('rpCsChartEmpty');
+  var legendDiv = document.getElementById('rpCsChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    barChart.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  // 0인 항목 제외하고 내림차순 정렬
+  var filtered = data.filter(function(d) { return d.count > 0; });
+  var sorted = filtered.slice().sort(function(a, b) { return b.count - a.count; });
+  var values = sorted.map(function(d) { return d.count; });
+  var maxVal = Math.max.apply(null, values);
+  var total = data.reduce(function(sum, d) { return sum + d.count; }, 0);
+
+  var labelText = isEn ? 'Clients' : '고객 수';
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total.toLocaleString() + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var val = d.count;
+    var pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var lbl = isEn ? d.labelEn : d.label;
+    var infoText = val.toLocaleString() + (isEn ? ' (' : '명 (') + ratio + '%)';
+
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row">' +
+        '<span class="rp-svra-bar-label">' + lbl + '</span>' +
+        '<div class="rp-svra-bar-track">' +
+          '<div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div>' +
+        '</div>' +
+        '</div>';
+    } else {
+      html += '<div class="rp-svra-bar-row">' +
+        '<span class="rp-svra-bar-label">' + lbl + '</span>' +
+        '<div class="rp-svra-bar-track">' +
+          '<div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div>' +
+          '<span class="rp-svra-bar-info">' + infoText + '</span>' +
+        '</div>' +
+        '</div>';
+    }
+  });
+
+  barChart.innerHTML = html;
+}
+
+function rpCsRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpCsPieWrap');
+  var canvas = document.getElementById('rpCsPieCanvas');
+  var emptyMsg = document.getElementById('rpCsChartEmpty');
+  var legendDiv = document.getElementById('rpCsChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  // 0인 항목 제외
+  var filtered = data.filter(function(d) { return d.count > 0; });
+
+  if (!filtered || filtered.length === 0) {
+    pieWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = filtered.slice().sort(function(a, b) { return b.count - a.count; });
+  var labels = sorted.map(function(d) { return isEn ? d.labelEn : d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  // 범례
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var val = d.count;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    var lbl = isEn ? d.labelEn : d.label;
+    legendHtml += '<span class="rp-svra-legend-item">' +
+      '<span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' +
+      lbl + ' (' + ratio + '%)' +
+      '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpCsChartInstance) rpCsChartInstance.destroy();
+
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpCsChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: gradColors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + (isEn ? ' (' : '명 (') + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'rpCsPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx2 = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+
+          var centerPoint = arc.tooltipPosition();
+          ctx2.save();
+          ctx2.fillStyle = '#fff';
+          ctx2.font = 'bold 12px Pretendard';
+          ctx2.textAlign = 'center';
+          ctx2.textBaseline = 'middle';
+          ctx2.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx2.restore();
+        });
+      }
+    }]
+  });
+}
+
+function rpCsRenderTable(data) {
+  var tbody = document.getElementById('rpCsTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+  for (var i = 0; i < data.length; i++) total += data[i].count;
+
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    var pct = total > 0 ? (data[i].count / total * 100).toFixed(1) : '0.0';
+    var countDisplay = data[i].count > 0 ? data[i].count : '-';
+    html += '<tr>' +
+      '<td>' + (isEn ? data[i].labelEn : data[i].label) + '</td>' +
+      '<td>' + countDisplay + '</td>' +
+      '<td>' + pct + '%</td>' +
+      '</tr>';
+  }
+  html += '<tr class="rp-cs-total-row">' +
+    '<td>' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + total + '</td>' +
+    '<td>100%</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-PERIOD-CLIENT] 기간별 고객 현황
+// ══════════════════════════════════════════════════════════════
+
+var rpPcsSampleData = {
+  visit: { newClient: 0, revisit: 3, subtotalA: 3, unregistered: 0, total: 3, newSales: 0, revisitSales: 8, subtotalASales: 8, unregSales: 0, totalSales: 8 },
+  member: { firstClient: 1, repeatClient: 0, subtotalClient: 1, deductClient: 2, firstSales: 3, repeatSales: 0, subtotalSales: 3, deductSales: 3 }
+};
+
+function openPeriodClientStatus() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpPeriodClientView').classList.add('show');
+  rpPcsInit();
+  rpPcsSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpPcsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpPcsPrint() { window.print(); }
+
+function rpPcsInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpPcsMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpPcsDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpPcsRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpPcsRangeEnd').value = y + '-' + m + '-' + d;
+  rpPcsTogglePeriod();
+}
+
+function rpPcsTogglePeriod() {
+  var type = document.querySelector('input[name="rpPcsPeriod"]:checked').value;
+  document.getElementById('rpPcsDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpPcsMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpPcsRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpPcsSearch() {
+  var d = rpPcsSampleData;
+  rpPcsRenderVisitTable(d.visit);
+  rpPcsRenderMemberTable(d.member);
+}
+
+function rpPcsRenderVisitTable(v) {
+  var tbody = document.getElementById('rpPcsVisitBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  tbody.innerHTML =
+    '<tr>' +
+      '<td>' + (isEn ? 'Clients' : '고객 수') + '</td>' +
+      '<td>' + v.newClient + '</td>' +
+      '<td>' + v.revisit + '</td>' +
+      '<td>' + v.subtotalA + '</td>' +
+      '<td>' + v.unregistered + '</td>' +
+      '<td>' + v.total + '</td>' +
+    '</tr>' +
+    '<tr>' +
+      '<td>' + (isEn ? 'Sales' : '판매 수') + '</td>' +
+      '<td>' + v.newSales + '</td>' +
+      '<td>' + v.revisitSales + '</td>' +
+      '<td>' + v.subtotalASales + '</td>' +
+      '<td>' + v.unregSales + '</td>' +
+      '<td>' + v.totalSales + '</td>' +
+    '</tr>';
+}
+
+function rpPcsRenderMemberTable(m) {
+  var tbody = document.getElementById('rpPcsMemberBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  tbody.innerHTML =
+    '<tr>' +
+      '<td>' + (isEn ? 'Clients' : '고객 수') + '</td>' +
+      '<td>' + m.firstClient + '</td>' +
+      '<td>' + m.repeatClient + '</td>' +
+      '<td>' + m.subtotalClient + '</td>' +
+      '<td>' + m.deductClient + '</td>' +
+    '</tr>' +
+    '<tr>' +
+      '<td>' + (isEn ? 'Sales' : '판매 수') + '</td>' +
+      '<td>' + m.firstSales + '</td>' +
+      '<td>' + m.repeatSales + '</td>' +
+      '<td>' + m.subtotalSales + '</td>' +
+      '<td>' + m.deductSales + '</td>' +
+    '</tr>';
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-CLIENT-TYPE] 고객 유형별 분석
+// ══════════════════════════════════════════════════════════════
+
+var rpCtaChartInstance = null;
+var rpCtaCurrentChartType = 'pie';
+
+var rpCtaSampleData = {
+  gender: [
+    { label: '선택 안함', labelEn: 'No Input', count: 14 }
+  ],
+  grade: [
+    { label: '일반',   labelEn: 'Regular',  count: 10 },
+    { label: 'VIP',    labelEn: 'VIP',      count: 3 },
+    { label: 'VVIP',   labelEn: 'VVIP',     count: 1 }
+  ],
+  group: [
+    { label: '선택 안함', labelEn: 'No Input', count: 14 }
+  ]
+};
+
+var rpCtaHeaderLabels = {
+  gender: { ko: '성별',     en: 'Sex' },
+  grade:  { ko: '고객 등급', en: 'Grade' },
+  group:  { ko: '고객그룹',  en: 'Group' }
+};
+
+function openClientTypeAnalysis() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpClientTypeView').classList.add('show');
+  rpCtaSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpCtaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpCtaPrint() { window.print(); }
+
+function rpCtaSetChartType(type) {
+  rpCtaCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpCtaChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpCtaSearch();
+}
+
+function rpCtaSearch() {
+  var analysisType = document.getElementById('rpCtaAnalysisType').value;
+  var data = rpCtaSampleData[analysisType] || [];
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  // 테이블 헤더 업데이트
+  var colHeader = document.getElementById('rpCtaColHeader');
+  var hdr = rpCtaHeaderLabels[analysisType];
+  colHeader.textContent = isEn ? hdr.en : hdr.ko;
+
+  rpCtaRenderChart(data);
+  rpCtaRenderTable(data);
+}
+
+function rpCtaRenderChart(data) {
+  var barChart = document.getElementById('rpCtaBarChart');
+  var pieWrap = document.getElementById('rpCtaPieWrap');
+  var emptyMsg = document.getElementById('rpCtaChartEmpty');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpCtaChartInstance) { rpCtaChartInstance.destroy(); rpCtaChartInstance = null; }
+
+  var filtered = data.filter(function(d) { return d.count > 0; });
+  if (!filtered.length) {
+    emptyMsg.style.display = '';
+    document.getElementById('rpCtaChartLegend').style.display = 'none';
+    return;
+  }
+
+  if (rpCtaCurrentChartType === 'pie') {
+    rpCtaRenderPieChart(filtered);
+  } else {
+    rpCtaRenderBarChart(filtered);
+  }
+}
+
+function rpCtaRenderBarChart(data) {
+  var barChart = document.getElementById('rpCtaBarChart');
+  var emptyMsg = document.getElementById('rpCtaChartEmpty');
+  var legendDiv = document.getElementById('rpCtaChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var values = sorted.map(function(d) { return d.count; });
+  var maxVal = Math.max.apply(null, values);
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var labelText = isEn ? 'Clients' : '고객 수';
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + labelText + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total.toLocaleString() + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var val = d.count;
+    var pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+    var ratio = total > 0 ? (val / total * 100).toFixed(1) : '0.0';
+    var lbl = isEn ? d.labelEn : d.label;
+    var infoText = val.toLocaleString() + (isEn ? ' (' : '명 (') + ratio + '%)';
+
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + lbl + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div></div></div>';
+    } else {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + lbl + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div><span class="rp-svra-bar-info">' + infoText + '</span></div></div>';
+    }
+  });
+  barChart.innerHTML = html;
+}
+
+function rpCtaRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpCtaPieWrap');
+  var canvas = document.getElementById('rpCtaPieCanvas');
+  var emptyMsg = document.getElementById('rpCtaChartEmpty');
+  var legendDiv = document.getElementById('rpCtaChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var labels = sorted.map(function(d) { return isEn ? d.labelEn : d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    var gp = gradPairs[i];
+    var lbl = isEn ? d.labelEn : d.label;
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' + lbl + ' (' + ratio + '%)</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpCtaChartInstance) rpCtaChartInstance.destroy();
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpCtaChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: { labels: labels, datasets: [{ data: values, backgroundColor: gradColors, borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { var v = ctx.parsed; var r = total > 0 ? (v / total * 100).toFixed(1) : '0.0'; return ctx.label + ': ' + v.toLocaleString() + (isEn ? ' (' : '명 (') + r + '%)'; } } }
+      }
+    },
+    plugins: [{
+      id: 'rpCtaPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var c = chart.ctx;
+        chart.getDatasetMeta(0).data.forEach(function(arc, idx) {
+          var v = chart.data.datasets[0].data[idx];
+          var r = total > 0 ? (v / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(r) < 5) return;
+          var pt = arc.tooltipPosition();
+          c.save(); c.fillStyle = '#fff'; c.font = 'bold 12px Pretendard'; c.textAlign = 'center'; c.textBaseline = 'middle';
+          c.fillText(r + '%', pt.x, pt.y); c.restore();
+        });
+      }
+    }]
+  });
+}
+
+function rpCtaRenderTable(data) {
+  var tbody = document.getElementById('rpCtaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+  for (var i = 0; i < data.length; i++) total += data[i].count;
+
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    var pct = total > 0 ? (data[i].count / total * 100).toFixed(1) : '0.0';
+    var countDisplay = data[i].count > 0 ? data[i].count : '-';
+    html += '<tr><td>' + (isEn ? data[i].labelEn : data[i].label) + '</td><td>' + countDisplay + '</td><td>' + pct + '%</td></tr>';
+  }
+  html += '<tr class="rp-cs-total-row"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td><td>100%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-NEW-CLIENT-REVISIT] 신규고객 재방문 분석
+// ══════════════════════════════════════════════════════════════
+
+var rpNcrSampleData = {
+  '원장님': 1
+};
+var rpNcrMonthNames = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+
+function openNewClientRevisit() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpNewClientRevisitView').classList.add('show');
+  rpNcrInitDropdowns();
+  rpNcrSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpNcrGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpNcrPrint() { window.print(); }
+
+function rpNcrInitDropdowns() {
+  var yearSel = document.getElementById('rpNcrYear');
+  var monthSel = document.getElementById('rpNcrMonth');
+  var now = new Date();
+  var curYear = now.getFullYear();
+  var curMonth = now.getMonth() + 1;
+
+  // 년 드롭다운 (2016 ~ 현재+1)
+  yearSel.innerHTML = '';
+  for (var y = curYear + 1; y >= 2016; y--) {
+    var opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    if (y === curYear) opt.selected = true;
+    yearSel.appendChild(opt);
+  }
+
+  // 월 드롭다운 (01 ~ 12)
+  monthSel.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var opt = document.createElement('option');
+    opt.value = String(m).padStart(2, '0');
+    opt.textContent = String(m).padStart(2, '0');
+    if (m === curMonth) opt.selected = true;
+    monthSel.appendChild(opt);
+  }
+}
+
+function rpNcrSearch() {
+  var year = parseInt(document.getElementById('rpNcrYear').value);
+  var month = parseInt(document.getElementById('rpNcrMonth').value);
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  // 기준월부터 4개월 재방문 추적
+  var baseLabel = year + '-' + String(month).padStart(2, '0');
+  var monthLabels = [];
+  for (var i = 0; i < 4; i++) {
+    var m = month + i;
+    var y = year;
+    if (m > 12) { m -= 12; y++; }
+    var mStr = String(m).padStart(2, '0');
+    monthLabels.push({ month: m, year: y, label: mStr + (isEn ? '월 Repeat' : '월 재방문') });
+  }
+
+  rpNcrRenderTable(baseLabel, monthLabels, isEn);
+}
+
+function rpNcrRenderTable(baseLabel, monthLabels, isEn) {
+  var thead = document.getElementById('rpNcrThead');
+  var tbody = document.getElementById('rpNcrTbody');
+
+  // 헤더 1행: 직원 | 기준월 신규 고객 | 재방문 합계 (colspan2) | 각 월 재방문 (colspan2) x 4
+  var hdr1 = '<tr>';
+  hdr1 += '<th rowspan="2">' + (isEn ? 'Staff' : '직원') + '</th>';
+  hdr1 += '<th rowspan="2">' + baseLabel + '<br>' + (isEn ? 'New Client' : '신규 고객') + '</th>';
+  hdr1 += '<th colspan="2">' + (isEn ? 'Repeat Total' : '재방문 합계') + '</th>';
+  for (var i = 0; i < monthLabels.length; i++) {
+    hdr1 += '<th colspan="2">' + monthLabels[i].label + '</th>';
+  }
+  hdr1 += '</tr>';
+
+  // 헤더 2행: 고객 수 | % 반복
+  var hdr2 = '<tr>';
+  var colCount = 1 + monthLabels.length; // 재방문 합계 + 4개월
+  for (var i = 0; i < colCount; i++) {
+    hdr2 += '<th>' + (isEn ? 'Num' : '고객 수') + '</th>';
+    hdr2 += '<th>%</th>';
+  }
+  hdr2 += '</tr>';
+
+  thead.innerHTML = hdr1 + hdr2;
+
+  // 데이터 행
+  var staffList = Object.keys(rpNcrSampleData);
+  var totalNew = 0;
+  staffList.forEach(function(s) { totalNew += rpNcrSampleData[s]; });
+
+  var html = '';
+  staffList.forEach(function(staff) {
+    var newCount = rpNcrSampleData[staff];
+    html += '<tr>';
+    html += '<td>' + staff + '</td>';
+    html += '<td>' + newCount + '</td>';
+    // 재방문 합계
+    html += '<td>0</td><td></td>';
+    // 각 월 재방문
+    for (var i = 0; i < monthLabels.length; i++) {
+      html += '<td>0</td><td></td>';
+    }
+    html += '</tr>';
+  });
+
+  // 합계 행
+  html += '<tr>';
+  html += '<td>' + (isEn ? 'Total' : '합계') + '</td>';
+  html += '<td>' + totalNew + '</td>';
+  html += '<td>0</td><td></td>';
+  for (var i = 0; i < monthLabels.length; i++) {
+    html += '<td>0</td><td></td>';
+  }
+  html += '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-MONTHLY-NEW-CLIENT] 월별 신규 고객
+// ══════════════════════════════════════════════════════════════
+
+var rpMncChartInstance = null;
+var rpMncCurrentChartType = 'line';
+
+var rpMncSampleData = {
+  '2025-09': 1,
+  '2025-11': 3,
+  '2025-12': 2,
+  '2026-01': 4,
+  '2026-02': 2,
+  '2026-03': 5,
+  '2026-04': 3
+};
+
+function openMonthlyNewClient() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyNewClientView').classList.add('show');
+  rpMncInitSelects();
+  rpMncSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMncGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMncPrint() { window.print(); }
+
+function rpMncInitSelects() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth() + 1;
+
+  var yFrom = document.getElementById('rpMncYearFrom');
+  var yTo = document.getElementById('rpMncYearTo');
+  var mFrom = document.getElementById('rpMncMonthFrom');
+  var mTo = document.getElementById('rpMncMonthTo');
+
+  yFrom.innerHTML = ''; yTo.innerHTML = '';
+  for (var y = curY - 10; y <= curY + 1; y++) {
+    yFrom.innerHTML += '<option value="' + y + '"' + (y === curY - 1 ? ' selected' : '') + '>' + y + '</option>';
+    yTo.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  }
+
+  mFrom.innerHTML = ''; mTo.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var mv = String(m).padStart(2, '0');
+    mFrom.innerHTML += '<option value="' + mv + '"' + (m === 1 ? ' selected' : '') + '>' + mv + '</option>';
+    mTo.innerHTML += '<option value="' + mv + '"' + (m === curM ? ' selected' : '') + '>' + mv + '</option>';
+  }
+}
+
+function rpMncGenerateData() {
+  var yf = parseInt(document.getElementById('rpMncYearFrom').value);
+  var mf = parseInt(document.getElementById('rpMncMonthFrom').value);
+  var yt = parseInt(document.getElementById('rpMncYearTo').value);
+  var mt = parseInt(document.getElementById('rpMncMonthTo').value);
+
+  var data = [];
+  var cy = yf, cm = mf;
+  while (cy < yt || (cy === yt && cm <= mt)) {
+    var key = cy + '-' + String(cm).padStart(2, '0');
+    var count = rpMncSampleData[key] || 0;
+    data.push({ month: key, count: count });
+    cm++;
+    if (cm > 12) { cm = 1; cy++; }
+  }
+  return data;
+}
+
+function rpMncSetChartType(type) {
+  rpMncCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpMncChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpMncSearch();
+}
+
+function rpMncSearch() {
+  var data = rpMncGenerateData();
+  rpMncRenderTable(data);
+  rpMncRenderChart(data);
+}
+
+function rpMncRenderTable(data) {
+  var tbody = document.getElementById('rpMncTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="2" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var total = 0;
+  var html = '';
+  data.forEach(function(row) {
+    total += row.count;
+    html += '<tr><td>' + row.month + '</td><td>' + row.count + '</td></tr>';
+  });
+
+  html += '<tr><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpMncRenderChart(data) {
+  var chartWrap = document.getElementById('rpMncChartWrap');
+  var emptyMsg = document.getElementById('rpMncChartEmpty');
+  var legendDiv = document.getElementById('rpMncChartLegend');
+  var canvas = document.getElementById('rpMncChartCanvas');
+  var chartType = rpMncCurrentChartType;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (rpMncChartInstance) { rpMncChartInstance.destroy(); rpMncChartInstance = null; }
+
+  var hasData = data.some(function(d) { return d.count > 0; });
+  if (!hasData) {
+    chartWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  chartWrap.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var labels = data.map(function(d) { return d.month; });
+  var values = data.map(function(d) { return d.count; });
+  var clientLabel = isEn ? 'Number of Clients' : '고객 수';
+
+  // 범례
+  if (chartType === 'barLine') {
+    legendDiv.innerHTML =
+      '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#F5A623;width:10px;height:10px;border-radius:50%;"></span>' + clientLabel + '</span>' +
+      '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + clientLabel + '</span>';
+  } else {
+    legendDiv.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + clientLabel + '</span>';
+  }
+
+  var ctx = canvas.getContext('2d');
+  var mh = canvas.height || 320;
+
+  // 그라데이션 (막대용)
+  var barGrad = ctx.createLinearGradient(0, 0, 0, mh);
+  barGrad.addColorStop(0, '#9B9BFF');
+  barGrad.addColorStop(1, '#6161FF');
+
+  var datasets = [];
+
+  if (chartType === 'bar' || chartType === 'barLine') {
+    datasets.push({
+      label: clientLabel,
+      data: values,
+      backgroundColor: barGrad,
+      maxBarThickness: 48,
+      order: 2,
+      yAxisID: 'y'
+    });
+  }
+
+  if (chartType === 'line' || chartType === 'barLine') {
+    datasets.push({
+      label: clientLabel,
+      data: values,
+      type: 'line',
+      borderColor: chartType === 'barLine' ? '#F5A623' : '#6161FF',
+      backgroundColor: 'transparent',
+      pointBackgroundColor: chartType === 'barLine' ? '#F5A623' : '#6161FF',
+      pointRadius: 4,
+      borderWidth: 2.5,
+      tension: 0,
+      fill: false,
+      order: 1,
+      yAxisID: chartType === 'barLine' ? 'yLine' : 'y',
+      datalabels: { display: true }
+    });
+  }
+
+  var scales = {
+    x: {
+      grid: { color: '#E0E0E0' },
+      ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+    },
+    y: {
+      beginAtZero: true,
+      grid: { color: '#F0F0F0' },
+      ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575', stepSize: 1 }
+    }
+  };
+
+  if (chartType === 'barLine') {
+    scales.y.position = 'left';
+    scales.yLine = {
+      position: 'right',
+      beginAtZero: true,
+      grid: { drawOnChartArea: false },
+      ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575', stepSize: 1 }
+    };
+  }
+
+  rpMncChartInstance = new Chart(ctx, {
+    type: chartType === 'line' ? 'line' : 'bar',
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': ' + context.parsed.y;
+            }
+          }
+        }
+      },
+      scales: scales
+    },
+    plugins: [{
+      id: 'rpMncValueLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx2 = chart.ctx;
+        chart.data.datasets.forEach(function(ds, dsIdx) {
+          if (ds.type === 'line' || (chartType === 'line' && dsIdx === 0)) {
+            var meta = chart.getDatasetMeta(dsIdx);
+            meta.data.forEach(function(pt, idx) {
+              var val = ds.data[idx];
+              if (val > 0) {
+                ctx2.save();
+                ctx2.fillStyle = '#212121';
+                ctx2.font = '600 11px Pretendard';
+                ctx2.textAlign = 'center';
+                ctx2.fillText(val, pt.x, pt.y - 10);
+                ctx2.restore();
+              }
+            });
+          }
+        });
+      }
+    }]
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-MONTHLY-REFERRAL] 월별 소개 고객 분석
+// ══════════════════════════════════════════════════════════════
+
+var rpMrfChartInstance = null;
+
+var rpMrfSampleData = {
+  '2025-09': { referral: 0, newClient: 1 },
+  '2025-11': { referral: 1, newClient: 3 },
+  '2025-12': { referral: 1, newClient: 2 },
+  '2026-01': { referral: 2, newClient: 4 },
+  '2026-02': { referral: 1, newClient: 2 },
+  '2026-03': { referral: 2, newClient: 5 },
+  '2026-04': { referral: 1, newClient: 3 }
+};
+
+function openMonthlyReferral() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyReferralView').classList.add('show');
+  rpMrfInitSelects();
+  rpMrfSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMrfGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMrfPrint() { window.print(); }
+
+function rpMrfInitSelects() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth() + 1;
+
+  var yFrom = document.getElementById('rpMrfYearFrom');
+  var yTo = document.getElementById('rpMrfYearTo');
+  var mFrom = document.getElementById('rpMrfMonthFrom');
+  var mTo = document.getElementById('rpMrfMonthTo');
+
+  yFrom.innerHTML = ''; yTo.innerHTML = '';
+  for (var y = curY - 10; y <= curY + 1; y++) {
+    yFrom.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+    yTo.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  }
+
+  mFrom.innerHTML = ''; mTo.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var mv = String(m).padStart(2, '0');
+    mFrom.innerHTML += '<option value="' + mv + '"' + (m === 1 ? ' selected' : '') + '>' + mv + '</option>';
+    mTo.innerHTML += '<option value="' + mv + '"' + (m === curM ? ' selected' : '') + '>' + mv + '</option>';
+  }
+}
+
+function rpMrfGenerateData() {
+  var yf = parseInt(document.getElementById('rpMrfYearFrom').value);
+  var mf = parseInt(document.getElementById('rpMrfMonthFrom').value);
+  var yt = parseInt(document.getElementById('rpMrfYearTo').value);
+  var mt = parseInt(document.getElementById('rpMrfMonthTo').value);
+
+  var data = [];
+  var cy = yf, cm = mf;
+  while (cy < yt || (cy === yt && cm <= mt)) {
+    var key = cy + '-' + String(cm).padStart(2, '0');
+    var sample = rpMrfSampleData[key] || { referral: 0, newClient: 0 };
+    data.push({ month: key, referral: sample.referral, newClient: sample.newClient });
+    cm++;
+    if (cm > 12) { cm = 1; cy++; }
+  }
+  return data;
+}
+
+function rpMrfSearch() {
+  var data = rpMrfGenerateData();
+  rpMrfRenderTable(data);
+  rpMrfRenderChart(data);
+}
+
+function rpMrfRenderTable(data) {
+  var tbody = document.getElementById('rpMrfTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var sumRef = 0, sumNew = 0;
+  var html = '';
+  data.forEach(function(row) {
+    sumRef += row.referral;
+    sumNew += row.newClient;
+    var pct = row.newClient > 0 ? (row.referral / row.newClient * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + row.month + '</td><td>' + row.referral + '</td><td>' + row.newClient + '</td><td>' + pct + '%</td></tr>';
+  });
+
+  var totalPct = sumNew > 0 ? (sumRef / sumNew * 100).toFixed(1) : '0.0';
+  html += '<tr><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + sumRef + '</td><td>' + sumNew + '</td><td>' + totalPct + '%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpMrfRenderChart(data) {
+  var chartWrap = document.getElementById('rpMrfChartWrap');
+  var emptyMsg = document.getElementById('rpMrfChartEmpty');
+  var legendDiv = document.getElementById('rpMrfChartLegend');
+  var canvas = document.getElementById('rpMrfChartCanvas');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (rpMrfChartInstance) { rpMrfChartInstance.destroy(); rpMrfChartInstance = null; }
+
+  if (!data || data.length === 0) {
+    chartWrap.style.display = 'none';
+    emptyMsg.style.display = '';
+    legendDiv.style.display = 'none';
+    return;
+  }
+
+  emptyMsg.style.display = 'none';
+  chartWrap.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var labels = data.map(function(d) { return d.month; });
+  var refValues = data.map(function(d) { return d.referral; });
+  var refLabel = isEn ? 'Recommended Clients' : '소개 고객';
+
+  var sum = refValues.reduce(function(a, b) { return a + b; }, 0);
+  var avg = refValues.length > 0 ? Math.round(sum / refValues.length) : 0;
+  var avgLine = refValues.map(function() { return avg; });
+  var avgLabel = isEn ? 'Average' : '평균';
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + refLabel + '</span>' +
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#F5A623; width:20px; height:2px; border-radius:0;"></span>' + avgLabel + ' (' + avg + ')</span>';
+
+  var ctx = canvas.getContext('2d');
+  var mh = canvas.height || 320;
+  var barGrad = ctx.createLinearGradient(0, 0, 0, mh);
+  barGrad.addColorStop(0, '#9B9BFF');
+  barGrad.addColorStop(1, '#6161FF');
+
+  rpMrfChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: refLabel,
+          data: refValues,
+          backgroundColor: barGrad,
+          maxBarThickness: 48,
+          order: 2,
+          yAxisID: 'y'
+        },
+        {
+          label: refLabel,
+          data: refValues,
+          type: 'line',
+          borderColor: '#3CB371',
+          backgroundColor: 'transparent',
+          pointBackgroundColor: '#3CB371',
+          pointRadius: 4,
+          borderWidth: 2.5,
+          tension: 0,
+          fill: false,
+          order: 1,
+          yAxisID: 'yLine'
+        },
+        {
+          label: avgLabel,
+          data: avgLine,
+          type: 'line',
+          borderColor: '#F5A623',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          tension: 0,
+          fill: false,
+          order: 3,
+          yAxisID: 'yLine'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      barPercentage: 0.5,
+      categoryPercentage: 0.7,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(context) {
+              if (context.datasetIndex === 1) return null; // 라인 중복 제거
+              return context.dataset.label + ': ' + context.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          position: 'left',
+          grid: { color: '#F0F0F0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575', stepSize: 1 }
+        },
+        yLine: {
+          beginAtZero: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575', stepSize: 1 }
+        }
+      }
+    },
+    plugins: [{
+      id: 'rpMrfValueLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx2 = chart.ctx;
+        var meta = chart.getDatasetMeta(1); // 라인 데이터셋
+        meta.data.forEach(function(pt, idx) {
+          var val = chart.data.datasets[1].data[idx];
+          if (val > 0) {
+            ctx2.save();
+            ctx2.fillStyle = '#212121';
+            ctx2.font = '600 11px Pretendard';
+            ctx2.textAlign = 'center';
+            ctx2.fillText(val, pt.x, pt.y - 10);
+            ctx2.restore();
+          }
+        });
+      }
+    }]
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// [FEAT-VISIT-SOURCE] 신규고객 방문경로 분석
+// ══════════════════════════════════════════════════════════════
+
+var rpVsaChartInstance = null;
+var rpVsaCurrentChartType = 'pie';
+
+var rpVsaSampleData = [
+  { label: '소개',      labelEn: 'Referral',     count: 3 },
+  { label: '인터넷',    labelEn: 'Internet',     count: 5 },
+  { label: 'SNS',       labelEn: 'SNS',          count: 4 },
+  { label: '기타',      labelEn: 'Other',        count: 2 },
+  { label: '가나다',    labelEn: 'Ganada',       count: 1 },
+  { label: '인스타그램', labelEn: 'Instagram',    count: 3 },
+  { label: '선택 안함',  labelEn: 'No Input',     count: 2 }
+];
+
+function openVisitSourceAnalysis() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpVisitSourceView').classList.add('show');
+  rpVsaInit();
+  rpVsaSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpVsaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpVsaPrint() { window.print(); }
+
+function rpVsaInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpVsaMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpVsaRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpVsaRangeEnd').value = y + '-' + m + '-' + d;
+  rpVsaTogglePeriod();
+}
+
+function rpVsaTogglePeriod() {
+  var type = document.querySelector('input[name="rpVsaPeriod"]:checked').value;
+  document.getElementById('rpVsaMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpVsaRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpVsaSetChartType(type) {
+  rpVsaCurrentChartType = type;
+  var btns = document.querySelectorAll('#rpVsaChartToggle .rp-msv-toggle-btn');
+  btns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  rpVsaSearch();
+}
+
+function rpVsaSearch() {
+  rpVsaRenderChart(rpVsaSampleData);
+  rpVsaRenderTable(rpVsaSampleData);
+}
+
+function rpVsaRenderChart(data) {
+  var barChart = document.getElementById('rpVsaBarChart');
+  var pieWrap = document.getElementById('rpVsaPieWrap');
+  var emptyMsg = document.getElementById('rpVsaChartEmpty');
+  barChart.style.display = 'none';
+  barChart.innerHTML = '';
+  pieWrap.style.display = 'none';
+  if (rpVsaChartInstance) { rpVsaChartInstance.destroy(); rpVsaChartInstance = null; }
+
+  var filtered = data.filter(function(d) { return d.count > 0; });
+  if (!filtered.length) {
+    emptyMsg.style.display = '';
+    document.getElementById('rpVsaChartLegend').style.display = 'none';
+    return;
+  }
+
+  if (rpVsaCurrentChartType === 'pie') {
+    rpVsaRenderPieChart(filtered);
+  } else {
+    rpVsaRenderBarChart(filtered);
+  }
+}
+
+function rpVsaRenderBarChart(data) {
+  var barChart = document.getElementById('rpVsaBarChart');
+  var emptyMsg = document.getElementById('rpVsaChartEmpty');
+  var legendDiv = document.getElementById('rpVsaChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  emptyMsg.style.display = 'none';
+  barChart.style.display = 'block';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var values = sorted.map(function(d) { return d.count; });
+  var maxVal = Math.max.apply(null, values);
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  legendDiv.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Number of Clients' : '고객 수') + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + (isEn ? 'Total' : '합계') + ' ' + total + '</span>';
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var pct = maxVal > 0 ? (d.count / maxVal * 100) : 0;
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    var lbl = isEn ? d.labelEn : d.label;
+    var infoText = d.count + (isEn ? ' (' : '명 (') + ratio + '%)';
+    if (pct >= 55) {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + lbl + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"><span class="rp-svra-bar-info-inside">' + infoText + '</span></div></div></div>';
+    } else {
+      html += '<div class="rp-svra-bar-row"><span class="rp-svra-bar-label">' + lbl + '</span><div class="rp-svra-bar-track"><div class="rp-svra-bar-fill" style="width:' + pct + '%;"></div><span class="rp-svra-bar-info">' + infoText + '</span></div></div>';
+    }
+  });
+  barChart.innerHTML = html;
+}
+
+function rpVsaRenderPieChart(data) {
+  var pieWrap = document.getElementById('rpVsaPieWrap');
+  var canvas = document.getElementById('rpVsaPieCanvas');
+  var emptyMsg = document.getElementById('rpVsaChartEmpty');
+  var legendDiv = document.getElementById('rpVsaChartLegend');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  emptyMsg.style.display = 'none';
+  pieWrap.style.display = 'flex';
+  legendDiv.style.display = 'flex';
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var labels = sorted.map(function(d) { return isEn ? d.labelEn : d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+  var gradPairs = sorted.map(function(_, i) { return rpSvraPieGradients[i % rpSvraPieGradients.length]; });
+  var total = values.reduce(function(sum, v) { return sum + v; }, 0);
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var gp = gradPairs[i];
+    var lbl = isEn ? d.labelEn : d.label;
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' + lbl + '</span>';
+  });
+  legendDiv.innerHTML = legendHtml;
+
+  if (rpVsaChartInstance) rpVsaChartInstance.destroy();
+  var ctx = canvas.getContext('2d');
+  var chartArea = { w: canvas.width || 300, h: canvas.height || 300 };
+  var gradColors = gradPairs.map(function(pair) {
+    var grad = ctx.createLinearGradient(0, 0, chartArea.w, chartArea.h);
+    grad.addColorStop(0, pair[0]);
+    grad.addColorStop(1, pair[1]);
+    return grad;
+  });
+
+  rpVsaChartInstance = new Chart(ctx, {
+    type: 'pie',
+    data: { labels: labels, datasets: [{ data: values, backgroundColor: gradColors, borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(c) { var v = c.parsed; var r = total > 0 ? (v / total * 100).toFixed(1) : '0.0'; return c.label + ': ' + v + (isEn ? ' (' : '명 (') + r + '%)'; } } }
+      }
+    },
+    plugins: [{
+      id: 'rpVsaPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var c2 = chart.ctx;
+        chart.getDatasetMeta(0).data.forEach(function(arc, idx) {
+          var v = chart.data.datasets[0].data[idx];
+          var r = total > 0 ? (v / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(r) < 5) return;
+          var pt = arc.tooltipPosition();
+          c2.save(); c2.fillStyle = '#fff'; c2.font = 'bold 12px Pretendard'; c2.textAlign = 'center'; c2.textBaseline = 'middle';
+          c2.fillText(r + '%', pt.x, pt.y); c2.restore();
+        });
+      }
+    }]
+  });
+}
+
+function rpVsaRenderTable(data) {
+  var tbody = document.getElementById('rpVsaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+
+  var html = '';
+  data.forEach(function(d) {
+    total += d.count;
+    var countDisplay = d.count > 0 ? d.count : '-';
+    html += '<tr><td>' + (isEn ? d.labelEn : d.label) + '</td><td>' + countDisplay + '</td></tr>';
+  });
+  html += '<tr><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td></tr>';
+  tbody.innerHTML = html;
+}
+
+// ══════════════════════════════════════════
+// [REPORT] 예약 상세 집계 (bda)
+// ══════════════════════════════════════════
+
+// ── 샘플 데이터 ──
+var rpBdaDailyData = {
+  '2026-04-10': {
+    summary: { admin: 0, naver: 0, total: 0, cancel: 0, noshow: 0 },
+    resources: []
+  },
+  '2026-04-09': {
+    summary: { admin: 1, naver: 3, total: 4, cancel: 1, noshow: 0 },
+    resources: [
+      { name: '실장님', admin: 1, naver: 1, total: 2, cancel: 0, noshow: 0 },
+      { name: '원장님', admin: 0, naver: 2, total: 2, cancel: 1, noshow: 0 }
+    ]
+  }
+};
+
+var rpBdaMonthlyData = {
+  '2026-04': {
+    summary: { admin: 3, naver: 7, total: 10, cancel: 4, noshow: 0 },
+    resources: [
+      { name: '서희(방문결제)', admin: 0, naver: 2, total: 2, cancel: 0, noshow: 0 },
+      { name: '실장님', admin: 2, naver: 1, total: 3, cancel: 1, noshow: 0 },
+      { name: '원장님', admin: 1, naver: 3, total: 4, cancel: 2, noshow: 0 },
+      { name: '토미(선결 예약금)', admin: 0, naver: 1, total: 1, cancel: 1, noshow: 0 }
+    ],
+    prevMonth: { label: '2026년 3월', admin: 2, naver: 16, total: 18, cancel: 1, noshow: 0 }
+  },
+  '2026-03': {
+    summary: { admin: 2, naver: 16, total: 18, cancel: 1, noshow: 0 },
+    resources: [
+      { name: '서희(방문결제)', admin: 0, naver: 5, total: 5, cancel: 0, noshow: 0 },
+      { name: '실장님', admin: 1, naver: 4, total: 5, cancel: 0, noshow: 0 },
+      { name: '원장님', admin: 1, naver: 5, total: 6, cancel: 1, noshow: 0 },
+      { name: '토미(선결 예약금)', admin: 0, naver: 2, total: 2, cancel: 0, noshow: 0 }
+    ],
+    prevMonth: { label: '2026년 2월', admin: 3, naver: 12, total: 15, cancel: 2, noshow: 1 }
+  }
+};
+
+function openBookingDetail() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingDetailView').classList.add('show');
+  rpBdaInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBdaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBdaPrint() { window.print(); }
+
+function rpBdaInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBdaDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpBdaMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBdaRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBdaRangeEnd').value = y + '-' + m + '-' + d;
+  rpBdaTogglePeriod();
+}
+
+function rpBdaTogglePeriod() {
+  var type = document.querySelector('input[name="rpBdaPeriod"]:checked').value;
+  document.getElementById('rpBdaDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpBdaMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBdaRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+  document.getElementById('rpBdaMonthCompareSection').style.display = type === 'monthly' ? '' : 'none';
+}
+
+function rpBdaSearch() {
+  var type = document.querySelector('input[name="rpBdaPeriod"]:checked').value;
+
+  if (type === 'daily') {
+    var dateVal = document.getElementById('rpBdaDailyDate').value;
+    var data = rpBdaDailyData[dateVal] || { summary: { admin: 0, naver: 0, total: 0, cancel: 0, noshow: 0 }, resources: [] };
+    rpBdaRenderSummary(data.summary);
+    rpBdaRenderResources(data.resources);
+    document.getElementById('rpBdaMonthCompareSection').style.display = 'none';
+  } else if (type === 'monthly') {
+    var monthVal = document.getElementById('rpBdaMonthlyDate').value;
+    var data = rpBdaMonthlyData[monthVal] || null;
+    if (data) {
+      rpBdaRenderSummary(data.summary);
+      rpBdaRenderResources(data.resources);
+      rpBdaRenderMonthCompare(monthVal, data);
+    } else {
+      rpBdaRenderSummary({ admin: 0, naver: 0, total: 0, cancel: 0, noshow: 0 });
+      rpBdaRenderResources([]);
+      rpBdaRenderMonthCompare(monthVal, null);
+    }
+    document.getElementById('rpBdaMonthCompareSection').style.display = '';
+  } else {
+    rpBdaRenderSummary({ admin: 0, naver: 0, total: 0, cancel: 0, noshow: 0 });
+    rpBdaRenderResources([]);
+    document.getElementById('rpBdaMonthCompareSection').style.display = 'none';
+  }
+}
+
+function rpBdaRenderSummary(s) {
+  var tbody = document.getElementById('rpBdaSummaryBody');
+  var adminR = s.total > 0 ? Math.round(s.admin / s.total * 100) : 0;
+  var naverR = s.total > 0 ? Math.round(s.naver / s.total * 100) : 0;
+  var totalR = s.total > 0 ? '100' : '0';
+  var cancelR = s.total > 0 ? Math.round(s.cancel / s.total * 100) : 0;
+  var noshowR = s.total > 0 ? Math.round(s.noshow / s.total * 100) : 0;
+
+  tbody.innerHTML =
+    '<tr>' +
+      '<td data-i18n="bda.bookingCount" data-ko="예약 건수" data-en="Number of Bookings">예약 건수</td>' +
+      '<td>' + s.admin + '</td>' +
+      '<td>' + s.naver + '</td>' +
+      '<td>' + s.total + '</td>' +
+      '<td class="rp-bda-highlight">' + s.cancel + '</td>' +
+      '<td>' + s.noshow + '</td>' +
+    '</tr>' +
+    '<tr>' +
+      '<td data-i18n="bda.ratioPercent" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</td>' +
+      '<td>' + adminR + '%</td>' +
+      '<td>' + naverR + '%</td>' +
+      '<td>' + totalR + '%</td>' +
+      '<td class="rp-bda-highlight">' + cancelR + '%</td>' +
+      '<td>' + noshowR + '%</td>' +
+    '</tr>';
+}
+
+function rpBdaRenderResources(resources) {
+  var tbody = document.getElementById('rpBdaResourceBody');
+  if (!resources || resources.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data for table">내역이 없습니다.</td></tr>';
+    return;
+  }
+  var html = '';
+  resources.forEach(function(r) {
+    html += '<tr>' +
+      '<td>' + r.name + '</td>' +
+      '<td>' + r.admin + '</td>' +
+      '<td class="' + (r.naver > 0 ? 'rp-bda-highlight' : '') + '">' + r.naver + '</td>' +
+      '<td>' + r.total + '</td>' +
+      '<td class="' + (r.cancel > 0 ? 'rp-bda-highlight' : '') + '">' + r.cancel + '</td>' +
+      '<td>' + r.noshow + '</td>' +
+      '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+function rpBdaRenderMonthCompare(monthVal, data) {
+  var tbody = document.getElementById('rpBdaMonthCompareBody');
+  if (!data) {
+    tbody.innerHTML = '<tr><td colspan="6" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data for table">내역이 없습니다.</td></tr>';
+    return;
+  }
+  var cur = data.summary;
+  var prev = data.prevMonth;
+  var parts = monthVal.split('-');
+  var curLabel = parts[0] + '년 ' + parseInt(parts[1], 10) + '월';
+
+  var html = '<tr>' +
+    '<td>' + curLabel + '</td>' +
+    '<td>' + cur.admin + '</td>' +
+    '<td>' + cur.naver + '</td>' +
+    '<td>' + cur.total + '</td>' +
+    '<td class="rp-bda-highlight">' + cur.cancel + '</td>' +
+    '<td>' + cur.noshow + '</td>' +
+    '</tr>';
+
+  if (prev) {
+    html += '<tr>' +
+      '<td>' + prev.label + '</td>' +
+      '<td>' + prev.admin + '</td>' +
+      '<td>' + prev.naver + '</td>' +
+      '<td>' + prev.total + '</td>' +
+      '<td>' + prev.cancel + '</td>' +
+      '<td>' + prev.noshow + '</td>' +
+      '</tr>';
+
+    var dA = cur.admin - prev.admin;
+    var dN = cur.naver - prev.naver;
+    var dT = cur.total - prev.total;
+    var dC = cur.cancel - prev.cancel;
+    var dNs = cur.noshow - prev.noshow;
+
+    html += '<tr class="rp-bda-change-row">' +
+      '<td data-i18n="bda.change" data-ko="증감" data-en="Changes">증감</td>' +
+      '<td>' + rpBdaFmtChange(dA, prev.admin) + '</td>' +
+      '<td>' + rpBdaFmtChange(dN, prev.naver) + '</td>' +
+      '<td>' + rpBdaFmtChange(dT, prev.total) + '</td>' +
+      '<td>' + rpBdaFmtChange(dC, prev.cancel) + '</td>' +
+      '<td>' + rpBdaFmtChange(dNs, prev.noshow) + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpBdaFmtChange(diff, prevVal) {
+  if (diff === 0) return '0';
+  var pct = '';
+  if (prevVal > 0) {
+    pct = '(' + Math.round(diff / prevVal * 100) + '%)';
+  }
+  return diff + pct;
+}
+
+// ══════════════════════════════════════════
+// [REPORT] 일별 예약 분석 (dba)
+// ══════════════════════════════════════════
+
+var rpDbaChart = null;
+var rpDbaData = [];
+
+// 샘플 데이터: 날짜 → { total, cancel, noshow } (경로/자원별)
+var rpDbaSample = {
+  all: {
+    all: {
+      '2026-04-01':{total:1,cancel:1,noshow:0},
+      '2026-04-02':{total:1,cancel:1,noshow:0},
+      '2026-04-03':{total:0,cancel:0,noshow:0},
+      '2026-04-04':{total:0,cancel:0,noshow:0},
+      '2026-04-05':{total:0,cancel:0,noshow:0},
+      '2026-04-06':{total:0,cancel:0,noshow:0},
+      '2026-04-07':{total:3,cancel:0,noshow:0},
+      '2026-04-08':{total:0,cancel:0,noshow:0},
+      '2026-04-09':{total:0,cancel:0,noshow:0},
+      '2026-04-10':{total:0,cancel:0,noshow:0}
+    },
+    '원장님': {}
+  },
+  admin: {
+    all: {},
+    '원장님': {}
+  },
+  naver: {
+    all: {},
+    '원장님': {}
+  }
+};
+
+function openDailyBooking() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpDailyBookingView').classList.add('show');
+  rpDbaInit();
+  rpDbaSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpDbaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpDbaPrint() { window.print(); }
+
+function rpDbaInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpDbaDateFrom').value = y + '-' + m + '-01';
+  document.getElementById('rpDbaDateTo').value = y + '-' + m + '-' + d;
+}
+
+function rpDbaGenerateData() {
+  var from = document.getElementById('rpDbaDateFrom').value;
+  var to = document.getElementById('rpDbaDateTo').value;
+  if (!from || !to) return [];
+
+  var route = document.getElementById('rpDbaRouteSelect').value;
+  var resource = document.getElementById('rpDbaResourceSelect').value;
+  var src = (rpDbaSample[route] && rpDbaSample[route][resource]) ? rpDbaSample[route][resource] : {};
+
+  var data = [];
+  var cur = new Date(from);
+  var end = new Date(to);
+  while (cur <= end) {
+    var ds = cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' + String(cur.getDate()).padStart(2, '0');
+    var s = src[ds] || { total: 0, cancel: 0, noshow: 0 };
+    var net = s.total - s.cancel;
+    var cancelRate = s.total > 0 ? (s.cancel / s.total * 100).toFixed(1) : '';
+    var noshowRate = net > 0 ? (s.noshow / net * 100).toFixed(1) : '';
+    data.push({ date: ds, total: s.total, cancel: s.cancel, cancelRate: cancelRate, net: net, noshow: s.noshow, noshowRate: noshowRate });
+    cur.setDate(cur.getDate() + 1);
+  }
+  return data;
+}
+
+function rpDbaSearch() {
+  rpDbaData = rpDbaGenerateData();
+  rpDbaRenderTable();
+  rpDbaUpdateChart();
+}
+
+function rpDbaRenderTable() {
+  var tbody = document.getElementById('rpDbaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var html = '';
+  var sumTotal = 0, sumCancel = 0, sumNet = 0, sumNoshow = 0;
+
+  rpDbaData.forEach(function(r) {
+    sumTotal += r.total;
+    sumCancel += r.cancel;
+    sumNet += r.net;
+    sumNoshow += r.noshow;
+    html += '<tr>' +
+      '<td>' + r.date + '</td>' +
+      '<td>' + r.total + '</td>' +
+      '<td>' + r.cancel + '</td>' +
+      '<td>' + (r.cancelRate ? r.cancelRate + '%' : '') + '</td>' +
+      '<td>' + r.net + '</td>' +
+      '<td>' + r.noshow + '</td>' +
+      '<td>' + (r.noshowRate ? r.noshowRate + '%' : '') + '</td>' +
+      '</tr>';
+  });
+
+  var totalCancelRate = sumTotal > 0 ? (sumCancel / sumTotal * 100).toFixed(1) + '%' : '';
+  var totalNoshowRate = sumNet > 0 ? (sumNoshow / sumNet * 100).toFixed(1) + '%' : '';
+  html += '<tr style="font-weight:600;background:#FAFAFA;">' +
+    '<td>' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + sumTotal + '</td>' +
+    '<td>' + sumCancel + '</td>' +
+    '<td>' + totalCancelRate + '</td>' +
+    '<td>' + sumNet + '</td>' +
+    '<td>' + sumNoshow + '</td>' +
+    '<td>' + totalNoshowRate + '</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpDbaUpdateChart() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var display = document.getElementById('rpDbaDisplaySelect').value;
+  var labels = rpDbaData.map(function(r) { return r.date; });
+
+  var values = rpDbaData.map(function(r) {
+    if (display === 'total') return r.total;
+    if (display === 'net') return r.net;
+    if (display === 'cancel') return r.cancel;
+    if (display === 'noshow') return r.noshow;
+    return r.total;
+  });
+
+  var displayLabels = {
+    total: isEn ? 'Total Bookings' : '총 예약건수',
+    net: isEn ? 'Total(Exclude Cancellation)' : '예약건수(취소제외)',
+    cancel: isEn ? 'Cancellation' : '취소',
+    noshow: isEn ? 'No Show' : '노쇼'
+  };
+
+  var sum = values.reduce(function(a, b) { return a + b; }, 0);
+  var avg = values.length > 0 ? Math.round(sum / values.length * 10) / 10 : 0;
+  document.getElementById('rpDbaAvgValue').textContent = avg % 1 === 0 ? avg : avg.toFixed(1);
+
+  // 범례 텍스트 업데이트
+  var legendEl = document.querySelector('#rpDailyBookingView .rp-ds-chart-legend .rp-ds-legend-item:first-child span:last-child');
+  if (legendEl) legendEl.textContent = displayLabels[display];
+
+  var avgLine = values.map(function() { return avg; });
+
+  var canvas = document.getElementById('rpDbaChart');
+  var ctx = canvas.getContext('2d');
+  if (rpDbaChart) { rpDbaChart.destroy(); rpDbaChart = null; }
+
+  // 그라데이션 (일별 매출 분석과 동일 패턴)
+  var h = canvas.height || 320;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpDbaChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: displayLabels[display],
+          data: values,
+          backgroundColor: grad,
+          borderRadius: 3,
+          order: 2
+        },
+        {
+          label: isEn ? 'Average' : '평균',
+          data: avgLine,
+          type: 'line',
+          borderColor: '#F5A623',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          tension: 0,
+          fill: false,
+          order: 1,
+          yAxisID: 'yLine'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      barPercentage: 0.5,
+      categoryPercentage: 0.7,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.parsed.y === 0 && ctx.dataset.type !== 'line') return null;
+              return ctx.dataset.label + ': ' + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' },
+            color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        },
+        yLine: {
+          display: false,
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+// [REPORT] 월별 예약 분석 (mba)
+// ══════════════════════════════════════════
+
+var rpMbaChart = null;
+var rpMbaData = [];
+
+var rpMbaSample = {
+  all: {
+    all: {
+      '2026-01':{total:15,cancel:3,noshow:2},
+      '2026-02':{total:46,cancel:11,noshow:15},
+      '2026-03':{total:18,cancel:1,noshow:0},
+      '2026-04':{total:10,cancel:4,noshow:0}
+    },
+    '원장님': {
+      '2026-01':{total:5,cancel:1,noshow:1},
+      '2026-02':{total:18,cancel:4,noshow:6},
+      '2026-03':{total:8,cancel:0,noshow:0},
+      '2026-04':{total:4,cancel:2,noshow:0}
+    }
+  },
+  admin: {
+    all: {
+      '2026-01':{total:3,cancel:0,noshow:0},
+      '2026-02':{total:8,cancel:2,noshow:1},
+      '2026-03':{total:2,cancel:0,noshow:0},
+      '2026-04':{total:3,cancel:1,noshow:0}
+    },
+    '원장님': {}
+  },
+  naver: {
+    all: {
+      '2026-01':{total:12,cancel:3,noshow:2},
+      '2026-02':{total:38,cancel:9,noshow:14},
+      '2026-03':{total:16,cancel:1,noshow:0},
+      '2026-04':{total:7,cancel:3,noshow:0}
+    },
+    '원장님': {}
+  }
+};
+
+function openMonthlyBooking() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyBookingView').classList.add('show');
+  rpMbaInitSelects();
+  rpMbaSearch();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMbaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMbaPrint() { window.print(); }
+
+function rpMbaInitSelects() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth() + 1;
+
+  var yFrom = document.getElementById('rpMbaYearFrom');
+  var yTo = document.getElementById('rpMbaYearTo');
+  var mFrom = document.getElementById('rpMbaMonthFrom');
+  var mTo = document.getElementById('rpMbaMonthTo');
+
+  yFrom.innerHTML = ''; yTo.innerHTML = '';
+  for (var y = curY - 3; y <= curY + 1; y++) {
+    yFrom.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+    yTo.innerHTML += '<option value="' + y + '"' + (y === curY ? ' selected' : '') + '>' + y + '</option>';
+  }
+
+  mFrom.innerHTML = ''; mTo.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var mv = String(m).padStart(2, '0');
+    mFrom.innerHTML += '<option value="' + mv + '"' + (m === 1 ? ' selected' : '') + '>' + mv + '</option>';
+    mTo.innerHTML += '<option value="' + mv + '"' + (m === curM ? ' selected' : '') + '>' + mv + '</option>';
+  }
+}
+
+function rpMbaGenerateData() {
+  var yf = parseInt(document.getElementById('rpMbaYearFrom').value);
+  var mf = parseInt(document.getElementById('rpMbaMonthFrom').value);
+  var yt = parseInt(document.getElementById('rpMbaYearTo').value);
+  var mt = parseInt(document.getElementById('rpMbaMonthTo').value);
+
+  var route = document.getElementById('rpMbaRouteSelect').value;
+  var resource = document.getElementById('rpMbaResourceSelect').value;
+  var src = (rpMbaSample[route] && rpMbaSample[route][resource]) ? rpMbaSample[route][resource] : {};
+
+  var data = [];
+  var cy = yf, cm = mf;
+  while (cy < yt || (cy === yt && cm <= mt)) {
+    var key = cy + '-' + String(cm).padStart(2, '0');
+    var s = src[key] || { total: 0, cancel: 0, noshow: 0 };
+    var net = s.total - s.cancel;
+    var cancelRate = s.total > 0 ? (s.cancel / s.total * 100).toFixed(1) : '';
+    var noshowRate = net > 0 ? (s.noshow / net * 100).toFixed(1) : '';
+    data.push({ month: key, total: s.total, cancel: s.cancel, cancelRate: cancelRate, net: net, noshow: s.noshow, noshowRate: noshowRate });
+    cm++;
+    if (cm > 12) { cm = 1; cy++; }
+  }
+  return data;
+}
+
+function rpMbaSearch() {
+  rpMbaData = rpMbaGenerateData();
+  rpMbaRenderTable();
+  rpMbaUpdateChart();
+}
+
+function rpMbaRenderTable() {
+  var tbody = document.getElementById('rpMbaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var html = '';
+  var sumTotal = 0, sumCancel = 0, sumNet = 0, sumNoshow = 0;
+
+  rpMbaData.forEach(function(r) {
+    sumTotal += r.total;
+    sumCancel += r.cancel;
+    sumNet += r.net;
+    sumNoshow += r.noshow;
+    html += '<tr>' +
+      '<td>' + r.month + '</td>' +
+      '<td>' + r.total + '</td>' +
+      '<td>' + r.cancel + '</td>' +
+      '<td>' + (r.cancelRate ? r.cancelRate + '%' : '') + '</td>' +
+      '<td>' + r.net + '</td>' +
+      '<td>' + r.noshow + '</td>' +
+      '<td>' + (r.noshowRate ? r.noshowRate + '%' : '') + '</td>' +
+      '</tr>';
+  });
+
+  var totalCancelRate = sumTotal > 0 ? (sumCancel / sumTotal * 100).toFixed(1) + '%' : '';
+  var totalNoshowRate = sumNet > 0 ? (sumNoshow / sumNet * 100).toFixed(1) + '%' : '';
+  html += '<tr style="font-weight:600;background:#FAFAFA;">' +
+    '<td>' + (isEn ? 'Total' : '합계') + '</td>' +
+    '<td>' + sumTotal + '</td>' +
+    '<td>' + sumCancel + '</td>' +
+    '<td>' + totalCancelRate + '</td>' +
+    '<td>' + sumNet + '</td>' +
+    '<td>' + sumNoshow + '</td>' +
+    '<td>' + totalNoshowRate + '</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpMbaUpdateChart() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var display = document.getElementById('rpMbaDisplaySelect').value;
+  var labels = rpMbaData.map(function(r) { return r.month; });
+
+  var values = rpMbaData.map(function(r) {
+    if (display === 'total') return r.total;
+    if (display === 'net') return r.net;
+    if (display === 'cancel') return r.cancel;
+    if (display === 'noshow') return r.noshow;
+    return r.total;
+  });
+
+  var displayLabels = {
+    total: isEn ? 'Total Bookings' : '총 예약건수',
+    net: isEn ? 'Total(Exclude Cancellation)' : '예약건수(취소제외)',
+    cancel: isEn ? 'Cancellation' : '취소',
+    noshow: isEn ? 'No Show' : '노쇼'
+  };
+
+  var sum = values.reduce(function(a, b) { return a + b; }, 0);
+  var avg = values.length > 0 ? Math.round(sum / values.length * 10) / 10 : 0;
+  document.getElementById('rpMbaAvgValue').textContent = avg % 1 === 0 ? avg : avg.toFixed(1);
+
+  var legendEl = document.getElementById('rpMbaLegendLabel');
+  if (legendEl) legendEl.textContent = displayLabels[display];
+
+  var avgLine = values.map(function() { return avg; });
+
+  var canvas = document.getElementById('rpMbaChart');
+  var ctx = canvas.getContext('2d');
+  if (rpMbaChart) { rpMbaChart.destroy(); rpMbaChart = null; }
+
+  var h = canvas.height || 320;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpMbaChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: displayLabels[display],
+          data: values,
+          backgroundColor: grad,
+          borderRadius: 3,
+          order: 2
+        },
+        {
+          label: isEn ? 'Average' : '평균',
+          data: avgLine,
+          type: 'line',
+          borderColor: '#F5A623',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          tension: 0,
+          fill: false,
+          order: 1,
+          yAxisID: 'yLine'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      barPercentage: 0.35,
+      categoryPercentage: 0.7,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.parsed.y === 0 && ctx.dataset.type !== 'line') return null;
+              return ctx.dataset.label + ': ' + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#E0E0E0' },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' },
+            color: '#757575',
+            callback: function(v) { return v.toLocaleString(); }
+          }
+        },
+        yLine: {
+          display: false,
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+// [REPORT] 예약 자원별 분석 (bra)
+// ══════════════════════════════════════════
+
+var rpBraPieChart = null;
+var rpBraChartType = 'bar';
+var rpBraCurrentData = [];
+
+var rpBraSample = {
+  '2026-04': [
+    { label: '서희(방문결제)', count: 2 },
+    { label: '실장님', count: 2 },
+    { label: '원장님', count: 2 }
+  ],
+  '2026-03': [
+    { label: '서희(방문결제)', count: 5 },
+    { label: '실장님', count: 5 },
+    { label: '원장님', count: 6 },
+    { label: '토미(선결 예약금)', count: 2 }
+  ],
+  '2026-02': [
+    { label: '서희(방문결제)', count: 12 },
+    { label: '실장님', count: 15 },
+    { label: '원장님', count: 19 }
+  ]
+};
+
+var rpBraPieColors = [
+  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
+  '#AB47BC', '#FF7043', '#26A69A', '#EC407A', '#8D6E63'
+];
+
+function openBookingByResource() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingByResourceView').classList.add('show');
+  rpBraInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBraGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBraPrint() { window.print(); }
+
+function rpBraInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBraMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBraRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBraRangeEnd').value = y + '-' + m + '-' + d;
+  rpBraTogglePeriod();
+}
+
+function rpBraTogglePeriod() {
+  var type = document.querySelector('input[name="rpBraPeriod"]:checked').value;
+  document.getElementById('rpBraMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBraRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpBraSetChartType(type) {
+  rpBraChartType = type;
+  document.querySelectorAll('#rpBraChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  if (rpBraCurrentData.length > 0) rpBraRenderChart(rpBraCurrentData);
+}
+
+function rpBraSearch() {
+  var periodType = document.querySelector('input[name="rpBraPeriod"]:checked').value;
+  var data = [];
+  if (periodType === 'monthly') {
+    var monthVal = document.getElementById('rpBraMonthlyDate').value;
+    data = rpBraSample[monthVal] || [];
+  }
+  rpBraCurrentData = data;
+  rpBraRenderTable(data);
+  rpBraRenderChart(data);
+}
+
+function rpBraRenderTable(data) {
+  var tbody = document.getElementById('rpBraTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.label + '</td><td>' + d.count + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td><td>100%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpBraRenderChart(data) {
+  if (rpBraChartType === 'pie') {
+    rpBraRenderPie(data);
+  } else {
+    rpBraRenderBar(data);
+  }
+}
+
+function rpBraRenderBar(data) {
+  var emptyEl = document.getElementById('rpBraChartEmpty');
+  var barEl = document.getElementById('rpBraBarChart');
+  var pieWrap = document.getElementById('rpBraPieWrap');
+  var legendEl = document.getElementById('rpBraChartLegend');
+
+  pieWrap.style.display = 'none';
+  if (rpBraPieChart) { rpBraPieChart.destroy(); rpBraPieChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    barEl.style.display = 'none';
+    legendEl.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  barEl.style.display = '';
+  legendEl.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  legendEl.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Number of Bookings' : '예약 건수') + '</span>';
+
+  var sorted = data.slice().sort(function(a, b) { return a.count - b.count; });
+  var maxVal = Math.max.apply(null, sorted.map(function(d) { return d.count; }));
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var pct = maxVal > 0 ? (d.count / maxVal * 100) : 0;
+    html += '<div class="rp-svra-bar-row">' +
+      '<span class="rp-svra-bar-label">' + d.label + '</span>' +
+      '<div class="rp-svra-bar-track">' +
+        '<div class="rp-svra-bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,#6161FF,#9B9BFF);"></div>' +
+      '</div>' +
+      '<span class="rp-svra-bar-value">' + d.count + '</span>' +
+    '</div>';
+  });
+
+  barEl.innerHTML = html;
+}
+
+function rpBraRenderPie(data) {
+  var emptyEl = document.getElementById('rpBraChartEmpty');
+  var barEl = document.getElementById('rpBraBarChart');
+  var pieWrap = document.getElementById('rpBraPieWrap');
+  var legendEl = document.getElementById('rpBraChartLegend');
+
+  barEl.style.display = 'none';
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    pieWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBraPieChart) { rpBraPieChart.destroy(); rpBraPieChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  pieWrap.style.display = '';
+  legendEl.style.display = 'flex';
+  legendEl.classList.add('rp-svra-legend--wrap');
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var total = 0;
+  sorted.forEach(function(d) { total += d.count; });
+
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+  var colors = sorted.map(function(_, i) { return rpBraPieColors[i % rpBraPieColors.length]; });
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + d.label + ' (' + ratio + '%)</span>';
+  });
+  legendEl.innerHTML = legendHtml;
+
+  if (rpBraPieChart) rpBraPieChart.destroy();
+
+  var canvas = document.getElementById('rpBraPieCanvas');
+  var ctx = canvas.getContext('2d');
+
+  rpBraPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'braPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 12px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+// ══════════════════════════════════════════
+// [REPORT] 예약 요일별 분석 (bwa)
+// ══════════════════════════════════════════
+
+var rpBwaBarChart = null;
+var rpBwaPieChart = null;
+var rpBwaChartType = 'bar';
+var rpBwaCurrentData = [];
+
+var rpBwaPieColors = [
+  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
+  '#AB47BC', '#FF7043'
+];
+
+var rpBwaSample = {
+  '2026-04': [
+    { label: '월요일', labelEn: 'Mon', count: 2 },
+    { label: '화요일', labelEn: 'Tue', count: 4 }
+  ],
+  '2026-03': [
+    { label: '월요일', labelEn: 'Mon', count: 3 },
+    { label: '화요일', labelEn: 'Tue', count: 5 },
+    { label: '수요일', labelEn: 'Wed', count: 2 },
+    { label: '목요일', labelEn: 'Thu', count: 4 },
+    { label: '금요일', labelEn: 'Fri', count: 6 },
+    { label: '토요일', labelEn: 'Sat', count: 3 },
+    { label: '일요일', labelEn: 'Sun', count: 1 }
+  ],
+  '2026-02': [
+    { label: '월요일', labelEn: 'Mon', count: 8 },
+    { label: '화요일', labelEn: 'Tue', count: 10 },
+    { label: '수요일', labelEn: 'Wed', count: 6 },
+    { label: '목요일', labelEn: 'Thu', count: 9 },
+    { label: '금요일', labelEn: 'Fri', count: 12 },
+    { label: '토요일', labelEn: 'Sat', count: 5 },
+    { label: '일요일', labelEn: 'Sun', count: 2 }
+  ]
+};
+
+function openBookingByWeekday() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingByWeekdayView').classList.add('show');
+  rpBwaInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBwaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBwaPrint() { window.print(); }
+
+function rpBwaInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBwaMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBwaRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBwaRangeEnd').value = y + '-' + m + '-' + d;
+  rpBwaTogglePeriod();
+}
+
+function rpBwaTogglePeriod() {
+  var type = document.querySelector('input[name="rpBwaPeriod"]:checked').value;
+  document.getElementById('rpBwaMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBwaRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpBwaSetChartType(type) {
+  rpBwaChartType = type;
+  document.querySelectorAll('#rpBwaChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  if (rpBwaCurrentData.length > 0) rpBwaRenderChart(rpBwaCurrentData);
+}
+
+function rpBwaSearch() {
+  var periodType = document.querySelector('input[name="rpBwaPeriod"]:checked').value;
+  var data = [];
+  if (periodType === 'monthly') {
+    var monthVal = document.getElementById('rpBwaMonthlyDate').value;
+    data = rpBwaSample[monthVal] || [];
+  }
+  rpBwaCurrentData = data;
+  rpBwaRenderTable(data);
+  rpBwaRenderChart(data);
+}
+
+function rpBwaRenderTable(data) {
+  var tbody = document.getElementById('rpBwaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var html = '';
+  data.forEach(function(d) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + (isEn ? d.labelEn : d.label) + '</td><td>' + d.count + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td><td>100%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpBwaRenderChart(data) {
+  if (rpBwaChartType === 'pie') {
+    rpBwaRenderPie(data);
+  } else {
+    rpBwaRenderBar(data);
+  }
+}
+
+function rpBwaRenderBar(data) {
+  var emptyEl = document.getElementById('rpBwaChartEmpty');
+  var barWrap = document.getElementById('rpBwaBarWrap');
+  var barCanvas = document.getElementById('rpBwaBarCanvas');
+  var pieWrap = document.getElementById('rpBwaPieWrap');
+  var legendEl = document.getElementById('rpBwaChartLegend');
+
+  pieWrap.style.display = 'none';
+  if (rpBwaPieChart) { rpBwaPieChart.destroy(); rpBwaPieChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    barWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBwaBarChart) { rpBwaBarChart.destroy(); rpBwaBarChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  barWrap.style.display = '';
+  legendEl.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  legendEl.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Number of Bookings' : '예약 건수') + '</span>';
+
+  var labels = data.map(function(d) { return isEn ? d.labelEn : d.label; });
+  var values = data.map(function(d) { return d.count; });
+
+  if (rpBwaBarChart) rpBwaBarChart.destroy();
+
+  var ctx = barCanvas.getContext('2d');
+  var h = barCanvas.height || 320;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpBwaBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: isEn ? 'Number of Bookings' : '예약 건수',
+        data: values,
+        backgroundColor: grad,
+        borderRadius: 3,
+        barPercentage: 0.25,
+        categoryPercentage: 0.7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Pretendard', size: 12 }, color: '#616161' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#F5F5F5' },
+          ticks: {
+            font: { family: 'Pretendard', size: 11 },
+            color: '#9E9E9E'
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'bwaBarLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        chart.data.datasets.forEach(function(dataset, i) {
+          var meta = chart.getDatasetMeta(i);
+          meta.data.forEach(function(bar, index) {
+            var value = dataset.data[index];
+            if (value === 0) return;
+            ctx.save();
+            ctx.fillStyle = '#212121';
+            ctx.font = '600 11px Pretendard';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(value, bar.x, bar.y - 4);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+}
+
+function rpBwaRenderPie(data) {
+  var emptyEl = document.getElementById('rpBwaChartEmpty');
+  var barWrap = document.getElementById('rpBwaBarWrap');
+  var pieWrap = document.getElementById('rpBwaPieWrap');
+  var legendEl = document.getElementById('rpBwaChartLegend');
+
+  barWrap.style.display = 'none';
+  if (rpBwaBarChart) { rpBwaBarChart.destroy(); rpBwaBarChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    pieWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBwaPieChart) { rpBwaPieChart.destroy(); rpBwaPieChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  pieWrap.style.display = '';
+  legendEl.style.display = 'flex';
+  legendEl.classList.add('rp-svra-legend--wrap');
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var labels = data.map(function(d) { return isEn ? d.labelEn : d.label; });
+  var values = data.map(function(d) { return d.count; });
+  var colors = data.map(function(_, i) { return rpBwaPieColors[i % rpBwaPieColors.length]; });
+
+  var legendHtml = '';
+  data.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + (isEn ? d.labelEn : d.label) + ' (' + ratio + '%)</span>';
+  });
+  legendEl.innerHTML = legendHtml;
+
+  if (rpBwaPieChart) rpBwaPieChart.destroy();
+
+  var canvas = document.getElementById('rpBwaPieCanvas');
+  var ctx = canvas.getContext('2d');
+
+  rpBwaPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'bwaPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 12px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+// ══════════════════════════════════════════
+// [SPA] 브라우저 뒤로가기 지원
+// ══════════════════════════════════════════
+
+// 분석 뷰 진입 시 history state 추가
+(function() {
+  // 원본 open 함수들을 래핑하여 pushState 추가
+  var reportOpenFunctions = [
+    'openDailySales','openMonthlySales','openStaffSales','openServiceRevenue',
+    'openServiceItemSales','openMonthlyServiceSales','openSalesCatService',
+    'openProductRevenue','openMonthlyProductSales','openDiscountSales',
+    'openRevisitSales','openMemberRepurchase','openProfitLoss',
+    'openClientStatus','openPeriodClientStatus','openClientTypeAnalysis',
+    'openNewClientRevisit','openMonthlyNewClient','openMonthlyReferral',
+    'openVisitSourceAnalysis','openBookingDetail','openDailyBooking',
+    'openMonthlyBooking','openBookingByResource','openBookingByWeekday',
+    'openBookingByTimeslot','openBookingByChannel',
+    'openBookingRate','openResourceUtil'
+  ];
+
+  reportOpenFunctions.forEach(function(fnName) {
+    var original = window[fnName];
+    if (typeof original === 'function') {
+      window[fnName] = function() {
+        history.pushState({ view: fnName }, '');
+        original.apply(this, arguments);
+      };
+    }
+  });
+
+  // reportView 자체 진입 시에도 pushState
+  var origOpenReport = window.openReportView;
+  if (typeof origOpenReport === 'function') {
+    window.openReportView = function() {
+      history.pushState({ view: 'reportView' }, '');
+      origOpenReport.apply(this, arguments);
+    };
+  }
+
+  // popstate 이벤트: 뒤로가기 시 보고서 목록으로 복귀
+  window.addEventListener('popstate', function(e) {
+    // 현재 보이는 분석 상세 뷰가 있으면 보고서 목록으로
+    var reportDetailViews = [
+      'rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView',
+      'rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView',
+      'rpProductRevenueView','rpMonthlyProductView','rpDiscountSalesView',
+      'rpRevisitSalesView','rpMemberRepurchaseView','rpProfitLossView',
+      'rpClientStatusView','rpPeriodClientView','rpClientTypeView',
+      'rpNewClientRevisitView','rpMonthlyNewClientView','rpMonthlyReferralView',
+      'rpVisitSourceView','rpBookingDetailView','rpDailyBookingView',
+      'rpMonthlyBookingView','rpBookingByResourceView','rpBookingByWeekdayView',
+      'rpBookingByTimeslotView','rpBookingByChannelView',
+      'rpBookingRateView','rpResourceUtilView'
+    ];
+
+    var activeDetailView = false;
+    reportDetailViews.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.classList.contains('show')) {
+        activeDetailView = true;
+      }
+    });
+
+    if (activeDetailView) {
+      hideAllViews();
+      var reportEl = document.getElementById('reportView');
+      if (reportEl) reportEl.classList.add('show');
+      if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+      return;
+    }
+
+    // 보고서 목록이 보이면 이전 메인 화면으로
+    var reportEl = document.getElementById('reportView');
+    if (reportEl && reportEl.classList.contains('show')) {
+      hideAllViews();
+      var appBody = document.getElementById('appBody');
+      if (appBody) appBody.style.display = '';
+      var homeView = document.getElementById('homeView');
+      if (homeView) homeView.style.display = '';
+    }
+  });
+})();
+
+// ══════════════════════════════════════════
+// [REPORT] 예약 시간대별 분석 (bta)
+// ══════════════════════════════════════════
+
+var rpBtaBarChart = null;
+var rpBtaPieChart = null;
+var rpBtaChartType = 'bar';
+var rpBtaCurrentData = [];
+
+var rpBtaPieColors = [
+  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
+  '#AB47BC', '#FF7043', '#26A69A', '#EC407A', '#8D6E63',
+  '#78909C', '#5C6BC0'
+];
+
+var rpBtaSample = {
+  '2026-04': [
+    { label: '11:00 ~ 12:00', count: 1 },
+    { label: '14:00 ~ 15:00', count: 2 },
+    { label: '16:00 ~ 17:00', count: 1 },
+    { label: '18:00 ~ 19:00', count: 1 },
+    { label: '20:00 ~ 21:00', count: 1 }
+  ],
+  '2026-03': [
+    { label: '09:00 ~ 10:00', count: 1 },
+    { label: '10:00 ~ 11:00', count: 3 },
+    { label: '11:00 ~ 12:00', count: 2 },
+    { label: '13:00 ~ 14:00', count: 2 },
+    { label: '14:00 ~ 15:00', count: 4 },
+    { label: '15:00 ~ 16:00', count: 3 },
+    { label: '16:00 ~ 17:00', count: 2 },
+    { label: '17:00 ~ 18:00', count: 1 },
+    { label: '18:00 ~ 19:00', count: 2 },
+    { label: '19:00 ~ 20:00', count: 1 },
+    { label: '20:00 ~ 21:00', count: 3 }
+  ],
+  '2026-02': [
+    { label: '09:00 ~ 10:00', count: 3 },
+    { label: '10:00 ~ 11:00', count: 8 },
+    { label: '11:00 ~ 12:00', count: 6 },
+    { label: '12:00 ~ 13:00', count: 2 },
+    { label: '13:00 ~ 14:00', count: 5 },
+    { label: '14:00 ~ 15:00', count: 9 },
+    { label: '15:00 ~ 16:00', count: 7 },
+    { label: '16:00 ~ 17:00', count: 4 },
+    { label: '17:00 ~ 18:00', count: 3 },
+    { label: '18:00 ~ 19:00', count: 2 },
+    { label: '19:00 ~ 20:00', count: 1 },
+    { label: '20:00 ~ 21:00', count: 2 }
+  ]
+};
+
+function openBookingByTimeslot() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingByTimeslotView').classList.add('show');
+  rpBtaInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBtaGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBtaPrint() { window.print(); }
+
+function rpBtaInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBtaMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBtaRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBtaRangeEnd').value = y + '-' + m + '-' + d;
+  rpBtaTogglePeriod();
+}
+
+function rpBtaTogglePeriod() {
+  var type = document.querySelector('input[name="rpBtaPeriod"]:checked').value;
+  document.getElementById('rpBtaMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBtaRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpBtaSetChartType(type) {
+  rpBtaChartType = type;
+  document.querySelectorAll('#rpBtaChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  if (rpBtaCurrentData.length > 0) rpBtaRenderChart(rpBtaCurrentData);
+}
+
+function rpBtaSearch() {
+  var periodType = document.querySelector('input[name="rpBtaPeriod"]:checked').value;
+  var data = [];
+  if (periodType === 'monthly') {
+    var monthVal = document.getElementById('rpBtaMonthlyDate').value;
+    data = rpBtaSample[monthVal] || [];
+  }
+  rpBtaCurrentData = data;
+  rpBtaRenderTable(data);
+  rpBtaRenderChart(data);
+}
+
+function rpBtaRenderTable(data) {
+  var tbody = document.getElementById('rpBtaTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var html = '';
+  data.forEach(function(d) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.label + '</td><td>' + d.count + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total + '</td><td>100%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpBtaRenderChart(data) {
+  if (rpBtaChartType === 'pie') {
+    rpBtaRenderPie(data);
+  } else {
+    rpBtaRenderBar(data);
+  }
+}
+
+function rpBtaRenderBar(data) {
+  var emptyEl = document.getElementById('rpBtaChartEmpty');
+  var barWrap = document.getElementById('rpBtaBarWrap');
+  var barCanvas = document.getElementById('rpBtaBarCanvas');
+  var pieWrap = document.getElementById('rpBtaPieWrap');
+  var legendEl = document.getElementById('rpBtaChartLegend');
+
+  pieWrap.style.display = 'none';
+  if (rpBtaPieChart) { rpBtaPieChart.destroy(); rpBtaPieChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    barWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBtaBarChart) { rpBtaBarChart.destroy(); rpBtaBarChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  barWrap.style.display = '';
+  legendEl.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  legendEl.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Number of Bookings' : '예약 건수') + '</span>';
+
+  var labels = data.map(function(d) { return d.label; });
+  var values = data.map(function(d) { return d.count; });
+
+  if (rpBtaBarChart) rpBtaBarChart.destroy();
+
+  var ctx = barCanvas.getContext('2d');
+  var h = barCanvas.height || 320;
+  var grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpBtaBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: isEn ? 'Number of Bookings' : '예약 건수',
+        data: values,
+        backgroundColor: grad,
+        borderRadius: 3,
+        barPercentage: 0.5,
+        categoryPercentage: 0.8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y; }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Pretendard', size: 11 }, color: '#616161', maxRotation: 45, minRotation: 0 }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#F5F5F5' },
+          ticks: { font: { family: 'Pretendard', size: 11 }, color: '#9E9E9E' }
+        }
+      }
+    },
+    plugins: [{
+      id: 'btaBarLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        chart.data.datasets.forEach(function(dataset, i) {
+          var meta = chart.getDatasetMeta(i);
+          meta.data.forEach(function(bar, index) {
+            var value = dataset.data[index];
+            if (value === 0) return;
+            ctx.save();
+            ctx.fillStyle = '#212121';
+            ctx.font = '600 11px Pretendard';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(value, bar.x, bar.y - 4);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+}
+
+function rpBtaRenderPie(data) {
+  var emptyEl = document.getElementById('rpBtaChartEmpty');
+  var barWrap = document.getElementById('rpBtaBarWrap');
+  var pieWrap = document.getElementById('rpBtaPieWrap');
+  var legendEl = document.getElementById('rpBtaChartLegend');
+
+  barWrap.style.display = 'none';
+  if (rpBtaBarChart) { rpBtaBarChart.destroy(); rpBtaBarChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    pieWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBtaPieChart) { rpBtaPieChart.destroy(); rpBtaPieChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  pieWrap.style.display = '';
+  legendEl.style.display = 'flex';
+  legendEl.classList.add('rp-svra-legend--wrap');
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var labels = data.map(function(d) { return d.label; });
+  var values = data.map(function(d) { return d.count; });
+  var colors = data.map(function(_, i) { return rpBtaPieColors[i % rpBtaPieColors.length]; });
+
+  var legendHtml = '';
+  data.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + d.label + ' (' + ratio + '%)</span>';
+  });
+  legendEl.innerHTML = legendHtml;
+
+  if (rpBtaPieChart) rpBtaPieChart.destroy();
+
+  var canvas = document.getElementById('rpBtaPieCanvas');
+  var ctx = canvas.getContext('2d');
+
+  rpBtaPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'btaPieLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 12px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   예약 경로별 분석 (Booking by Channel)
+   ═══════════════════════════════════════════════════════════ */
+
+var rpBchDoughnutChart = null;
+var rpBchBarChart = null;
+var rpBchChartType = 'doughnut';
+var rpBchCurrentData = [];
+
+var rpBchColors = [
+  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
+  '#AB47BC', '#FF7043', '#26A69A', '#EC407A', '#8D6E63',
+  '#78909C', '#5C6BC0'
+];
+
+var rpBchSample = {
+  '2026-04': [
+    { label: '관리자', count: 1 },
+    { label: '네이버', count: 5 }
+  ],
+  '2026-03': [
+    { label: '관리자', count: 8 },
+    { label: '네이버', count: 15 },
+    { label: '카카오', count: 6 },
+    { label: '홈페이지', count: 3 }
+  ],
+  '2026-02': [
+    { label: '관리자', count: 12 },
+    { label: '네이버', count: 20 },
+    { label: '카카오', count: 9 },
+    { label: '전화', count: 4 },
+    { label: '홈페이지', count: 7 }
+  ],
+  '2026-01': [
+    { label: '관리자', count: 5 },
+    { label: '네이버', count: 11 },
+    { label: '카카오', count: 3 }
+  ]
+};
+
+function openBookingByChannel() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingByChannelView').classList.add('show');
+  rpBchInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBchGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBchPrint() { window.print(); }
+
+function rpBchInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBchMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBchRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBchRangeEnd').value = y + '-' + m + '-' + d;
+  rpBchTogglePeriod();
+  rpBchSearch();
+}
+
+function rpBchTogglePeriod() {
+  var type = document.querySelector('input[name="rpBchPeriod"]:checked').value;
+  document.getElementById('rpBchMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBchRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpBchSetChartType(type) {
+  rpBchChartType = type;
+  document.querySelectorAll('#rpBchChartToggle .rp-msv-toggle-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-type') === type);
+  });
+  if (rpBchCurrentData.length > 0) rpBchRenderChart(rpBchCurrentData);
+}
+
+function rpBchSearch() {
+  var periodType = document.querySelector('input[name="rpBchPeriod"]:checked').value;
+  var data = [];
+  if (periodType === 'monthly') {
+    var monthVal = document.getElementById('rpBchMonthlyDate').value;
+    data = rpBchSample[monthVal] || [];
+  } else {
+    var start = document.getElementById('rpBchRangeStart').value;
+    var end = document.getElementById('rpBchRangeEnd').value;
+    var merged = {};
+    Object.keys(rpBchSample).forEach(function(key) {
+      var monthStart = key + '-01';
+      var monthEnd = key + '-31';
+      if (monthEnd >= start && monthStart <= end) {
+        rpBchSample[key].forEach(function(item) {
+          if (!merged[item.label]) {
+            merged[item.label] = { label: item.label, count: 0 };
+          }
+          merged[item.label].count += item.count;
+        });
+      }
+    });
+    data = Object.values(merged);
+  }
+  rpBchCurrentData = data;
+  rpBchRenderTable(data);
+  rpBchRenderChart(data);
+}
+
+function rpBchRenderTable(data) {
+  var tbody = document.getElementById('rpBchTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+
+  var html = '';
+  sorted.forEach(function(d) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    html += '<tr><td>' + d.label + '</td><td>' + d.count.toLocaleString() + '</td><td>' + ratio + '%</td></tr>';
+  });
+
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + total.toLocaleString() + '</td><td>100%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpBchRenderChart(data) {
+  if (rpBchChartType === 'doughnut') {
+    rpBchRenderDoughnut(data);
+  } else {
+    rpBchRenderBar(data);
+  }
+}
+
+function rpBchRenderDoughnut(data) {
+  var emptyEl = document.getElementById('rpBchChartEmpty');
+  var doughnutWrap = document.getElementById('rpBchDoughnutWrap');
+  var barWrap = document.getElementById('rpBchBarWrap');
+  var legendEl = document.getElementById('rpBchChartLegend');
+  var centerText = document.getElementById('rpBchCenterText');
+
+  barWrap.style.display = 'none';
+  if (rpBchBarChart) { rpBchBarChart.destroy(); rpBchBarChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    doughnutWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    centerText.style.display = 'none';
+    if (rpBchDoughnutChart) { rpBchDoughnutChart.destroy(); rpBchDoughnutChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  doughnutWrap.style.display = '';
+  legendEl.style.display = 'flex';
+  legendEl.classList.add('rp-svra-legend--wrap');
+
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  var sorted = data.slice().sort(function(a, b) { return b.count - a.count; });
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+  var colors = sorted.map(function(_, i) { return rpBchColors[i % rpBchColors.length]; });
+
+  var legendHtml = '';
+  sorted.forEach(function(d, i) {
+    var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + d.label + ' (' + ratio + '%)</span>';
+  });
+  legendEl.innerHTML = legendHtml;
+
+  // 중앙 총합 텍스트
+  centerText.style.display = '';
+  document.getElementById('rpBchCenterValue').textContent = total.toLocaleString();
+
+  if (rpBchDoughnutChart) rpBchDoughnutChart.destroy();
+
+  var canvas = document.getElementById('rpBchDoughnutCanvas');
+  var ctx = canvas.getContext('2d');
+
+  rpBchDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+              return ctx.label + ': ' + value.toLocaleString() + (isEn ? ' bookings' : '건') + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'bchDoughnutLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 8) return;
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 12px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+function rpBchRenderBar(data) {
+  var emptyEl = document.getElementById('rpBchChartEmpty');
+  var doughnutWrap = document.getElementById('rpBchDoughnutWrap');
+  var barWrap = document.getElementById('rpBchBarWrap');
+  var legendEl = document.getElementById('rpBchChartLegend');
+  var centerText = document.getElementById('rpBchCenterText');
+
+  doughnutWrap.style.display = 'none';
+  centerText.style.display = 'none';
+  if (rpBchDoughnutChart) { rpBchDoughnutChart.destroy(); rpBchDoughnutChart = null; }
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    barWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpBchBarChart) { rpBchBarChart.destroy(); rpBchBarChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  barWrap.style.display = '';
+  legendEl.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = 0;
+  data.forEach(function(d) { total += d.count; });
+
+  legendEl.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Number of Bookings' : '예약 건수') + '</span>' +
+    '<span class="rp-svra-legend-item" style="margin-left:8px;font-weight:600;">' + total.toLocaleString() + '</span>';
+
+  var sorted = data.slice().sort(function(a, b) { return a.count - b.count; });
+  var labels = sorted.map(function(d) { return d.label; });
+  var values = sorted.map(function(d) { return d.count; });
+
+  if (rpBchBarChart) rpBchBarChart.destroy();
+
+  var barCanvas = document.getElementById('rpBchBarCanvas');
+  var ctx = barCanvas.getContext('2d');
+  var h = barCanvas.height || 320;
+  var grad = ctx.createLinearGradient(0, 0, h, 0);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpBchBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: isEn ? 'Number of Bookings' : '예약 건수',
+        data: values,
+        backgroundColor: grad,
+        borderRadius: 3,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.x.toLocaleString() + (isEn ? '' : '건'); }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: '#F5F5F5' },
+          ticks: { font: { family: 'Pretendard', size: 11 }, color: '#9E9E9E', stepSize: 1 }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { family: 'Pretendard', size: 12 }, color: '#616161' }
+        }
+      },
+      layout: { padding: { right: 50 } }
+    },
+    plugins: [{
+      id: 'bchBarEndLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        chart.data.datasets.forEach(function(dataset, i) {
+          var meta = chart.getDatasetMeta(i);
+          meta.data.forEach(function(bar, index) {
+            var value = dataset.data[index];
+            if (value === 0) return;
+            ctx.save();
+            ctx.fillStyle = '#212121';
+            ctx.font = '600 11px Pretendard';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(value.toLocaleString(), bar.x + 6, bar.y);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   예약률 분석 (Booking Rate Analysis)
+   ═══════════════════════════════════════════════════════════ */
+
+var rpBrtDoughnutChart = null;
+var rpBrtCurrentData = { booked: 0, nonBooked: 0 };
+
+var rpBrtSample = {
+  '2026-04': { booked: 6, nonBooked: 2 },
+  '2026-03': { booked: 18, nonBooked: 5 },
+  '2026-02': { booked: 22, nonBooked: 8 },
+  '2026-01': { booked: 14, nonBooked: 6 }
+};
+
+function openBookingRate() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpBookingRateView').classList.add('show');
+  rpBrtInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBrtGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpBrtPrint() { window.print(); }
+
+function rpBrtInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpBrtMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpBrtRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpBrtRangeEnd').value = y + '-' + m + '-' + d;
+  rpBrtTogglePeriod();
+  rpBrtSearch();
+}
+
+function rpBrtTogglePeriod() {
+  var type = document.querySelector('input[name="rpBrtPeriod"]:checked').value;
+  document.getElementById('rpBrtMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpBrtRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpBrtSearch() {
+  var periodType = document.querySelector('input[name="rpBrtPeriod"]:checked').value;
+  var data = { booked: 0, nonBooked: 0 };
+
+  if (periodType === 'monthly') {
+    var monthVal = document.getElementById('rpBrtMonthlyDate').value;
+    data = rpBrtSample[monthVal] || { booked: 0, nonBooked: 0 };
+  } else {
+    var start = document.getElementById('rpBrtRangeStart').value;
+    var end = document.getElementById('rpBrtRangeEnd').value;
+    Object.keys(rpBrtSample).forEach(function(key) {
+      var monthStart = key + '-01';
+      var monthEnd = key + '-31';
+      if (monthEnd >= start && monthStart <= end) {
+        data.booked += rpBrtSample[key].booked;
+        data.nonBooked += rpBrtSample[key].nonBooked;
+      }
+    });
+  }
+
+  rpBrtCurrentData = data;
+  rpBrtRenderTable(data);
+  rpBrtRenderChart(data);
+}
+
+function rpBrtRenderTable(data) {
+  var tbody = document.getElementById('rpBrtTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var total = data.booked + data.nonBooked;
+  var bookedRatio = total > 0 ? (data.booked / total * 100).toFixed(1) : '0.0';
+  var nonBookedRatio = total > 0 ? (data.nonBooked / total * 100).toFixed(1) : '0.0';
+
+  var bookedVal = total > 0 ? data.booked.toLocaleString() : '-';
+  var nonBookedVal = total > 0 ? data.nonBooked.toLocaleString() : '-';
+  var totalVal = total > 0 ? total.toLocaleString() : '-';
+  var totalRatio = total > 0 ? '100%' : '0%';
+
+  var html = '';
+  html += '<tr><td>' + (isEn ? 'Scheduled Clients' : '예약 고객') + '</td><td>' + bookedVal + '</td><td>' + bookedRatio + '%</td></tr>';
+  html += '<tr><td>' + (isEn ? 'Unscheduled Clients' : '비 예약 고객') + '</td><td>' + nonBookedVal + '</td><td>' + nonBookedRatio + '%</td></tr>';
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalVal + '</td><td>' + totalRatio + '</td></tr>';
+  tbody.innerHTML = html;
+}
+
+function rpBrtRenderChart(data) {
+  var emptyEl = document.getElementById('rpBrtChartEmpty');
+  var doughnutWrap = document.getElementById('rpBrtDoughnutWrap');
+  var legendEl = document.getElementById('rpBrtChartLegend');
+  var centerText = document.getElementById('rpBrtCenterText');
+  var total = data.booked + data.nonBooked;
+
+  if (total === 0) {
+    emptyEl.style.display = '';
+    doughnutWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    centerText.style.display = 'none';
+    if (rpBrtDoughnutChart) { rpBrtDoughnutChart.destroy(); rpBrtDoughnutChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  doughnutWrap.style.display = '';
+  legendEl.style.display = 'flex';
+  legendEl.classList.add('rp-svra-legend--wrap');
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var bookedRatio = (data.booked / total * 100).toFixed(1);
+  var nonBookedRatio = (data.nonBooked / total * 100).toFixed(1);
+
+  var labels = [isEn ? 'Scheduled Clients' : '예약 고객', isEn ? 'Unscheduled Clients' : '비 예약 고객'];
+  var values = [data.booked, data.nonBooked];
+  var colors = ['#6161FF', '#FF9800'];
+
+  legendEl.innerHTML =
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + labels[0] + ' (' + bookedRatio + '%)</span>' +
+    '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#FF9800;"></span>' + labels[1] + ' (' + nonBookedRatio + '%)</span>';
+
+  // 중앙 텍스트
+  centerText.style.display = '';
+  document.getElementById('rpBrtCenterValue').textContent = total.toLocaleString();
+
+  if (rpBrtDoughnutChart) rpBrtDoughnutChart.destroy();
+
+  var canvas = document.getElementById('rpBrtDoughnutCanvas');
+  var ctx = canvas.getContext('2d');
+
+  rpBrtDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var value = ctx.parsed;
+              var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+              return ctx.label + ': ' + value.toLocaleString() + (isEn ? ' clients' : '명') + ' (' + ratio + '%)';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'brtDoughnutLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(arc, index) {
+          var value = chart.data.datasets[0].data[index];
+          var ratio = total > 0 ? (value / total * 100).toFixed(1) : '0.0';
+          if (parseFloat(ratio) < 5) return;
+          var centerPoint = arc.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 13px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ratio + '%', centerPoint.x, centerPoint.y);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   자원 운용률 분석 (Resource Utilization Analysis)
+   ═══════════════════════════════════════════════════════════ */
+
+var rpRutBarChart = null;
+var rpRutCurrentData = [];
+
+var rpRutSample = {
+  '원장님':       { available: '12:00', used: '00:00', rate: 0.0 },
+  '실장님':       { available: '12:00', used: '00:00', rate: 0.0 },
+  '서희(방문결제)': { available: '12:00', used: '00:00', rate: 0.0 },
+  '토미(선결 예약금)': { available: '07:00', used: '00:00', rate: 0.0 }
+};
+
+function openResourceUtil() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpResourceUtilView').classList.add('show');
+  rpRutInit();
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpRutGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpRutPrint() { window.print(); }
+
+function rpRutInit() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('rpRutDailyDate').value = y + '-' + m + '-' + d;
+  document.getElementById('rpRutMonthlyDate').value = y + '-' + m;
+  document.getElementById('rpRutRangeStart').value = y + '-' + m + '-01';
+  document.getElementById('rpRutRangeEnd').value = y + '-' + m + '-' + d;
+  rpRutTogglePeriod();
+  rpRutSearch();
+}
+
+function rpRutTogglePeriod() {
+  var type = document.querySelector('input[name="rpRutPeriod"]:checked').value;
+  document.getElementById('rpRutDailyDate').style.display = type === 'daily' ? '' : 'none';
+  document.getElementById('rpRutMonthlyDate').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('rpRutRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+/* ── Multi-select 드롭다운 ── */
+function rpRutToggleDrop() {
+  var drop = document.getElementById('rpRutResDrop');
+  drop.classList.toggle('show');
+}
+
+function rpRutResAllToggle(el) {
+  var items = document.querySelectorAll('#rpRutResDrop input[type="checkbox"]');
+  items.forEach(function(cb) { cb.checked = el.checked; });
+  rpRutUpdateLabel();
+}
+
+function rpRutResChanged() {
+  var items = document.querySelectorAll('#rpRutResDrop input[type="checkbox"]:not([value="all"])');
+  var allCb = document.querySelector('#rpRutResDrop input[value="all"]');
+  var allChecked = true;
+  items.forEach(function(cb) { if (!cb.checked) allChecked = false; });
+  allCb.checked = allChecked;
+  rpRutUpdateLabel();
+}
+
+function rpRutUpdateLabel() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  var items = document.querySelectorAll('#rpRutResDrop input[type="checkbox"]:not([value="all"])');
+  var checked = [];
+  items.forEach(function(cb) { if (cb.checked) checked.push(cb.value); });
+  var label = document.getElementById('rpRutResLabel');
+  if (checked.length === 0) {
+    label.textContent = isEn ? 'None' : '선택 없음';
+  } else if (checked.length === items.length) {
+    label.textContent = isEn ? 'All' : '전체';
+  } else if (checked.length <= 2) {
+    label.textContent = checked.join(', ');
+  } else {
+    label.textContent = checked[0] + (isEn ? ' +' : ' 외 ') + (checked.length - 1) + (isEn ? ' more' : '명');
+  }
+}
+
+// 드롭다운 외부 클릭 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#rpRutResWrap')) {
+    var drop = document.getElementById('rpRutResDrop');
+    if (drop) drop.classList.remove('show');
+  }
+});
+
+/* ── 선택된 자원 목록 반환 ── */
+function rpRutGetSelectedResources() {
+  var items = document.querySelectorAll('#rpRutResDrop input[type="checkbox"]:not([value="all"])');
+  var selected = [];
+  items.forEach(function(cb) { if (cb.checked) selected.push(cb.value); });
+  return selected;
+}
+
+/* ── 검색 ── */
+function rpRutSearch() {
+  var selected = rpRutGetSelectedResources();
+  var data = [];
+  selected.forEach(function(name) {
+    if (rpRutSample[name]) {
+      data.push({ label: name, available: rpRutSample[name].available, used: rpRutSample[name].used, rate: rpRutSample[name].rate });
+    }
+  });
+  rpRutCurrentData = data;
+  rpRutRenderTable(data);
+  rpRutRenderChart(data);
+}
+
+/* ── 시간 문자열을 분으로 변환 ── */
+function rpRutTimeToMin(str) {
+  var parts = str.split(':');
+  return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+}
+
+/* ── 테이블 렌더링 ── */
+function rpRutRenderTable(data) {
+  var tbody = document.getElementById('rpRutTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="rp-svra-empty-td">' + (isEn ? 'No data' : '내역이 없습니다') + '</td></tr>';
+    return;
+  }
+
+  var totalAvail = 0;
+  var totalUsed = 0;
+  data.forEach(function(d) {
+    totalAvail += rpRutTimeToMin(d.available);
+    totalUsed += rpRutTimeToMin(d.used);
+  });
+
+  var html = '';
+  data.forEach(function(d) {
+    html += '<tr><td>' + d.label + '</td><td>' + d.available + '</td><td>' + d.used + '</td><td>' + d.rate.toFixed(1) + '%</td></tr>';
+  });
+
+  var totalAvailStr = String(Math.floor(totalAvail / 60)).padStart(2, '0') + ':' + String(totalAvail % 60).padStart(2, '0');
+  var totalUsedStr = String(Math.floor(totalUsed / 60)).padStart(2, '0') + ':' + String(totalUsed % 60).padStart(2, '0');
+  var totalRate = totalAvail > 0 ? (totalUsed / totalAvail * 100).toFixed(1) : '0.0';
+
+  html += '<tr style="font-weight:600;background:#FAFAFA;"><td>' + (isEn ? 'Total' : '합계') + '</td><td>' + totalAvailStr + '</td><td>' + totalUsedStr + '</td><td>' + totalRate + '%</td></tr>';
+  tbody.innerHTML = html;
+}
+
+/* ── 차트 렌더링 ── */
+function rpRutRenderChart(data) {
+  var emptyEl = document.getElementById('rpRutChartEmpty');
+  var barWrap = document.getElementById('rpRutBarWrap');
+  var legendEl = document.getElementById('rpRutChartLegend');
+
+  if (!data || data.length === 0) {
+    emptyEl.style.display = '';
+    barWrap.style.display = 'none';
+    legendEl.style.display = 'none';
+    if (rpRutBarChart) { rpRutBarChart.destroy(); rpRutBarChart = null; }
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  barWrap.style.display = '';
+  legendEl.style.display = 'flex';
+
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  legendEl.innerHTML = '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:#6161FF;"></span>' + (isEn ? 'Utilization' : '운용률') + '</span>';
+
+  var labels = data.map(function(d) { return d.label; });
+  var values = data.map(function(d) { return d.rate; });
+
+  if (rpRutBarChart) rpRutBarChart.destroy();
+
+  var barCanvas = document.getElementById('rpRutBarCanvas');
+  var ctx = barCanvas.getContext('2d');
+  var h = barCanvas.height || 360;
+  var grad = ctx.createLinearGradient(0, h, 0, 0);
+  grad.addColorStop(0, '#9B9BFF');
+  grad.addColorStop(1, '#6161FF');
+
+  rpRutBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: isEn ? 'Utilization' : '운용률',
+        data: values,
+        backgroundColor: grad,
+        borderRadius: 3,
+        barPercentage: 0.5,
+        categoryPercentage: 0.7,
+        maxBarThickness: 60
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%'; }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: 'Pretendard', size: 11 }, color: '#616161' }
+        },
+        y: {
+          beginAtZero: true,
+          max: 100,
+          grid: { color: '#F5F5F5' },
+          ticks: {
+            font: { family: 'Pretendard', size: 11 },
+            color: '#9E9E9E',
+            stepSize: 10,
+            callback: function(v) { return v + '%'; }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'rutBarLabels',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        chart.data.datasets.forEach(function(dataset, i) {
+          var meta = chart.getDatasetMeta(i);
+          meta.data.forEach(function(bar, index) {
+            var value = dataset.data[index];
+            ctx.save();
+            ctx.fillStyle = '#212121';
+            ctx.font = '600 11px Pretendard';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(value.toFixed(1), bar.x, bar.y - 4);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
 }
