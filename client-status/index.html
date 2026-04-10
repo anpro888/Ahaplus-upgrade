@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 전체 고객 현황</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="cs-page">
+
+  <!-- 헤더 -->
+  <div class="cs-page-header">
+    <h2 class="cs-page-title" data-i18n="cs.title" data-ko="전체 고객 현황" data-en="Clients Summary">전체 고객 현황</h2>
+    <div class="cs-header-actions">
+      <button class="cs-btn cs-btn-outline" onclick="history.back()" data-i18n="common.goBack" data-ko="← 뒤로 가기" data-en="← Back">← 뒤로 가기</button>
+      <button class="cs-btn cs-btn-primary" onclick="printPage()" data-i18n="common.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="cs-filter-panel">
+    <div class="cs-filter-row">
+      <!-- 휴면 고객 기준 -->
+      <div class="cs-filter-group">
+        <span class="cs-filter-label" data-i18n="cs.dormantCriteria" data-ko="휴면 고객 기준: 미방문" data-en="Dormant Client Criteria: No visit in">휴면 고객 기준: 미방문</span>
+        <select class="cs-select cs-select-sm" id="dormantMonths" onchange="doSearch()">
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12" selected>12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="26">26</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="29">29</option>
+          <option value="30">30</option>
+          <option value="31">31</option>
+          <option value="32">32</option>
+          <option value="33">33</option>
+          <option value="34">34</option>
+          <option value="35">35</option>
+          <option value="36">36</option>
+        </select>
+        <span class="cs-filter-label" data-i18n="cs.monthsOrMore" data-ko="개월 이상" data-en="months">개월 이상</span>
+      </div>
+
+      <!-- 차트 유형 -->
+      <div class="cs-filter-group">
+        <span class="cs-filter-label" data-i18n="cs.chart" data-ko="차트" data-en="Chart">차트</span>
+        <label class="cs-radio-label">
+          <input type="radio" name="chartType" value="pie" checked onchange="doSearch()">
+          <span class="cs-radio-dot"></span>
+          <span data-i18n="cs.pie" data-ko="파이" data-en="Pie">파이</span>
+        </label>
+        <label class="cs-radio-label">
+          <input type="radio" name="chartType" value="bar" onchange="doSearch()">
+          <span class="cs-radio-dot"></span>
+          <span data-i18n="cs.bar" data-ko="막대" data-en="Bar">막대</span>
+        </label>
+      </div>
+
+      <!-- 검색 -->
+      <div class="cs-filter-right">
+        <button class="cs-btn cs-btn-primary cs-btn-search" onclick="doSearch()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 콘텐츠: 차트 + 테이블 -->
+  <div class="cs-content">
+    <!-- 차트 -->
+    <div class="cs-chart-panel">
+      <div class="cs-chart-legend" id="chartLegend"></div>
+      <div class="cs-chart-wrap">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="cs-table-panel">
+      <div class="cs-table-header">
+        <label class="cs-checkbox-label">
+          <input type="checkbox" id="detailCheck" onchange="doSearch()">
+          <span class="cs-checkbox-box"></span>
+          <span data-i18n="cs.detail" data-ko="상세" data-en="Detail">상세</span>
+        </label>
+      </div>
+      <table class="cs-table">
+        <thead>
+          <tr>
+            <th data-i18n="cs.category" data-ko="구분" data-en="Type">구분</th>
+            <th data-i18n="cs.clientCount" data-ko="고객 수" data-en="Number of Clients">고객 수</th>
+            <th data-i18n="cs.ratio" data-ko="비율" data-en="Ratio">비율</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 안내 문구 -->
+  <div class="cs-notes">
+    <ul>
+      <li data-i18n="cs.note1" data-ko="회원: 유효한 회원권을 보유하고 있으며 휴면 상태가 아닌 고객." data-en="Member : Clients who have valid prepaid goods and are not dormant.">회원: 유효한 회원권을 보유하고 있으며 휴면 상태가 아닌 고객.</li>
+      <li data-i18n="cs.note2" data-ko="비회원: 현재 유효한 회원권을 보유하고 있지 않으며 휴면 상태가 아닌 고객. (회원권 만료된 고객 포함.)" data-en="Non Member : Clients who do not have valid prepaid goods and are not dormant. (Including expired members.)">비회원: 현재 유효한 회원권을 보유하고 있지 않으며 휴면 상태가 아닌 고객. (회원권 만료된 고객 포함.)</li>
+    </ul>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

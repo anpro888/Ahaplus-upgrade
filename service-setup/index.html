@@ -92,8 +92,8 @@
   <div class="nav-shop-name" data-i18n="topnav.shop_name" data-ko="아하 네일 스튜디오" data-en="Aha Nail Studio">아하 네일 스튜디오</div>
   <div class="nav-right">
     <span class="nav-text-btn" data-i18n="topnav.home" data-ko="홈" data-en="Home" onclick="showHomeView()">홈</span>
-    <span class="nav-text-btn" data-i18n="topnav.remote" data-ko="원격지원" data-en="Remote">원격지원</span>
-    <span class="nav-text-btn" data-i18n="topnav.chat" data-ko="채팅문의" data-en="Chat">채팅문의</span>
+    <span class="nav-text-btn" data-i18n="topnav.remote" data-ko="원격지원" data-en="Remote" onclick="window.open('https://988.co.kr/','remoteSupport','width=1024,height=768,scrollbars=yes,resizable=yes')">원격지원</span>
+    <span class="nav-text-btn" data-i18n="topnav.chat" data-ko="채팅문의" data-en="Chat" onclick="window.open('https://talk.naver.com/WC3Q1J','chatSupport','width=500,height=700,scrollbars=yes,resizable=yes')">채팅문의</span>
     <div class="user-menu-wrap" id="userMenuWrap">
       <span class="nav-text-btn" id="userMenuBtn" onclick="toggleUserMenu(event)" style="color:#1a1a1a; font-weight:500; display:flex; align-items:center; gap:4px;">
         <svg width="13" height="13" viewBox="0 0 20 20" fill="#555"><circle cx="10" cy="7" r="4"/><path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>
@@ -256,9 +256,9 @@
     <div class="mega-menu">
       <div class="mega-col">
         <div class="mega-col-item"><span class="mci" style="background:#FFF3E0;"><svg viewBox="0 0 20 20" fill="none" stroke="#F5A623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M10 7v1M10 11v1"/></svg></span><span data-i18n="gnb.support.notices" data-ko="아하소프트 공지" data-en="Notices">아하소프트 공지</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M7 8h6M7 11h4"/></svg></span><span data-i18n="gnb.support.chat" data-ko="채팅 문의" data-en="Contact Chat">채팅 문의</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="10" rx="1"/><path d="M3 7h14M7 7v7"/></svg></span><span data-i18n="gnb.support.remote" data-ko="원격 지원" data-en="Remote Support">원격 지원</span></div>
-        <div class="mega-col-item"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 13v1M8 8a2 2 0 114 0c0 1-2 1.5-2 3"/></svg></span><span data-i18n="gnb.support.info" data-ko="고객센터 안내" data-en="Help Center Information">고객센터 안내</span></div>
+        <div class="mega-col-item" onclick="window.open('https://talk.naver.com/WC3Q1J','chatSupport','width=500,height=700,scrollbars=yes,resizable=yes')"><span class="mci" style="background:#E8F0FE;"><svg viewBox="0 0 20 20" fill="none" stroke="#4285F4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H6l-3 3V5a1 1 0 011-1z"/><path d="M7 8h6M7 11h4"/></svg></span><span data-i18n="gnb.support.chat" data-ko="채팅 문의" data-en="Contact Chat">채팅 문의</span></div>
+        <div class="mega-col-item" onclick="window.open('https://988.co.kr/','remoteSupport','width=1024,height=768,scrollbars=yes,resizable=yes')"><span class="mci" style="background:#E8F5E9;"><svg viewBox="0 0 20 20" fill="none" stroke="#43A047" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="10" rx="1"/><path d="M3 7h14M7 7v7"/></svg></span><span data-i18n="gnb.support.remote" data-ko="원격 지원" data-en="Remote Support">원격 지원</span></div>
+        <div class="mega-col-item" onclick="openSupportInfoModal()"><span class="mci" style="background:#F0EAFF;"><svg viewBox="0 0 20 20" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 13v1M8 8a2 2 0 114 0c0 1-2 1.5-2 3"/></svg></span><span data-i18n="gnb.support.info" data-ko="고객센터 안내" data-en="Help Center Information">고객센터 안내</span></div>
       </div>
     </div>
   </div>
@@ -2940,6 +2940,53 @@
 </div>
 
 <!-- 매입/반품 등록 모달 -->
+<!-- 매입 상세 모달 -->
+<div class="pc-modal-overlay ap-modal-overlay" id="pcDetailModal" onclick="if(event.target===this)pcCloseDetailModal()">
+  <div class="pc-modal-box ap-modal" style="max-width:720px;">
+    <div class="pc-modal-header ap-modal-header">
+      <div class="pc-modal-header-left">
+        <div class="pc-modal-header-bar"></div>
+        <span class="pc-modal-title" data-i18n="pc.detail_title" data-ko="매입 상세" data-en="Purchase Detail">매입 상세</span>
+      </div>
+      <button class="pc-modal-close ap-modal-close" onclick="pcCloseDetailModal()">✕</button>
+    </div>
+    <div class="pc-modal-body">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:15px; font-weight:700; color:#212121;" id="pcDetailType">매입</span>
+        <span style="font-size:12px; color:#757575;" id="pcDetailCreatedAt"></span>
+      </div>
+      <div style="border-top:2px solid #6161FF; padding-top:12px; margin-bottom:16px;">
+        <div style="display:flex; gap:24px; font-size:13px; color:#616161; margin-bottom:4px;">
+          <span><span data-i18n="pc.detail_supplier" data-ko="공급처:" data-en="Supplier:">공급처:</span> <b id="pcDetailSupplier" style="color:#212121;"></b></span>
+          <span><span data-i18n="pc.detail_date" data-ko="날짜:" data-en="Date:">날짜:</span> <b id="pcDetailDate" style="color:#212121;"></b></span>
+        </div>
+        <div style="font-size:13px; color:#616161;">
+          <span data-i18n="pc.detail_memo" data-ko="메모 :" data-en="Notes :">메모 :</span> <span id="pcDetailMemo" style="color:#212121;"></span>
+        </div>
+      </div>
+      <div class="pc-modal-table-wrap">
+        <table class="pc-modal-table">
+          <thead>
+            <tr>
+              <th data-i18n="pc.pth_code" data-ko="제품 코드" data-en="Product Code">제품 코드</th>
+              <th data-i18n="pc.pth_name" data-ko="상품명" data-en="Product Name">상품명</th>
+              <th data-i18n="pc.pth_price" data-ko="단가" data-en="Unit Price">단가</th>
+              <th data-i18n="pc.pth_qty" data-ko="수량" data-en="Qty">수량</th>
+              <th data-i18n="pc.pth_amount" data-ko="금액" data-en="Amount">금액</th>
+            </tr>
+          </thead>
+          <tbody id="pcDetailProductTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pc-modal-footer">
+      <button class="pc-modal-btn-cancel" onclick="pcEditFromDetail()" data-i18n="pc.detail_edit" data-ko="수정" data-en="Edit">수정</button>
+      <button class="pc-modal-btn-cancel" style="background:#F06060; border-color:#F06060; color:#fff;" onclick="pcDeleteFromDetail()" data-i18n="pc.detail_delete" data-ko="삭제" data-en="Delete">삭제</button>
+      <button class="pc-modal-btn-save" onclick="pcCloseDetailModal()" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
+    </div>
+  </div>
+</div>
+
 <div id="pcRegModal" onclick="if(event.target===this)pcCloseRegModal()">
   <div class="pc-modal-box">
     <div class="pc-modal-header ap-modal-header">
@@ -11345,13 +11392,13 @@
       <div class="rp-col">
         <div class="rp-col-title" data-i18n="rp.membership" data-ko="회원권 및 포인트 잔액" data-en="Membership & Point Balance">회원권 및 포인트 잔액</div>
         <div class="rp-col-list">
-          <div class="rp-col-item" data-i18n="rp.m1" data-ko="고객별 정액권 보유 내역" data-en="Prepaid Card by Client">고객별 정액권 보유 내역</div>
-          <div class="rp-col-item" data-i18n="rp.m2" data-ko="정액권별 잔액 합계" data-en="Prepaid Card Balance Total">정액권별 잔액 합계</div>
-          <div class="rp-col-item" data-i18n="rp.m3" data-ko="고객별 티켓 보유 내역" data-en="Prepaid Service by Client">고객별 티켓 보유 내역</div>
-          <div class="rp-col-item" data-i18n="rp.m4" data-ko="티켓별 잔액 합계" data-en="Prepaid Service Balance Total">티켓별 잔액 합계</div>
-          <div class="rp-col-item" data-i18n="rp.m5" data-ko="고객별 포인트 잔액" data-en="Point Balance by Client">고객별 포인트 잔액</div>
-          <div class="rp-col-item" data-i18n="rp.m6" data-ko="회원권 기한 만료 잔액" data-en="Expired Membership Balance">회원권 기한 만료 잔액</div>
-          <div class="rp-col-item" data-i18n="rp.m7" data-ko="월별 기한 만료 잔액" data-en="Monthly Expired Balance">월별 기한 만료 잔액</div>
+          <div class="rp-col-item" data-i18n="rp.m1" data-ko="고객별 정액권 보유 내역" data-en="Prepaid Card by Client" onclick="openPrepaidHoldings()">고객별 정액권 보유 내역</div>
+          <div class="rp-col-item" data-i18n="rp.m2" data-ko="정액권별 잔액 합계" data-en="Prepaid Card Balance Total" onclick="openPrepaidBalance()">정액권별 잔액 합계</div>
+          <div class="rp-col-item" data-i18n="rp.m3" data-ko="고객별 티켓 보유 내역" data-en="Prepaid Service by Client" onclick="openTicketHoldings()">고객별 티켓 보유 내역</div>
+          <div class="rp-col-item" data-i18n="rp.m4" data-ko="티켓별 잔액 합계" data-en="Prepaid Service Balance Total" onclick="openTicketBalance()">티켓별 잔액 합계</div>
+          <div class="rp-col-item" data-i18n="rp.m5" data-ko="고객별 포인트 잔액" data-en="Point Balance by Client" onclick="openPointBalance()">고객별 포인트 잔액</div>
+          <div class="rp-col-item" data-i18n="rp.m6" data-ko="회원권 기한 만료 잔액" data-en="Expired Membership Balance" onclick="openExpiredBalance()">회원권 기한 만료 잔액</div>
+          <div class="rp-col-item" data-i18n="rp.m7" data-ko="월별 기한 만료 잔액" data-en="Monthly Expired Balance" onclick="openMonthlyExpired()">월별 기한 만료 잔액</div>
         </div>
       </div>
 
@@ -12567,8 +12614,9 @@
         </div>
 
         <!-- 상세 체크박스 -->
-        <label class="rp-ds-radio-label" style="margin-left:12px;">
-          <input type="checkbox" id="rpCsDetailCheck" onchange="rpCsSearch()" style="accent-color:#6161FF; width:16px; height:16px; margin:0; cursor:pointer;">
+        <label class="rp-ss-chk-label" style="margin-left:12px;">
+          <input type="checkbox" id="rpCsDetailCheck" onchange="rpCsSearch()">
+          <span class="rp-ss-chk-mark">✓</span>
           <span data-i18n="cs.detail" data-ko="상세" data-en="Detail">상세</span>
         </label>
 
@@ -13834,6 +13882,548 @@
           <p data-i18n="rut.note3" data-ko="운용 가능 시간은 예약 가능 시간, 운용 시간은 예약 시간과 동일합니다." data-en="* The Available Hours corresponds to the the Allowed Booking Hours and the Utilized Hours indicates the actual booking time.">운용 가능 시간은 예약 가능 시간, 운용 시간은 예약 시간과 동일합니다.</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     고객별 정액권 보유 내역 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpPrepaidHoldingsView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="pch.title" data-ko="고객별 정액권 보유 내역" data-en="Prepaid Cards by Client">고객별 정액권 보유 내역</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpPchGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpPchPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="pch.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpPchStaffSelect" style="min-width:120px;">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="staff1">실장님</option>
+          <option value="staff2">원장님</option>
+        </select>
+        <button class="rp-ds-search-btn" onclick="rpPchSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 테이블 영역 -->
+    <div class="rp-ds-section">
+      <!-- 요약 + 체크박스 -->
+      <div class="rp-pch-summary-row">
+        <span class="rp-pch-summary-text">
+          <span data-i18n="pch.totalLabel" data-ko="총" data-en="All">총</span>
+          <strong id="rpPchTotalCount">2</strong>
+          <span data-i18n="pch.unit" data-ko="건" data-en="Records">건</span>
+          /
+          <span data-i18n="pch.balanceTotal" data-ko="잔액 합계" data-en="Balance Total">잔액 합계</span>
+          <strong id="rpPchTotalBalance">103,671,978,903</strong>
+        </span>
+        <div class="rp-pch-discount-check">
+          <label class="rp-ss-chk-label">
+            <input type="checkbox" id="rpPchDiscountCheck" onchange="rpPchSearch()">
+            <span class="rp-ss-chk-mark">✓</span>
+            <span data-i18n="pch.discountCalc" data-ko="할인 전용 정액권 잔액 계산" data-en="Calculate the balance on Discount Card">할인 전용 정액권 잔액 계산</span>
+          </label>
+          <div class="rp-ds-help-wrap">
+            <span class="rp-ds-help-icon">?</span>
+            <div class="rp-ds-tooltip rp-ds-tooltip-left" data-i18n="pch.discountTooltip" data-ko="할인 전용 정액권의 잔액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)" data-en="The balance on Discount Card = Sales Amount x (Remaining period / Total available period)">할인 전용 정액권의 잔액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="pch.clientName" data-ko="고객명" data-en="Client Name">고객명</th>
+              <th data-i18n="pch.type" data-ko="유형" data-en="Type">유형</th>
+              <th data-i18n="pch.cardName" data-ko="정액권명" data-en="Prepaid Card Name">정액권명</th>
+              <th data-i18n="pch.balance" data-ko="잔액" data-en="Balance">잔액</th>
+              <th data-i18n="pch.expiryDate" data-ko="만료일" data-en="Expiry Date">만료일</th>
+              <th data-i18n="pch.saleDate" data-ko="판매일" data-en="Sales Date">판매일</th>
+              <th data-i18n="pch.saleAmount" data-ko="판매액" data-en="Sales Amount">판매액</th>
+              <th data-i18n="pch.accumulatedAmount" data-ko="적립 금액" data-en="Earned Amount">적립 금액</th>
+            </tr>
+          </thead>
+          <tbody id="rpPchTableBody">
+            <tr><td colspan="8" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     고객별 티켓 보유 내역 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpTicketHoldingsView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="tch.title" data-ko="고객별 티켓 보유 내역" data-en="Prepaid Services by Client">고객별 티켓 보유 내역</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpTchGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpTchPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="tch.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="rp-ds-select" id="rpTchStaffSelect" style="min-width:120px;">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="staff1">실장님</option>
+          <option value="staff2">원장님</option>
+        </select>
+        <button class="rp-ds-search-btn" onclick="rpTchSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 테이블 영역 -->
+    <div class="rp-ds-section">
+      <!-- 요약 + 체크박스 -->
+      <div class="rp-pch-summary-row">
+        <span class="rp-pch-summary-text">
+          <span data-i18n="tch.totalLabel" data-ko="총" data-en="All">총</span>
+          <strong id="rpTchTotalCount">2</strong>
+          <span data-i18n="tch.unit" data-ko="건" data-en="Records">건</span>
+          /
+          <span data-i18n="tch.balanceTotal" data-ko="잔액 합계" data-en="Total Remaining Amount">잔액 합계</span>
+          <strong id="rpTchTotalBalance">530,000</strong>
+        </span>
+        <div class="rp-pch-discount-check">
+          <label class="rp-ss-chk-label">
+            <input type="checkbox" id="rpTchUnlimitedCheck" onchange="rpTchSearch()">
+            <span class="rp-ss-chk-mark">✓</span>
+            <span data-i18n="tch.unlimitedCalc" data-ko="횟수 무제한 티켓 잔여 금액 계산" data-en="Calculate the Remaining Amount for Unlimited Qty Prepaid Services">횟수 무제한 티켓 잔여 금액 계산</span>
+          </label>
+          <div class="rp-ds-help-wrap">
+            <span class="rp-ds-help-icon">?</span>
+            <div class="rp-ds-tooltip rp-ds-tooltip-left" data-i18n="tch.unlimitedTooltip" data-ko="횟수 무제한 티켓의 잔여 금액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)" data-en="Remaining Amount for Unlimited Qty Prepaid Services = Sales Amount x (Remaining period / Total available period)">횟수 무제한 티켓의 잔여 금액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="tch.clientName" data-ko="고객명" data-en="Client Name">고객명</th>
+              <th data-i18n="tch.ticketName" data-ko="티켓명" data-en="Prepaid Service Name">티켓명</th>
+              <th data-i18n="tch.remainCount" data-ko="잔여 횟수" data-en="Remaining Quantity">잔여 횟수</th>
+              <th data-i18n="tch.remainAmount" data-ko="잔여 금액" data-en="Remaining Amount">잔여 금액</th>
+              <th data-i18n="tch.expiryDate" data-ko="만료일" data-en="Expiry Date">만료일</th>
+              <th data-i18n="tch.saleDate" data-ko="판매일" data-en="Sales Date">판매일</th>
+              <th data-i18n="tch.saleAmount" data-ko="판매액" data-en="Sales Amount">판매액</th>
+              <th data-i18n="tch.accumulatedCount" data-ko="적립 횟수" data-en="Initial Quantity">적립 횟수</th>
+            </tr>
+          </thead>
+          <tbody id="rpTchTableBody">
+            <tr><td colspan="8" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     정액권별 잔액 합계 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpPrepaidBalanceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="pbs.title" data-ko="정액권별 잔액 합계" data-en="Prepaid Card Summary">정액권별 잔액 합계</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpPbsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpPbsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 테이블 영역 -->
+    <div class="rp-ds-section">
+      <!-- 요약 -->
+      <div class="rp-pch-summary-row" style="margin-bottom:12px;">
+        <span class="rp-pch-summary-text">
+          <span data-i18n="pbs.totalLabel" data-ko="총" data-en="All">총</span>
+          <strong id="rpPbsTotalClients">9</strong>
+          <span data-i18n="pbs.clientUnit" data-ko="고객" data-en="Clients">고객</span>
+          /
+          <span data-i18n="pbs.balanceTotal" data-ko="잔액 합계" data-en="Total Remaining Amount">잔액 합계</span>
+          <strong id="rpPbsTotalBalance">5,164,800</strong>
+        </span>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="pbs.cardName" data-ko="정액권명" data-en="Prepaid Card Name">정액권명</th>
+              <th data-i18n="pbs.clientCount" data-ko="고객 수" data-en="Number of Clients">고객 수</th>
+              <th data-i18n="pbs.balance" data-ko="잔액" data-en="Remaining Balance">잔액</th>
+            </tr>
+          </thead>
+          <tbody id="rpPbsTableBody">
+            <tr><td colspan="3" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     티켓별 잔액 합계 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpTicketBalanceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="tbs.title" data-ko="티켓별 잔액 합계" data-en="Prepaid Service Summary">티켓별 잔액 합계</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpTbsGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpTbsPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <div class="rp-ds-section">
+      <!-- 요약 -->
+      <div class="rp-pch-summary-row" style="margin-bottom:12px;">
+        <span class="rp-pch-summary-text">
+          <span data-i18n="tbs.totalLabel" data-ko="총" data-en="All">총</span>
+          <strong id="rpTbsTotalClients">3</strong>
+          <span data-i18n="tbs.clientUnit" data-ko="명" data-en="Clients">명</span>
+          /
+          <span data-i18n="tbs.balanceTotal" data-ko="잔여 금액 합계" data-en="Total Amount">잔여 금액 합계</span>
+          <strong id="rpTbsTotalBalance">580,000</strong>
+        </span>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="tbs.category" data-ko="분류" data-en="Category">분류</th>
+              <th data-i18n="tbs.ticketName" data-ko="티켓 명" data-en="Prepaid Service Name">티켓 명</th>
+              <th data-i18n="tbs.clientCount" data-ko="고객수" data-en="Number of Clients">고객수</th>
+              <th data-i18n="tbs.remainCount" data-ko="잔여 수량" data-en="Remaining Qty">잔여 수량</th>
+              <th data-i18n="tbs.amount" data-ko="금액" data-en="Amount">금액</th>
+            </tr>
+          </thead>
+          <tbody id="rpTbsTableBody">
+            <tr><td colspan="5" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 안내 문구 -->
+      <div class="rp-svra-notes" style="margin-top:12px;">
+        <p data-i18n="tbs.note1" data-ko="횟수가 무제한인 티켓의 금액은 잔여 기간을 기준으로 계산됩니다." data-en="The amount of the prepaid services with 'No Limit' quantity is calculated based on its remaining period.">횟수가 무제한인 티켓의 금액은 잔여 기간을 기준으로 계산됩니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     고객별 포인트 잔액 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpPointBalanceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="ptb.title" data-ko="고객별 포인트 잔액" data-en="Loyalty Points by Client">고객별 포인트 잔액</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpPtbGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpPtbPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <div class="rp-ds-section">
+      <!-- 요약 -->
+      <div class="rp-pch-summary-row" style="margin-bottom:12px;">
+        <span class="rp-pch-summary-text">
+          <span data-i18n="ptb.totalLabel" data-ko="총" data-en="All">총</span>
+          <strong id="rpPtbTotalClients">6</strong>
+          <span data-i18n="ptb.clientUnit" data-ko="고객" data-en="Clients">고객</span>
+          /
+          <span data-i18n="ptb.pointTotal" data-ko="포인트 합계" data-en="Points Total">포인트 합계</span>
+          <strong id="rpPtbTotalPoints">8,095</strong>
+        </span>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th data-i18n="ptb.clientNo" data-ko="고객 번호" data-en="Client Number">고객 번호</th>
+              <th data-i18n="ptb.clientName" data-ko="고객명" data-en="Client Name">고객명</th>
+              <th data-i18n="ptb.remainPoint" data-ko="잔여 포인트" data-en="Remain Loyalty Points">잔여 포인트</th>
+            </tr>
+          </thead>
+          <tbody id="rpPtbTableBody">
+            <tr><td colspan="3" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     회원권 기한 만료 잔액 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpExpiredBalanceView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="exb.title" data-ko="회원권 기한 만료 잔액" data-en="Prepaid Goods Expired Balance">회원권 기한 만료 잔액</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpExbGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpExbPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="exb.expiryLabel" data-ko="기한 만료" data-en="Expiration">기한 만료</span>
+        <label class="rp-ds-radio-label"><input type="radio" name="exbPeriodType" value="monthly" checked onchange="rpExbTogglePeriod()"><span data-i18n="exb.monthly" data-ko="월" data-en="Month">월</span></label>
+        <label class="rp-ds-radio-label"><input type="radio" name="exbPeriodType" value="range" onchange="rpExbTogglePeriod()"><span data-i18n="exb.range" data-ko="기간" data-en="Date Range">기간</span></label>
+        <!-- 월별 -->
+        <input type="month" class="rp-ds-date-input" id="exbMonthInput" value="2026-04" />
+        <!-- 기간 -->
+        <div id="exbRangeInputs" style="display:none; display:none; align-items:center; gap:6px;">
+          <input type="date" class="rp-ds-date-input" id="exbRangeStart" value="2026-04-01" />
+          <span class="rp-ds-tilde">~</span>
+          <input type="date" class="rp-ds-date-input" id="exbRangeEnd" value="2026-04-30" />
+        </div>
+        <button class="rp-ds-search-btn" onclick="rpExbSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 기한 만료 잔액 합계 -->
+    <div class="rp-ds-section" style="margin-bottom:16px;">
+      <h4 class="rp-exb-section-title" data-i18n="exb.summaryTitle" data-ko="기한 만료 잔액 합계" data-en="Expired Balance Total">기한 만료 잔액 합계</h4>
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th rowspan="2" style="min-width:200px;"></th>
+              <th colspan="2" data-i18n="exb.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+              <th colspan="2" data-i18n="exb.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+              <th colspan="2" data-i18n="exb.total" data-ko="합계" data-en="Total">합계</th>
+            </tr>
+            <tr>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+            </tr>
+          </thead>
+          <tbody id="rpExbSummaryBody">
+            <tr>
+              <td data-i18n="exb.expiredBalance" data-ko="기한 만료 잔액" data-en="Expired Balance">기한 만료 잔액</td>
+              <td id="exbPrepQty">0</td><td id="exbPrepAmt">0</td>
+              <td id="exbTickQty">0</td><td id="exbTickAmt">0</td>
+              <td id="exbTotQty">0</td><td id="exbTotAmt">0</td>
+            </tr>
+            <tr>
+              <td data-i18n="exb.saleAccumulated" data-ko="판매시 적립 금액" data-en="Initial Deposit Amount">판매시 적립 금액</td>
+              <td id="exbPrepSaleQty">0</td><td id="exbPrepSaleAmt">0</td>
+              <td id="exbTickSaleQty">0</td><td id="exbTickSaleAmt">0</td>
+              <td id="exbTotSaleQty">0</td><td id="exbTotSaleAmt">0</td>
+            </tr>
+            <tr>
+              <td data-i18n="exb.expiryRatio" data-ko="기한 만료 잔액 비율(%)" data-en="Expired Balance Ratio(%)">기한 만료 잔액 비율(%)</td>
+              <td colspan="2" id="exbPrepRatio">0.0%</td>
+              <td colspan="2" id="exbTickRatio">0.0%</td>
+              <td colspan="2" id="exbTotRatio">0.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 안내 문구 -->
+      <div class="rp-svra-notes" style="margin-top:12px;">
+        <p data-i18n="exb.note1" data-ko="기한 만료 잔액은 고객이 회원권 만료일까지 적립 금액(또는 횟수)을 전액 사용하지 않고 남은 잔액을 의미합니다." data-en="Expired Balance refers to the remaining balance that a client has not fully used by the expiration date of their prepaid goods.">기한 만료 잔액은 고객이 회원권 만료일까지 적립 금액(또는 횟수)을 전액 사용하지 않고 남은 잔액을 의미합니다.</p>
+        <p data-i18n="exb.note2" data-ko="판매 시 적립 금액 : 조회 기간내에 만료된 회원권의 판매 시 적립 금액 (만료 후 잔액이 0인 회원권도 포함)" data-en="Initial Deposit Amount : Initial deposit amounts for prepaid goods that expired within the query period (including prepaid goods with a zero balance after expiration)">판매 시 적립 금액 : 조회 기간내에 만료된 회원권의 판매 시 적립 금액 (만료 후 잔액이 0인 회원권도 포함)</p>
+        <p data-i18n="exb.note3" data-ko="기한 만료 잔액 비율 = (기한 만료 잔액 / 판매 시 적립 금액) * 100%" data-en="Expired Balance Ratio = (Expired Balance / Initial Deposit Amount ) * 100%">기한 만료 잔액 비율 = (기한 만료 잔액 / 판매 시 적립 금액) * 100%</p>
+        <p data-i18n="exb.note4" data-ko="적립횟수가 무제한인 티켓은 기간이 만료되어도 집계에서 제외됩니다." data-en="Prepaid Services with unlimited quantity are not counted even if they are expired.">적립횟수가 무제한인 티켓은 기간이 만료되어도 집계에서 제외됩니다.</p>
+        <p data-i18n="exb.note5" data-ko="티켓 금액은 횟수를 금액으로 환산한 값입니다. (금액 = 횟수 * 1회당 매출)" data-en="Prepaid service quantities are converted to monetary value. (Amount = Quantity * Revenue per Service)">티켓 금액은 횟수를 금액으로 환산한 값입니다. (금액 = 횟수 * 1회당 매출)</p>
+      </div>
+    </div>
+
+    <!-- 구간별 기한 만료 잔액 -->
+    <div class="rp-ds-section">
+      <h4 class="rp-exb-section-title" data-i18n="exb.rangeTitle" data-ko="구간별 기한 만료 잔액" data-en="Expired Balance by Interval">구간별 기한 만료 잔액</h4>
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th rowspan="2" style="min-width:200px;" data-i18n="exb.ratioLabel" data-ko="기한 만료 잔액 비율(%)" data-en="Expired Balance Ratio(%)">기한 만료 잔액 비율(%)</th>
+              <th colspan="2" data-i18n="exb.prepaid" data-ko="정액권" data-en="Prepaid Card">정액권</th>
+              <th colspan="2" data-i18n="exb.ticket" data-ko="티켓" data-en="Prepaid Service">티켓</th>
+              <th colspan="2" data-i18n="exb.total" data-ko="합계" data-en="Total">합계</th>
+            </tr>
+            <tr>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="exb.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="exb.amount" data-ko="금액" data-en="Amount">금액</th>
+            </tr>
+          </thead>
+          <tbody id="rpExbRangeBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     월별 기한 만료 잔액 뷰
+     ═══════════════════════════════════════════════════════════ -->
+<div id="rpMonthlyExpiredView">
+  <div class="sv-page-header-bg">
+    <div class="sv-page-header">
+      <h3><span data-i18n="mex.title" data-ko="월별 기한 만료 잔액" data-en="Expired Balance by Month">월별 기한 만료 잔액</span></h3>
+      <div class="rp-ds-header-actions">
+        <button class="rp-ds-action-btn" onclick="rpMexGoBack()" data-i18n="rp.back" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+        <button class="rp-ds-action-btn primary" onclick="rpMexPrint()" data-i18n="rp.print" data-ko="인쇄" data-en="Print">인쇄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-ds-body">
+    <!-- 필터 -->
+    <div class="rp-ds-filter-box">
+      <div class="rp-ds-filter-row">
+        <span class="rp-ds-label" data-i18n="mex.period" data-ko="기간" data-en="Date Range">기간</span>
+        <select class="rp-ds-select" id="mexStartYear" style="width:85px;"></select>
+        <span class="rp-ds-label" data-i18n="mex.year" data-ko="년" data-en="Year">년</span>
+        <select class="rp-ds-select" id="mexStartMonth" style="width:65px;"></select>
+        <span class="rp-ds-label" data-i18n="mex.month" data-ko="월" data-en="Month">월</span>
+        <span class="rp-ds-tilde">~</span>
+        <select class="rp-ds-select" id="mexEndYear" style="width:85px;"></select>
+        <span class="rp-ds-label" data-i18n="mex.year2" data-ko="년" data-en="Year">년</span>
+        <select class="rp-ds-select" id="mexEndMonth" style="width:65px;"></select>
+        <span class="rp-ds-label" data-i18n="mex.month2" data-ko="월" data-en="Month">월</span>
+        <button class="rp-ds-search-btn" onclick="rpMexSearch()" data-i18n="rp.ds_search" data-ko="검색" data-en="Search">검색</button>
+      </div>
+    </div>
+
+    <!-- 차트 -->
+    <div class="rp-ds-section" style="margin-bottom:16px;">
+      <div class="rp-mex-chart-legend">
+        <span class="rp-mex-legend-item"><span class="rp-mex-legend-color" style="background:#6161FF;"></span><span data-i18n="mex.ratioLine" data-ko="기한 만료 잔액 비율(%)" data-en="Expired Balance Ratio(%)">기한 만료 잔액 비율(%)</span></span>
+        <span class="rp-mex-legend-item"><span class="rp-mex-legend-color" style="background:#F5A623;"></span><span data-i18n="mex.avgLine" data-ko="평균 (100%)" data-en="Average (100%)">평균 (100%)</span></span>
+      </div>
+      <div class="rp-mex-chart-wrap">
+        <canvas id="rpMexChartCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="rp-ds-section" style="margin-bottom:16px;">
+      <div class="rp-svra-table-panel">
+        <table class="rp-ds-table">
+          <thead>
+            <tr>
+              <th rowspan="2" data-i18n="mex.monthCol" data-ko="월" data-en="Month">월</th>
+              <th colspan="2" data-i18n="mex.saleAccum" data-ko="판매시 적립 금액" data-en="Initial Deposit Amount">판매시 적립 금액</th>
+              <th colspan="2" data-i18n="mex.expiredBal" data-ko="기한 만료 잔액" data-en="Expired Balance">기한 만료 잔액</th>
+              <th rowspan="2" data-i18n="mex.ratioCol" data-ko="기한 만료 잔액 비율(%)" data-en="Expired Balance Ratio(%)">기한 만료 잔액 비율(%)</th>
+            </tr>
+            <tr>
+              <th data-i18n="mex.qty" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="mex.amount" data-ko="금액" data-en="Amount">금액</th>
+              <th data-i18n="mex.qty2" data-ko="수량" data-en="Quantity">수량</th>
+              <th data-i18n="mex.amount2" data-ko="금액" data-en="Amount">금액</th>
+            </tr>
+          </thead>
+          <tbody id="rpMexTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 안내 문구 -->
+    <div class="rp-ds-section">
+      <div class="rp-svra-notes">
+        <p data-i18n="mex.note1" data-ko="기한 만료 잔액은 고객이 회원권 만료일까지 적립 금액(또는 횟수)을 전액 사용하지 않고 남은 잔액을 의미합니다." data-en="Expired Balance refers to the remaining balance that a client has not fully used by the expiration date of their prepaid goods.">기한 만료 잔액은 고객이 회원권 만료일까지 적립 금액(또는 횟수)을 전액 사용하지 않고 남은 잔액을 의미합니다.</p>
+        <p data-i18n="mex.note2" data-ko="판매 시 적립 금액 : 조회 기간내에 만료된 회원권의 판매 시 적립 금액 (만료 후 잔액이 0인 회원권도 포함)" data-en="Initial Deposit Amount : Initial deposit amounts for prepaid goods that expired within the query period (including prepaid goods with a zero balance after expiration)">판매 시 적립 금액 : 조회 기간내에 만료된 회원권의 판매 시 적립 금액 (만료 후 잔액이 0인 회원권도 포함)</p>
+        <p data-i18n="mex.note3" data-ko="기한 만료 잔액 비율 = (기한 만료 잔액 / 판매 시 적립 금액) * 100%" data-en="Expired Balance Ratio = (Expired Balance / Initial Deposit Amount ) * 100%">기한 만료 잔액 비율 = (기한 만료 잔액 / 판매 시 적립 금액) * 100%</p>
+        <p data-i18n="mex.note4" data-ko="적립횟수가 무제한인 티켓은 기간이 만료되어도 집계에서 제외됩니다." data-en="Prepaid Services with unlimited quantity are not counted even if they are expired.">적립횟수가 무제한인 티켓은 기간이 만료되어도 집계에서 제외됩니다.</p>
+        <p data-i18n="mex.note5" data-ko="티켓 금액은 횟수를 금액으로 환산한 값입니다. (금액 = 횟수 * 1회당 매출)" data-en="Prepaid service quantities are converted to monetary value. (Amount = Quantity * Revenue per Service)">티켓 금액은 횟수를 금액으로 환산한 값입니다. (금액 = 횟수 * 1회당 매출)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 고객센터 안내 모달 ═══ -->
+<div class="ap-modal-overlay" id="supportInfoModal" onclick="if(event.target===this)closeSupportInfoModal()">
+  <div class="ap-modal ap-modal-md">
+    <div class="ap-modal-header">
+      <h3 class="ap-modal-title" data-i18n="support.info_title" data-ko="고객센터 안내" data-en="Help Center Information">고객센터 안내</h3>
+      <button class="ap-modal-close" onclick="closeSupportInfoModal()">✕</button>
+    </div>
+    <div style="padding:24px 28px; overflow-y:auto;">
+      <p style="text-align:center; font-size:14px; color:#212121; line-height:1.8; margin-bottom:20px;">
+        <span data-i18n="support.info_desc1" data-ko="아하소프트 플러스 이용 중 문의사항은" data-en="For inquiries while using AhaSoft Plus,">아하소프트 플러스 이용 중 문의사항은</span><br>
+        <span data-i18n="support.info_desc2" data-ko="고객센터 '전화' 또는 '채팅 문의'를 이용해 주세요" data-en="please contact us by 'Phone' or 'Chat'">고객센터 '전화' 또는 '채팅 문의'를 이용해 주세요</span>
+      </p>
+
+      <div style="display:flex; gap:12px; margin-bottom:24px;">
+        <div style="flex:1; border:1px solid #E0E0E0; border-radius:10px; padding:16px; text-align:center; background:#FAFAFA;">
+          <div style="font-size:14px; font-weight:600; color:#212121; margin-bottom:6px;" data-i18n="support.info_phone_title" data-ko="고객센터 전화" data-en="Customer Center Phone">고객센터 전화</div>
+          <div style="font-size:16px; font-weight:700; color:#212121;">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#212121" stroke-width="2" style="vertical-align:middle; margin-right:4px;"><path d="M3 4.5C3 3.67 3.67 3 4.5 3H7l1.5 4-2 1.5a11 11 0 005 5L13 11.5l4 1.5v2.5c0 .83-.67 1.5-1.5 1.5A14.5 14.5 0 013 4.5z"/></svg>
+            1544-4634
+          </div>
+        </div>
+        <div style="flex:1; border:1px solid #E0E0E0; border-radius:10px; padding:16px; text-align:center; background:#FAFAFA; cursor:pointer;" onclick="window.open('https://talk.naver.com/WC3Q1J','chatSupport','width=500,height=700,scrollbars=yes,resizable=yes')">
+          <div style="font-size:14px; font-weight:600; color:#212121; margin-bottom:6px;" data-i18n="support.info_chat_title" data-ko="채팅 문의" data-en="Chat Inquiry">채팅 문의</div>
+          <div style="font-size:20px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#212121" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="1" fill="#212121"/><circle cx="12" cy="10" r="1" fill="#212121"/><circle cx="15" cy="10" r="1" fill="#212121"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="font-size:14px; font-weight:700; color:#212121; margin-bottom:12px;" data-i18n="support.info_hours_title" data-ko="고객센터 운영시간" data-en="Operating Hours">고객센터 운영시간</h4>
+      <ul style="list-style:disc; margin-left:20px; font-size:13px; color:#212121; line-height:2;">
+        <li><strong data-i18n="support.info_weekday" data-ko="평일" data-en="Weekdays">평일</strong>: <span data-i18n="support.info_weekday_time" data-ko="오전 9시 ~ 오후 6시" data-en="9:00 AM ~ 6:00 PM">오전 9시 ~ 오후 6시</span></li>
+        <li><strong data-i18n="support.info_saturday" data-ko="토요일" data-en="Saturday">토요일</strong>: <span data-i18n="support.info_saturday_time" data-ko="오전 9시 30분 ~ 오후 3시 (일부 업무 제한)" data-en="9:30 AM ~ 3:00 PM (limited services)">오전 9시 30분 ~ 오후 3시 (일부 업무 제한)</span></li>
+        <li><strong data-i18n="support.info_lunch" data-ko="점심시간" data-en="Lunch">점심시간</strong>: <span data-i18n="support.info_lunch_time" data-ko="12시 30분 ~ 1시 30분" data-en="12:30 PM ~ 1:30 PM">12시 30분 ~ 1시 30분</span></li>
+      </ul>
+      <p style="font-size:13px; color:#212121; line-height:1.8; margin-top:12px; margin-left:4px;">
+        <span style="color:#6161FF; font-weight:600; text-decoration:underline;" data-i18n="support.info_holiday" data-ko="일요일 및 공휴일" data-en="Sundays and Holidays">일요일 및 공휴일</span><span data-i18n="support.info_holiday_desc" data-ko="에는 '채팅 문의'로 내용을 남겨주시면, 운영시간 내에 순차적으로 답변드리겠습니다." data-en=" — please leave a message via 'Chat' and we will respond during business hours.">에는 '채팅 문의'로 내용을 남겨주시면, 운영시간 내에 순차적으로 답변드리겠습니다.</span>
+      </p>
+    </div>
+    <div style="padding:0 28px 20px; display:flex; justify-content:flex-end;">
+      <button style="height:36px; padding:0 40px; background:#6161FF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;" onclick="closeSupportInfoModal()" data-i18n="common.close" data-ko="닫기" data-en="Close">닫기</button>
     </div>
   </div>
 </div>

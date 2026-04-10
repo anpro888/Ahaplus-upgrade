@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 예약 상세 집계</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="bda-page">
+
+  <!-- 헤더 -->
+  <div class="bda-page-header">
+    <h2 class="bda-page-title" data-i18n="bda.title" data-ko="예약 상세 집계" data-en="Booking Detail Summary">예약 상세 집계</h2>
+    <div class="bda-header-actions">
+      <button class="bda-btn bda-btn-outline" onclick="history.back()" data-i18n="common.goBack" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+      <button class="bda-btn bda-btn-primary" onclick="printPage()" data-i18n="common.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="bda-filter-panel">
+    <div class="bda-filter-row">
+      <div class="bda-filter-group">
+        <label class="bda-radio-label">
+          <input type="radio" name="periodType" value="daily" checked onchange="togglePeriodType()">
+          <span class="bda-radio-dot"></span>
+          <span data-i18n="bda.daily" data-ko="일별" data-en="Daily">일별</span>
+        </label>
+        <label class="bda-radio-label">
+          <input type="radio" name="periodType" value="monthly" onchange="togglePeriodType()">
+          <span class="bda-radio-dot"></span>
+          <span data-i18n="bda.monthly" data-ko="월별" data-en="Monthly">월별</span>
+        </label>
+        <label class="bda-radio-label">
+          <input type="radio" name="periodType" value="range" onchange="togglePeriodType()">
+          <span class="bda-radio-dot"></span>
+          <span data-i18n="bda.range" data-ko="기간" data-en="Range">기간</span>
+        </label>
+        <!-- 일별 -->
+        <input type="date" class="bda-input bda-input-date" id="dailyDate" value="2026-04-10" />
+        <!-- 월별 -->
+        <input type="month" class="bda-input bda-input-date" id="monthlyDate" value="2026-04" style="display:none;" />
+        <!-- 기간 -->
+        <div class="bda-range-inputs" id="rangeInputs" style="display:none;">
+          <input type="date" class="bda-input bda-input-date" id="rangeStart" value="2026-04-01" />
+          <span class="bda-range-sep">~</span>
+          <input type="date" class="bda-input bda-input-date" id="rangeEnd" value="2026-04-10" />
+        </div>
+      </div>
+
+      <!-- 검색 -->
+      <button class="bda-btn bda-btn-primary bda-btn-search" onclick="doSearch()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+        <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 예약 집계 -->
+  <div class="bda-section">
+    <h3 class="bda-section-title" data-i18n="bda.bookingSummary" data-ko="예약 집계" data-en="Booking Summary">예약 집계</h3>
+    <div class="bda-table-panel">
+      <table class="bda-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="bda.adminBooking" data-ko="관리자 예약" data-en="Admin Booking">관리자 예약</th>
+            <th data-i18n="bda.naverBooking" data-ko="네이버 예약" data-en="Naver Booking">네이버 예약</th>
+            <th data-i18n="bda.totalCount" data-ko="총건수" data-en="Total">총건수</th>
+            <th data-i18n="bda.cancelled" data-ko="취소" data-en="Cancelled">취소</th>
+            <th data-i18n="bda.noShow" data-ko="노쇼" data-en="No-show">노쇼</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody">
+          <tr>
+            <td data-i18n="bda.bookingCount" data-ko="예약 건수" data-en="Booking Count">예약 건수</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td data-i18n="bda.ratioPercent" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+            <td>0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 예약 자원별 분석 -->
+  <div class="bda-section">
+    <h3 class="bda-section-title" data-i18n="bda.resourceAnalysis" data-ko="예약 자원별 분석" data-en="Booking Analysis by Resource">예약 자원별 분석</h3>
+    <div class="bda-table-panel">
+      <table class="bda-table">
+        <thead>
+          <tr>
+            <th data-i18n="bda.resourceBooking" data-ko="자원별 예약" data-en="Resource">자원별 예약</th>
+            <th data-i18n="bda.adminBooking" data-ko="관리자 예약" data-en="Admin Booking">관리자 예약</th>
+            <th data-i18n="bda.naverBooking" data-ko="네이버 예약" data-en="Naver Booking">네이버 예약</th>
+            <th data-i18n="bda.totalCount" data-ko="총건수" data-en="Total">총건수</th>
+            <th data-i18n="bda.cancelled" data-ko="취소" data-en="Cancelled">취소</th>
+            <th data-i18n="bda.noShow" data-ko="노쇼" data-en="No-show">노쇼</th>
+          </tr>
+        </thead>
+        <tbody id="resourceBody">
+          <tr class="bda-empty-row">
+            <td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 전월 대비 예약 (월별 선택 시에만 표시) -->
+  <div class="bda-section" id="monthCompareSection" style="display:none;">
+    <h3 class="bda-section-title" data-i18n="bda.monthComparison" data-ko="전월 대비 예약" data-en="Month-over-Month Booking">전월 대비 예약</h3>
+    <div class="bda-table-panel">
+      <table class="bda-table">
+        <thead>
+          <tr>
+            <th data-i18n="bda.yearMonth" data-ko="년-월" data-en="Year-Month">년-월</th>
+            <th data-i18n="bda.adminBooking" data-ko="관리자 예약" data-en="Admin Booking">관리자 예약</th>
+            <th data-i18n="bda.naverBooking" data-ko="네이버 예약" data-en="Naver Booking">네이버 예약</th>
+            <th data-i18n="bda.totalCount" data-ko="총건수" data-en="Total">총건수</th>
+            <th data-i18n="bda.cancelled" data-ko="취소" data-en="Cancelled">취소</th>
+            <th data-i18n="bda.noShow" data-ko="노쇼" data-en="No-show">노쇼</th>
+          </tr>
+        </thead>
+        <tbody id="monthCompareBody">
+          <tr class="bda-empty-row">
+            <td colspan="6" data-i18n="common.noData" data-ko="내역이 없습니다." data-en="No data available.">내역이 없습니다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

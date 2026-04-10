@@ -1,0 +1,302 @@
+/* ========================================
+   아하플러스 v2 — 예약 경로별 분석
+   prefix: bsa-
+   ======================================== */
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #F5F4F1;
+  color: #212121;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page Layout ── */
+.bsa-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+/* ── Page Header ── */
+.bsa-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.bsa-page-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #212121;
+}
+.bsa-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Buttons ── */
+.bsa-btn {
+  height: 36px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.bsa-btn-primary {
+  background: #6161FF;
+  color: #fff;
+}
+.bsa-btn-primary:hover { background: #4F4FE0; }
+.bsa-btn-outline {
+  background: #fff;
+  color: #6161FF;
+  border: 1px solid #6161FF;
+}
+.bsa-btn-outline:hover { background: #EEF0FF; }
+.bsa-btn-search {
+  min-width: 100px;
+}
+
+/* ── Inputs & Selects ── */
+.bsa-input {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #212121;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.bsa-input:focus { border-color: #6161FF; }
+.bsa-input-date { width: 150px; }
+
+/* ── Radio ── */
+.bsa-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #212121;
+  cursor: pointer;
+  user-select: none;
+}
+.bsa-radio-label input[type="radio"] { display: none; }
+.bsa-radio-dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #BDBDBD;
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.bsa-radio-label input[type="radio"]:checked + .bsa-radio-dot {
+  border-color: #6161FF;
+}
+.bsa-radio-label input[type="radio"]:checked + .bsa-radio-dot::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background: #6161FF;
+  border-radius: 50%;
+}
+
+/* ── Filter Panel ── */
+.bsa-filter-panel {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.bsa-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bsa-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.bsa-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #616161;
+  white-space: nowrap;
+}
+.bsa-filter-right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.bsa-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bsa-range-sep {
+  color: #757575;
+  font-size: 13px;
+}
+
+/* ── Content: Chart + Table side-by-side ── */
+.bsa-content {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+
+/* ── Chart Panel ── */
+.bsa-chart-panel {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.bsa-chart-empty {
+  font-size: 13px;
+  color: #6161FF;
+  text-align: center;
+  padding: 40px 0;
+}
+.bsa-chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.bsa-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #616161;
+}
+.bsa-legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* 도넛 차트 중앙 총합 텍스트 */
+.bsa-chart-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.bsa-chart-center-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #212121;
+  line-height: 1.2;
+}
+.bsa-chart-center-label {
+  font-size: 12px;
+  color: #757575;
+  margin-top: 2px;
+}
+
+/* ── Table Panel ── */
+.bsa-table-panel {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.bsa-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.bsa-table th {
+  background: #FAFAFA;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #616161;
+  text-align: center;
+  border-bottom: 1px solid #E0E0E0;
+  white-space: nowrap;
+}
+.bsa-table td {
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #212121;
+  border-bottom: 1px solid #E0E0E0;
+  text-align: center;
+  vertical-align: middle;
+}
+.bsa-table tbody tr:last-child td { border-bottom: none; }
+.bsa-table .bsa-total-row td {
+  font-weight: 600;
+  background: #FAFAFA;
+}
+.bsa-empty-row td {
+  padding: 32px 12px;
+  color: #9E9E9E;
+  font-size: 13px;
+}
+
+/* ── Notes ── */
+.bsa-notes {
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.bsa-notes ul {
+  list-style: disc;
+  margin-left: 16px;
+}
+.bsa-notes li {
+  font-size: 12px;
+  color: #757575;
+  line-height: 1.8;
+}
+
+/* ── Print ── */
+@media print {
+  body { background: #fff; }
+  .bsa-btn { display: none !important; }
+  .bsa-filter-panel { border: none; box-shadow: none; }
+  .bsa-chart-panel, .bsa-table-panel { border: 1px solid #E0E0E0; }
+}

@@ -8146,6 +8146,12 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .rp-ds-tilde { color:#757575; font-size:13px; }
 .rp-ds-radio-label { display:inline-flex; align-items:center; gap:4px; font-size:13px; font-weight:500; color:#212121; cursor:pointer; user-select:none; white-space:nowrap; }
 .rp-ds-radio-label input[type="radio"] { accent-color:#6161FF; width:16px; height:16px; margin:0; cursor:pointer; }
+.rp-ds-checkbox-label { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; color:#212121; cursor:pointer; user-select:none; white-space:nowrap; }
+.rp-ds-checkbox-label input[type="checkbox"] { display:none; }
+.rp-ds-checkbox-box { width:18px; height:18px; border:1.5px solid #BDBDBD; border-radius:4px; position:relative; transition:all 0.15s; flex-shrink:0; box-sizing:border-box; }
+.rp-ds-checkbox-label:hover .rp-ds-checkbox-box { border-color:#9E9E9E; }
+.rp-ds-checkbox-label input[type="checkbox"]:checked+.rp-ds-checkbox-box { background:#6161FF; border-color:#6161FF; }
+.rp-ds-checkbox-label input[type="checkbox"]:checked+.rp-ds-checkbox-box::after { content:''; position:absolute; top:2px; left:5px; width:5px; height:9px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
 .rp-ds-help-wrap { position:relative; display:inline-flex; align-items:center; }
 .rp-ds-help-icon { width:18px; height:18px; border-radius:50%; border:1.5px solid #BDBDBD; background:#fff; font-size:11px; font-weight:700; color:#9E9E9E; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; line-height:1; flex-shrink:0; }
 .rp-ds-help-wrap:hover .rp-ds-tooltip { display:block; }
@@ -8156,6 +8162,8 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 /* 툴팁 */
 .rp-ds-tooltip { display:none; position:absolute; top:calc(100% + 8px); left:0; background:#1A1A4E; color:#fff; font-size:12px; line-height:1.8; padding:12px 14px; border-radius:8px; z-index:10; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,0.2); }
 .rp-ds-tooltip::after { content:''; position:absolute; bottom:100%; left:9px; border:6px solid transparent; border-bottom-color:#1A1A4E; }
+.rp-ds-tooltip-left { left:auto; right:0; }
+.rp-ds-tooltip-left::after { left:auto; right:9px; }
 
 /* 차트 */
 .rp-ds-chart-box { background:#fff; border:1px solid #E0E0E0; border-radius:8px; padding:20px; margin-bottom:12px; }
@@ -8178,9 +8186,11 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .rp-ds-table thead th:last-child { border-right:none; }
 .rp-ds-table tbody td { font-size:12px; color:#212121; padding:8px 12px; border-bottom:1px solid #F0EEE9; border-right:1px solid #F0EEE9; text-align:center; }
 .rp-ds-table tbody td:last-child { border-right:none; }
-.rp-ds-table tbody tr:last-child td { font-weight:700; background:#F7F7FF; border-top:1.5px solid #D0D0D0; border-bottom:none; }
-.rp-ds-table tbody tr:last-child td:first-child { color:#6161FF; }
-.rp-ds-table tbody tr:hover:not(:last-child) { background:#FAFAFA; }
+.rp-ds-table tbody tr:last-child td { border-bottom:none; }
+.rp-ds-table tbody tr.rp-total-row td { font-weight:700; background:#F7F7FF; border-top:1.5px solid #D0D0D0; }
+.rp-ds-table tbody tr.rp-total-row td:first-child { color:#6161FF; }
+.rp-ds-table tbody tr:hover { background:#FAFAFA; }
+.rp-ds-table tbody tr.rp-total-row:hover { background:#F7F7FF; }
 /* ── 월별 매출 분석 뷰 ── */
 #rpMonthlySalesView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
 #rpMonthlySalesView.show { display:flex; }
@@ -8311,7 +8321,7 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 #rpProfitLossView.show { display:flex; }
 .rp-pnl-table tbody td { background:#fff; font-weight:400; color:#212121; vertical-align:middle; }
 .rp-pnl-table tbody td:last-child { text-align:right; padding-right:16px; }
-.rp-pnl-table tbody td[rowspan] { font-weight:600; }
+.rp-pnl-table tbody td[rowspan] { font-weight:600; background:#FAFAFA; }
 .rp-pnl-table .rp-pnl-subtotal td { background:#FAFAFA; font-weight:600; }
 .rp-pnl-table .rp-pnl-profit td { background:#EEF0FF; font-weight:700; color:#6161FF; }
 /* ── [FEAT-CLIENT-STATUS] 전체 고객 현황 ── */
@@ -8434,4 +8444,44 @@ select.tc-modal-input { background:#fff url("data:image/svg+xml,%3Csvg width='10
 .rp-rut-right-panel { display:flex; flex-direction:column; gap:0; min-width:0; }
 .rp-rut-bar-wrap { width:100%; height:360px; position:relative; }
 .rp-rut-bar-wrap canvas { width:100% !important; height:100% !important; }
+/* ── 고객별 정액권 보유 내역 ── */
+#rpPrepaidHoldingsView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpPrepaidHoldingsView.show { display:flex; }
+#rpPrepaidHoldingsView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 고객별 티켓 보유 내역 ── */
+#rpTicketHoldingsView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpTicketHoldingsView.show { display:flex; }
+#rpTicketHoldingsView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 정액권별 잔액 합계 ── */
+#rpPrepaidBalanceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpPrepaidBalanceView.show { display:flex; }
+#rpPrepaidBalanceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-ds-section { background:#fff; border:1px solid #E0E0E0; border-radius:8px; padding:20px; }
+.rp-pch-summary-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:12px; }
+.rp-pch-summary-text { font-size:13px; color:#212121; }
+.rp-pch-summary-text strong { font-weight:700; }
+.rp-pch-discount-check { display:flex; align-items:center; gap:6px; }
+/* ── 티켓별 잔액 합계 ── */
+#rpTicketBalanceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpTicketBalanceView.show { display:flex; }
+#rpTicketBalanceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 고객별 포인트 잔액 ── */
+#rpPointBalanceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpPointBalanceView.show { display:flex; }
+#rpPointBalanceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+/* ── 회원권 기한 만료 잔액 ── */
+#rpExpiredBalanceView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpExpiredBalanceView.show { display:flex; }
+#rpExpiredBalanceView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-exb-section-title { font-size:14px; font-weight:700; color:#212121; margin-bottom:12px; }
+.rp-ds-table th[rowspan] { vertical-align:middle; }
+/* ── 월별 기한 만료 잔액 ── */
+#rpMonthlyExpiredView { display:none; flex-direction:column; height:calc(100vh - 52px - 36px); overflow:hidden; background:#F5F4F1; font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+#rpMonthlyExpiredView.show { display:flex; }
+#rpMonthlyExpiredView .rp-ds-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.rp-mex-chart-legend { display:flex; align-items:center; justify-content:center; gap:20px; margin-bottom:8px; }
+.rp-mex-legend-item { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#616161; }
+.rp-mex-legend-color { width:14px; height:14px; border-radius:2px; flex-shrink:0; }
+.rp-mex-chart-wrap { width:100%; height:360px; position:relative; }
+.rp-mex-chart-wrap canvas { width:100% !important; height:100% !important; }
 /* ══ [FEAT-REPORT] END ══ */

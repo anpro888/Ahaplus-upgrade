@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AhaPlus v2 — 문자 발송 패널 추출</title>
+<!--
+  포함: panel-send, test-send-overlay, spam-overlay, sender-confirm-overlay
+  v2 통합 시 의존성: switchToPanel(), openPanel(), closePanel(), getD(), I18N, currentLang, chosenMsg
+-->
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#E8E8E8; }
+@keyframes modalIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══ 사이드 패널 ═══ */
+.side-panel { position:fixed; top:0; right:0; bottom:0; background:#F4F5F7; display:flex; flex-direction:column; z-index:400; width:600px; max-width:100vw; box-shadow:-8px 0 40px rgba(0,0,0,0.15); }
+.sp-hdr { background:#fff; border-bottom:1px solid #E8E8E8; height:56px; flex-shrink:0; display:flex; align-items:center; padding:0 18px; gap:12px; }
+.sp-back { width:32px; height:32px; border-radius:8px; border:1px solid #E0E0E0; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#555; flex-shrink:0; }
+.sp-back:hover { background:#F5F5F5; }
+.sp-hdr-info { flex:1; min-width:0; }
+.sp-hdr-title { font-size:15px; font-weight:700; color:#222; }
+.sp-close { background:none; border:none; cursor:pointer; color:#AAA; font-size:22px; line-height:1; flex-shrink:0; }
+.sp-close:hover { color:#555; }
+.sp-body { flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:10px; }
+
+/* ═══ 문자 발송 레이아웃 ═══ */
+.send-layout { display:flex; gap:16px; align-items:flex-start; }
+.phone-col { flex-shrink:0; display:flex; flex-direction:column; }
+.phone-mock { width:270px; background:#F2F2F7; border-radius:16px; overflow:hidden; border:1px solid #E0E0E0; box-shadow:0 2px 12px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:520px; }
+.phone-screen { background:#F2F2F7; flex:1; padding:0; overflow:hidden; display:flex; flex-direction:column; }
+.phone-fixed-line { background:#F8F8F8; font-size:13.5px; color:#888; line-height:1.7; width:100%; padding:10px 14px 6px; }
+.phone-bubble { background:#fff; font-size:14px; color:#222; line-height:1.7; width:100%; flex:1; border:none; outline:none; resize:none; font-family:inherit; padding:6px 14px; }
+.phone-fixed-bottom { background:#F8F8F8; font-size:13.5px; color:#888; line-height:1.7; width:100%; padding:6px 14px 10px; border-top:1px solid #EBEBEB; }
+.phone-btn-area { background:#fff; border-top:1px solid #EBEBEB; padding:12px 14px; display:flex; gap:8px; }
+.btn-preview-phone { flex:1; padding:11px; background:#fff; border:1.5px solid #6161FF; border-radius:10px; color:#6161FF; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.btn-preview-phone:hover { background:#EEF0FF; }
+.btn-send-in-phone { flex:2; padding:11px; background:#6161FF; border:none; border-radius:10px; color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.btn-send-in-phone:hover { background:#4F4FE0; }
+.phone-bottom-bar { height:6px; background:#fff; border-top:1px solid #EBEBEB; }
+
+/* 비용/설정 */
+.cost-col { flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
+.cost-row { display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+.cost-total-wrap { background:#fff; border-radius:12px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.cost-total-lbl { font-size:12px; color:#AAA; margin-bottom:4px; }
+.cost-total-num { font-size:18px; font-weight:700; color:#555; line-height:1; }
+.cost-total-sub { font-size:11.5px; color:#BBB; margin-top:5px; }
+.setting-card { background:#fff; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,0.06); overflow:hidden; }
+.setting-row { display:flex; align-items:center; gap:8px; padding:10px 14px; font-size:13px; }
+.setting-lbl { font-size:12px; color:#555; font-weight:600; min-width:60px; }
+.setting-val { font-weight:500; color:#333; }
+.schedule-toggle { display:flex; background:#F4F5F7; border-radius:8px; overflow:hidden; border:1px solid #E8E8E8; }
+.sch-btn { flex:1; padding:6px 12px; border:none; background:#fff; font-size:12.5px; font-weight:600; color:#888; cursor:pointer; font-family:inherit; }
+.sch-btn.on { background:#EEF0FF; color:#6161FF; }
+.datetime-row { display:flex; gap:8px; padding:0 14px 10px; }
+.datetime-row.hidden { display:none; }
+.dt-input { flex:1; border:1px solid #E0E0E0; border-radius:6px; padding:7px 10px; font-size:13px; color:#333; font-family:inherit; outline:none; }
+.dt-input:focus { border-color:#6161FF; }
+.warning-box { background:#FFFBEB; border:1.5px solid #FCD34D; border-radius:10px; padding:12px 14px; font-size:12px; color:#555; line-height:1.7; }
+.warning-box strong { color:#D97706; }
+
+/* ═══ 스팸 팝업 ═══ */
+#spam-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:900; align-items:center; justify-content:center; padding:20px; }
+#spam-overlay.show { display:flex; }
+.spam-popup { background:#fff; border-radius:16px; max-width:520px; width:100%; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 8px 32px rgba(0,0,0,0.18); overflow:hidden; animation:modalIn .2s ease-out; }
+.spam-popup-hdr { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid #EEE; }
+.spam-popup-hdr span { font-size:15px; font-weight:700; color:#222; }
+.spam-popup-close { background:none; border:none; font-size:24px; cursor:pointer; color:#AAA; }
+.spam-popup-body { padding:20px; overflow-y:auto; flex:1; }
+.spam-card { background:#FAFAFA; border-radius:10px; border:1px solid #EBEBEB; padding:14px; display:flex; flex-direction:column; margin-bottom:10px; }
+.spam-card-row { display:flex; align-items:flex-start; gap:10px; }
+.spam-card-ico { font-size:16px; flex-shrink:0; }
+.spam-card-txt { font-size:13px; color:#333; line-height:1.6; }
+.spam-sec-title { font-size:14px; font-weight:700; color:#222; margin:8px 0; }
+
+/* ═══ 테스트 발송 팝업 ═══ */
+#test-send-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:900; align-items:center; justify-content:center; padding:20px; }
+#test-send-overlay.show { display:flex; }
+.ts-popup { background:#fff; border-radius:16px; max-width:440px; width:100%; box-shadow:0 8px 32px rgba(0,0,0,0.18); overflow:hidden; animation:modalIn .2s ease-out; }
+.ts-popup-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E8E8E8; }
+.ts-popup-hdr span { font-size:15px; font-weight:700; color:#212121; }
+.ts-popup-close { width:28px; height:28px; border:none; background:#F5F5F5; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#757575; font-size:14px; }
+.ts-popup-body { padding:20px 20px 8px; }
+.ts-desc { font-size:13px; color:#555; line-height:1.7; margin-bottom:16px; background:#F8FBFF; border:1px solid #E0EDFF; border-radius:8px; padding:12px 14px; }
+.ts-input-lbl { font-size:12px; font-weight:700; color:#212121; margin-bottom:8px; }
+.ts-carrier-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.ts-carrier-row { display:flex; align-items:center; gap:8px; }
+.ts-carrier-lbl { flex-shrink:0; width:32px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; }
+.ts-carrier-lbl.sk { background:#E53935; }
+.ts-carrier-lbl.kt { background:#1565C0; }
+.ts-carrier-lbl.lg { background:#6A1B9A; }
+.ts-input { flex:1; border:1.5px solid #E0E0E0; border-radius:8px; padding:10px 13px; font-size:14px; color:#333; font-family:inherit; outline:none; }
+.ts-input:focus { border-color:#6161FF; }
+.ts-save-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; color:#555; cursor:pointer; }
+.ts-save-row input[type=checkbox] { width:16px; height:16px; accent-color:#6161FF; }
+.ts-recommend-note { font-size:12.5px; color:#555; line-height:1.65; background:#FFF8E1; border:1px solid #FFE082; border-radius:8px; padding:11px 13px; margin-bottom:14px; }
+.ts-recommend-note strong { color:#E65100; }
+.ts-note { font-size:12px; color:#AAA; line-height:1.6; margin-bottom:16px; }
+.ts-popup-foot { display:flex; gap:10px; padding:14px 20px; border-top:1px solid #E8E8E8; }
+.btn-ts-cancel { flex:1; padding:11px; border-radius:10px; border:1px solid #DDD; background:#fff; font-size:13.5px; font-weight:600; color:#555; cursor:pointer; font-family:inherit; }
+.btn-ts-send { flex:2; padding:11px; border-radius:10px; border:none; background:#6161FF; font-size:13.5px; font-weight:700; color:#fff; cursor:pointer; font-family:inherit; }
+.btn-ts-send:hover { background:#4F4FE0; }
+
+@media (max-width:700px) {
+  .side-panel { width:100vw !important; }
+  .send-layout { flex-direction:column; gap:12px; }
+  .phone-mock { width:100% !important; height:400px; }
+  .cost-col { width:100% !important; }
+  .spam-popup,.ts-popup { max-width:95vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ 문자 발송 패널 ═══ -->
+<div class="side-panel" id="panel-send">
+  <div class="sp-hdr">
+    <button class="sp-back" onclick="alert('← 이전 패널')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <div class="sp-hdr-info"><div class="sp-hdr-title">문자 발송</div></div>
+    <button class="sp-close" onclick="alert('패널 닫기')">×</button>
+  </div>
+  <div class="sp-body">
+    <div class="send-layout">
+      <div class="phone-col">
+        <div class="phone-mock">
+          <div class="phone-screen">
+            <div class="phone-fixed-line">(광고)○○헤어살롱</div>
+            <textarea class="phone-bubble" id="phone-msg-body">○○님, 봄맞이 헤어 변신!
+이번 시즌 트렌드 스타일로 바꿔볼까요? 🌸
+
+지금 예약하시면 10% 할인!
+[예약하기]</textarea>
+            <div class="phone-fixed-bottom">무료수신거부 080-808-0132</div>
+          </div>
+          <div class="phone-btn-area">
+            <button class="btn-preview-phone" onclick="openTestSendPopup()">테스트 발송</button>
+            <button class="btn-send-in-phone" onclick="doSend()">문자 발송하기</button>
+          </div>
+          <div class="phone-bottom-bar"></div>
+        </div>
+      </div>
+      <div class="cost-col">
+        <div class="cost-total-wrap">
+          <div class="cost-row" style="border-bottom:1px solid #EEE;padding-bottom:8px;margin-bottom:8px;"><span style="color:#888;">발송 대상</span><span style="font-weight:600;color:#333;">15명</span></div>
+          <div class="cost-row" style="border-bottom:1px solid #EEE;padding-bottom:8px;margin-bottom:8px;"><span style="color:#888;">건당 비용</span><span style="font-weight:600;color:#333;">49원 (LMS)</span></div>
+          <div class="cost-total-lbl">예상 총 비용</div>
+          <div class="cost-total-num">735원</div>
+          <div class="cost-total-sub">VAT 포함 · 발송 실패 시 자동 환불</div>
+        </div>
+        <div class="setting-card">
+          <div class="setting-row">
+            <span class="setting-lbl">발송번호</span>
+            <span class="setting-val">010-1234-5678</span>
+            <button onclick="openSenderConfirm()" style="flex-shrink:0;padding:4px 12px;background:#F4F5F7;border:1px solid #DDD;border-radius:6px;font-size:12px;color:#555;cursor:pointer;font-family:inherit;">설정</button>
+          </div>
+          <div class="setting-row">
+            <span class="setting-lbl">발송일시</span>
+            <div class="schedule-toggle">
+              <button class="sch-btn on" id="sch-now" onclick="setSchedule('now')">즉시 발송</button>
+              <button class="sch-btn" id="sch-later" onclick="setSchedule('later')">예약 발송</button>
+            </div>
+          </div>
+          <div class="datetime-row hidden" id="datetime-row">
+            <input class="dt-input" type="date" id="sch-date">
+            <input class="dt-input" type="time" id="sch-time" value="09:00">
+          </div>
+        </div>
+        <div class="warning-box">
+          ⚠️ <strong>주의!</strong> 스팸 필터링 강화로 문자가 차단될 수 있으니 <strong style="color:#D97706;background:#FDE68A;padding:1px 4px;border-radius:3px;">테스트 발송을 먼저</strong> 진행하세요.
+          <div style="margin-top:7px;border-top:1px solid #FCD34D;padding-top:7px;">
+            <a onclick="openSpamPopup()" style="cursor:pointer;font-size:12px;color:#D97706;display:flex;align-items:center;gap:5px;font-weight:600;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              스팸 필터링 안내 보기
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 스팸 필터링 안내 팝업 ═══ -->
+<div id="spam-overlay" onclick="if(event.target===this)closeSpamPopup()">
+  <div class="spam-popup">
+    <div class="spam-popup-hdr"><span>🚫 스팸 문자 필터링 안내</span><button class="spam-popup-close" onclick="closeSpamPopup()">×</button></div>
+    <div class="spam-popup-body">
+      <div class="spam-card" style="background:#EEF0FF;border:1px solid #C5C5FF;"><div class="spam-card-txt">이동통신사 3사(SK, KT, LG)의 스팸 필터링 강화로 <strong>특수 문자, 지정 단어, 특정 번호</strong>가 걸리는 현상이 발생하고 있습니다.<br>전체 발송 전 테스트 발송을 먼저 진행하세요.</div></div>
+      <div><div class="spam-sec-title">✅ 스팸 필터링 테스트 방법</div>
+        <div class="spam-card" style="gap:10px;">
+          <div class="spam-card-row"><span class="spam-card-ico">1️⃣</span><span class="spam-card-txt">직원들의 휴대폰을 활용해 테스트 메시지 발송</span></div>
+          <div class="spam-card-row" style="border-top:1px solid #EBEBEB;padding-top:8px;"><span class="spam-card-ico">2️⃣</span><span class="spam-card-txt">메시지가 스팸으로 분류된다면 해당 내용 수정 후 재발송</span></div>
+          <div class="spam-card-row" style="border-top:1px solid #EBEBEB;padding-top:8px;"><span class="spam-card-ico">3️⃣</span><span class="spam-card-txt">통신사 <strong>3사 모두 수신</strong> 가능한 메시지로 최종 전송</span></div>
+          <div style="border-top:1px solid #EBEBEB;padding-top:10px;"><button onclick="closeSpamPopup();openTestSendPopup();" style="width:100%;padding:11px;background:#6161FF;border:none;border-radius:8px;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;">테스트 발송</button></div>
+        </div>
+      </div>
+      <div><div class="spam-sec-title">✅ 스팸 필터링의 예</div>
+        <div class="spam-card" style="gap:10px;">
+          <div class="spam-card-row"><span class="spam-card-ico">🔤</span><div><div class="spam-card-txt"><strong>특수문자 사용</strong></div><div class="spam-card-txt" style="color:#777;">과도한 특수 문자 사용 시 필터링 가능성 높음</div></div></div>
+          <div class="spam-card-row" style="border-top:1px solid #EBEBEB;padding-top:8px;"><span class="spam-card-ico">💬</span><div><div class="spam-card-txt"><strong>특정단어 사용</strong></div><div class="spam-card-txt" style="color:#777;">통신사 보안 등급별 지정 단어 또는 고객 등록 스팸 단어</div></div></div>
+          <div class="spam-card-row" style="border-top:1px solid #EBEBEB;padding-top:8px;"><span class="spam-card-ico">📱</span><div><div class="spam-card-txt"><strong>특정번호</strong></div><div class="spam-card-txt" style="color:#777;">고객 스팸 등록 번호 또는 KISA 스팸번호</div></div></div>
+          <div class="spam-card-row" style="border-top:1px solid #EBEBEB;padding-top:8px;"><span class="spam-card-ico">🔄</span><div><div class="spam-card-txt"><strong>유동적 스팸 반영</strong></div><div class="spam-card-txt" style="color:#777;">필터링 기준 수시 변경 — <strong style="color:#E53935;">테스트 성공 후 즉시 발송 추천</strong></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 테스트 발송 팝업 ═══ -->
+<div id="test-send-overlay" onclick="if(event.target===this)closeTestSendPopup()">
+  <div class="ts-popup">
+    <div class="ts-popup-hdr"><span>문자 테스트 발송</span><button class="ts-popup-close" onclick="closeTestSendPopup()">×</button></div>
+    <div class="ts-popup-body">
+      <div class="ts-desc">스팸 필터링 강화로 차단될 수 있습니다.<br>전체 발송 전 <strong style="color:#1565C0;">테스트 발송을 먼저 진행</strong>해 주세요.</div>
+      <div class="ts-input-lbl">통신사별 수신 번호</div>
+      <div class="ts-carrier-grid">
+        <div class="ts-carrier-row"><span class="ts-carrier-lbl sk">SK</span><input class="ts-input" type="tel" id="ts-sk" placeholder="010-0000-0000"></div>
+        <div class="ts-carrier-row"><span class="ts-carrier-lbl kt">KT</span><input class="ts-input" type="tel" id="ts-kt" placeholder="010-0000-0000"></div>
+        <div class="ts-carrier-row"><span class="ts-carrier-lbl lg">LG</span><input class="ts-input" type="tel" id="ts-lg" placeholder="010-0000-0000"></div>
+      </div>
+      <label class="ts-save-row"><input type="checkbox" id="ts-save-chk" onchange="onTsSaveToggle(this)"> 번호 저장 (다음에 자동 입력)</label>
+      <div class="ts-recommend-note">통신사 3사 모두 테스트 추천. <strong>테스트 성공 후 즉시 발송</strong>하세요.</div>
+      <div class="ts-note">* 테스트 발송 시 Variables 문구는 생략됩니다.<br>* 테스트 발송도 건당 49원 청구됩니다.</div>
+    </div>
+    <div class="ts-popup-foot">
+      <button class="btn-ts-cancel" onclick="closeTestSendPopup()">취소</button>
+      <button class="btn-ts-send" onclick="doTestSend()">테스트 발송</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 발송번호 설정 확인 ═══ -->
+<div id="sender-confirm-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;padding:28px 24px 20px;max-width:320px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;">
+    <div style="font-size:15px;font-weight:600;color:#222;margin-bottom:8px;">발송번호 설정</div>
+    <div style="font-size:13.5px;color:#555;line-height:1.6;margin-bottom:22px;">발송번호 설정 화면으로<br>이동하시겠습니까?</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeSenderConfirm()" style="flex:1;padding:10px 0;border-radius:9px;border:1px solid #DDD;background:#F5F5F5;font-size:14px;color:#555;cursor:pointer;font-family:inherit;">취소</button>
+      <button onclick="closeSenderConfirm()" style="flex:1;padding:10px 0;border-radius:9px;border:none;background:#6161FF;font-size:14px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var savedTestNums = null;
+function setSchedule(m) {
+  var n=document.getElementById('sch-now'), l=document.getElementById('sch-later'), r=document.getElementById('datetime-row');
+  if(m==='now'){n.classList.add('on');l.classList.remove('on');r.classList.add('hidden');}
+  else{l.classList.add('on');n.classList.remove('on');r.classList.remove('hidden');document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);}
+}
+function doSend(){alert('문자 발송 완료!\n대상: 15명 · 비용: 735원');}
+function openSpamPopup(){document.getElementById('spam-overlay').classList.add('show');}
+function closeSpamPopup(){document.getElementById('spam-overlay').classList.remove('show');}
+function openSenderConfirm(){document.getElementById('sender-confirm-overlay').style.display='flex';}
+function closeSenderConfirm(){document.getElementById('sender-confirm-overlay').style.display='none';}
+function openTestSendPopup(){
+  document.getElementById('test-send-overlay').classList.add('show');
+  if(savedTestNums){document.getElementById('ts-sk').value=savedTestNums.sk||'';document.getElementById('ts-kt').value=savedTestNums.kt||'';document.getElementById('ts-lg').value=savedTestNums.lg||'';document.getElementById('ts-save-chk').checked=true;}
+  else{document.getElementById('ts-sk').value='';document.getElementById('ts-kt').value='';document.getElementById('ts-lg').value='';document.getElementById('ts-save-chk').checked=false;}
+}
+function closeTestSendPopup(){document.getElementById('test-send-overlay').classList.remove('show');}
+function onTsSaveToggle(c){if(!c.checked)savedTestNums=null;}
+function doTestSend(){
+  var s=document.getElementById('ts-sk').value.trim(),k=document.getElementById('ts-kt').value.trim(),l=document.getElementById('ts-lg').value.trim();
+  var nums=[s&&'SK: '+s,k&&'KT: '+k,l&&'LG: '+l].filter(Boolean);
+  if(!nums.length){document.getElementById('ts-sk').focus();return;}
+  if(document.getElementById('ts-save-chk').checked)savedTestNums={sk:s,kt:k,lg:l};
+  alert('테스트 발송 완료!\n'+nums.join('\n'));closeTestSendPopup();
+}
+</script>
+</body>
+</html>

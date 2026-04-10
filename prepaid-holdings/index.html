@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 고객별 정액권 보유 내역</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="pch-page">
+
+  <!-- 헤더 -->
+  <div class="pch-page-header">
+    <h2 class="pch-page-title" data-i18n="pch.title" data-ko="고객별 정액권 보유 내역" data-en="Prepaid Card Holdings by Client">고객별 정액권 보유 내역</h2>
+    <div class="pch-header-actions">
+      <button class="pch-btn pch-btn-outline" onclick="history.back()" data-i18n="common.goBack" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+      <button class="pch-btn pch-btn-primary" onclick="printPage()" data-i18n="common.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="pch-filter-panel">
+    <div class="pch-filter-row">
+      <div class="pch-filter-group">
+        <span class="pch-filter-label" data-i18n="pch.staff" data-ko="직원" data-en="Staff">직원</span>
+        <select class="pch-select" id="staffSelect">
+          <option value="all" data-i18n="common.all" data-ko="전체" data-en="All">전체</option>
+          <option value="staff1">실장님</option>
+          <option value="staff2">원장님</option>
+        </select>
+      </div>
+
+      <!-- 검색 -->
+      <button class="pch-btn pch-btn-primary pch-btn-search" onclick="doSearch()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+        <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 테이블 영역 -->
+  <div class="pch-section">
+    <!-- 테이블 상단 요약 -->
+    <div class="pch-table-summary">
+      <span class="pch-summary-text" id="summaryText">
+        <span data-i18n="pch.totalLabel" data-ko="총" data-en="Total">총</span>
+        <strong id="totalCount">2</strong>
+        <span data-i18n="pch.unit" data-ko="건" data-en="items">건</span>
+        /
+        <span data-i18n="pch.balanceTotal" data-ko="잔액 합계" data-en="Balance Total">잔액 합계</span>
+        <strong id="totalBalance">103,671,978,903</strong>
+      </span>
+      <div class="pch-discount-check">
+        <label class="pch-checkbox-label">
+          <input type="checkbox" id="discountCheck" onchange="doSearch()">
+          <span class="pch-checkbox-box"></span>
+          <span data-i18n="pch.discountCalc" data-ko="할인 전용 정액권 잔액 계산" data-en="Discount Prepaid Card Balance Calculation">할인 전용 정액권 잔액 계산</span>
+        </label>
+        <span class="pch-tooltip-wrap">
+          <span class="pch-tooltip-icon" tabindex="0">?</span>
+          <span class="pch-tooltip-content" data-i18n="pch.discountTooltip" data-ko="할인 전용 정액권의 잔액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)" data-en="Discount prepaid card balance = Sale price x (Remaining period / Total available period)">할인 전용 정액권의 잔액 = 판매 금액 x (남은 기간 / 총 사용 가능 기간)</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="pch-table-panel">
+      <table class="pch-table">
+        <thead>
+          <tr>
+            <th data-i18n="pch.clientName" data-ko="고객명" data-en="Client Name">고객명</th>
+            <th data-i18n="pch.type" data-ko="유형" data-en="Type">유형</th>
+            <th data-i18n="pch.cardName" data-ko="정액권명" data-en="Prepaid Card Name">정액권명</th>
+            <th data-i18n="pch.balance" data-ko="잔액" data-en="Balance">잔액</th>
+            <th data-i18n="pch.expiryDate" data-ko="만료일" data-en="Expiry Date">만료일</th>
+            <th data-i18n="pch.saleDate" data-ko="판매일" data-en="Sale Date">판매일</th>
+            <th data-i18n="pch.saleAmount" data-ko="판매액" data-en="Sale Amount">판매액</th>
+            <th data-i18n="pch.accumulatedAmount" data-ko="적립 금액" data-en="Accumulated Amount">적립 금액</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

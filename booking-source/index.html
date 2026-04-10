@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아하플러스 — 예약 경로별 분석</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="bsa-page">
+
+  <!-- 헤더 -->
+  <div class="bsa-page-header">
+    <h2 class="bsa-page-title" data-i18n="bsa.title" data-ko="예약 경로별 분석" data-en="Booking Source Analysis">예약 경로별 분석</h2>
+    <div class="bsa-header-actions">
+      <button class="bsa-btn bsa-btn-outline" onclick="history.back()" data-i18n="common.goBack" data-ko="← 뒤로 가기" data-en="← Go Back">← 뒤로 가기</button>
+      <button class="bsa-btn bsa-btn-primary" onclick="printPage()" data-i18n="common.print" data-ko="인쇄" data-en="Print">인쇄</button>
+    </div>
+  </div>
+
+  <!-- 필터 영역 -->
+  <div class="bsa-filter-panel">
+    <div class="bsa-filter-row">
+      <!-- 기간 타입 -->
+      <div class="bsa-filter-group">
+        <label class="bsa-radio-label">
+          <input type="radio" name="periodType" value="monthly" checked onchange="togglePeriodType()">
+          <span class="bsa-radio-dot"></span>
+          <span data-i18n="bsa.monthly" data-ko="월별" data-en="Monthly">월별</span>
+        </label>
+        <label class="bsa-radio-label">
+          <input type="radio" name="periodType" value="range" onchange="togglePeriodType()">
+          <span class="bsa-radio-dot"></span>
+          <span data-i18n="bsa.range" data-ko="기간" data-en="Range">기간</span>
+        </label>
+        <!-- 월별 -->
+        <input type="month" class="bsa-input bsa-input-date" id="monthlyDate" value="2026-04" />
+        <!-- 기간 -->
+        <div class="bsa-range-inputs" id="rangeInputs" style="display:none;">
+          <input type="date" class="bsa-input bsa-input-date" id="rangeStart" value="2026-04-01" />
+          <span class="bsa-range-sep">~</span>
+          <input type="date" class="bsa-input bsa-input-date" id="rangeEnd" value="2026-04-10" />
+        </div>
+      </div>
+
+      <!-- 차트 타입 -->
+      <div class="bsa-filter-group">
+        <span class="bsa-filter-label" data-i18n="bsa.chartType" data-ko="차트" data-en="Chart">차트</span>
+        <label class="bsa-radio-label">
+          <input type="radio" name="chartType" value="doughnut" checked onchange="doSearch()">
+          <span class="bsa-radio-dot"></span>
+          <span data-i18n="bsa.doughnut" data-ko="도넛" data-en="Doughnut">도넛</span>
+        </label>
+        <label class="bsa-radio-label">
+          <input type="radio" name="chartType" value="bar" onchange="doSearch()">
+          <span class="bsa-radio-dot"></span>
+          <span data-i18n="bsa.bar" data-ko="막대" data-en="Bar">막대</span>
+        </label>
+      </div>
+
+      <!-- 검색 -->
+      <div class="bsa-filter-right">
+        <button class="bsa-btn bsa-btn-primary bsa-btn-search" onclick="doSearch()">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          <span data-i18n="common.search" data-ko="검색" data-en="Search">검색</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 콘텐츠: 차트 + 테이블 -->
+  <div class="bsa-content">
+    <!-- 차트 -->
+    <div class="bsa-chart-panel" id="chartPanel">
+      <div class="bsa-chart-legend" id="chartLegend" style="display:none;"></div>
+      <div class="bsa-chart-empty" id="chartEmpty">
+        <span data-i18n="bsa.noChartData" data-ko="차트에 대한 데이터가 없습니다" data-en="No chart data available">차트에 대한 데이터가 없습니다</span>
+      </div>
+      <canvas id="sourceChart" style="display:none;"></canvas>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="bsa-table-panel">
+      <table class="bsa-table">
+        <thead>
+          <tr>
+            <th data-i18n="bsa.source" data-ko="예약 경로" data-en="Booking Source">예약 경로</th>
+            <th data-i18n="bsa.count" data-ko="예약 건수" data-en="Bookings">예약 건수</th>
+            <th data-i18n="bsa.ratio" data-ko="비율(%)" data-en="Ratio(%)">비율(%)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr class="bsa-empty-row">
+            <td colspan="3" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data available">내역이 없습니다</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 안내 문구 -->
+  <div class="bsa-notes">
+    <ul>
+      <li data-i18n="bsa.note1" data-ko="예약 상태가 예약완료, 고객입장, 계산완료인 건만 집계됩니다." data-en="Only bookings with Completed, Arrived, or Checked Out status are counted.">예약 상태가 예약완료, 고객입장, 계산완료인 건만 집계됩니다.</li>
+      <li data-i18n="bsa.note2" data-ko="노쇼 및 취소된 예약은 집계에서 제외됩니다." data-en="No-show and cancelled bookings are excluded from the count.">노쇼 및 취소된 예약은 집계에서 제외됩니다.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

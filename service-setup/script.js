@@ -54,7 +54,14 @@ function bindMoneyInput(id) {
 
 // ── 패키지 / 제품 / 정액권 / 티켓 공유 데이터 ──
 var pkgProductData = [
-  { code: '100001', name: '영양제', price: 0, cat: '판매' }
+  { code: '100001', name: '영양제', price: 35000, cat: '판매', buyPrice: 18000, stock: 24, safetyStock: 10 },
+  { code: '100002', name: '샴푸 500ml', price: 28000, cat: '판매', buyPrice: 12000, stock: 15, safetyStock: 5 },
+  { code: '100003', name: '트리트먼트', price: 32000, cat: '판매', buyPrice: 15000, stock: 8, safetyStock: 10 },
+  { code: '100004', name: '헤어오일', price: 25000, cat: '판매', buyPrice: 11000, stock: 3, safetyStock: 5 },
+  { code: '100005', name: '왁스', price: 18000, cat: '판매', buyPrice: 8000, stock: 0, safetyStock: 3 },
+  { code: '200001', name: '염색약 (브라운)', price: 0, cat: '시술', buyPrice: 5000, stock: 30, safetyStock: 10 },
+  { code: '200002', name: '탈색제', price: 0, cat: '시술', buyPrice: 7000, stock: 12, safetyStock: 5 },
+  { code: '200003', name: '파마약', price: 0, cat: '시술', buyPrice: 9000, stock: 6, safetyStock: 8 }
 ];
 var ppCardData = [
   { name: '20만원권(현금)', price: 200000 },
@@ -1221,7 +1228,12 @@ function closeServiceSetup() {
 }
 
 // ── 내부 소모 내역 페이지 ──
-var iuData = [];
+var iuData = [
+  { date: '2026-04-10', staff: '원장님', productCode: '200001', productName: '염색약 (브라운)', category: '시술', unitPrice: 5000, qty: 3, memo: '시술 사용' },
+  { date: '2026-04-08', staff: '수진', productCode: '200002', productName: '탈색제', category: '시술', unitPrice: 7000, qty: 2, memo: '시술 사용' },
+  { date: '2026-04-05', staff: '원장님', productCode: '200003', productName: '파마약', category: '시술', unitPrice: 9000, qty: 1, memo: '' },
+  { date: '2026-04-03', staff: '지훈', productCode: '100003', productName: '트리트먼트', category: '판매', unitPrice: 15000, qty: 1, memo: '직원 사용' }
+];
 var iuEditIdx = -1;
 
 function openInternalUse() {
@@ -1409,7 +1421,13 @@ function iuDeleteEntry() {
 function iuPrint() { window.print(); }
 
 // ── 재고 조정 페이지 ──
-var saData = []; // 재고 조정 내역 데이터
+var saData = [
+  { date: '2026-04-10', productCode: '100004', productName: '헤어오일', before: 3, after: 13, memo: '정기 입고' },
+  { date: '2026-04-08', productCode: '100005', productName: '왁스', before: 3, after: 0, memo: '고객 판매' },
+  { date: '2026-04-05', productCode: '200001', productName: '염색약 (브라운)', before: 10, after: 30, memo: '추가 발주' },
+  { date: '2026-04-03', productCode: '100001', productName: '영양제', before: 29, after: 24, memo: '고객 판매' },
+  { date: '2026-04-01', productCode: '100003', productName: '트리트먼트', before: 0, after: 12, memo: '월초 입고' }
+];
 
 function openStockAdjust() {
   hideAllViews();
@@ -1555,7 +1573,15 @@ function saSaveAdjust() {
 }
 
 // ── 재고 변동 이력 페이지 ──
-var sh2Data = [];
+var sh2Data = [
+  { date: '2026-04-10', userId: '원장님', productCode: '100004', productName: '헤어오일', type: '입고', diff: 10, stock: 13 },
+  { date: '2026-04-08', userId: '실장님', productCode: '100005', productName: '왁스', type: '판매', diff: -3, stock: 0 },
+  { date: '2026-04-05', userId: '원장님', productCode: '200001', productName: '염색약 (브라운)', type: '입고', diff: 20, stock: 30 },
+  { date: '2026-04-03', userId: '실장님', productCode: '100001', productName: '영양제', type: '판매', diff: -5, stock: 24 },
+  { date: '2026-04-01', userId: '원장님', productCode: '100003', productName: '트리트먼트', type: '입고', diff: 12, stock: 12 },
+  { date: '2026-03-28', userId: '실장님', productCode: '100002', productName: '샴푸 500ml', type: '판매', diff: -3, stock: 15 },
+  { date: '2026-03-25', userId: '원장님', productCode: '200003', productName: '파마약', type: '입고', diff: 10, stock: 10 }
+];
 
 function openStockHistory() {
   hideAllViews();
@@ -1724,7 +1750,16 @@ function ssShowDetail(code) {
 }
 
 // ── 매입 페이지 ──
-var pcData = [];
+var pcData = [
+  { type: '매입', date: '2026-04-09', supplier: '아하뷰티', qty: 20, amount: 360000, memo: '영양제 20개', createdAt: '2026-04-09 14:30',
+    products: [{code:'100001',name:'영양제',price:18000,qty:20,amount:360000}] },
+  { type: '매입', date: '2026-04-05', supplier: '코스메틱월드', qty: 15, amount: 180000, memo: '샴푸 15개', createdAt: '2026-04-05 10:15',
+    products: [{code:'100002',name:'샴푸 500ml',price:12000,qty:15,amount:180000}] },
+  { type: '반품', date: '2026-04-03', supplier: '아하뷰티', qty: 2, amount: 36000, memo: '불량품 반품', createdAt: '2026-04-03 16:45',
+    products: [{code:'100001',name:'영양제',price:18000,qty:2,amount:36000}] },
+  { type: '매입', date: '2026-03-28', supplier: '코스메틱월드', qty: 10, amount: 90000, memo: '파마약 10개', createdAt: '2026-03-28 09:20',
+    products: [{code:'200003',name:'파마약',price:9000,qty:10,amount:90000}] }
+];
 var pcRegProducts = [];
 var pcRegType = '매입';
 var pcTempProducts = [];
@@ -1777,12 +1812,58 @@ function pcRenderHistory() {
     html += '<td>' + (d.qty || 0) + '</td>';
     html += '<td>' + (d.amount || 0).toLocaleString() + '</td>';
     html += '<td class="memo-cell">' + (d.memo || '') + '</td>';
-    html += '<td><button class="pc-detail-btn">' + (isEn ? 'View' : '보기') + '</button></td>';
+    var origIdx = pcData.indexOf(d);
+    html += '<td><button class="pc-detail-btn" onclick="pcOpenDetailModal(' + origIdx + ')">' + (isEn ? 'View' : '보기') + '</button></td>';
     html += '</tr>';
   });
   tbody.innerHTML = html || '<tr><td colspan="7" class="pc-empty">' + (isEn ? 'No records found' : '내역이 없습니다') + '</td></tr>';
   document.getElementById('pcTotalCount').textContent = filtered.length;
   document.getElementById('pcTotalAmount').textContent = totalAmt.toLocaleString();
+}
+
+var pcDetailIdx = -1;
+
+function pcOpenDetailModal(idx) {
+  pcDetailIdx = idx;
+  var d = pcData[idx];
+  if (!d) return;
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  document.getElementById('pcDetailType').textContent = d.type;
+  document.getElementById('pcDetailCreatedAt').textContent = (isEn ? 'Created: ' : '생성일: ') + (d.createdAt || d.date);
+  document.getElementById('pcDetailSupplier').textContent = d.supplier || '';
+  document.getElementById('pcDetailDate').textContent = d.date;
+  document.getElementById('pcDetailMemo').textContent = d.memo || '';
+
+  var tbody = document.getElementById('pcDetailProductTbody');
+  var products = d.products || [];
+  if (!products.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="pc-empty">' + (isEn ? 'No products' : '제품이 없습니다') + '</td></tr>';
+  } else {
+    var html = '';
+    products.forEach(function(p) {
+      html += '<tr><td>' + p.code + '</td><td>' + p.name + '</td><td>' + p.price.toLocaleString() + '</td><td>' + p.qty + '</td><td>' + p.amount.toLocaleString() + '</td></tr>';
+    });
+    tbody.innerHTML = html;
+  }
+  document.getElementById('pcDetailModal').classList.add('show');
+}
+
+function pcCloseDetailModal() {
+  document.getElementById('pcDetailModal').classList.remove('show');
+}
+
+function pcEditFromDetail() {
+  pcCloseDetailModal();
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  alert(isEn ? 'Edit function will be available in the next update.' : '수정 기능은 다음 업데이트에서 제공될 예정입니다.');
+}
+
+function pcDeleteFromDetail() {
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!confirm(isEn ? 'Are you sure you want to delete?' : '정말 삭제하시겠습니까?')) return;
+  pcData.splice(pcDetailIdx, 1);
+  pcCloseDetailModal();
+  pcRenderHistory();
 }
 
 function pcOpenRegModal(type) {
@@ -1951,6 +2032,8 @@ function pcConfirmProducts() {
 
 // ── 매입처 관리 페이지 ──
 var spData = [
+  { name: '아하뷰티', manager: '김미정', phone: '02-1234-5678', mobile: '010-1234-5678', fax: '', email: 'beauty@aha.com', memo: '헤어제품 전문', active: true },
+  { name: '코스메틱월드', manager: '박지훈', phone: '02-9876-5432', mobile: '010-9876-5432', fax: '', email: 'info@cosworld.com', memo: '시술재료', active: true },
   { name: 'Black Store', manager: '', phone: '', mobile: '', fax: '', email: '', memo: '', active: true }
 ];
 var spEditIdx = -1;
@@ -5985,6 +6068,14 @@ function openAhaCallSetup() {
   if (currentLang === 'en') applyLang();
 }
 
+// ── 고객센터 안내 모달 ──
+function openSupportInfoModal() {
+  document.getElementById('supportInfoModal').classList.add('show');
+}
+function closeSupportInfoModal() {
+  document.getElementById('supportInfoModal').classList.remove('show');
+}
+
 function openAhaCallHistory() {
   freezeGnb();
   document.getElementById('appBody').style.display = 'none';
@@ -6016,9 +6107,8 @@ function openAhaCallHistory() {
   weekAgo.setDate(today.getDate() - 6);
   document.getElementById('achDateTo').value = today.toISOString().slice(0,10);
   document.getElementById('achDateFrom').value = weekAgo.toISOString().slice(0,10);
-  // 초기 빈 테이블
-  document.getElementById('achTotalCount').textContent = '0';
-  document.getElementById('achTableBody').innerHTML = '<tr class="ach-empty-row"><td colspan="8">내역이 없습니다</td></tr>';
+  // 페이지 진입 시 자동 검색
+  achSearch();
   if (currentLang === 'en') applyLang();
 }
 // ══ [FEAT-AHACALL-SETUP] END ══
@@ -6235,7 +6325,8 @@ function hideAllViews() {
     'stockAdjustView','stockAdjustEditView',
     'stockHistoryView','stockStatusView','purchaseView','supplierMgmtView',
     'expenseItemView','expenseSummaryView','expenseHistoryView',
-    'reportView','rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView','rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView','rpProductRevenueView','rpMonthlyProductView','rpDiscountSalesView','rpRevisitSalesView','rpMemberRepurchaseView','rpProfitLossView','rpClientStatusView','rpPeriodClientView','rpClientTypeView','rpNewClientRevisitView','rpMonthlyNewClientView','rpMonthlyReferralView','rpVisitSourceView','rpBookingDetailView','rpDailyBookingView','rpMonthlyBookingView','rpBookingByResourceView','rpBookingByWeekdayView','rpBookingByTimeslotView','rpBookingByChannelView','rpBookingRateView','rpResourceUtilView'
+    'reportView','rpDailySalesView','rpMonthlySalesView','rpStaffSalesView','rpServiceRevenueView','rpServiceItemView','rpMonthlyServiceView','rpSalesCatServiceView','rpProductRevenueView','rpMonthlyProductView','rpDiscountSalesView','rpRevisitSalesView','rpMemberRepurchaseView','rpProfitLossView','rpClientStatusView','rpPeriodClientView','rpClientTypeView','rpNewClientRevisitView','rpMonthlyNewClientView','rpMonthlyReferralView','rpVisitSourceView','rpBookingDetailView','rpDailyBookingView','rpMonthlyBookingView','rpBookingByResourceView','rpBookingByWeekdayView','rpBookingByTimeslotView','rpBookingByChannelView','rpBookingRateView','rpResourceUtilView',
+    'rpPrepaidHoldingsView','rpPrepaidBalanceView','rpTicketHoldingsView','rpTicketBalanceView','rpPointBalanceView','rpExpiredBalanceView','rpMonthlyExpiredView'
   ];
   viewIds.forEach(function(id) {
     var el = document.getElementById(id);
@@ -11119,7 +11210,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // ══════════════════════════════════════════════════════════════
 
 // 급여 명세서 데이터 저장소
-var paySlipStore = [];
+var paySlipStore = [
+  { id: 1001, dateStr: '2026-04-10', staff: '원장님', from: '2026-04-01', to: '2026-04-30',
+    payItems: [{name:'기본급',amount:3000000},{name:'인센티브',amount:450000}],
+    dedItems: [{name:'국민연금',amount:135000},{name:'건강보험',amount:110000},{name:'고용보험',amount:26000}],
+    advance: 0, incomeType: '근로소득', totalPay: 3450000, totalDed: 271000 },
+  { id: 1002, dateStr: '2026-04-10', staff: '수진', from: '2026-04-01', to: '2026-04-30',
+    payItems: [{name:'기본급',amount:2200000},{name:'인센티브',amount:320000}],
+    dedItems: [{name:'국민연금',amount:99000},{name:'건강보험',amount:80000},{name:'고용보험',amount:19000}],
+    advance: 0, incomeType: '근로소득', totalPay: 2520000, totalDed: 198000 },
+  { id: 1003, dateStr: '2026-04-10', staff: '지훈', from: '2026-04-01', to: '2026-04-30',
+    payItems: [{name:'기본급',amount:2000000},{name:'인센티브',amount:280000}],
+    dedItems: [{name:'국민연금',amount:90000},{name:'건강보험',amount:73000},{name:'고용보험',amount:17000}],
+    advance: 0, incomeType: '근로소득', totalPay: 2280000, totalDed: 180000 }
+];
 
 // ── 직원 관리 테이블에서 등록된 직원 목록 가져오기 ──
 function payGetStaffList() {
@@ -11207,7 +11311,35 @@ function openPayrollView() {
   hideAllViews();
   document.getElementById('payrollView').classList.add('show');
   payRefreshStaffDropdowns();
+  payRenderSlipList();
   if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function payRenderSlipList() {
+  var tbody = document.getElementById('payTableBody');
+  var isEn = (typeof currentLang !== 'undefined' && currentLang === 'en');
+  if (!paySlipStore.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="pay-empty">' + (isEn ? 'No data for table' : '내역이 없습니다.') + '</td></tr>';
+    document.getElementById('paySummary').textContent = isEn ? 'Total 0 records, Total salary 0' : '총 0 건, 총 급여 0';
+    return;
+  }
+  var html = '';
+  var allTotal = 0;
+  paySlipStore.forEach(function(r) {
+    allTotal += r.totalPay;
+    html += '<tr data-payslip-id="' + r.id + '">' +
+      '<td>' + r.dateStr + '</td>' +
+      '<td>' + r.staff + '</td>' +
+      '<td>' + r.from + ' ~ ' + r.to + '</td>' +
+      '<td>' + r.totalPay.toLocaleString() + '</td>' +
+      '<td><button class="pay-view-btn" onclick="payOpenViewModal(this)" data-i18n="common.btn_view" data-ko="보기" data-en="View">' + (isEn ? 'View' : '보기') + '</button></td>' +
+      '<td><button class="pay-view-btn" onclick="payOpenIncDetail()" data-i18n="common.btn_view" data-ko="보기" data-en="View">' + (isEn ? 'View' : '보기') + '</button></td>' +
+      '</tr>';
+  });
+  tbody.innerHTML = html;
+  document.getElementById('paySummary').textContent = isEn
+    ? 'Total ' + paySlipStore.length + ' records, Total salary ' + allTotal.toLocaleString()
+    : '총 ' + paySlipStore.length + ' 건, 총 급여 ' + allTotal.toLocaleString();
 }
 
 function payToggleDateType() {
@@ -13835,6 +13967,7 @@ function openExpenseSummary() {
   hideAllViews();
   document.getElementById('expenseSummaryView').classList.add('show');
   esSetDefaults();
+  esSearch();
   if (typeof currentLang !== 'undefined' && currentLang === 'en' && typeof applyLang === 'function') applyLang();
 }
 
@@ -13873,14 +14006,28 @@ function esSearch() {
     return;
   }
 
+  // ehData에서 항목별 집계
+  var itemMap = {};
+  items.forEach(function(name) { itemMap[name] = { count: 0, amount: 0 }; });
+  ehData.forEach(function(d) {
+    if (itemMap[d.item] !== undefined) {
+      itemMap[d.item].count += 1;
+      itemMap[d.item].amount += (d.amount || 0);
+    }
+  });
+
   var html = '';
   var totalCount = 0;
   var totalAmount = 0;
   items.forEach(function(name) {
+    var c = itemMap[name].count;
+    var a = itemMap[name].amount;
+    totalCount += c;
+    totalAmount += a;
     html += '<tr>' +
       '<td>' + name.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>' +
-      '<td class="es-count">0</td>' +
-      '<td class="es-amount">0</td>' +
+      '<td class="es-count">' + c + '</td>' +
+      '<td class="es-amount">' + a.toLocaleString() + '</td>' +
       '</tr>';
   });
   html += '<tr class="es-total-row">' +
@@ -13895,8 +14042,16 @@ function esSearch() {
 
 // ══ [FEAT-EXPENSE-HISTORY] 지출 내역 START ══
 
-var ehData = [];
-var ehNextId = 1;
+var ehData = [
+  { id: 1, date: '2026-04-10', item: '급여', payment: '이체', amount: 1200000, memo: '4월 급여' },
+  { id: 2, date: '2026-04-05', item: '임대료', payment: '이체', amount: 800000, memo: '4월 임대료' },
+  { id: 3, date: '2026-04-03', item: '관리비', payment: '이체', amount: 250000, memo: '4월 관리비' },
+  { id: 4, date: '2026-04-02', item: '홍보비', payment: '카드', amount: 150000, memo: '네이버 광고비' },
+  { id: 5, date: '2026-04-01', item: '재료비', payment: '카드', amount: 350000, memo: '시술 재료 구입' },
+  { id: 6, date: '2026-04-01', item: '식대', payment: '현금', amount: 180000, memo: '직원 식대' },
+  { id: 7, date: '2026-03-28', item: '기타', payment: '카드', amount: 120000, memo: '소모품 구매' }
+];
+var ehNextId = 8;
 var ehEditingIdx = -1;
 
 /* ── 페이지 열기 ── */
@@ -13906,6 +14061,7 @@ function openExpenseHistory() {
   document.getElementById('expenseHistoryView').classList.add('show');
   ehSetDefaults();
   ehPopulateItemFilter();
+  ehRenderTable();
   if (typeof currentLang !== 'undefined' && currentLang === 'en' && typeof applyLang === 'function') applyLang();
 }
 
@@ -19444,10 +19600,8 @@ var rpBraSample = {
   ]
 };
 
-var rpBraPieColors = [
-  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
-  '#AB47BC', '#FF7043', '#26A69A', '#EC407A', '#8D6E63'
-];
+var rpBraPieColors = rpSvraPieColors;
+var rpBraPieGradients = rpSvraPieGradients;
 
 function openBookingByResource() {
   freezeGnb();
@@ -19605,12 +19759,13 @@ function rpBraRenderPie(data) {
 
   var labels = sorted.map(function(d) { return d.label; });
   var values = sorted.map(function(d) { return d.count; });
-  var colors = sorted.map(function(_, i) { return rpBraPieColors[i % rpBraPieColors.length]; });
+  var baseColors = sorted.map(function(_, i) { return rpBraPieColors[i % rpBraPieColors.length]; });
 
   var legendHtml = '';
   sorted.forEach(function(d, i) {
     var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
-    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + d.label + ' (' + ratio + '%)</span>';
+    var gp = rpBraPieGradients[i % rpBraPieGradients.length];
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' + d.label + ' (' + ratio + '%)</span>';
   });
   legendEl.innerHTML = legendHtml;
 
@@ -19625,7 +19780,7 @@ function rpBraRenderPie(data) {
       labels: labels,
       datasets: [{
         data: values,
-        backgroundColor: colors,
+        backgroundColor: baseColors,
         borderWidth: 2,
         borderColor: '#fff'
       }]
@@ -19647,6 +19802,21 @@ function rpBraRenderPie(data) {
       }
     },
     plugins: [{
+      id: 'braPieGrad',
+      beforeDraw: function(chart) {
+        var ds = chart.data.datasets[0];
+        var chartArea = chart.chartArea;
+        if (!chartArea) return;
+        var ctx = chart.ctx;
+        ds.backgroundColor = sorted.map(function(_, i) {
+          var gp = rpBraPieGradients[i % rpBraPieGradients.length];
+          var grad = ctx.createLinearGradient(0, 0, chartArea.right, chartArea.bottom);
+          grad.addColorStop(0, gp[0]);
+          grad.addColorStop(1, gp[1]);
+          return grad;
+        });
+      }
+    },{
       id: 'braPieLabels',
       afterDatasetsDraw: function(chart) {
         var ctx = chart.ctx;
@@ -19678,10 +19848,8 @@ var rpBwaPieChart = null;
 var rpBwaChartType = 'bar';
 var rpBwaCurrentData = [];
 
-var rpBwaPieColors = [
-  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
-  '#AB47BC', '#FF7043'
-];
+var rpBwaPieColors = rpSvraPieColors;
+var rpBwaPieGradients = rpSvraPieGradients;
 
 var rpBwaSample = {
   '2026-04': [
@@ -19919,12 +20087,13 @@ function rpBwaRenderPie(data) {
 
   var labels = data.map(function(d) { return isEn ? d.labelEn : d.label; });
   var values = data.map(function(d) { return d.count; });
-  var colors = data.map(function(_, i) { return rpBwaPieColors[i % rpBwaPieColors.length]; });
+  var baseColors = data.map(function(_, i) { return rpBwaPieColors[i % rpBwaPieColors.length]; });
 
   var legendHtml = '';
   data.forEach(function(d, i) {
     var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
-    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + (isEn ? d.labelEn : d.label) + ' (' + ratio + '%)</span>';
+    var gp = rpBwaPieGradients[i % rpBwaPieGradients.length];
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' + (isEn ? d.labelEn : d.label) + ' (' + ratio + '%)</span>';
   });
   legendEl.innerHTML = legendHtml;
 
@@ -19939,7 +20108,7 @@ function rpBwaRenderPie(data) {
       labels: labels,
       datasets: [{
         data: values,
-        backgroundColor: colors,
+        backgroundColor: baseColors,
         borderWidth: 2,
         borderColor: '#fff'
       }]
@@ -19961,6 +20130,21 @@ function rpBwaRenderPie(data) {
       }
     },
     plugins: [{
+      id: 'bwaPieGrad',
+      beforeDraw: function(chart) {
+        var ds = chart.data.datasets[0];
+        var chartArea = chart.chartArea;
+        if (!chartArea) return;
+        var ctx2 = chart.ctx;
+        ds.backgroundColor = data.map(function(_, i) {
+          var gp = rpBwaPieGradients[i % rpBwaPieGradients.length];
+          var grad = ctx2.createLinearGradient(0, 0, chartArea.right, chartArea.bottom);
+          grad.addColorStop(0, gp[0]);
+          grad.addColorStop(1, gp[1]);
+          return grad;
+        });
+      }
+    },{
       id: 'bwaPieLabels',
       afterDatasetsDraw: function(chart) {
         var ctx = chart.ctx;
@@ -20000,7 +20184,9 @@ function rpBwaRenderPie(data) {
     'openVisitSourceAnalysis','openBookingDetail','openDailyBooking',
     'openMonthlyBooking','openBookingByResource','openBookingByWeekday',
     'openBookingByTimeslot','openBookingByChannel',
-    'openBookingRate','openResourceUtil'
+    'openBookingRate','openResourceUtil',
+    'openPrepaidHoldings','openPrepaidBalance','openTicketHoldings','openTicketBalance',
+    'openPointBalance','openExpiredBalance','openMonthlyExpired'
   ];
 
   reportOpenFunctions.forEach(function(fnName) {
@@ -20035,7 +20221,9 @@ function rpBwaRenderPie(data) {
       'rpVisitSourceView','rpBookingDetailView','rpDailyBookingView',
       'rpMonthlyBookingView','rpBookingByResourceView','rpBookingByWeekdayView',
       'rpBookingByTimeslotView','rpBookingByChannelView',
-      'rpBookingRateView','rpResourceUtilView'
+      'rpBookingRateView','rpResourceUtilView',
+      'rpPrepaidHoldingsView','rpPrepaidBalanceView','rpTicketHoldingsView','rpTicketBalanceView',
+      'rpPointBalanceView','rpExpiredBalanceView','rpMonthlyExpiredView'
     ];
 
     var activeDetailView = false;
@@ -20075,11 +20263,8 @@ var rpBtaPieChart = null;
 var rpBtaChartType = 'bar';
 var rpBtaCurrentData = [];
 
-var rpBtaPieColors = [
-  '#6161FF', '#43A047', '#F5A623', '#E24B4A', '#29B6F6',
-  '#AB47BC', '#FF7043', '#26A69A', '#EC407A', '#8D6E63',
-  '#78909C', '#5C6BC0'
-];
+var rpBtaPieColors = rpSvraPieColors;
+var rpBtaPieGradients = rpSvraPieGradients;
 
 var rpBtaSample = {
   '2026-04': [
@@ -20323,12 +20508,13 @@ function rpBtaRenderPie(data) {
 
   var labels = data.map(function(d) { return d.label; });
   var values = data.map(function(d) { return d.count; });
-  var colors = data.map(function(_, i) { return rpBtaPieColors[i % rpBtaPieColors.length]; });
+  var baseColors = data.map(function(_, i) { return rpBtaPieColors[i % rpBtaPieColors.length]; });
 
   var legendHtml = '';
   data.forEach(function(d, i) {
     var ratio = total > 0 ? (d.count / total * 100).toFixed(1) : '0.0';
-    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:' + colors[i] + ';"></span>' + d.label + ' (' + ratio + '%)</span>';
+    var gp = rpBtaPieGradients[i % rpBtaPieGradients.length];
+    legendHtml += '<span class="rp-svra-legend-item"><span class="rp-svra-legend-color" style="background:linear-gradient(135deg, ' + gp[0] + ', ' + gp[1] + ');"></span>' + d.label + ' (' + ratio + '%)</span>';
   });
   legendEl.innerHTML = legendHtml;
 
@@ -20343,7 +20529,7 @@ function rpBtaRenderPie(data) {
       labels: labels,
       datasets: [{
         data: values,
-        backgroundColor: colors,
+        backgroundColor: baseColors,
         borderWidth: 2,
         borderColor: '#fff'
       }]
@@ -20365,6 +20551,21 @@ function rpBtaRenderPie(data) {
       }
     },
     plugins: [{
+      id: 'btaPieGrad',
+      beforeDraw: function(chart) {
+        var ds = chart.data.datasets[0];
+        var chartArea = chart.chartArea;
+        if (!chartArea) return;
+        var ctx2 = chart.ctx;
+        ds.backgroundColor = data.map(function(_, i) {
+          var gp = rpBtaPieGradients[i % rpBtaPieGradients.length];
+          var grad = ctx2.createLinearGradient(0, 0, chartArea.right, chartArea.bottom);
+          grad.addColorStop(0, gp[0]);
+          grad.addColorStop(1, gp[1]);
+          return grad;
+        });
+      }
+    },{
       id: 'btaPieLabels',
       afterDatasetsDraw: function(chart) {
         var ctx = chart.ctx;
@@ -21169,4 +21370,729 @@ function rpRutRenderChart(data) {
       }
     }]
   });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   고객별 정액권 보유 내역  (rpPch)
+   ══════════════════════════════════════════════════════════════ */
+
+// ── 샘플 데이터 ──
+var rpPchSampleData = [
+  {
+    clientName: 'Ariana Grande',
+    type: '금액 적립',
+    cardName: '20만원권',
+    balance: 1234567890,
+    expiryDate: '2027-06-17',
+    saleDate: '2021-11-30',
+    saleAmount: 200000,
+    accumulatedAmount: 220000
+  },
+  {
+    clientName: 'Taylor Swift',
+    type: '금액 적립',
+    cardName: '20만원권',
+    balance: 102437411013,
+    expiryDate: '2027-05-12',
+    saleDate: '2025-01-07',
+    saleAmount: 200000,
+    accumulatedAmount: 220000
+  }
+];
+
+function openPrepaidHoldings() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpPrepaidHoldingsView').classList.add('show');
+  rpPchSearch();
+}
+
+function rpPchGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpPchPrint() { window.print(); }
+
+function rpPchSearch() {
+  var staffVal = document.getElementById('rpPchStaffSelect').value;
+  var filtered = rpPchSampleData;
+  if (staffVal !== 'all') {
+    filtered = [];
+  }
+
+  // 요약
+  var totalCount = filtered.length;
+  var totalBalance = 0;
+  for (var i = 0; i < filtered.length; i++) {
+    totalBalance += filtered[i].balance;
+  }
+  document.getElementById('rpPchTotalCount').textContent = totalCount;
+  document.getElementById('rpPchTotalBalance').textContent = rpPchFormatNumber(totalBalance);
+
+  // 테이블
+  var tbody = document.getElementById('rpPchTableBody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var d = filtered[i];
+    html += '<tr>' +
+      '<td>' + rpPchEscape(d.clientName) + '</td>' +
+      '<td>' + rpPchEscape(d.type) + '</td>' +
+      '<td>' + rpPchEscape(d.cardName) + '</td>' +
+      '<td>' + rpPchFormatNumber(d.balance) + '</td>' +
+      '<td>' + d.expiryDate + '</td>' +
+      '<td>' + d.saleDate + '</td>' +
+      '<td>' + rpPchFormatNumber(d.saleAmount) + '</td>' +
+      '<td>' + rpPchFormatNumber(d.accumulatedAmount) + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpPchFormatNumber(num) {
+  if (num === null || num === undefined) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function rpPchEscape(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   정액권별 잔액 합계  (rpPbs)
+   ══════════════════════════════════════════════════════════════ */
+
+var rpPbsSampleData = [
+  { cardName: '100만원권', clientCount: 2, balance: 2579200 },
+  { cardName: '50만원권',  clientCount: 5, balance: 2566400 },
+  { cardName: '맞춤 정액권', clientCount: 1, balance: 19200 },
+  { cardName: '10%할인전용', clientCount: 1, balance: 0 }
+];
+
+function openPrepaidBalance() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpPrepaidBalanceView').classList.add('show');
+  rpPbsRender();
+}
+
+function rpPbsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpPbsPrint() { window.print(); }
+
+function rpPbsRender() {
+  var data = rpPbsSampleData;
+  var totalClients = 0;
+  var totalBalance = 0;
+  for (var i = 0; i < data.length; i++) {
+    totalClients += data[i].clientCount;
+    totalBalance += data[i].balance;
+  }
+  document.getElementById('rpPbsTotalClients').textContent = totalClients;
+  document.getElementById('rpPbsTotalBalance').textContent = rpPbsFormatNumber(totalBalance);
+
+  var tbody = document.getElementById('rpPbsTableBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i];
+    var balanceDisplay = d.balance > 0 ? rpPbsFormatNumber(d.balance) : '-';
+    html += '<tr>' +
+      '<td>' + rpPbsEscape(d.cardName) + '</td>' +
+      '<td>' + d.clientCount + '</td>' +
+      '<td>' + balanceDisplay + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpPbsFormatNumber(num) {
+  if (num === null || num === undefined) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function rpPbsEscape(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   고객별 티켓 보유 내역  (rpTch)
+   ══════════════════════════════════════════════════════════════ */
+
+var rpTchSampleData = [
+  {
+    clientName: 'Taylor Swift',
+    ticketName: '2 22 회',
+    remainCount: 21,
+    remainAmount: 420000,
+    expiryDate: '2026-06-30',
+    saleDate: '2025-06-30',
+    saleAmount: 440000,
+    accumulatedCount: 22
+  },
+  {
+    clientName: 'Taylor Swift',
+    ticketName: '매직 12 회',
+    remainCount: 11,
+    remainAmount: 110000,
+    expiryDate: '2026-06-30',
+    saleDate: '2025-06-30',
+    saleAmount: 120000,
+    accumulatedCount: 12
+  }
+];
+
+function openTicketHoldings() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpTicketHoldingsView').classList.add('show');
+  rpTchSearch();
+}
+
+function rpTchGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpTchPrint() { window.print(); }
+
+function rpTchSearch() {
+  var staffVal = document.getElementById('rpTchStaffSelect').value;
+  var filtered = rpTchSampleData;
+  if (staffVal !== 'all') {
+    filtered = [];
+  }
+
+  // 요약
+  var totalCount = filtered.length;
+  var totalBalance = 0;
+  for (var i = 0; i < filtered.length; i++) {
+    totalBalance += filtered[i].remainAmount;
+  }
+  document.getElementById('rpTchTotalCount').textContent = totalCount;
+  document.getElementById('rpTchTotalBalance').textContent = rpTchFormatNumber(totalBalance);
+
+  // 테이블
+  var tbody = document.getElementById('rpTchTableBody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var d = filtered[i];
+    html += '<tr>' +
+      '<td>' + rpTchEscape(d.clientName) + '</td>' +
+      '<td>' + rpTchEscape(d.ticketName) + '</td>' +
+      '<td>' + d.remainCount + '</td>' +
+      '<td>' + rpTchFormatNumber(d.remainAmount) + '</td>' +
+      '<td>' + d.expiryDate + '</td>' +
+      '<td>' + d.saleDate + '</td>' +
+      '<td>' + rpTchFormatNumber(d.saleAmount) + '</td>' +
+      '<td>' + d.accumulatedCount + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpTchFormatNumber(num) {
+  if (num === null || num === undefined) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function rpTchEscape(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   티켓별 잔액 합계  (rpTbs)
+   ══════════════════════════════════════════════════════════════ */
+
+var rpTbsSampleData = [
+  { category: '크리닉', ticketName: '두피스켈링 10 회', clientCount: 1, remainCount: 10, amount: 400000 },
+  { category: '커트',   ticketName: 'cut (1hour) 10 회', clientCount: 2, remainCount: 18, amount: 180000 }
+];
+
+function openTicketBalance() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpTicketBalanceView').classList.add('show');
+  rpTbsRender();
+}
+
+function rpTbsGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpTbsPrint() { window.print(); }
+
+function rpTbsRender() {
+  var data = rpTbsSampleData;
+  var totalClients = 0;
+  var totalAmount = 0;
+  for (var i = 0; i < data.length; i++) {
+    totalClients += data[i].clientCount;
+    totalAmount += data[i].amount;
+  }
+  document.getElementById('rpTbsTotalClients').textContent = totalClients;
+  document.getElementById('rpTbsTotalBalance').textContent = rpTbsFormatNumber(totalAmount);
+
+  var tbody = document.getElementById('rpTbsTableBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i];
+    html += '<tr>' +
+      '<td>' + rpTbsEscape(d.category) + '</td>' +
+      '<td>' + rpTbsEscape(d.ticketName) + '</td>' +
+      '<td>' + d.clientCount + '</td>' +
+      '<td>' + d.remainCount + '</td>' +
+      '<td>' + rpTbsFormatNumber(d.amount) + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpTbsFormatNumber(num) {
+  if (num === null || num === undefined) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function rpTbsEscape(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   고객별 포인트 잔액  (rpPtb)
+   ══════════════════════════════════════════════════════════════ */
+
+var rpPtbSampleData = [
+  { clientNo: 99, clientName: '양창호', points: 4899 },
+  { clientNo: 14, clientName: '민민',   points: 3000 },
+  { clientNo: 5,  clientName: '안재원', points: 141 },
+  { clientNo: 1,  clientName: '이재성', points: 40 },
+  { clientNo: 10, clientName: '조아라', points: 10 },
+  { clientNo: 3,  clientName: '스마일', points: 5 }
+];
+
+function openPointBalance() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpPointBalanceView').classList.add('show');
+  rpPtbRender();
+}
+
+function rpPtbGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpPtbPrint() { window.print(); }
+
+function rpPtbRender() {
+  var data = rpPtbSampleData;
+  var totalClients = data.length;
+  var totalPoints = 0;
+  for (var i = 0; i < data.length; i++) {
+    totalPoints += data[i].points;
+  }
+  document.getElementById('rpPtbTotalClients').textContent = totalClients;
+  document.getElementById('rpPtbTotalPoints').textContent = rpPtbFormatNumber(totalPoints);
+
+  var tbody = document.getElementById('rpPtbTableBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="rp-svra-empty-td" data-i18n="common.noData" data-ko="내역이 없습니다" data-en="No data">내역이 없습니다</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i];
+    html += '<tr>' +
+      '<td>' + d.clientNo + '</td>' +
+      '<td>' + rpPtbEscape(d.clientName) + '</td>' +
+      '<td>' + rpPtbFormatNumber(d.points) + '</td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function rpPtbFormatNumber(num) {
+  if (num === null || num === undefined) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function rpPtbEscape(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   회원권 기한 만료 잔액  (rpExb)
+   ══════════════════════════════════════════════════════════════ */
+
+// 샘플 데이터: 월별
+var rpExbMonthlyData = {
+  '2026-04': {
+    prep: { qty: 0, amt: 0, saleQty: 0, saleAmt: 0 },
+    tick: { qty: 0, amt: 0, saleQty: 0, saleAmt: 0 },
+    ranges: [
+      { label: '0.1% ~ 5.0%',   pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '5.1% ~ 10.0%',  pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '10.1% ~ 15.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '15.1% ~ 20.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '20.1% ~ 100%',  pQty:0, pAmt:0, tQty:0, tAmt:0 }
+    ]
+  },
+  '2026-01': {
+    prep: { qty: 0, amt: 0, saleQty: 0, saleAmt: 0 },
+    tick: { qty: 1, amt: 90000, saleQty: 1, saleAmt: 100000 },
+    ranges: [
+      { label: '0.1% ~ 5.0%',   pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '5.1% ~ 10.0%',  pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '10.1% ~ 15.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '15.1% ~ 20.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+      { label: '20.1% ~ 100%',  pQty:0, pAmt:0, tQty:1, tAmt:90000 }
+    ]
+  }
+};
+
+function openExpiredBalance() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpExpiredBalanceView').classList.add('show');
+  rpExbTogglePeriod();
+  rpExbSearch();
+}
+
+function rpExbGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpExbPrint() { window.print(); }
+
+function rpExbTogglePeriod() {
+  var type = document.querySelector('input[name="exbPeriodType"]:checked').value;
+  document.getElementById('exbMonthInput').style.display = type === 'monthly' ? '' : 'none';
+  document.getElementById('exbRangeInputs').style.display = type === 'range' ? 'flex' : 'none';
+}
+
+function rpExbSearch() {
+  var type = document.querySelector('input[name="exbPeriodType"]:checked').value;
+  var data = null;
+
+  if (type === 'monthly') {
+    var monthVal = document.getElementById('exbMonthInput').value;
+    data = rpExbMonthlyData[monthVal] || null;
+  }
+
+  if (!data) {
+    data = {
+      prep: { qty: 0, amt: 0, saleQty: 0, saleAmt: 0 },
+      tick: { qty: 0, amt: 0, saleQty: 0, saleAmt: 0 },
+      ranges: [
+        { label: '0.1% ~ 5.0%',   pQty:0, pAmt:0, tQty:0, tAmt:0 },
+        { label: '5.1% ~ 10.0%',  pQty:0, pAmt:0, tQty:0, tAmt:0 },
+        { label: '10.1% ~ 15.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+        { label: '15.1% ~ 20.0%', pQty:0, pAmt:0, tQty:0, tAmt:0 },
+        { label: '20.1% ~ 100%',  pQty:0, pAmt:0, tQty:0, tAmt:0 }
+      ]
+    };
+  }
+
+  rpExbRenderSummary(data);
+  rpExbRenderRanges(data.ranges);
+}
+
+function rpExbRenderSummary(d) {
+  var p = d.prep, t = d.tick;
+  var totQty = p.qty + t.qty, totAmt = p.amt + t.amt;
+  var totSaleQty = p.saleQty + t.saleQty, totSaleAmt = p.saleAmt + t.saleAmt;
+
+  document.getElementById('exbPrepQty').textContent = p.qty;
+  document.getElementById('exbPrepAmt').textContent = rpExbFmt(p.amt);
+  document.getElementById('exbTickQty').textContent = t.qty;
+  document.getElementById('exbTickAmt').textContent = rpExbFmt(t.amt);
+  document.getElementById('exbTotQty').textContent = totQty;
+  document.getElementById('exbTotAmt').textContent = rpExbFmt(totAmt);
+
+  document.getElementById('exbPrepSaleQty').textContent = p.saleQty;
+  document.getElementById('exbPrepSaleAmt').textContent = rpExbFmt(p.saleAmt);
+  document.getElementById('exbTickSaleQty').textContent = t.saleQty;
+  document.getElementById('exbTickSaleAmt').textContent = rpExbFmt(t.saleAmt);
+  document.getElementById('exbTotSaleQty').textContent = totSaleQty;
+  document.getElementById('exbTotSaleAmt').textContent = rpExbFmt(totSaleAmt);
+
+  var pRatio = p.saleAmt > 0 ? (p.amt / p.saleAmt * 100).toFixed(1) : '0.0';
+  var tRatio = t.saleAmt > 0 ? (t.amt / t.saleAmt * 100).toFixed(1) : '0.0';
+  var totRatio = totSaleAmt > 0 ? (totAmt / totSaleAmt * 100).toFixed(1) : '0.0';
+
+  document.getElementById('exbPrepRatio').textContent = pRatio + '%';
+  document.getElementById('exbTickRatio').textContent = tRatio + '%';
+  document.getElementById('exbTotRatio').textContent = totRatio + '%';
+}
+
+function rpExbRenderRanges(ranges) {
+  var tbody = document.getElementById('rpExbRangeBody');
+  var html = '';
+  var sPQ=0, sPA=0, sTQ=0, sTA=0;
+
+  for (var i = 0; i < ranges.length; i++) {
+    var r = ranges[i];
+    sPQ += r.pQty; sPA += r.pAmt; sTQ += r.tQty; sTA += r.tAmt;
+    html += '<tr>' +
+      '<td>' + r.label + '</td>' +
+      '<td>' + r.pQty + '</td><td>' + rpExbFmt(r.pAmt) + '</td>' +
+      '<td>' + r.tQty + '</td><td>' + rpExbFmt(r.tAmt) + '</td>' +
+      '<td>' + (r.pQty + r.tQty) + '</td><td>' + rpExbFmt(r.pAmt + r.tAmt) + '</td>' +
+      '</tr>';
+  }
+
+  // 합계 행
+  html += '<tr class="rp-svra-total-row">' +
+    '<td data-i18n="common.total" data-ko="합계" data-en="Total">합계</td>' +
+    '<td>' + sPQ + '</td><td>' + rpExbFmt(sPA) + '</td>' +
+    '<td>' + sTQ + '</td><td>' + rpExbFmt(sTA) + '</td>' +
+    '<td>' + (sPQ + sTQ) + '</td><td>' + rpExbFmt(sPA + sTA) + '</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpExbFmt(num) {
+  if (!num) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   월별 기한 만료 잔액  (rpMex)
+   ══════════════════════════════════════════════════════════════ */
+
+var rpMexChart = null;
+var rpMexSampleData = {
+  '2026-01': { saleQty: 0, saleAmt: 0, expQty: 0, expAmt: 0 },
+  '2026-02': { saleQty: 0, saleAmt: 0, expQty: 0, expAmt: 0 },
+  '2026-03': { saleQty: 1, saleAmt: 330000, expQty: 1, expAmt: 330000 },
+  '2026-04': { saleQty: 0, saleAmt: 0, expQty: 0, expAmt: 0 }
+};
+
+function openMonthlyExpired() {
+  freezeGnb();
+  hideAllViews();
+  document.getElementById('rpMonthlyExpiredView').classList.add('show');
+  rpMexInitSelects();
+  rpMexSearch();
+}
+
+function rpMexGoBack() {
+  hideAllViews();
+  document.getElementById('reportView').classList.add('show');
+  if (typeof currentLang !== 'undefined' && currentLang === 'en') applyLang();
+}
+
+function rpMexPrint() { window.print(); }
+
+function rpMexInitSelects() {
+  var now = new Date();
+  var curYear = now.getFullYear();
+  var curMonth = now.getMonth() + 1;
+
+  var syEl = document.getElementById('mexStartYear');
+  var eyEl = document.getElementById('mexEndYear');
+  var smEl = document.getElementById('mexStartMonth');
+  var emEl = document.getElementById('mexEndMonth');
+
+  if (syEl.options.length > 0) return;
+
+  for (var y = curYear - 5; y <= curYear + 1; y++) {
+    syEl.add(new Option(y, y));
+    eyEl.add(new Option(y, y));
+  }
+  for (var m = 1; m <= 12; m++) {
+    var mStr = m < 10 ? '0' + m : '' + m;
+    smEl.add(new Option(mStr, mStr));
+    emEl.add(new Option(mStr, mStr));
+  }
+
+  syEl.value = curYear;
+  eyEl.value = curYear;
+  smEl.value = '01';
+  emEl.value = curMonth < 10 ? '0' + curMonth : '' + curMonth;
+}
+
+function rpMexSearch() {
+  var sy = document.getElementById('mexStartYear').value;
+  var sm = document.getElementById('mexStartMonth').value;
+  var ey = document.getElementById('mexEndYear').value;
+  var em = document.getElementById('mexEndMonth').value;
+
+  // 월 목록 생성
+  var months = [];
+  var startD = new Date(parseInt(sy), parseInt(sm) - 1, 1);
+  var endD = new Date(parseInt(ey), parseInt(em) - 1, 1);
+  var cur = new Date(startD);
+  while (cur <= endD) {
+    var yy = cur.getFullYear();
+    var mm = cur.getMonth() + 1;
+    months.push(yy + '-' + (mm < 10 ? '0' + mm : '' + mm));
+    cur.setMonth(cur.getMonth() + 1);
+  }
+
+  var rows = [];
+  for (var i = 0; i < months.length; i++) {
+    var d = rpMexSampleData[months[i]] || { saleQty: 0, saleAmt: 0, expQty: 0, expAmt: 0 };
+    rows.push({ month: months[i], saleQty: d.saleQty, saleAmt: d.saleAmt, expQty: d.expQty, expAmt: d.expAmt });
+  }
+
+  rpMexRenderChart(rows);
+  rpMexRenderTable(rows);
+}
+
+function rpMexRenderChart(rows) {
+  var ctx = document.getElementById('rpMexChartCanvas').getContext('2d');
+  if (rpMexChart) { rpMexChart.destroy(); rpMexChart = null; }
+
+  var labels = [];
+  var ratioData = [];
+  var avgData = [];
+
+  for (var i = 0; i < rows.length; i++) {
+    labels.push(rows[i].month);
+    var ratio = rows[i].saleAmt > 0 ? (rows[i].expAmt / rows[i].saleAmt * 100) : 0;
+    ratioData.push(parseFloat(ratio.toFixed(1)));
+    avgData.push(100);
+  }
+
+  rpMexChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '기한 만료 잔액 비율(%)',
+          data: ratioData,
+          backgroundColor: '#6161FF',
+          borderRadius: 4,
+          maxBarThickness: 48,
+          order: 2
+        },
+        {
+          label: '평균 (100%)',
+          data: avgData,
+          type: 'line',
+          borderColor: '#F5A623',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          tension: 0,
+          fill: false,
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11, family: 'Pretendard' }, color: '#757575' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#E0E0E0' },
+          ticks: {
+            font: { size: 11, family: 'Pretendard' },
+            color: '#757575',
+            stepSize: 10,
+            callback: function(v) { return v + '%'; }
+          }
+        }
+      }
+    }
+  });
+}
+
+function rpMexRenderTable(rows) {
+  var tbody = document.getElementById('rpMexTableBody');
+  var html = '';
+  var tSaleQty = 0, tSaleAmt = 0, tExpQty = 0, tExpAmt = 0;
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    tSaleQty += r.saleQty; tSaleAmt += r.saleAmt;
+    tExpQty += r.expQty; tExpAmt += r.expAmt;
+    var ratio = r.saleAmt > 0 ? (r.expAmt / r.saleAmt * 100).toFixed(1) : '0.0';
+    html += '<tr>' +
+      '<td>' + r.month + '</td>' +
+      '<td>' + r.saleQty + '</td>' +
+      '<td>' + rpMexFmt(r.saleAmt) + '</td>' +
+      '<td>' + r.expQty + '</td>' +
+      '<td>' + rpMexFmt(r.expAmt) + '</td>' +
+      '<td>' + ratio + '%</td>' +
+      '</tr>';
+  }
+
+  var totRatio = tSaleAmt > 0 ? (tExpAmt / tSaleAmt * 100).toFixed(1) : '0.0';
+  html += '<tr class="rp-svra-total-row">' +
+    '<td data-i18n="common.total" data-ko="합계" data-en="Total">합계</td>' +
+    '<td>' + tSaleQty + '</td>' +
+    '<td>' + rpMexFmt(tSaleAmt) + '</td>' +
+    '<td>' + tExpQty + '</td>' +
+    '<td>' + rpMexFmt(tExpAmt) + '</td>' +
+    '<td>' + totRatio + '%</td>' +
+    '</tr>';
+
+  tbody.innerHTML = html;
+}
+
+function rpMexFmt(num) {
+  if (!num) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
